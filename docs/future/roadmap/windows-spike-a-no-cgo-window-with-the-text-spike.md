@@ -5,14 +5,7 @@ tags: [feature, spike]
 state: researching
 ---
 
-prove dfx2's no-cgo approach on Windows by giving `experiments/text-spike` a Windows window (`window_windows.go`, and narrowing `window_other.go` to neither Linux nor Windows). use plain Win32 through `syscall`, without cgo and without new dependencies:
-- register a window class with a window procedure made by `syscall.NewCallback`. it's made once and never freed, like purego's.
-- run the message loop on the locked main thread.
-- present the spike's CPU frame in `WM_PAINT` with `SetDIBitsToDevice`. the frame is already premultiplied BGRA, which is what a top-down 32-bit DIB takes.
-- be per-monitor DPI aware (v2): scale from `GetDpiForWindow`, and resize and redraw on `WM_DPICHANGED`.
-- keep the zoom keys and the per-frame log.
-
-build it from Linux with `GOOS=windows CGO_ENABLED=0 go build`. Michael runs it on Windows. record in `docs/future/text.md` how the go-text engine and its slight hinting look there next to Windows' own text, which is ClearType with DirectWrite's grid fitting, not FreeType's light hinting. say whether the Linux-tuned hinting reads right there.
+execute [the Windows native-spike brief](../windows-native-spike.md) on Michael's Windows development host. extend `experiments/text-spike` with a no-cgo Win32 window, per-monitor DPI handling, and a synthetic background-driven meter that exercises sessionmixer's update pattern. audition the window and text on Windows, record the evidence and limitations in `docs/future/text.md`, and bring the implementation back for Linux integration checks. the brief carries the scope, stages, acceptance checks, and cross-host handoff.
 
 ## why
 

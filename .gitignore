@@ -1,0 +1,46 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# example binaries, built at the repo root by `go build ./examples/...`
+# (never committed)
+/dfx_example_*
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+
+# Go workspace file
+go.work
+go.work.sum
+
+# Build artifacts
+bin/
+dist/
+build/
+
+# IDE and editor files
+.devprj
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Dependency directories
+vendor/
+
+# Debug files
+debug
+debug.test
+__debug_bin
+
+# mercurius
+.mercurius
+mercurius.yaml
