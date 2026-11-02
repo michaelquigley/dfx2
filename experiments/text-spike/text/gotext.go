@@ -201,7 +201,37 @@ func bitmap(face *font.Face, gid font.GID, b font.GlyphBitmap, s float32) Bitmap
 func round(v float32) int { return int(math.Round(float64(v))) }
 
 // Family names the font the engine resolves Latin text to.
-func (e *GoText) Family() string {
-	fam, _ := e.fonts.FontMetadata(e.fonts.ResolveFace('a').Font)
+func (e *GoText) Family() string { return e.FaceFamily(e.fonts.ResolveFace('a')) }
+
+// FaceFamily names a face's family, as the font index knows it.
+func (e *GoText) FaceFamily(f *font.Face) string {
+	if f == nil {
+		return ""
+	}
+	fam, _ := e.fonts.FontMetadata(f.Font)
 	return fam
+}
+
+// GlyphKind names the kind of data a glyph has, for diagnosing what the
+// engine can draw: outlines and PNG bitmaps it can, the rest it can't.
+func (e *GoText) GlyphKind(f *font.Face, gid font.GID) string {
+	switch d := f.GlyphData(gid).(type) {
+	case font.GlyphOutline:
+		if len(d.Segments) == 0 {
+			return "empty outline"
+		}
+		return "outline"
+	case font.GlyphSVG:
+		return "svg"
+	case font.GlyphBitmap:
+		if d.Format == font.PNG {
+			return "png bitmap"
+		}
+		return "other bitmap"
+	case font.GlyphColor:
+		return "colr paint (not drawn)"
+	case nil:
+		return "no data"
+	}
+	return "other"
 }

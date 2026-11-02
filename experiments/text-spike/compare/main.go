@@ -1,3 +1,5 @@
+//go:build linux
+
 // Command compare draws the same text with the spike's pure-Go engine and
 // with Pango, as GTK 3 draws it, at several sizes, light on dark and dark on
 // light, into compare.png, with the small sizes magnified 5× into

@@ -106,6 +106,119 @@ two pixel rows. See the roadmap card on stem snapping.
   tinted whole words instead of fringing glyph edges. The comparison draws
   Pango's LCD row on RGB24, as GTK draws into a window.
 
+## Windows results (2026-11-02)
+
+The [Windows native spike](windows-native-spike.md) put the same engine and
+CPU renderer in a no-cgo Win32 window (`window_windows.go`) and added a
+background-fed meter (`-meter`). The evidence is in
+[`experiments/text-spike/evidence/windows/`](../../experiments/text-spike/evidence/windows/).
+
+### Host and conditions
+
+- Windows 10 Pro 22H2, build 19045.6466, amd64. It's a QEMU/KVM guest
+  (i440FX), with 8 logical CPUs of an i7-6950X.
+- **Session: remote, over RDP** (`RDP-Tcp#0`). There's one display, the
+  Microsoft Remote Display Adapter at 3440×1440, at 96 dpi (100%). Every
+  window result below is RDP presentation, not a local GPU or monitor.
+- ClearType on (`FontSmoothing=2`, `FontSmoothingType=2`, RGB order), in
+  the session's registry. Whether RDP delivers it to the client was not
+  verified.
+- Go 1.27.3 windows/amd64 (the module declares 1.26). `CGO_ENABLED=0`
+  throughout.
+- Fonts, from `-fonts`: `Segoe UI,sans-serif` resolves Latin, Greek,
+  Cyrillic, Hebrew and Arabic to Segoe UI. 日本語 falls back to MS Gothic.
+  The emoji land in Segoe UI Emoji, whose glyphs are COLR paint, and come
+  out blank (see below).
+
+### Commands and tests run
+
+From `experiments/text-spike`, with `CGO_ENABLED=0`:
+- `go test ./...` passes: `TestRewrapKeepsSpaces`, and new tests for the
+  meter feed (coalescing, a failed post, pause, stop/join) and for the
+  Win32 struct layouts.
+- `go vet ./...` is clean, and so is `go vet` with `GOOS=linux` and
+  `GOOS=darwin`.
+- `GOOS=linux go build . ./compare` cross-builds. The Linux window and
+  compare were not run.
+- `go build -o dfx2-text-spike.exe .` builds, and `-png` (with
+  `-scale 1.5`, `-meter`, `-sizes`, `-light`) renders and exits.
+
+A scripted driver ran the real window. It launched the exe, captured the
+client area from the screen, resized it with `SetWindowPos`, minimized and
+restored it, posted keys (`WM_CHAR`) and `WM_CLOSE`, and timed the exit.
+That's automated evidence of native behavior. It isn't Michael's
+observation, so the two are kept apart below.
+
+### A bug found: Go-heap frames fail in `SetDIBitsToDevice`
+
+Presenting the frame from a Go `[]byte` failed intermittently: a black or
+stale window at some sizes, and different sizes on different runs.
+`SetDIBitsToDevice` returned 0 lines with `GetLastError` 0, and the paint
+DC's clip box covered the whole client. Retrying never helped. The failures
+tracked the buffer's address exactly: every failing frame (1.9–3.0 MB)
+straddled a 4 MB boundary, and no succeeding frame did
+([log](../../experiments/text-spike/evidence/windows/present-failure.log),
+[capture](../../experiments/text-spike/evidence/windows/before-fix-present-failure-984x761.png)).
+On Windows, Go reserves its heap in 4 MB arenas, each its own
+`VirtualAlloc`. The likely cause is that GDI rejects a source buffer that
+spans two allocations. That's an inference: it matches every observation,
+but it isn't documented. The fix gives the frame memory from one
+`VirtualAlloc` (`window.pixels`), and rendering writes straight into it.
+Afterwards, every scripted size and resize run presented with no failures.
+**Any dfx2 surface handed to GDI (and probably any OS blit API) should be
+native-allocated, not Go-heap.**
+
+### Audition
+
+"Automated" is the scripted driver or the counters. "Observed" is what
+Michael saw in the window.
+
+| Check | Automated | Observed |
+| --- | --- | --- |
+| Launch, close, relaunch | Each run launched, and `WM_CLOSE` exited in 30–50 ms, metering or paused. A real-close test exited too. | Observed: Michael reported it "looked great". |
+| Resize and exposure | 6–32 scripted resizes per run (200–2000 px wide), minimize 2 s and restore: captures readable, no lost spaces, body text rewrapped and not reshaped. The meter kept updating through programmatic resizes. | Observed: "looked great". |
+| DPI | Untested: the RDP display is fixed at 96 dpi. The `WM_DPICHANGED` path has never run. | **Untested**: Michael can't change display scaling on this host. |
+| Text | 11/13/14/18/24 px, dark and light, zoom: [sizes](../../experiments/text-spike/evidence/windows/text-sizes-dark.png), [zoomed, light](../../experiments/text-spike/evidence/windows/text-zoomed-light.png) | Observed: "looked great". No side-by-side reference app or settings were recorded. |
+| Active updates | 30.0 ticks/s, ~30 paints/s, render avg 0.08–0.3 ms (first frame ~56 ms, rasterizing). 0–1 coalesced per 5 s, 0 failed posts. CPU 297 ms per 10 s (~3% of one core), frame log off. | Observed: "looked great". |
+| Paused updates | 10 s paused: 0 ticks, 0 posts, 0 paints. Zoom while paused repainted once. | Observed: "looked great". |
+| PNG | `-png` at scale 1 and 1.5, with and without `-meter`, writes and exits. | n/a |
+
+Counters come from `s` in the window and the 5 s and exit summaries
+(README). Measured with the per-frame log off, which `-meter` defaults to.
+
+### Michael's judgment and what it implies
+
+Michael auditioned the window over RDP. Every check except DPI "looked
+great": the text, the meter, resizing, pausing and closing. He couldn't
+change display scaling on this host, so DPI is untested.
+
+- **Next design step:** the no-cgo Win32 window and the
+  background-to-UI wakeup are proven enough to design the platform
+  layer's main-thread loop and wakeup contract on.
+- **Needs another run:** DPI (100% to 125/150/200%, and moving between
+  monitors) on a machine where scaling can change.
+- **Untested:** text on a local console rather than RDP, and against a
+  side-by-side Windows reference app.
+
+### Findings
+
+- **Win32 through `syscall` carries the window.** One window procedure for
+  the process, windows routed by an id in `GWLP_USERDATA`, and per-monitor
+  v2 awareness all hold up. A settled window does nothing.
+- **The background-to-UI pattern works as sessionmixer needs it.** The
+  worker publishes under a mutex and posts a payload-free `WM_APP` only when
+  none is pending. Exposure re-presents without re-rendering (paints >
+  renders while minimized). Pausing stops the ticker, so a paused window is
+  idle.
+- **The readout reshapes every tick.** A number that changes each frame is
+  a new paragraph each frame (shaped ≈ readouts in the counters). The body
+  text is shaped once. A real meter readout wants cached digit glyphs or a
+  shaping cache keyed by string.
+- **COLR emoji are blank on Windows by default.** Without Noto Color Emoji
+  installed, `fontscan.Emoji` resolves to Segoe UI Emoji, whose glyphs are
+  `GlyphColor` (COLR paint). They keep their advance but draw nothing. This
+  is the known renderer gap, not a window problem.
+
 ## Paths forward
 
 - **Pure Go.** go-text with our hinting is good enough on Linux at every

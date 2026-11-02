@@ -1,0 +1,13 @@
+# Before the fix: frame pixels in the Go heap, presented with SetDIBitsToDevice.
+# One present per window size (scripted SetWindowPos), 96 dpi, RDP session.
+# n = scan lines SetDIBitsToDevice reported; each call was retried 4 times.
+# GetLastError was 0 ("The operation completed successfully.") on every failure,
+# and GetClipBox reported a SIMPLEREGION covering the whole client.
+EXPERIMENT: n=0 tries=4 buf 0x339e8b280000..0x339e8b45a048 (1941576 B) crosses 4MB boundary: true
+EXPERIMENT: n=0 tries=4 buf 0x339e8b280000..0x339e8b45dbd0 (1956816 B) crosses 4MB boundary: true
+EXPERIMENT: n=0 tries=4 buf 0x339e8bbd8000..0x339e8beb7c40 (3013696 B) crosses 4MB boundary: true
+EXPERIMENT: n=0 tries=4 buf 0x339e8bbd8000..0x339e8beba300 (3023616 B) crosses 4MB boundary: true
+EXPERIMENT: n=261 tries=1 buf 0x339e8b8fc000..0x339e8ba43450 (1340496 B) crosses 4MB boundary: false
+EXPERIMENT: n=360 tries=1 buf 0x339e891ba000..0x339e892f6680 (1296000 B) crosses 4MB boundary: false
+EXPERIMENT: n=381 tries=1 buf 0x339e8b480000..0x339e8b661758 (1972056 B) crosses 4MB boundary: false
+EXPERIMENT: n=761 tries=1 buf 0x339e8b8fc000..0x339e8bbd7460 (2995296 B) crosses 4MB boundary: false
