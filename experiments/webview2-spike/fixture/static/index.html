@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>dfx2 WebView2 spike fixture</title>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<header>
+  <h1>dfx2 WebView2 spike</h1>
+  <p id="where">origin: <code id="origin">?</code> · mode: <strong id="mode">?</strong> · assets: <span id="assets">?</span></p>
+</header>
+
+<main>
+  <section aria-labelledby="h-checks">
+    <h2 id="h-checks">Checks</h2>
+    <div class="buttons">
+      <button id="run-all">Run all checks</button>
+      <button id="query">GET query</button>
+      <button id="post">POST echo (UTF-8)</button>
+      <button id="post-binary">POST echo (binary)</button>
+      <button id="binary">GET binary</button>
+      <button id="headers">Repeated headers</button>
+      <button id="s404">Handler 404</button>
+      <button id="s500">Handler 500</button>
+      <button id="unknown">Unknown route</button>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-slow">
+    <h2 id="h-slow">Slow work and lifetime</h2>
+    <div class="buttons">
+      <button id="slow">Slow (3 s)</button>
+      <button id="fast">Fast</button>
+      <button id="race">Slow, then fast</button>
+      <button id="abort">Abort slow after 0.3 s</button>
+      <button id="reload-slow">Reload during slow</button>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-limits">
+    <h2 id="h-limits">Limits</h2>
+    <div class="buttons">
+      <button id="big-post">Oversized POST (1.5 MiB)</button>
+      <button id="big-get">Oversized response (2 MiB)</button>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-origin">
+    <h2 id="h-origin">Origin</h2>
+    <div class="buttons">
+      <button id="open-outside">window.open outside</button>
+      <button id="open-same">window.open same origin</button>
+      <button id="nav-outside">Navigate outside</button>
+      <a id="link-outside" href="https://example.com/" target="_blank">Outside link (new window)</a>
+      <a id="link-outside-same" href="https://example.com/">Outside link (same window)</a>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-focus">
+    <h2 id="h-focus">Focus</h2>
+    <label>Type here <input id="typing" type="text" value="" placeholder="edit me, then Tab"></label>
+    <label>And here <input id="typing2" type="text" value="" placeholder="second field"></label>
+    <label class="wide">Notes <textarea id="notes" rows="3" placeholder="multi-line"></textarea></label>
+  </section>
+
+  <section aria-labelledby="h-log">
+    <h2 id="h-log">Result log <button id="clear" class="small">Clear</button></h2>
+    <ol id="log" aria-live="polite"></ol>
+  </section>
+</main>
+<script src="app.js"></script>
+</body>
+</html>

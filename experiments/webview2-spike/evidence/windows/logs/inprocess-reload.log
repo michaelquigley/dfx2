@@ -1,0 +1,59 @@
+# dfx2-webview2-spike.exe -mode inprocess -autorun reload
+10:57:56.377332 loader: C:\Repos\q\products\dfx2\experiments\webview2-spike\WebView2Loader.dll sha256 a9a09232c25805323d4cfb3fc8f545a190a9c8a99c93262ea99d0b88df99ec90 (matches the pinned SDK 1.0.4129.50 x64 loader)
+10:57:56.379043 runtime: installed Evergreen Runtime 151.0.4129.93
+10:57:56.379584 user data: C:\Repos\q\products\dfx2\experiments\webview2-spike\webview2-userdata\inprocess
+10:57:56.381775 window: hwnd 0x420346 on UI thread 7716, 96 dpi (scale 1), client 1000x760 DIPs
+10:57:56.407179 transport: in-process dispatch for https://dfx2-spike.invalid; no application listener (pid 3540)
+10:57:56.411749 webview: environment ready in 42ms; browser version 151.0.4129.93
+10:57:56.417216 webview: environment creation started (returned in 9.414ms)
+10:57:56.729585 webview: controller ready in 360ms; browser process 6180
+10:57:56.729585 webview: intercepting https://dfx2-spike.invalid/* (all resource contexts)
+10:57:56.736027 webview: navigating to https://dfx2-spike.invalid/?autorun=reload
+10:57:56.749240 webview: navigation 2 starting: https://dfx2-spike.invalid/?autorun=reload
+10:57:56.749785 req 1 start GET /?autorun=reload (0 B body, outstanding 1)
+10:57:56.749785 req 1 handler done 200 in 0s (outstanding 0)
+10:57:56.750361 intercept: SHCreateMemStream stream: IAgileObject S_OK, IMarshal S_OK
+10:57:56.750361 req 1 response installed: 200, 2731 B, 1ms after start (put_Response S_OK, Complete S_OK; pending 0)
+10:57:56.816712 req 2 start GET /app.css (0 B body, outstanding 1)
+10:57:56.816712 req 2 handler done 200 in 0s (outstanding 0)
+10:57:56.816712 req 3 start GET /app.js (0 B body, outstanding 1)
+10:57:56.816712 req 3 handler done 200 in 0s (outstanding 0)
+10:57:56.816712 req 2 response installed: 200, 1998 B, 0s after start (put_Response S_OK, Complete S_OK; pending 1)
+10:57:56.816712 req 3 response installed: 200, 12574 B, 0s after start (put_Response S_OK, Complete S_OK; pending 0)
+10:57:56.851157 req 4 start POST /api/report (67 B body, outstanding 1)
+10:57:56.851157 report: [inprocess] loaded /?autorun=reload (assets app.css ✓ app.js ✓)
+10:57:56.851157 req 4 handler done 204 in 0s (outstanding 0)
+10:57:56.851157 req 4 response installed: 204, 0 B, 0s after start (put_Response S_OK, Complete S_OK; pending 0)
+10:57:56.889887 req 5 start GET /api/slow?tag=reload (0 B body, outstanding 1)
+10:57:56.890438 req 6 start POST /api/report (71 B body, outstanding 2)
+10:57:56.890438 report: [inprocess] reload: slow request tag=reload started; reloading in 500ms
+10:57:56.890438 req 6 handler done 204 in 0s (outstanding 1)
+10:57:56.890438 req 6 response installed: 204, 0 B, 0s after start (put_Response S_OK, Complete S_OK; pending 1)
+10:57:56.892057 webview: navigation 2 completed: success true, web error status 0 (522ms after launch)
+10:57:56.897650 req 7 start GET /favicon.ico (0 B body, outstanding 2)
+10:57:56.897650 req 7 handler done 404 in 0s (outstanding 1)
+10:57:56.897650 req 7 response installed: 404, 19 B, 0s after start (put_Response S_OK, Complete S_OK; pending 1)
+10:57:57.401853 webview: navigation 3 starting: https://dfx2-spike.invalid/?autorun=reload
+10:57:57.404122 req 8 start GET /?autorun=reload (0 B body, outstanding 2)
+10:57:57.404122 req 8 handler done 200 in 0s (outstanding 1)
+10:57:57.404122 req 8 response installed: 200, 2731 B, 0s after start (put_Response S_OK, Complete S_OK; pending 1)
+10:57:57.416461 req 9 start GET /app.css (0 B body, outstanding 2)
+10:57:57.416461 req 10 start GET /app.js (0 B body, outstanding 3)
+10:57:57.416461 req 9 handler done 200 in 0s (outstanding 2)
+10:57:57.416461 req 10 handler done 200 in 0s (outstanding 1)
+10:57:57.416461 req 9 response installed: 200, 1998 B, 0s after start (put_Response S_OK, Complete S_OK; pending 2)
+10:57:57.416461 req 10 response installed: 200, 12574 B, 0s after start (put_Response S_OK, Complete S_OK; pending 1)
+10:57:57.423090 req 11 start POST /api/report (70 B body, outstanding 2)
+10:57:57.423090 report: [inprocess] reload: page reloaded 537ms after starting slow tag=reload
+10:57:57.423090 req 11 handler done 204 in 0s (outstanding 1)
+10:57:57.423090 req 11 response installed: 204, 0 B, 0s after start (put_Response S_OK, Complete S_OK; pending 1)
+10:57:57.423644 webview: navigation 3 completed: success true, web error status 0 (1.054s after launch)
+10:57:59.890367 req 5 handler done 200 in 3s (outstanding 0)
+10:57:59.890367 req 5 response installed: 200, 44 B, 3s after start (put_Response S_OK, Complete S_OK; pending 0)
+10:58:01.423258 close: WM_CLOSE in state running, 5.054s after launch (handlers running 0, deferrals pending 0, env pending false, controller pending false)
+10:58:01.446782 close: controller closed (S_OK) in 23.524ms
+10:58:01.462726 close: message loop ended 39ms after close began
+10:58:01.462726 close: workers drained true in 0s; started 11, finished 11, canceled 0, dropped after close 0, refused 0
+10:58:01.462726 close: intercepted 11, responses installed 11 (settled on close 0), origin refusals 0
+10:58:01.462726 exit: 17 WebView2 callbacks, 0 off the UI thread
+10:58:01.462726 exit: late creation callbacks 0; callback objects still referenced 0 []; 39ms after close began, 5.093s after launch

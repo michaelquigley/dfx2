@@ -1,0 +1,5 @@
+# dfx2-webview2-spike.exe -mode inprocess -runtime-dir C:\Cygwin64\tmp\dfx2-wv2-prereq594298220\runtime
+10:58:08.059331 loader: C:\Repos\q\products\dfx2\experiments\webview2-spike\WebView2Loader.dll sha256 a9a09232c25805323d4cfb3fc8f545a190a9c8a99c93262ea99d0b88df99ec90 (matches the pinned SDK 1.0.4129.50 x64 loader)
+10:58:08.061579 error: WebView2 Runtime not found (fixed-version Runtime in C:\Cygwin64\tmp\dfx2-wv2-prereq594298220\runtime, HRESULT ERROR_FILE_NOT_FOUND (0x80070002))
+  Install the Evergreen WebView2 Runtime from https://developer.microsoft.com/microsoft-edge/webview2/
+  (Windows 11 includes it), or pass -runtime-dir with a fixed-version Runtime folder.

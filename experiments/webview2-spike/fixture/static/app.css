@@ -1,0 +1,77 @@
+:root {
+  --css-loaded: 1;
+  --bg: #f6f6f4;
+  --fg: #1d1d1b;
+  --muted: #66655f;
+  --line: #d9d8d2;
+  --pass: #1f7a3a;
+  --fail: #b3261e;
+  --info: #3b5ba5;
+  --button: #ffffff;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1b1b1a;
+    --fg: #ecebe6;
+    --muted: #a3a29b;
+    --line: #3a3936;
+    --pass: #6cc58a;
+    --fail: #f2867e;
+    --info: #9db4ee;
+    --button: #2a2a28;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 16px 20px 40px;
+  background: var(--bg);
+  color: var(--fg);
+  font: 14px/1.45 "Segoe UI", system-ui, sans-serif;
+}
+h1 { font-size: 20px; margin: 0 0 4px; }
+h2 { font-size: 15px; margin: 18px 0 8px; display: flex; gap: 8px; align-items: center; }
+header p { margin: 0; color: var(--muted); }
+code { font: 13px Consolas, ui-monospace, monospace; }
+.buttons { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+button {
+  font: inherit;
+  padding: 5px 10px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: var(--button);
+  color: var(--fg);
+  cursor: pointer;
+}
+button:focus-visible, input:focus-visible, textarea:focus-visible, a:focus-visible {
+  outline: 2px solid var(--info);
+  outline-offset: 1px;
+}
+button.small { padding: 1px 8px; font-size: 12px; }
+a { color: var(--info); }
+label { display: inline-flex; gap: 6px; align-items: center; margin: 0 12px 6px 0; }
+label.wide { display: flex; align-items: flex-start; }
+input, textarea {
+  font: inherit;
+  padding: 4px 6px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--button);
+  color: var(--fg);
+}
+textarea { width: min(560px, 100%); }
+#log {
+  margin: 0;
+  padding: 8px 8px 8px 36px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  font: 12.5px/1.5 Consolas, ui-monospace, monospace;
+  min-height: 120px;
+  max-height: 420px;
+  overflow: auto;
+  overflow-wrap: anywhere;
+}
+#log .pass { color: var(--pass); }
+#log .fail { color: var(--fail); }
+#log .info { color: var(--info); }

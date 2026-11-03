@@ -1,0 +1,35 @@
+# dfx2-webview2-spike.exe -mode loopback -autorun slow
+10:57:28.737374 loader: C:\Repos\q\products\dfx2\experiments\webview2-spike\WebView2Loader.dll sha256 a9a09232c25805323d4cfb3fc8f545a190a9c8a99c93262ea99d0b88df99ec90 (matches the pinned SDK 1.0.4129.50 x64 loader)
+10:57:28.740458 runtime: installed Evergreen Runtime 151.0.4129.93
+10:57:28.740458 user data: C:\Repos\q\products\dfx2\experiments\webview2-spike\webview2-userdata\loopback
+10:57:28.743290 window: hwnd 0x1b0344 on UI thread 9512, 96 dpi (scale 1), client 1000x760 DIPs
+10:57:28.765766 transport: loopback HTTP server listening on http://127.0.0.1:54530 (pid 8228)
+10:57:28.772675 webview: environment ready in 42ms; browser version 151.0.4129.93
+10:57:28.777692 webview: environment creation started (returned in 11.925ms)
+10:57:29.092293 webview: controller ready in 362ms; browser process 9308
+10:57:29.097298 webview: navigating to http://127.0.0.1:54530/?autorun=slow
+10:57:29.105421 webview: navigation 2 starting: http://127.0.0.1:54530/?autorun=slow
+10:57:29.105967 req 1 start GET /?autorun=slow from 127.0.0.1:54531 (0 B body, outstanding 1)
+10:57:29.105967 req 1 handler done 200 in 0s (outstanding 0)
+10:57:29.183251 req 2 start GET /app.css from 127.0.0.1:54531 (0 B body, outstanding 1)
+10:57:29.183251 req 2 handler done 200 in 0s (outstanding 0)
+10:57:29.183251 req 3 start GET /app.js from 127.0.0.1:54532 (0 B body, outstanding 1)
+10:57:29.183251 req 3 handler done 200 in 0s (outstanding 0)
+10:57:29.222089 req 4 start POST /api/report from 127.0.0.1:54532 (64 B body, outstanding 1)
+10:57:29.223084 report: [loopback] loaded /?autorun=slow (assets app.css ✓ app.js ✓)
+10:57:29.223084 req 4 handler done 204 in 1ms (outstanding 0)
+10:57:29.238790 req 5 start POST /api/report from 127.0.0.1:54532 (33 B body, outstanding 1)
+10:57:29.238790 report: [loopback] slow: started tag=busy
+10:57:29.238790 req 6 start GET /api/slow?tag=busy from 127.0.0.1:54531 (0 B body, outstanding 2)
+10:57:29.238790 req 5 handler done 204 in 0s (outstanding 1)
+10:57:29.240457 webview: navigation 2 completed: success true, web error status 0 (510ms after launch)
+10:57:29.247626 req 7 start GET /favicon.ico from 127.0.0.1:54532 (0 B body, outstanding 2)
+10:57:29.247626 req 7 handler done 404 in 0s (outstanding 1)
+10:57:29.539723 close: WM_CLOSE in state running, 809ms after launch (handlers running 0, deferrals pending 0, env pending false, controller pending false)
+10:57:29.539723 fixture: /api/slow tag="busy" saw cancellation: context canceled
+10:57:29.539723 req 6 handler canceled (context canceled), returned 503 in 301ms (outstanding 0)
+10:57:29.563624 close: controller closed (S_OK) in 23.9ms
+10:57:29.572926 close: message loop ended 33ms after close began
+10:57:29.572926 transport: server shutdown in 0s (ok)
+10:57:29.572926 exit: 4 WebView2 callbacks, 0 off the UI thread
+10:57:29.572926 exit: late creation callbacks 0; callback objects still referenced 0 []; 33ms after close began, 843ms after launch

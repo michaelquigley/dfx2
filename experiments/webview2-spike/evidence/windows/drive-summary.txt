@@ -1,0 +1,194 @@
+# drive 2026-11-03T10:57:16-05:00, .\dfx2-webview2-spike.exe
+
+## loopback
+checks: [loopback] checks PASS 14/14
+  [loopback] INFO header-utf8: handler sent "café" as UTF-8 bytes; page sees "cafÃ©"
+  [loopback] INFO abort: browser side: AbortError after 306ms; Go side: see host log for tag=abort
+  outside navigation: [loopback] origin: still on the fixture 1.5 s after location.href = https://example.com/
+  host: origin: new window for https://example.com/ refused
+  host: origin: new window for http://127.0.0.1:54516/ refused
+  host: origin: navigation 3 to https://example.com/ refused (outside http://127.0.0.1:54516)
+  host: loader: C:\Repos\q\products\dfx2\experiments\webview2-spike\WebView2Loader.dll sha256 a9a09232c25805323d4cfb3fc8f545a190a9c8a99c93262ea99d0b88df99ec90 (matches the pinned SDK 1.0.4129.50 x64 loader)
+  host: runtime: installed Evergreen Runtime 151.0.4129.93
+  host: transport: loopback HTTP server listening on http://127.0.0.1:54516 (pid 5056)
+  sockets owned by pid 5056: Established 127.0.0.1:54516 -> 127.0.0.1:54520; Listen 127.0.0.1:54516 -> 0.0.0.0:0
+  ordinary client (Go net/http) GET http://127.0.0.1:54516/api/query: 200 application/json; charset=utf-8 {"accept":"","custom":null,"host":"127.0.0.1:54516","method":"GET","path":"/api/query","query":{"client":["go-net-http"],"text":["café"]},"rawQuery":"client=go-net-http\u0026text=caf%C3%A9"}
+  curl.exe -i http://127.0.0.1:54516/api/headers:
+    HTTP/1.1 200 OK
+    Cache-Control: no-store
+    Content-Type: application/json; charset=utf-8
+    X-Spike-Repeat: one
+    X-Spike-Repeat: two
+    X-Spike-Unicode: café
+    Date: Tue, 03 Nov 2026 15:57:23 GMT
+    Content-Length: 69
+    
+    {"sent":{"X-Spike-Repeat":["one","two"],"X-Spike-Unicode":["café"]}}
+  capture: loopback-checks.png (1016x799)
+  close after checks: exited true in 44ms, code 0; 8 WebView2 callbacks, 0 off the UI thread; late creation callbacks 0; callback objects still referenced 0 []; 37ms after close began, 7.099s after launch
+resize: 4 SetWindowPos calls in 624ms while /api/slow was pending
+  capture: loopback-resized-during-slow.png (1000x760)
+  capture: loopback-restored.png (1000x760)
+  slow request during resize/minimize: 10:57:27.048841 req 6 handler done 200 in 3.001s (outstanding 0)
+  close: exited true in 44ms, code 0; 4 WebView2 callbacks, 0 off the UI thread; late creation callbacks 0; callback objects still referenced 0 []; 36ms after close began, 4.093s after launch
+close idle: exited true in 46ms, code 0; 4 WebView2 callbacks, 0 off the UI thread; late creation callbacks 0; callback objects still referenced 0 []; 34ms after close began, 1.05s after launch
+close busy (slow request 300 ms in): exited true in 40ms, code 0
+  close: WM_CLOSE in state running, 809ms after launch (handlers running 0, deferrals pending 0, env pending false, controller pending false)
+  fixture: /api/slow tag="busy" saw cancellation: context canceled
+  req 6 handler canceled (context canceled), returned 503 in 301ms (outstanding 0)
+  close: controller closed (S_OK) in 23.9ms
+  close: message loop ended 33ms after close began
+  exit: 4 WebView2 callbacks, 0 off the UI thread
+  exit: late creation callbacks 0; callback objects still referenced 0 []; 33ms after close began, 843ms after launch
+reload during slow: [loopback] reload: page reloaded 539ms after starting slow tag=reload
+  webview: navigation 2 starting: http://127.0.0.1:54533/?autorun=reload
+  report: [loopback] reload: slow request tag=reload started; reloading in 500ms
+  req 6 start GET /api/slow?tag=reload from 127.0.0.1:54534 (0 B body, outstanding 1)
+  webview: navigation 2 completed: success true, web error status 0 (510ms after launch)
+  webview: navigation 3 starting: http://127.0.0.1:54533/?autorun=reload
+  fixture: /api/slow tag="reload" saw cancellation: context canceled
+  report: [loopback] reload: page reloaded 539ms after starting slow tag=reload
+  webview: navigation 3 completed: success true, web error status 0 (1.043s after launch)
+  req 6 handler canceled (context canceled), returned 503 in 518ms (outstanding 0)
+  close: exited true in 51ms, code 0; 6 WebView2 callbacks, 0 off the UI thread; late creation callbacks 0; callback objects still referenced 0 []; 40ms after close began, 5.086s after launch
+close init +0s: exited true in 66ms, code 0; WM_CLOSE in state starting, 50ms after launch (handlers running 0, deferrals pending 0, env pending false, controller pending true)
+  webview: late controller callback during close (E_ABORT (0x80004004), 59ms after launch): controller false, closed and not attached
+  2 WebView2 callbacks, 0 off the UI thread; late creation callbacks 1; callback objects still referenced 0 []; 11ms after close began, 61ms after launch
+close init +50ms: exited true in 20ms, code 0; WM_CLOSE in state starting, 74ms after launch (handlers running 0, deferrals pending 0, env pending false, controller pending true)
+  webview: late controller callback during close (E_ABORT (0x80004004), 84ms after launch): controller false, closed and not attached
+  2 WebView2 callbacks, 0 off the UI thread; late creation callbacks 1; callback objects still referenced 0 []; 11ms after close began, 86ms after launch
+close init +150ms: exited true in 26ms, code 0; WM_CLOSE in state starting, 168ms after launch (handlers running 0, deferrals pending 0, env pending false, controller pending true)
+  webview: late controller callback during close (E_ABORT (0x80004004), 179ms after launch): controller false, closed and not attached
+  2 WebView2 callbacks, 0 off the UI thread; late creation callbacks 1; callback objects still referenced 0 []; 12ms after close began, 182ms after launch
+close init +300ms: exited true in 22ms, code 0; WM_CLOSE in state starting, 319ms after launch (handlers running 0, deferrals pending 0, env pending false, controller pending true)
+  webview: late controller callback during close (E_ABORT (0x80004004), 333ms after launch): controller false, closed and not attached
+  2 WebView2 callbacks, 0 off the UI thread; late creation callbacks 1; callback objects still referenced 0 []; 15ms after close began, 334ms after launch
+close init +600ms: exited true in 48ms, code 0; WM_CLOSE in state running, 612ms after launch (handlers running 0, deferrals pending 0, env pending false, controller pending false)
+  4 WebView2 callbacks, 0 off the UI thread; late creation callbacks 0; callback objects still referenced 0 []; 36ms after close began, 649ms after launch
+close-during env (WM_CLOSE posted just before the call): exit 0 after 78ms
+  test: posting WM_CLOSE before environment creation
+  webview: environment ready in 42ms; browser version 151.0.4129.93
+  webview: environment creation started (returned in 13.359ms)
+  close: WM_CLOSE in state starting, 48ms after launch (handlers running 0, deferrals pending 0, env pending false, controller pending true)
+  webview: late controller callback during close (E_ABORT (0x80004004), 56ms after launch): controller false, closed and not attached
+  exit: 2 WebView2 callbacks, 0 off the UI thread
+  exit: late creation callbacks 1; callback objects still referenced 0 []; 8ms after close began, 57ms after launch
+close-during controller (WM_CLOSE posted just before the call): exit 0 after 88ms
+  webview: environment ready in 50ms; browser version 151.0.4129.93
+  test: posting WM_CLOSE before controller creation
+  webview: environment creation started (returned in 9.458ms)
+  close: WM_CLOSE in state starting, 55ms after launch (handlers running 0, deferrals pending 0, env pending false, controller pending true)
+  webview: late controller callback during close (E_ABORT (0x80004004), 63ms after launch): controller false, closed and not attached
+  exit: 2 WebView2 callbacks, 0 off the UI thread
+  exit: late creation callbacks 1; callback objects still referenced 0 []; 9ms after close began, 65ms after launch
+repeat launch/close x5: 5 clean (exit 0, no live callback objects); close-to-exit 43ms, 45ms, 43ms, 49ms, 44ms
+console break (Ctrl+Break, slow request pending): exit code 0 in 39ms
+  close: console signal interrupt: posted WM_CLOSE
+  close: WM_CLOSE in state running, 791ms after launch (handlers running 0, deferrals pending 0, env pending false, controller pending false)
+  fixture: /api/slow tag="busy" saw cancellation: context canceled
+  req 5 handler canceled (context canceled), returned 503 in 302ms (outstanding 0)
+  exit: 4 WebView2 callbacks, 0 off the UI thread
+  exit: late creation callbacks 0; callback objects still referenced 0 []; 31ms after close began, 823ms after launch
+server failure (-break-listener 3s): exit code 1 after 3.102s
+  transport: -break-listener: closing the listener under the server
+  error: loopback server stopped: accept tcp 127.0.0.1:54564: use of closed network connection
+  close: failure in state running, 3.036s after launch (handlers running 0, deferrals pending 0, env pending false, controller pending false)
+  error: loopback server stopped: accept tcp 127.0.0.1:54564: use of closed network connection
+
+## inprocess
+checks: [inprocess] checks PASS 14/14
+  [inprocess] INFO header-utf8: handler sent "café" as UTF-8 bytes; page sees "cafÃ©"
+  [inprocess] INFO abort: browser side: AbortError after 305ms; Go side: see host log for tag=abort
+  outside navigation: [inprocess] origin: still on the fixture 1.5 s after location.href = https://example.com/
+  host: origin: new window for https://example.com/ refused
+  host: origin: new window for https://dfx2-spike.invalid/ refused
+  host: origin: navigation 3 to https://example.com/ refused (outside https://dfx2-spike.invalid)
+  host: loader: C:\Repos\q\products\dfx2\experiments\webview2-spike\WebView2Loader.dll sha256 a9a09232c25805323d4cfb3fc8f545a190a9c8a99c93262ea99d0b88df99ec90 (matches the pinned SDK 1.0.4129.50 x64 loader)
+  host: runtime: installed Evergreen Runtime 151.0.4129.93
+  host: transport: in-process dispatch for https://dfx2-spike.invalid; no application listener (pid 7620)
+  host: intercept: SHCreateMemStream stream: IAgileObject S_OK, IMarshal S_OK
+  sockets owned by pid 7620: none
+  capture: inprocess-checks.png (1016x799)
+  close after checks: exited true in 46ms, code 0; 47 WebView2 callbacks, 0 off the UI thread; late creation callbacks 0; callback objects still referenced 0 []; 38ms after close began, 6.966s after launch
+resize: 4 SetWindowPos calls in 622ms while /api/slow was pending
+  capture: inprocess-resized-during-slow.png (1000x760)
+  capture: inprocess-restored.png (1000x760)
+  slow request during resize/minimize: 10:57:53.834262 req 5 handler done 200 in 3.001s (outstanding 0)
+  close: exited true in 46ms, code 0; 11 WebView2 callbacks, 0 off the UI thread; late creation callbacks 0; callback objects still referenced 0 []; 39ms after close began, 4.098s after launch
+close idle: exited true in 44ms, code 0; 9 WebView2 callbacks, 0 off the UI thread; late creation callbacks 0; callback objects still referenced 0 []; 37ms after close began, 1.029s after launch
+close busy (slow request 300 ms in): exited true in 42ms, code 0
+  close: WM_CLOSE in state running, 826ms after launch (handlers running 1, deferrals pending 1, env pending false, controller pending false)
+  close: canceled handlers for [5]; their results will be dropped
+  req 5 response settled on close: 503, 15 B, 301ms after start (put_Response S_OK, Complete S_OK; pending 0)
+  fixture: /api/slow tag="busy" saw cancellation: context canceled
+  req 5 handler canceled (context done), returned 503 in 301ms after close: result dropped (outstanding 0)
+  close: controller closed (S_OK) in 24.208ms
+  close: message loop ended 36ms after close began
+  close: workers drained true in 0s; started 7, finished 6, canceled 1, dropped after close 1, refused 0
+  close: intercepted 7, responses installed 7 (settled on close 1), origin refusals 0
+  exit: 11 WebView2 callbacks, 0 off the UI thread
+  exit: late creation callbacks 0; callback objects still referenced 0 []; 36ms after close began, 862ms after launch
+reload during slow: [inprocess] reload: page reloaded 537ms after starting slow tag=reload
+  webview: navigation 2 starting: https://dfx2-spike.invalid/?autorun=reload
+  req 5 start GET /api/slow?tag=reload (0 B body, outstanding 1)
+  report: [inprocess] reload: slow request tag=reload started; reloading in 500ms
+  webview: navigation 2 completed: success true, web error status 0 (522ms after launch)
+  webview: navigation 3 starting: https://dfx2-spike.invalid/?autorun=reload
+  report: [inprocess] reload: page reloaded 537ms after starting slow tag=reload
+  webview: navigation 3 completed: success true, web error status 0 (1.054s after launch)
+  req 5 handler done 200 in 3s (outstanding 0)
+  req 5 response installed: 200, 44 B, 3s after start (put_Response S_OK, Complete S_OK; pending 0)
+  close: exited true in 46ms, code 0; 17 WebView2 callbacks, 0 off the UI thread; late creation callbacks 0; callback objects still referenced 0 []; 39ms after close began, 5.093s after launch
+close init +0s: exited true in 49ms, code 0; WM_CLOSE in state starting, 46ms after launch (handlers running 0, deferrals pending 0, env pending false, controller pending true)
+  webview: late controller callback during close (E_ABORT (0x80004004), 54ms after launch): controller false, closed and not attached
+  2 WebView2 callbacks, 0 off the UI thread; late creation callbacks 1; callback objects still referenced 0 []; 9ms after close began, 55ms after launch
+close init +50ms: exited true in 27ms, code 0; WM_CLOSE in state starting, 80ms after launch (handlers running 0, deferrals pending 0, env pending false, controller pending true)
+  webview: late controller callback during close (E_ABORT (0x80004004), 99ms after launch): controller false, closed and not attached
+  2 WebView2 callbacks, 0 off the UI thread; late creation callbacks 1; callback objects still referenced 0 []; 21ms after close began, 100ms after launch
+close init +150ms: exited true in 18ms, code 0; WM_CLOSE in state starting, 163ms after launch (handlers running 0, deferrals pending 0, env pending false, controller pending true)
+  webview: late controller callback during close (E_ABORT (0x80004004), 173ms after launch): controller false, closed and not attached
+  2 WebView2 callbacks, 0 off the UI thread; late creation callbacks 1; callback objects still referenced 0 []; 11ms after close began, 174ms after launch
+close init +300ms: exited true in 28ms, code 0; WM_CLOSE in state starting, 312ms after launch (handlers running 0, deferrals pending 0, env pending false, controller pending true)
+  webview: late controller callback during close (E_ABORT (0x80004004), 325ms after launch): controller false, closed and not attached
+  2 WebView2 callbacks, 0 off the UI thread; late creation callbacks 1; callback objects still referenced 0 []; 18ms after close began, 331ms after launch
+close init +600ms: exited true in 40ms, code 0; WM_CLOSE in state running, 616ms after launch (handlers running 0, deferrals pending 0, env pending false, controller pending false)
+  9 WebView2 callbacks, 0 off the UI thread; late creation callbacks 0; callback objects still referenced 0 []; 34ms after close began, 650ms after launch
+close-during env (WM_CLOSE posted just before the call): exit 0 after 88ms
+  test: posting WM_CLOSE before environment creation
+  webview: environment ready in 36ms; browser version 151.0.4129.93
+  webview: environment creation started (returned in 9.979ms)
+  close: WM_CLOSE in state starting, 43ms after launch (handlers running 0, deferrals pending 0, env pending false, controller pending true)
+  webview: late controller callback during close (E_ABORT (0x80004004), 60ms after launch): controller false, closed and not attached
+  exit: 2 WebView2 callbacks, 0 off the UI thread
+  exit: late creation callbacks 1; callback objects still referenced 0 []; 18ms after close began, 61ms after launch
+close-during controller (WM_CLOSE posted just before the call): exit 0 after 91ms
+  webview: environment ready in 42ms; browser version 151.0.4129.93
+  test: posting WM_CLOSE before controller creation
+  webview: environment creation started (returned in 12.522ms)
+  close: WM_CLOSE in state starting, 48ms after launch (handlers running 0, deferrals pending 0, env pending false, controller pending true)
+  webview: late controller callback during close (E_ABORT (0x80004004), 61ms after launch): controller false, closed and not attached
+  exit: 2 WebView2 callbacks, 0 off the UI thread
+  exit: late creation callbacks 1; callback objects still referenced 0 []; 14ms after close began, 62ms after launch
+repeat launch/close x5: 5 clean (exit 0, no live callback objects); close-to-exit 48ms, 48ms, 45ms, 46ms, 55ms
+console break (Ctrl+Break, slow request pending): exit code 0 in 42ms
+  close: console signal interrupt: posted WM_CLOSE
+  close: WM_CLOSE in state running, 800ms after launch (handlers running 1, deferrals pending 1, env pending false, controller pending false)
+  req 5 response settled on close: 503, 15 B, 301ms after start (put_Response S_OK, Complete S_OK; pending 0)
+  fixture: /api/slow tag="busy" saw cancellation: context canceled
+  req 5 handler canceled (context done), returned 503 in 301ms after close: result dropped (outstanding 0)
+  close: intercepted 7, responses installed 7 (settled on close 1), origin refusals 0
+  exit: 11 WebView2 callbacks, 0 off the UI thread
+  exit: late creation callbacks 0; callback objects still referenced 0 []; 35ms after close began, 835ms after launch
+
+## prerequisites
+missing loader (-loader <empty dir>): exit 1, window false
+  error: WebView2Loader.dll not found at C:\Cygwin64\tmp\dfx2-wv2-prereq594298220\WebView2Loader.dll
+  It comes from the WebView2 SDK, not from Windows. Run .\setup-loader.ps1 in experiments\webview2-spike
+  (it downloads Microsoft.Web.WebView2 1.0.4129.50 and copies the x64 loader beside the executable),
+  or pass -loader <path>.
+executable copied alone (no loader beside it): exit 1
+  error: WebView2Loader.dll not found at C:\Cygwin64\tmp\dfx2-wv2-prereq594298220\WebView2Loader.dll
+missing Runtime, simulated (-runtime-dir <empty folder>): exit 1
+  error: WebView2 Runtime not found (fixed-version Runtime in C:\Cygwin64\tmp\dfx2-wv2-prereq594298220\runtime, HRESULT ERROR_FILE_NOT_FOUND (0x80070002))
+  Install the Evergreen WebView2 Runtime from https://developer.microsoft.com/microsoft-edge/webview2/
+  (Windows 11 includes it), or pass -runtime-dir with a fixed-version Runtime folder.

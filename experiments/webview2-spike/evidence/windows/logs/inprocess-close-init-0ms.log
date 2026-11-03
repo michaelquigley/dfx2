@@ -1,0 +1,15 @@
+# dfx2-webview2-spike.exe -mode inprocess
+10:58:01.491385 loader: C:\Repos\q\products\dfx2\experiments\webview2-spike\WebView2Loader.dll sha256 a9a09232c25805323d4cfb3fc8f545a190a9c8a99c93262ea99d0b88df99ec90 (matches the pinned SDK 1.0.4129.50 x64 loader)
+10:58:01.493354 runtime: installed Evergreen Runtime 151.0.4129.93
+10:58:01.493354 user data: C:\Repos\q\products\dfx2\experiments\webview2-spike\webview2-userdata\inprocess
+10:58:01.496374 window: hwnd 0x4f0162 on UI thread 7896, 96 dpi (scale 1), client 1000x760 DIPs
+10:58:01.515354 transport: in-process dispatch for https://dfx2-spike.invalid; no application listener (pid 8252)
+10:58:01.522355 webview: environment ready in 40ms; browser version 151.0.4129.93
+10:58:01.528305 webview: environment creation started (returned in 12.951ms)
+10:58:01.528305 close: WM_CLOSE in state starting, 46ms after launch (handlers running 0, deferrals pending 0, env pending false, controller pending true)
+10:58:01.536305 webview: late controller callback during close (E_ABORT (0x80004004), 54ms after launch): controller false, closed and not attached
+10:58:01.537303 close: message loop ended 9ms after close began
+10:58:01.537303 close: workers drained true in 0s; started 0, finished 0, canceled 0, dropped after close 0, refused 0
+10:58:01.537303 close: intercepted 0, responses installed 0 (settled on close 0), origin refusals 0
+10:58:01.537303 exit: 2 WebView2 callbacks, 0 off the UI thread
+10:58:01.537303 exit: late creation callbacks 1; callback objects still referenced 0 []; 9ms after close began, 55ms after launch

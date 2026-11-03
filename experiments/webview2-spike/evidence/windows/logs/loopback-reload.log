@@ -1,0 +1,46 @@
+# dfx2-webview2-spike.exe -mode loopback -autorun reload
+10:57:29.605370 loader: C:\Repos\q\products\dfx2\experiments\webview2-spike\WebView2Loader.dll sha256 a9a09232c25805323d4cfb3fc8f545a190a9c8a99c93262ea99d0b88df99ec90 (matches the pinned SDK 1.0.4129.50 x64 loader)
+10:57:29.607005 runtime: installed Evergreen Runtime 151.0.4129.93
+10:57:29.607005 user data: C:\Repos\q\products\dfx2\experiments\webview2-spike\webview2-userdata\loopback
+10:57:29.610315 window: hwnd 0x11016a on UI thread 7984, 96 dpi (scale 1), client 1000x760 DIPs
+10:57:29.633677 transport: loopback HTTP server listening on http://127.0.0.1:54533 (pid 9672)
+10:57:29.637455 webview: environment ready in 39ms; browser version 151.0.4129.93
+10:57:29.642437 webview: environment creation started (returned in 8.76ms)
+10:57:29.942513 webview: controller ready in 344ms; browser process 10996
+10:57:29.950693 webview: navigating to http://127.0.0.1:54533/?autorun=reload
+10:57:29.965986 req 1 start GET /?autorun=reload from 127.0.0.1:54534 (0 B body, outstanding 1)
+10:57:29.965986 req 1 handler done 200 in 0s (outstanding 0)
+10:57:29.965986 webview: navigation 2 starting: http://127.0.0.1:54533/?autorun=reload
+10:57:30.039428 req 2 start GET /app.css from 127.0.0.1:54534 (0 B body, outstanding 1)
+10:57:30.039428 req 2 handler done 200 in 0s (outstanding 0)
+10:57:30.039428 req 3 start GET /app.js from 127.0.0.1:54535 (0 B body, outstanding 1)
+10:57:30.039428 req 3 handler done 200 in 0s (outstanding 0)
+10:57:30.065949 req 4 start POST /api/report from 127.0.0.1:54535 (66 B body, outstanding 1)
+10:57:30.065949 report: [loopback] loaded /?autorun=reload (assets app.css ✓ app.js ✓)
+10:57:30.065949 req 4 handler done 204 in 0s (outstanding 0)
+10:57:30.106796 req 5 start POST /api/report from 127.0.0.1:54535 (70 B body, outstanding 1)
+10:57:30.106796 report: [loopback] reload: slow request tag=reload started; reloading in 500ms
+10:57:30.106796 req 5 handler done 204 in 0s (outstanding 0)
+10:57:30.107324 req 6 start GET /api/slow?tag=reload from 127.0.0.1:54534 (0 B body, outstanding 1)
+10:57:30.108446 webview: navigation 2 completed: success true, web error status 0 (510ms after launch)
+10:57:30.116204 req 7 start GET /favicon.ico from 127.0.0.1:54535 (0 B body, outstanding 2)
+10:57:30.116204 req 7 handler done 404 in 0s (outstanding 1)
+10:57:30.620197 webview: navigation 3 starting: http://127.0.0.1:54533/?autorun=reload
+10:57:30.621859 req 8 start GET /?autorun=reload from 127.0.0.1:54535 (0 B body, outstanding 2)
+10:57:30.621859 req 8 handler done 200 in 0s (outstanding 1)
+10:57:30.625228 fixture: /api/slow tag="reload" saw cancellation: context canceled
+10:57:30.625228 req 6 handler canceled (context canceled), returned 503 in 518ms (outstanding 0)
+10:57:30.635019 req 9 start GET /app.css from 127.0.0.1:54535 (0 B body, outstanding 1)
+10:57:30.635019 req 9 handler done 200 in 0s (outstanding 0)
+10:57:30.635579 req 10 start GET /app.js from 127.0.0.1:54535 (0 B body, outstanding 1)
+10:57:30.636099 req 10 handler done 200 in 1ms (outstanding 0)
+10:57:30.640656 req 11 start POST /api/report from 127.0.0.1:54535 (69 B body, outstanding 1)
+10:57:30.641255 report: [loopback] reload: page reloaded 539ms after starting slow tag=reload
+10:57:30.641255 req 11 handler done 204 in 1ms (outstanding 0)
+10:57:30.641255 webview: navigation 3 completed: success true, web error status 0 (1.043s after launch)
+10:57:34.642139 close: WM_CLOSE in state running, 5.044s after launch (handlers running 0, deferrals pending 0, env pending false, controller pending false)
+10:57:34.668094 close: controller closed (S_OK) in 25.955ms
+10:57:34.681796 close: message loop ended 40ms after close began
+10:57:34.683986 transport: server shutdown in 2ms (ok)
+10:57:34.683986 exit: 6 WebView2 callbacks, 0 off the UI thread
+10:57:34.683986 exit: late creation callbacks 0; callback objects still referenced 0 []; 40ms after close began, 5.086s after launch

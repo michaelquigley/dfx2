@@ -1,0 +1,7 @@
+# Downloaded SDK, the loader, built executables and the webview's profile:
+# none of it belongs in git (setup-loader.ps1 and go build recreate them).
+/.sdk/
+*.dll
+*.exe
+/webview2-userdata/
+/evidence/windows/drive/drive
