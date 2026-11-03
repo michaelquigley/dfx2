@@ -1,0 +1,17 @@
+Overriding existing handler for signal 10. Set JSC_SIGNAL_FOR_GC if you want WebKit to use a different signal
+11:39:13.276883 WebKitGTK 2.52.6 mode=inprocess origin=dfx2://spike scale=1
+11:39:14.335761 load event=0 uri=dfx2://spike/
+11:39:14.336582 req 1 start GET / (0 B body, outstanding 1)
+11:39:14.336884 req 1 handler done 200 in 0s (outstanding 0)
+11:39:14.339437 load event=2 uri=dfx2://spike/
+11:39:14.340231 req 2 start GET /app.css (0 B body, outstanding 1)
+11:39:14.340394 req 2 handler done 200 in 0s (outstanding 0)
+11:39:14.340960 req 3 start GET /app.js (0 B body, outstanding 1)
+11:39:14.341150 req 3 handler done 200 in 0s (outstanding 0)
+11:39:14.458721 req 4 start POST /api/report (52 B body, outstanding 1)
+11:39:14.458792 report: [inprocess] loaded / (assets app.css ✓ app.js ✓)
+11:39:14.458825 req 4 handler done 204 in 0s (outstanding 0)
+11:39:14.479376 load event=3 uri=dfx2://spike/
+11:39:14.482448 javascript: {"origin":"dfx2://spike","secure":true,"crypto":true,"storage":"yes"}
+11:39:17.282509 closing: timed exit; native requests=0 async=0 handlers=0
+11:39:17.301967 closed: requests=0 native-async=0 handlers=0 stats={Started:4 Finished:4 Canceled:0 Dropped:0 Refused:0}

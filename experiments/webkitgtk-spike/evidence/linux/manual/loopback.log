@@ -1,0 +1,140 @@
+Overriding existing handler for signal 10. Set JSC_SIGNAL_FOR_GC if you want WebKit to use a different signal
+11:31:22.837647 WebKitGTK 2.52.6 mode=loopback origin=http://127.0.0.1:43067 scale=1
+11:31:23.377229 load event=0 uri=http://127.0.0.1:43067/
+11:31:23.377996 req 1 start GET / from 127.0.0.1:54100 (0 B body, outstanding 1)
+11:31:23.378060 req 1 handler done 200 in 0s (outstanding 0)
+11:31:23.379972 load event=2 uri=http://127.0.0.1:43067/
+11:31:23.381162 req 2 start GET /app.css from 127.0.0.1:54100 (0 B body, outstanding 1)
+11:31:23.381224 req 2 handler done 200 in 0s (outstanding 0)
+11:31:23.381634 req 3 start GET /app.js from 127.0.0.1:54116 (0 B body, outstanding 1)
+11:31:23.381746 req 3 handler done 200 in 0s (outstanding 0)
+11:31:23.453953 req 4 start POST /api/report from 127.0.0.1:54122 (51 B body, outstanding 1)
+11:31:23.453998 report: [loopback] loaded / (assets app.css ✓ app.js ✓)
+11:31:23.454002 req 4 handler done 204 in 0s (outstanding 0)
+11:31:23.481597 load event=3 uri=http://127.0.0.1:43067/
+11:31:23.503242 javascript: {"origin":"http://127.0.0.1:43067","secure":true,"crypto":true,"storage":"yes"}
+11:31:58.134449 req 5 start GET /api/query?text=h%C3%A9llo+%E2%80%94+%E6%97%A5%E6%9C%AC%E8%AA%9E+%E2%9C%93+%F0%9F%99%82&n=1&n=2&empty= from 127.0.0.1:54116 (0 B body, outstanding 1)
+11:31:58.134668 req 5 handler done 200 in 0s (outstanding 0)
+11:31:58.159397 req 6 start POST /api/echo from 127.0.0.1:58878 (40 B body, outstanding 1)
+11:31:58.159479 req 6 handler done 200 in 0s (outstanding 0)
+11:31:58.164681 req 7 start POST /api/echo from 127.0.0.1:58880 (65536 B body, outstanding 1)
+11:31:58.165238 req 7 handler done 200 in 1ms (outstanding 0)
+11:31:58.167538 req 8 start GET /api/binary from 127.0.0.1:58880 (0 B body, outstanding 1)
+11:31:58.167558 req 8 handler done 200 in 0s (outstanding 0)
+11:31:58.169132 req 9 start GET /api/headers from 127.0.0.1:58880 (0 B body, outstanding 1)
+11:31:58.169177 req 9 handler done 200 in 0s (outstanding 0)
+11:31:58.170573 req 10 start GET /api/headers from 127.0.0.1:58880 (0 B body, outstanding 1)
+11:31:58.170594 req 10 handler done 200 in 0s (outstanding 0)
+11:31:58.171845 req 11 start GET /api/status/404 from 127.0.0.1:58880 (0 B body, outstanding 1)
+11:31:58.171862 req 11 handler done 404 in 0s (outstanding 0)
+11:31:58.173020 req 12 start GET /api/status/500 from 127.0.0.1:58880 (0 B body, outstanding 1)
+11:31:58.173035 req 12 handler done 500 in 0s (outstanding 0)
+11:31:58.174087 req 13 start GET /no/such/route from 127.0.0.1:58880 (0 B body, outstanding 1)
+11:31:58.174117 req 13 handler done 404 in 0s (outstanding 0)
+11:31:58.175403 req 14 start GET /api/slow?tag=race from 127.0.0.1:58880 (0 B body, outstanding 1)
+11:31:58.275934 req 15 start GET /api/query?fast=1 from 127.0.0.1:58878 (0 B body, outstanding 2)
+11:31:58.275986 req 15 handler done 200 in 0s (outstanding 1)
+11:32:01.177367 req 14 handler done 200 in 3.002s (outstanding 0)
+11:32:01.179357 req 16 start GET /api/slow?tag=abort from 127.0.0.1:58880 (0 B body, outstanding 1)
+11:32:01.479573 fixture: /api/slow tag="abort" saw cancellation: context canceled
+11:32:01.479608 req 16 handler canceled (context canceled), returned 503 in 300ms (outstanding 0)
+11:32:01.503135 req 17 start POST /api/echo from 127.0.0.1:58886 (1572864 B body, outstanding 1)
+11:32:01.513221 req 17 handler done 200 in 10ms (outstanding 0)
+11:32:01.514833 req 18 start GET /api/query?text=h%C3%A9llo+%E2%80%94+%E6%97%A5%E6%9C%AC%E8%AA%9E+%E2%9C%93+%F0%9F%99%82&n=1&n=2&empty= from 127.0.0.1:58886 (0 B body, outstanding 1)
+11:32:01.514906 req 18 handler done 200 in 0s (outstanding 0)
+11:32:01.517352 req 19 start GET /api/big from 127.0.0.1:58886 (0 B body, outstanding 1)
+11:32:01.517721 req 19 handler done 200 in 0s (outstanding 0)
+11:32:01.529264 req 20 start GET /api/query?text=h%C3%A9llo+%E2%80%94+%E6%97%A5%E6%9C%AC%E8%AA%9E+%E2%9C%93+%F0%9F%99%82&n=1&n=2&empty= from 127.0.0.1:58886 (0 B body, outstanding 1)
+11:32:01.529342 req 20 handler done 200 in 0s (outstanding 0)
+11:32:01.538078 new window refused (create)
+11:32:01.539757 new window refused (create)
+11:32:01.541771 req 21 start POST /api/report from 127.0.0.1:58892 (67 B body, outstanding 1)
+11:32:01.541803 report: [loopback] PASS assets: app.css applied: true; app.js running: true
+11:32:01.541807 req 21 handler done 204 in 0s (outstanding 0)
+11:32:01.544059 req 22 start POST /api/report from 127.0.0.1:58900 (127 B body, outstanding 1)
+11:32:01.544103 report: [loopback] PASS query: status 200, text "héllo — 日本語 ✓ 🙂", n=1,2, host 127.0.0.1:43067, custom header query-check
+11:32:01.544110 req 22 handler done 204 in 0s (outstanding 0)
+11:32:01.545001 req 23 start POST /api/report from 127.0.0.1:58902 (76 B body, outstanding 1)
+11:32:01.545033 report: [loopback] PASS post: status 200, 40 B, Content-Length 40, sha256 match true
+11:32:01.545038 req 23 handler done 204 in 0s (outstanding 0)
+11:32:01.545774 req 24 start POST /api/report from 127.0.0.1:58904 (93 B body, outstanding 1)
+11:32:01.545806 report: [loopback] PASS post-binary: status 200, sent 65536 B, handler got 65536 B, sha256 match true
+11:32:01.545810 req 24 handler done 204 in 0s (outstanding 0)
+11:32:01.546496 req 25 start POST /api/report from 127.0.0.1:58920 (98 B body, outstanding 1)
+11:32:01.546627 report: [loopback] PASS binary: status 200, 267/267 B, bytes identical true, type application/octet-stream
+11:32:01.546663 req 25 handler done 204 in 0s (outstanding 0)
+11:32:01.547501 req 26 start POST /api/report from 127.0.0.1:58924 (98 B body, outstanding 1)
+11:32:01.547555 report: [loopback] PASS headers: x-spike-repeat "one, two" (fetch joins repeats), cache-control "no-store"
+11:32:01.547561 req 26 handler done 204 in 0s (outstanding 0)
+11:32:01.548870 req 27 start POST /api/report from 127.0.0.1:58940 (85 B body, outstanding 1)
+11:32:01.548930 report: [loopback] INFO header-utf8: handler sent "café" as UTF-8 bytes; page sees "cafÃ©"
+11:32:01.548936 req 27 handler done 204 in 0s (outstanding 0)
+11:32:01.550118 req 28 start POST /api/report from 127.0.0.1:58950 (80 B body, outstanding 1)
+11:32:01.550153 report: [loopback] PASS s404: status 404 Not Found, body {"from":"handler","status":404}
+11:32:01.550157 req 28 handler done 204 in 0s (outstanding 0)
+11:32:01.551332 req 29 start POST /api/report from 127.0.0.1:58964 (92 B body, outstanding 1)
+11:32:01.551367 report: [loopback] PASS s500: status 500 Internal Server Error, body {"from":"handler","status":500}
+11:32:01.551371 req 29 handler done 204 in 0s (outstanding 0)
+11:32:01.552261 req 30 start POST /api/report from 127.0.0.1:58966 (96 B body, outstanding 1)
+11:32:01.552303 report: [loopback] PASS unknown: status 404, body "404 page not found\n", type text/plain; charset=utf-8
+11:32:01.552309 req 30 handler done 204 in 0s (outstanding 0)
+11:32:01.553128 req 31 start POST /api/report from 127.0.0.1:58982 (59 B body, outstanding 1)
+11:32:01.553154 report: [loopback] PASS race: fast@101ms then slow(finished)@3003ms
+11:32:01.553158 req 31 handler done 204 in 0s (outstanding 0)
+11:32:01.553962 req 32 start POST /api/report from 127.0.0.1:58998 (96 B body, outstanding 1)
+11:32:01.553994 report: [loopback] INFO abort: browser side: AbortError after 301ms; Go side: see host log for tag=abort
+11:32:01.553999 req 32 handler done 204 in 0s (outstanding 0)
+11:32:01.554661 req 33 start POST /api/report from 127.0.0.1:59002 (176 B body, outstanding 1)
+11:32:01.554680 report: [loopback] PASS big-post: status 200, adapter error null, body "{\"contentLength\":1572864,\"contentType\":\"application/octet-stream\",\"custom\":null,"; next request ok: true
+11:32:01.554684 req 33 handler done 204 in 0s (outstanding 0)
+11:32:01.555344 req 34 start POST /api/report from 127.0.0.1:59006 (89 B body, outstanding 1)
+11:32:01.555365 report: [loopback] PASS big-get: status 200, adapter error null, 2097152 B; next request ok: true
+11:32:01.555368 req 34 handler done 204 in 0s (outstanding 0)
+11:32:01.556057 req 35 start POST /api/report from 127.0.0.1:59018 (83 B body, outstanding 1)
+11:32:01.556080 report: [loopback] PASS open-outside: window.open returned null; host log shows the refusal
+11:32:01.556084 req 35 handler done 204 in 0s (outstanding 0)
+11:32:01.556866 req 36 start POST /api/report from 127.0.0.1:59034 (88 B body, outstanding 1)
+11:32:01.556891 report: [loopback] PASS open-same: window.open("./") returned null (all new windows are refused)
+11:32:01.556895 req 36 handler done 204 in 0s (outstanding 0)
+11:32:01.557564 req 37 start POST /api/report from 127.0.0.1:59042 (28 B body, outstanding 1)
+11:32:01.557587 report: [loopback] checks PASS 14/14
+11:32:01.557590 req 37 handler done 204 in 0s (outstanding 0)
+11:32:07.092634 new window refused (create)
+11:32:23.057774 req 38 start GET /api/slow?tag=button from 127.0.0.1:58886 (0 B body, outstanding 1)
+11:32:26.059495 req 38 handler done 200 in 3.002s (outstanding 0)
+11:32:29.732597 req 39 start GET /api/slow?tag=button from 127.0.0.1:58886 (0 B body, outstanding 1)
+11:32:32.734328 req 39 handler done 200 in 3.002s (outstanding 0)
+11:32:35.132540 req 40 start GET /api/slow?tag=button from 127.0.0.1:58886 (0 B body, outstanding 1)
+11:32:38.134326 req 40 handler done 200 in 3.002s (outstanding 0)
+11:32:48.837009 req 41 start GET /api/headers from 127.0.0.1:58886 (0 B body, outstanding 1)
+11:32:48.837066 req 41 handler done 200 in 0s (outstanding 0)
+11:32:48.839447 req 42 start GET /api/headers from 127.0.0.1:58886 (0 B body, outstanding 1)
+11:32:48.839507 req 42 handler done 200 in 0s (outstanding 0)
+11:33:41.387475 req 43 start GET /api/slow?tag=button from 127.0.0.1:58886 (0 B body, outstanding 1)
+11:33:44.389782 req 43 handler done 200 in 3.002s (outstanding 0)
+11:33:49.372262 navigation refused kind=0 uri=https://example.com/
+11:33:50.876074 req 44 start POST /api/report from 127.0.0.1:40500 (88 B body, outstanding 1)
+11:33:50.876191 report: [loopback] origin: still on the fixture 1.5 s after location.href = https://example.com/
+11:33:50.876208 req 44 handler done 204 in 0s (outstanding 0)
+11:34:01.647211 req 45 start GET /api/slow?tag=button from 127.0.0.1:58886 (0 B body, outstanding 1)
+11:34:02.749491 fixture: /api/slow tag="button" saw cancellation: context canceled
+11:34:02.749635 req 45 handler canceled (context canceled), returned 503 in 1.102s (outstanding 0)
+11:34:02.750871 load event=0 uri=http://127.0.0.1:43067/
+11:34:02.751414 req 46 start GET / from 127.0.0.1:50804 (0 B body, outstanding 1)
+11:34:02.751578 req 46 handler done 200 in 0s (outstanding 0)
+11:34:02.761533 load event=2 uri=http://127.0.0.1:43067/
+11:34:02.772204 req 47 start GET /app.css from 127.0.0.1:50804 (0 B body, outstanding 1)
+11:34:02.772263 req 47 handler done 200 in 0s (outstanding 0)
+11:34:02.773526 req 48 start GET /app.js from 127.0.0.1:50818 (0 B body, outstanding 1)
+11:34:02.773814 req 48 handler done 200 in 0s (outstanding 0)
+11:34:02.783178 req 49 start POST /api/report from 127.0.0.1:50828 (51 B body, outstanding 1)
+11:34:02.783258 report: [loopback] loaded / (assets app.css ✓ app.js ✓)
+11:34:02.783280 req 49 handler done 204 in 0s (outstanding 0)
+11:34:02.785263 load event=3 uri=http://127.0.0.1:43067/
+11:34:02.790939 javascript: {"origin":"http://127.0.0.1:43067","secure":true,"crypto":true,"storage":"yes"}
+11:34:09.966637 req 50 start GET /api/slow?tag=button from 127.0.0.1:50818 (0 B body, outstanding 1)
+11:34:10.982074 closing: window close; native requests=0 async=0 handlers=0
+11:34:10.982162 fixture: /api/slow tag="button" saw cancellation: context canceled
+11:34:10.982239 req 50 handler canceled (context canceled), returned 503 in 1.016s (outstanding 0)
+11:34:11.005443 closed: requests=0 native-async=0 handlers=0 stats={Started:0 Finished:0 Canceled:0 Dropped:0 Refused:0}
+free(): corrupted unsorted chunks

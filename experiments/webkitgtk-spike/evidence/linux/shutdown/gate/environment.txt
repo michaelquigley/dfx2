@@ -1,0 +1,7 @@
+WebKitGTK, GTK, Soup versions:
+2.52.6
+3.24.52
+3.6.6
+session=wayland
+GDK_BACKEND=default
+go version go1.27.1 linux/amd64

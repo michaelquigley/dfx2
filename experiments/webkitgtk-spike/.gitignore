@@ -1,2 +1,3 @@
 /dfx2-webkitgtk-spike
 *.exe
+__pycache__/

@@ -53,6 +53,10 @@ func installCallbacks() {
 		case tokenLoad:
 			log.Printf("load event=%d uri=%s", arg, n.webkitWebViewGetURI(object))
 			if arg == 3 && !h.closing {
+				if h.c.exerciseExit && !h.exercising {
+					h.exercising = true
+					h.exerciseExit()
+				}
 				h.evaluate(`JSON.stringify({origin:location.origin,secure:isSecureContext,crypto:!!crypto.subtle,storage:(()=>{try{sessionStorage.setItem('probe','yes');return sessionStorage.getItem('probe')}catch(e){return String(e)}})()})`)
 			}
 		case tokenProcess:
@@ -133,6 +137,7 @@ type request struct {
 	input          adapt.Request
 }
 type host struct {
+	exercising                        bool
 	c                                 config
 	ctx                               context.Context
 	cancel                            context.CancelFunc
@@ -203,7 +208,7 @@ func runHost(c config) error {
 		n.webkitWebContextRegisterURIScheme(h.webctx, "dfx2", callbacks.two, tokenScheme, 0)
 	}
 	h.window = n.gtkWindowNew(0)
-	n.gtkWindowSetTitle(h.window, "dfx2 WebKitGTK spike — "+c.mode)
+	n.gtkWindowSetTitle(h.window, fmt.Sprintf("dfx2 WebKitGTK %d.%d.%d — %s", n.webkitGetMajorVersion(), n.webkitGetMinorVersion(), n.webkitGetMicroVersion(), c.mode))
 	n.gtkWindowSetDefaultSize(h.window, int32(c.width), int32(c.height))
 	h.view = n.webkitWebViewNewWithContext(h.webctx)
 	settings := n.webkitWebViewGetSettings(h.view)
@@ -235,15 +240,29 @@ func runHost(c config) error {
 	}
 	n.webkitWebViewLoadURI(h.view, uri)
 	if c.devtools {
-		n.webkitWebInspectorShow(n.webkitWebViewGetInspector(h.view))
+		inspector := n.webkitWebViewGetInspector(h.view)
+		n.webkitWebInspectorShow(inspector)
+		if c.dockDevtools {
+			h.after(1500*time.Millisecond, func() {
+				n.webkitWebInspectorAttach(inspector)
+				log.Printf("inspector attached=%t", n.webkitWebInspectorIsAttached(inspector) != 0)
+			})
+		}
 	}
 	h.after(c.quitAfter, func() {
 		if c.snapshot != "" {
 			h.snapshot()
 		} else {
-			h.close("timed exit")
+			if c.windowClose {
+				n.gtkWindowClose(h.window)
+			} else {
+				h.close("timed exit")
+			}
 		}
 	})
+	if c.exerciseExit && c.quitAfter > time.Second {
+		h.after(c.quitAfter-time.Second, func() { h.evaluate(`slow('exit'); 'slow before exit'`) })
+	}
 	h.after(c.breakListener, func() { log.Print("audition: breaking loopback listener"); h.listener.Close() })
 	h.after(c.resizeAfter, func() {
 		log.Print("audition: resize")
@@ -419,6 +438,10 @@ func (h *host) close(why string) {
 	h.post.close()
 	n.gCancellableCancel(h.cancellable)
 	n.webkitWebViewStopLoading(h.view)
+	if h.c.closeInspector {
+		log.Print("audition: explicitly closing inspector")
+		n.webkitWebInspectorClose(n.webkitWebViewGetInspector(h.view))
+	}
 	n.gtkWidgetHide(h.window)
 	for id, req := range h.pending {
 		h.finish(req, closedResponse())
@@ -468,4 +491,29 @@ func (h *host) snapshot() {
 		h.close("snapshot and timed exit")
 	})
 	n.webkitWebViewGetSnapshot(h.view, 0, 0, h.cancellable, callbacks.three, token)
+}
+
+// Diagnostic workload only. Timers and scripts stop with the window lifetime.
+func (h *host) exerciseExit() {
+	h.evaluate(`(async()=>{
+ for(let i=0;i<12;i++) {
+  await runAll();
+  const inputs=document.querySelectorAll('input,textarea');
+  for(const input of inputs){input.focus();input.value='exit investigation '+i;}
+  window.scrollTo(0,document.body.scrollHeight);await sleep(250);
+  window.scrollTo(0,0);await sleep(250);
+ }
+ report('exit exercise completed');
+ })(); 'exit exercise started'`)
+	var resize func(int)
+	resize = func(i int) {
+		if i >= 24 {
+			return
+		}
+		h.after(time.Second, func() {
+			n.gtkWindowResize(h.window, int32(850+(i%3)*100), int32(640+(i%2)*150))
+			resize(i + 1)
+		})
+	}
+	resize(0)
 }

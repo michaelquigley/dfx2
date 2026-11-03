@@ -1,0 +1,42 @@
+Original 2026-11-03 11:36:25 child crash. Exact-build-id debug symbols from debuginfod.ubuntu.com.
+WebKit: 9788492834087d9d0cdd85171ee0da0e43699eb1
+Mesa EGL: 37b258bf6e6801c1214cbc6bd6c26a17b731e7af
+Frame arguments suppressed; no core contents or environment included.
+
+[Switching to thread 9 (Thread 0x737ad77fe6c0 (LWP 298911))]
+#0  syscall () at ../sysdeps/unix/sysv/linux/x86_64/syscall.S:38
+warning: 38	../sysdeps/unix/sysv/linux/x86_64/syscall.S: No such file or directory
+#0  syscall () at ../sysdeps/unix/sysv/linux/x86_64/syscall.S:38
+#1  0x0000737c49f4f9ea in sys_futex (addr1=..., op=..., val1=..., timeout=..., addr2=..., val3=...) at ../src/util/futex.c:43
+#2  futex_wait (addr=..., value=..., timeout=...) at ../src/util/futex.c:55
+#3  0x0000737c49f337ff in simple_mtx_lock (mtx=...) at ../src/util/simple_mtx.h:117
+#4  _eglLockDisplay (dpy=...) at ../src/egl/main/eglapi.c:288
+#5  0x0000737c49f34e59 in eglDestroyContext (dpy=..., ctx=...) at ../src/egl/main/eglapi.c:912
+#6  0x0000737cbad27be7 in ~GLContext () at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WebCore/platform/graphics/egl/GLContext.cpp:335
+#7  0x0000737cbade6faf in operator() () at /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/bits/unique_ptr.h:92
+#8  ~unique_ptr () at /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/bits/unique_ptr.h:398
+#9  ~SkiaGLContext () at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WebCore/platform/graphics/skia/PlatformDisplaySkia.cpp:238
+#10 operator() () at WTF/Headers/wtf/ThreadSafeWeakPtr.h:95
+#11 strongDeref<WebCore::SkiaGLContext, (WTF::DestructionThread)0> () at WTF/Headers/wtf/ThreadSafeWeakPtr.h:110
+#12 0x0000737cb184821f in __GI___call_tls_dtors () at ./stdlib/cxa_thread_atexit_impl.c:156
+#13 0x0000737cb18a3c8b in start_thread (arg=...) at ./nptl/pthread_create.c:459
+#14 0x0000737cb19375cc in __GI___clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+[Switching to thread 1 (Thread 0x737cafaa7dc0 (LWP 298295))]
+#0  __pthread_kill_implementation (threadid=..., signo=..., no_tid=...) at ./nptl/pthread_kill.c:44
+warning: 44	./nptl/pthread_kill.c: No such file or directory
+#0  __pthread_kill_implementation (threadid=..., signo=..., no_tid=...) at ./nptl/pthread_kill.c:44
+#1  __pthread_kill_internal (threadid=..., signo=...) at ./nptl/pthread_kill.c:89
+#2  __GI___pthread_kill (threadid=..., signo=...) at ./nptl/pthread_kill.c:100
+#3  0x0000737cb1845b7e in __GI_raise (sig=...) at ../sysdeps/posix/raise.c:26
+#4  0x0000737cb18288ec in __GI_abort () at ./stdlib/abort.c:77
+#5  0x0000737cb1829979 in __libc_message_impl (vma_name=..., fmt=...) at ../sysdeps/posix/libc_fatal.c:138
+#6  0x0000737cb18b08ac in __libc_message_wrapper (vmaname=..., fmt=...) at ../include/stdio.h:203
+#7  malloc_printerr (str=...) at ./malloc/malloc.c:5341
+#8  0x0000737cb18b22e4 in _int_free_create_chunk (av=..., p=..., size=..., nextchunk=..., nextsize=...) at ./malloc/malloc.c:4483
+#9  _int_free_merge_chunk (av=..., p=..., size=...) at ./malloc/malloc.c:4444
+#10 0x0000737cb18b23b4 in _int_free_chunk (av=..., p=..., size=..., have_lock=...) at ./malloc/malloc.c:4368
+#11 0x0000737cb1848528 in __run_exit_handlers (status=..., listp=..., run_list_atexit=..., run_dtors=...) at ./stdlib/exit.c:133
+#12 0x0000737cb18486be in __GI_exit (status=...) at ./stdlib/exit.c:148
+#13 0x0000737cb182a608 in __libc_start_call_main (main=..., argc=..., argv=...) at ../sysdeps/nptl/libc_start_call_main.h:83
+#14 0x0000737cb182a718 in __libc_start_main_impl (main=..., argc=..., argv=..., init=..., fini=..., rtld_fini=..., stack_end=...) at ../csu/libc-start.c:360
+#15 0x00005997f62fe085 in ?? ()

@@ -29,16 +29,19 @@ The runtime prints JavaScriptCore's warning about replacing Go's SIGUSR1 handler
 CGO_ENABLED=0 go test ./...
 CGO_ENABLED=0 go vet ./...
 CGO_ENABLED=0 go test dfx2webview2spike/adapt dfx2webview2spike/fixture
-python3 audition.py /tmp/dfx2-webkitgtk-spike /tmp/webkit-audition
+python3 -B -m unittest -v test_exitwatch
+python3 -B audition.py /tmp/dfx2-webkitgtk-spike /tmp/webkit-audition
 ```
 
-The shared fixture tests need local sockets. The audition needs the desktop, Python 3, `ss`, `pkg-config`, and Go. It opens real windows sequentially, writes logs and WebKit-rendered PNGs, and fails on missing observations, wrong exit codes, GLib criticals or browser-check failures. The PNGs show web content, not window-manager decorations or proof of minimize behavior.
+The shared fixture tests need local sockets. The audition needs the desktop, Python 3, `ss`, `pkg-config`, and Go. It opens real windows sequentially, writes logs and WebKit-rendered PNGs, and fails on missing observations, wrong exit codes, GLib criticals or browser-check failures. Its Linux child subreaper also waits after host exit, records adopted-child statuses, and rejects observed browser-child failures and late allocator diagnostics. The PNGs show web content, not window-manager decorations or proof of minimize behavior.
 
 Recorded evidence lives in [`evidence/linux/`](evidence/linux/). Both modes pass **14/14** checks. The driver covers reload, close with a handler pending, SIGTERM with a handler pending, close during startup, and listener failure. The in-process-only `-close-reading` case closes with a real Gio body read pending, to exercise asynchronous cancellation and reference cleanup. `-resize-after` requests a resize, minimize and restore; a compositor may ignore those requests. Final screenshots were visually inspected.
 
-The logs distinguish the lifetime contracts: abort/reload cancels loopback handlers; the in-process handler keeps running. Closing cancels both. Every recorded case drains tracked native requests, async operations, and handler workers. These counters are ownership checks, not a leak-detector result.
+The logs distinguish the lifetime contracts: abort/reload cancels loopback handlers; the in-process handler keeps running. Closing cancels both. Every recorded case drains tracked native requests, async operations, and handler workers. These counters are ownership checks, not a leak-detector result or proof of clean browser-child exit. The original driver waited only for the Go host; the current driver adds descendant observation and docked-inspector cases. Its fourteen-case results are in [`evidence/linux/shutdown/gate/`](evidence/linux/shutdown/gate/).
 
-The loopback listener is visible in `ss`; the in-process host owns no TCP listener. Browser-child sockets were not surveyed. Keyboard focus, Tab, scrolling, manual window-manager interaction, inspector presentation, mixed DPI, X11, multiple windows, and browser-process failure remain unauditioned.
+The loopback listener is visible in `ss`; the in-process host owns no TCP listener. Browser-child sockets were not surveyed. Michael subsequently auditioned interaction and inspector presentation: everything seemingly worked, but **both modes produced a WebKitWebProcess heap-corruption crash on exit with a docked inspector**. See the [manual evidence](evidence/linux/manual/README.md). The [shutdown investigation](evidence/linux/shutdown/README.md) symbolized the original core and found a strong match for WebKit's fixed graphics-exit race. Neither the installed 2.52.6 nor isolated 2.54.2 libraries crashed in the repeat manual comparison, so the remedy remains unconfirmed. Default host teardown is unchanged. Mixed DPI, X11, multiple windows and crash recovery remain unauditioned.
+
+For focused exit investigations, use `exitwatch.py` around the executable. `-dock-devtools` opens and docks the inspector; titles include the runtime version. `-exercise-exit` repeats page checks and synthetic focus/scroll/resize work. `-window-close` makes timed exit go through GTK's delete event, and `-close-inspector` explicitly closes devtools before destroying the window as a diagnostic comparison only. Commands and observer limitations are in the investigation report.
 
 ## Transport and lifetime
 

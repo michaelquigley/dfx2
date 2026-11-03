@@ -13,7 +13,21 @@ dfx2 drops Dear ImGui and cgo. It draws native UI itself and shows web UI in the
 
 **Programming model and first application.** Source compatibility with dfx or dfw is not a goal. Preserve the immediate-mode programming model, with a smoother, more idiomatic Go API. Sessionmixer is the first real application that will guide the native UI work.
 
+The next design discussion is the [application and UI foundation proposal](foundation.md): shared application/window lifetime, a synthetic mixer API, explicit webview transports, and an implementation sequence. Choices not recorded under Decisions below remain proposals.
+
 ## Decisions
+
+**Native and webview windows coexist in one application.** An application can open immediate-mode native windows and webview windows together, sharing the event loop, lifecycle machinery and application services. Closing one window leaves the others running. Initially each window has one content type; embedding webviews alongside native controls inside the same window is deferred.
+
+**Application lifetime has two explicit modes.** A window application begins shutdown when its last window closes. A resident application keeps running with no windows until explicitly quit, supporting background services and future tray integration. Closing a window cancels only its owned work; application-owned shared services live until application shutdown. Shutdown cancels owned work, continues pumping native cleanup callbacks, and returns from `Run` after cleanup completes. Cancellation is cooperative: stuck work must remain visible as outstanding, not be reported as cleaned up.
+
+**Application values and widget interaction state have separate owners.** Applications own values such as gain, mute and meter readings. Widgets retain focus, capture and drag state, associated with stable keys. A widget receives the current value and returns changes caused by user input; an external value update requests a redraw without becoming another user command. Ordinary Go functions compose the interface, without a required `Component` base type or framework-owned application-state container. Exact API spelling remains open.
+
+**Layout starts with measured rows and columns.** Scoped callbacks express nesting, and ordinary helper functions compose their contents. The framework measures and positions controls using gaps, padding, minimum/maximum sizes and flexible space, in logical units. Grid and absolute positioning wait for a concrete interface that needs them. Exact API spelling remains open.
+
+**Frames run on demand, including animation.** Input, resize, scale changes and explicit invalidation request frames; pending invalidations coalesce around the latest published state. Active animations request subsequent frames through a shared per-window scheduler, paced to the display where supported. Progress uses monotonic elapsed time rather than frame counts. Once activity settles, the window has no permanent redraw timer. Animation retains presentation state under stable control keys without changing application values or generating user commands; direct dragging follows the pointer immediately. Hidden or minimized windows can suspend drawing and catch up when shown. The view runs once per frame; layout or rendering retries reuse recorded output, and consumed input is not replayed.
+
+**Webview transport is explicit.** Keep ordinary Go `http.Handler` as the endpoint boundary. Choose in-process dispatch for finite buffered requests/responses with defined limits, an owned loopback server for normal HTTP facilities, or attachment to an existing server whose lifetime remains independent. Never fall back automatically between transports. Closing a window cancels work owned by its endpoint; the initial in-process contract does not promise handler cancellation on fetch abort or page reload. Detailed limits, origin policy and API spelling remain open.
 
 **A repository of its own; dfx stays maintained.** dfx2 is built here, while dfx (and dfw) keep being maintained until every product has migrated. There's no in-place rewrite of dfx.
 
@@ -28,13 +42,14 @@ dfx2 drops Dear ImGui and cgo. It draws native UI itself and shows web UI in the
 
 Keep the boundary as if the layer were separate: platform packages never import UI packages. Enforce that with an import test, so splitting it out later is mechanical.
 
+**The platform implementation is private.** Keep GTK, Win32, COM, native callbacks, browser bindings and dispatch machinery under `internal/`. The public surfaces are `dfx2` for application/window lifetime and UI-thread posting, `ui` for immediate-mode controls/layout/animation, and `webview` for handler-backed or existing-URL windows. Native-only applications must not load WebKit or WebView2. Add a narrow native-handle escape hatch only when a real integration needs it, with explicit thread and lifetime rules; a public platform package would need a concrete consumer.
+
 **Text has two workable paths.** A pure-Go engine (go-text plus our own slight hinting) looks nearly identical to GTK's text at UI sizes on the target desktop. A Pango engine can sit behind the same seam. See [text.md](text.md).
 
 **mygo is a source of ideas, not a dependency.** dfx2 doesn't adopt mygo and doesn't copy its code. Its ideas are rebuilt here where they earn a place. [mygo-study.md](mygo-study.md) records them.
 
 ## Open questions
 
-- **`internal/` or public platform packages.** The recommendation is `internal/`, with narrow public escape hatches: a window's native handle (documented as main thread only, not to be destroyed) and a public `OnMain(func())`. Promote a package to public only when a real consumer asks. Moving from `internal/` to public breaks no one; the reverse breaks everyone. If they're public from the start, keep the callback registry and the main-thread queue private, and have development builds check that bindings run on the main thread.
 - **Which ideas earn a place, and in what order.** [mygo-study.md](mygo-study.md) lists them roughly in build order. The text stack is the furthest along.
 - **The default text engine:** pure Go or Pango, and whether the engine is pluggable. Also whether LCD (subpixel) antialiasing matters. The target desktop uses it, but the hinted pure-Go engine without it already looked nearly identical.
 - **Where line breaking lives.** The recommendation is shared code, over shaped runs, with break opportunities from go-text's `segmenter`. That keeps "shape once, rewrap at any width" for every engine.

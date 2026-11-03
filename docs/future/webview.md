@@ -107,7 +107,7 @@ The [Linux experiment](../../experiments/webkitgtk-spike/README.md) reuses the W
 
 WebKitGTK 2.52.6 (4.1/Soup 3 ABI), GTK 3.24.52, Soup 3.6.6; Go 1.27.1 linux/amd64. The desktop session is Wayland, with GTK's default backend and scale factor 1. X11 and scale changes were not tested. Runtime loading needs WebKit 2.40 or later for the request-body API.
 
-The [evidence directory](../../experiments/webkitgtk-spike/evidence/linux/) contains logs, application-listener observations and two WebKit snapshots. The [driver](../../experiments/webkitgtk-spike/audition.py) executes actual native windows and asserts the observations below. The two screenshots were visually inspected; this was an automated audition, **not a manual audition by Michael**. Resize/minimize/restore calls were issued; screenshots establish the resized content, not compositor acceptance of minimization.
+The [evidence directory](../../experiments/webkitgtk-spike/evidence/linux/) contains logs, application-listener observations and two WebKit snapshots. The [driver](../../experiments/webkitgtk-spike/audition.py) executes actual native windows and asserts the observations below. The two screenshots were visually inspected; that first run was automated. Resize/minimize/restore calls were issued; screenshots establish the resized content, not compositor acceptance of minimization. Michael's subsequent hands-on audition found a browser-child crash on exit; see below.
 
 `go test ./...` and `go vet ./...` passed in the new module. The shared `adapt` and `fixture` tests passed too, with loopback permission for the fixture's real HTTP server. Terminus review could not start: the canon has no `projects/dfx2/rubric.yaml`. There is no code-review verdict.
 
@@ -125,7 +125,31 @@ The [evidence directory](../../experiments/webkitgtk-spike/evidence/linux/) cont
 | Navigation | New windows return null; outside navigation refused | Same |
 | Headers and limits | Repeated custom header becomes `one, two`; UTF-8 header reads `cafÃ©`; >1 MiB request gets 413 and response gets 502; subsequent requests succeed | Same header observations; larger bodies served normally |
 
-All twelve driver scenarios passed. Every run ended with zero tracked native requests, zero native async operations and zero dispatcher handlers; loopback server shutdown also completed. This is explicit ownership accounting, not a leak-detector result. The two busy-close runs took about 10–27 ms from the closing log to the closed log. No GLib critical was logged.
+All twelve driver scenarios passed their host-level assertions. Every run ended with zero tracked native requests, zero native async operations and zero dispatcher handlers; loopback server shutdown also completed. This is explicit ownership accounting, not a leak-detector result or a browser-child exit check. The two busy-close runs took about 10–27 ms from the closing log to the closed log. No GLib critical was logged.
+
+### Hands-on audition: interaction works, child shutdown fails
+
+Michael reported that everything seemingly worked fine through the supplied interaction checklist, but GNOME reported `WebKitWebProcess stopped unexpectedly` when he exited each application. Devtools was docked in the main window. The [manual logs and diagnostic evidence](../../experiments/webkitgtk-spike/evidence/linux/manual/README.md) preserve the result: both modes report 14/14 checks, cancel the pending Slow handler on window close, and drain tracked host work, then emit `free(): corrupted unsorted chunks`. Apport's retained report identifies a WebKitWebProcess child aborting during process-exit handlers. **Shutdown is not clean.**
+
+His inspector captures show `X-Spike-Repeat: one, two` and `X-Spike-Unicode: cafÃ©` in both modes. Loopback additionally displays the HTTP status line, `Content-Length: 69`, and `Date`; in-process does not display those fields. This establishes the inspector presentation, not cookie semantics or raw header-line fidelity.
+
+Eight short follow-ups, including Go runs with inspector/checks/resize and a minimal PyGObject comparison with a docked inspector, did not reproduce SIGABRT. A supervisor observed descendant exits after the host exited; some adopted children received SIGKILL and were not classified by role. This is limited negative evidence, not a successful reproduction or a clean-shutdown claim.
+
+WebKit's [graphics-teardown fix](https://github.com/WebKit/WebKit/commit/e0b1fddaa46813e6b7165037198bb7c34768c1f6) for [305909](https://bugs.webkit.org/show_bug.cgi?id=305909) and related [315577](https://bugs.webkit.org/show_bug.cgi?id=315577) is a credible lead. The upstream 2.52.6 tag has the earlier exit-handler path, and the installed Ubuntu package predates the fix. Our stack shows where heap corruption was detected, not its source: **the upstream cause remains unconfirmed**. No runtime replacement or speculative host workaround was applied. Cached apt metadata offers the installed version as the candidate; no package index refresh was performed.
+
+The [follow-up card](roadmap/resolve-webkitgtk-child-process-crash-on-exit.md) calls for isolating this failure and covering child exits in the audition. The original driver only waits for the host and reads its log immediately, so it can miss a child crash after its checks complete. This issue is separate from JSC's signal-handler collision.
+
+### Shutdown investigation: strong runtime diagnosis, unconfirmed remedy
+
+The subsequent [investigation and retained evidence](../../experiments/webkitgtk-spike/evidence/linux/shutdown/README.md) considerably strengthen the runtime diagnosis. Exact-build-id Ubuntu symbols identify a second thread in the original core destroying `SkiaGLContext` → `GLContext` → `eglDestroyContext` from its thread-local destructor, while the main thread detects corruption in process-exit cleanup. That is the mechanism addressed by the upstream graphics-teardown fix. The corrupting write itself was not captured, so the conclusion is strong evidence of that race rather than a causally isolated proof.
+
+Longer automated runs (90 and 70 seconds with twelve check rounds and repeated resizing) did not reproduce it. Michael then repeated the manual sequence in version-labelled loopback windows using installed 2.52.6 and isolated 2.54.2 libraries. He reported **“Neither version crashes.”** Both hosts and their observed WebKit web processes exited 0. The comparison confirms that the new libraries work on this fixture, but cannot prove the remedy: the old version also passed.
+
+No system packages changed. The 2.54.2 Debian packages and missing dependencies were checksum-verified and extracted under `/tmp`; observed library mappings confirm their use in the host and browser children. System helper executable stubs remained in use. This mixed-distribution library comparison is a diagnostic setup, not a production distribution proposal. The source for 2.54.2 includes the identified fix.
+
+The current audition now observes descendants after host exit and retains their identities, library mappings and adopted-child wait statuses. It rejects observed child failures and late fatal diagnostics; only identified `bwrap` helper SIGKILL exits are exempted, with those statuses still recorded. Four tests cover successful and failed orphans, unexplained SIGKILL, and late allocator errors after successful host exit. The expanded native matrix has fourteen cases, including docked-inspector busy close in both modes. Already-reaped descendant statuses remain unavailable; this is improved coverage, not universal leak/crash detection.
+
+**Disposition:** keep the default host shutdown order. An explicit inspector-first diagnostic also passed, but there is no evidence that it is a remedy. Production Linux webview validation should use a supported runtime containing the graphics-teardown fixes and retain child-exit checks. The roadmap item remains open for confirming that remedy on this host; neither sleep nor suppressed diagnostics nor disabled graphics was adopted. The JSC signal collision remains a separate prerequisite.
 
 ### What carries into the design
 
@@ -141,4 +165,4 @@ All twelve driver scenarios passed. Every run ended with zero tracked native req
 
 **JavaScriptCore signal coexistence is unfinished.** Every native run logs JSC replacing the existing signal-10 handler. dfw already studies an optional private `JSConfigureSignalForGC` entry point and selection of an unused real-time signal. That implementation uses cgo, so it was not pulled into this experiment. A no-cgo solution needs its own validation before production use; neither hard-coding a signal nor hiding the warning resolves ownership.
 
-Still untested: manual focus/typing/Tab/scrolling, inspector presentation, mixed DPI, X11, multiple windows, web-process crash recovery, cookies, redirects/authentication, streaming/SSE, WebSockets and aggregate load limits.
+Still untested: mixed DPI, X11, multiple windows, web-process crash recovery, cookies, redirects/authentication, streaming/SSE, WebSockets and aggregate load limits. Manual interaction and inspector presentation have been auditioned; the exit crash remains unresolved.

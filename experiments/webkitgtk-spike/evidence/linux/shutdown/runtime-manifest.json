@@ -1,0 +1,74 @@
+{
+  "mirror": "https://deb.debian.org/debian/",
+  "packages": [
+    {
+      "Package": "libwebkit2gtk-4.1-0",
+      "Version": "2.54.2-2",
+      "Filename": "pool/main/w/webkit2gtk/libwebkit2gtk-4.1-0_2.54.2-2_amd64.deb",
+      "SHA256": "ef327f840d3f9ee0d729297b54f66e3e217c0b733da5f01e75537097fce0f09c"
+    },
+    {
+      "Package": "libjavascriptcoregtk-4.1-0",
+      "Version": "2.54.2-2",
+      "Filename": "pool/main/w/webkit2gtk/libjavascriptcoregtk-4.1-0_2.54.2-2_amd64.deb",
+      "SHA256": "fe5d6a8c958daee505174d112afdcd313806b3e0241e41b52c80c8e2b61bd8a6"
+    },
+    {
+      "Package": "libavif16",
+      "Version": "1.4.2-1",
+      "Filename": "pool/main/liba/libavif/libavif16_1.4.2-1_amd64.deb",
+      "SHA256": "44b9a2d151b1bdc95aab81c54daa3f9d12b042c469744572614e3e77527fbf7b",
+      "Depends": "libaom3 (>= 3.2.0), libc6 (>= 2.34), libdav1d7 (>= 0.1.0), libgav1-2 (>= 0.18.0), librav1e0.8 (>= 0.5.1), libsvtav1enc4 (>= 4.0.1), libyuv0 (>= 0.0.1922)"
+    },
+    {
+      "Package": "libjpeg62-turbo",
+      "Version": "1:3.1.3-4",
+      "Filename": "pool/main/libj/libjpeg-turbo/libjpeg62-turbo_3.1.3-4_amd64.deb",
+      "SHA256": "402b02ea2f4aaf8922343e4c08c374cf07f26fb88323f87e1047ec475b3f12b5",
+      "Depends": "libc6 (>= 2.38)"
+    },
+    {
+      "Package": "libmanette-0.2-0",
+      "Version": "0.2.13-1+b1",
+      "Filename": "pool/main/libm/libmanette/libmanette-0.2-0_0.2.13-1+b1_amd64.deb",
+      "SHA256": "db2866609c8927eeee9a40d77212cee1bb93ece143a6c905599f716b527f7488",
+      "Depends": "libc6 (>= 2.38), libevdev2 (>= 1.4.5), libglib2.0-0t64 (>= 2.80.0), libgudev-1.0-0 (>= 146), libhidapi-hidraw0 (>= 0.13.0)"
+    },
+    {
+      "Package": "libhidapi-hidraw0",
+      "Version": "0.15.0-2+b2",
+      "Filename": "pool/main/h/hidapi/libhidapi-hidraw0_0.15.0-2+b2_amd64.deb",
+      "SHA256": "a3d7343c8998953dd79f049faad99d429bb33dc411a61269f89d3517e737eb90",
+      "Depends": "libc6 (>= 2.38), libudev1 (>= 183)"
+    },
+    {
+      "Package": "libgav1-2",
+      "Version": "0.20.0-2+b2",
+      "Filename": "pool/main/libg/libgav1/libgav1-2_0.20.0-2+b2_amd64.deb",
+      "SHA256": "d3aa4dc7ff62ad7c71c76ff86e3dca06e008b5235a90ec5952b11ff53add500c",
+      "Depends": "libabsl20260526 (>= 20260526.0-0~), libc6 (>= 2.34), libgcc-s1 (>= 3.3.1), libstdc++6 (>= 12)"
+    },
+    {
+      "Package": "libyuv0",
+      "Version": "0.0.1974.20261008-1",
+      "Filename": "pool/main/liby/libyuv/libyuv0_0.0.1974.20261008-1_amd64.deb",
+      "SHA256": "8e01a507764361ed8500c46f49e9142b08c9f8e7eebd7b511ebf2f5102fb7acf",
+      "Depends": "libc6 (>= 2.14), libgcc-s1 (>= 3.0), libjpeg62-turbo (>= 1.3.1), libstdc++6 (>= 4.1.1)"
+    },
+    {
+      "Package": "libsvtav1enc4",
+      "Version": "4.2.0+dfsg-3",
+      "Filename": "pool/main/s/svt-av1/libsvtav1enc4_4.2.0+dfsg-3_amd64.deb",
+      "SHA256": "7844a846c1adf1f32072c53f28e8f36715b02adff944ac06928055d38da21acf",
+      "Depends": "libc6 (>= 2.43)"
+    },
+    {
+      "Package": "libabsl20260526",
+      "Version": "20260526.0-2+b1",
+      "Filename": "pool/main/a/abseil/libabsl20260526_20260526.0-2+b1_amd64.deb",
+      "SHA256": "951c69d645eea81e17d908ff3f79b6d70a33346f65ba283d564cdab07b660952",
+      "Depends": "libc6 (>= 2.38), libgcc-s1 (>= 3.4), libstdc++6 (>= 13.1)"
+    }
+  ],
+  "package_index_sha256": "d3b6fdd270e268da2de8328e4c1602f6aa67b6bd704d2098e1ba778fe1e1bc4c"
+}

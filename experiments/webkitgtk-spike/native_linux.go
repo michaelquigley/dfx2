@@ -12,46 +12,50 @@ import (
 // Signatures/ownership checked against the installed GTK 3, WebKit2-4.1,
 // GLib/Gio and Soup-3.0 headers and GIR. Runtime loading needs no headers.
 var n struct {
-	gtkInitCheck                                                            func(uintptr, uintptr) int32
-	gtkWindowNew                                                            func(int32) uintptr
-	gtkWindowSetTitle                                                       func(uintptr, string)
-	gtkWindowSetDefaultSize                                                 func(uintptr, int32, int32)
-	gtkWindowResize                                                         func(uintptr, int32, int32)
-	gtkWindowIconify, gtkWindowDeiconify                                    func(uintptr)
-	gtkContainerAdd                                                         func(uintptr, uintptr)
-	gtkWidgetShowAll, gtkWidgetHide, gtkWidgetDestroy, gtkWidgetGrabFocus   func(uintptr)
-	gtkWidgetGetScaleFactor                                                 func(uintptr) int32
-	gtkMain, gtkMainQuit                                                    func()
-	gSignalConnectData                                                      func(uintptr, string, uintptr, uintptr, uintptr, int32) uint64
-	gObjectRef                                                              func(uintptr) uintptr
-	gObjectUnref                                                            func(uintptr)
-	gIdleAddFull                                                            func(int32, uintptr, uintptr, uintptr) uint32
-	gSourceRemove                                                           func(uint32) int32
-	gBytesNew                                                               func(unsafe.Pointer, uintptr) uintptr
-	gBytesGetData                                                           func(uintptr, *uintptr) unsafe.Pointer
-	gBytesUnref                                                             func(uintptr)
-	gMemoryInputStreamNewFromBytes                                          func(uintptr) uintptr
-	gInputStreamReadBytesAsync                                              func(uintptr, uintptr, int32, uintptr, uintptr, uintptr)
-	gInputStreamReadBytesFinish                                             func(uintptr, uintptr, *uintptr) uintptr
-	gCancellableNew                                                         func() uintptr
-	gCancellableCancel                                                      func(uintptr)
-	gErrorFree                                                              func(uintptr)
-	gFree                                                                   func(uintptr)
-	webkitGetMajorVersion, webkitGetMinorVersion, webkitGetMicroVersion     func() uint32
-	webkitWebContextNewEphemeral                                            func() uintptr
-	webkitWebContextGetSecurityManager                                      func(uintptr) uintptr
-	webkitSecurityManagerRegisterURISchemeAsSecure                          func(uintptr, string)
-	webkitSecurityManagerRegisterURISchemeAsCorsEnabled                     func(uintptr, string)
-	webkitWebContextRegisterURIScheme                                       func(uintptr, string, uintptr, uintptr, uintptr)
-	webkitWebViewNewWithContext                                             func(uintptr) uintptr
-	webkitWebViewGetSettings                                                func(uintptr) uintptr
-	webkitSettingsSetEnableDeveloperExtras                                  func(uintptr, int32)
-	webkitSettingsSetJavascriptCanOpenWindowsAutomatically                  func(uintptr, int32)
-	webkitWebViewLoadURI                                                    func(uintptr, string)
-	webkitWebViewStopLoading                                                func(uintptr)
-	webkitWebViewGetURI                                                     func(uintptr) string
-	webkitWebViewGetInspector                                               func(uintptr) uintptr
-	webkitWebInspectorShow                                                  func(uintptr)
+	gtkWindowClose                                                        func(uintptr)
+	gtkInitCheck                                                          func(uintptr, uintptr) int32
+	gtkWindowNew                                                          func(int32) uintptr
+	gtkWindowSetTitle                                                     func(uintptr, string)
+	gtkWindowSetDefaultSize                                               func(uintptr, int32, int32)
+	gtkWindowResize                                                       func(uintptr, int32, int32)
+	gtkWindowIconify, gtkWindowDeiconify                                  func(uintptr)
+	gtkContainerAdd                                                       func(uintptr, uintptr)
+	gtkWidgetShowAll, gtkWidgetHide, gtkWidgetDestroy, gtkWidgetGrabFocus func(uintptr)
+	gtkWidgetGetScaleFactor                                               func(uintptr) int32
+	gtkMain, gtkMainQuit                                                  func()
+	gSignalConnectData                                                    func(uintptr, string, uintptr, uintptr, uintptr, int32) uint64
+	gObjectRef                                                            func(uintptr) uintptr
+	gObjectUnref                                                          func(uintptr)
+	gIdleAddFull                                                          func(int32, uintptr, uintptr, uintptr) uint32
+	gSourceRemove                                                         func(uint32) int32
+	gBytesNew                                                             func(unsafe.Pointer, uintptr) uintptr
+	gBytesGetData                                                         func(uintptr, *uintptr) unsafe.Pointer
+	gBytesUnref                                                           func(uintptr)
+	gMemoryInputStreamNewFromBytes                                        func(uintptr) uintptr
+	gInputStreamReadBytesAsync                                            func(uintptr, uintptr, int32, uintptr, uintptr, uintptr)
+	gInputStreamReadBytesFinish                                           func(uintptr, uintptr, *uintptr) uintptr
+	gCancellableNew                                                       func() uintptr
+	gCancellableCancel                                                    func(uintptr)
+	gErrorFree                                                            func(uintptr)
+	gFree                                                                 func(uintptr)
+	webkitGetMajorVersion, webkitGetMinorVersion, webkitGetMicroVersion   func() uint32
+	webkitWebContextNewEphemeral                                          func() uintptr
+	webkitWebContextGetSecurityManager                                    func(uintptr) uintptr
+	webkitSecurityManagerRegisterURISchemeAsSecure                        func(uintptr, string)
+	webkitSecurityManagerRegisterURISchemeAsCorsEnabled                   func(uintptr, string)
+	webkitWebContextRegisterURIScheme                                     func(uintptr, string, uintptr, uintptr, uintptr)
+	webkitWebViewNewWithContext                                           func(uintptr) uintptr
+	webkitWebViewGetSettings                                              func(uintptr) uintptr
+	webkitSettingsSetEnableDeveloperExtras                                func(uintptr, int32)
+	webkitSettingsSetJavascriptCanOpenWindowsAutomatically                func(uintptr, int32)
+	webkitWebViewLoadURI                                                  func(uintptr, string)
+	webkitWebViewStopLoading                                              func(uintptr)
+	webkitWebViewGetURI                                                   func(uintptr) string
+	webkitWebViewGetInspector                                             func(uintptr) uintptr
+	webkitWebInspectorShow                                                func(uintptr)
+	webkitWebInspectorAttach, webkitWebInspectorClose                     func(uintptr)
+	webkitWebInspectorIsAttached                                          func(uintptr) int32
+
 	webkitWebViewEvaluateJavascript                                         func(uintptr, string, int64, uintptr, uintptr, uintptr, uintptr, uintptr)
 	webkitWebViewEvaluateJavascriptFinish                                   func(uintptr, uintptr, *uintptr) uintptr
 	jscValueToString                                                        func(uintptr) uintptr
@@ -82,7 +86,8 @@ func loadNative() error {
 		bindings map[string]any
 	}{
 		{"libgtk-3.so.0", map[string]any{
-			"gtk_init_check": &n.gtkInitCheck, "gtk_window_new": &n.gtkWindowNew,
+			"gtk_window_close": &n.gtkWindowClose,
+			"gtk_init_check":   &n.gtkInitCheck, "gtk_window_new": &n.gtkWindowNew,
 			"gtk_window_set_title": &n.gtkWindowSetTitle, "gtk_window_set_default_size": &n.gtkWindowSetDefaultSize,
 			"gtk_window_resize": &n.gtkWindowResize, "gtk_window_iconify": &n.gtkWindowIconify, "gtk_window_deiconify": &n.gtkWindowDeiconify,
 			"gtk_container_add": &n.gtkContainerAdd, "gtk_widget_show_all": &n.gtkWidgetShowAll,
@@ -110,6 +115,9 @@ func loadNative() error {
 			"webkit_settings_set_javascript_can_open_windows_automatically": &n.webkitSettingsSetJavascriptCanOpenWindowsAutomatically,
 			"webkit_web_view_load_uri":                                      &n.webkitWebViewLoadURI, "webkit_web_view_stop_loading": &n.webkitWebViewStopLoading,
 			"webkit_web_view_get_uri": &n.webkitWebViewGetURI, "webkit_web_view_get_inspector": &n.webkitWebViewGetInspector,
+			"webkit_web_inspector_attach":                &n.webkitWebInspectorAttach,
+			"webkit_web_inspector_close":                 &n.webkitWebInspectorClose,
+			"webkit_web_inspector_is_attached":           &n.webkitWebInspectorIsAttached,
 			"webkit_web_inspector_show":                  &n.webkitWebInspectorShow,
 			"webkit_web_view_evaluate_javascript":        &n.webkitWebViewEvaluateJavascript,
 			"webkit_web_view_evaluate_javascript_finish": &n.webkitWebViewEvaluateJavascriptFinish,

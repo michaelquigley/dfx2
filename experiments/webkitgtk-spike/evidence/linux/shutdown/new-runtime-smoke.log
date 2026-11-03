@@ -1,0 +1,108 @@
+Overriding existing handler for signal 10. Set JSC_SIGNAL_FOR_GC if you want WebKit to use a different signal
+12:50:20.926629 WebKitGTK 2.54.2 mode=inprocess origin=dfx2://spike scale=1
+12:50:21.094070 load event=0 uri=dfx2://spike/?autorun=checks
+12:50:21.094253 req 1 start GET /?autorun=checks (0 B body, outstanding 1)
+12:50:21.094362 req 1 handler done 200 in 0s (outstanding 0)
+12:50:21.095556 load event=2 uri=dfx2://spike/?autorun=checks
+12:50:21.096084 req 2 start GET /app.css (0 B body, outstanding 1)
+12:50:21.096145 req 2 handler done 200 in 0s (outstanding 0)
+12:50:21.096478 req 3 start GET /app.js (0 B body, outstanding 1)
+12:50:21.096662 req 3 handler done 200 in 0s (outstanding 0)
+12:50:21.178926 req 4 start POST /api/report (67 B body, outstanding 1)
+12:50:21.178998 report: [inprocess] loaded /?autorun=checks (assets app.css ✓ app.js ✓)
+12:50:21.179028 req 4 handler done 204 in 0s (outstanding 0)
+12:50:21.187801 load event=3 uri=dfx2://spike/?autorun=checks
+12:50:21.194857 javascript: {"origin":"dfx2://spike","secure":true,"crypto":true,"storage":"yes"}
+12:50:21.195200 req 5 start GET /api/query?text=h%C3%A9llo+%E2%80%94+%E6%97%A5%E6%9C%AC%E8%AA%9E+%E2%9C%93+%F0%9F%99%82&n=1&n=2&empty= (0 B body, outstanding 1)
+12:50:21.195406 req 5 handler done 200 in 0s (outstanding 0)
+12:50:21.217800 req 6 start POST /api/echo (40 B body, outstanding 1)
+12:50:21.217897 req 6 handler done 200 in 0s (outstanding 0)
+12:50:21.221366 req 7 start POST /api/echo (65536 B body, outstanding 1)
+12:50:21.221731 req 7 handler done 200 in 0s (outstanding 0)
+12:50:21.223176 req 8 start GET /api/binary (0 B body, outstanding 1)
+12:50:21.223238 req 8 handler done 200 in 0s (outstanding 0)
+12:50:21.224217 req 9 start GET /api/headers (0 B body, outstanding 1)
+12:50:21.224298 req 9 handler done 200 in 0s (outstanding 0)
+12:50:21.225041 req 10 start GET /api/headers (0 B body, outstanding 1)
+12:50:21.225107 req 10 handler done 200 in 0s (outstanding 0)
+12:50:21.226542 req 11 start GET /api/status/404 (0 B body, outstanding 1)
+12:50:21.226725 req 11 handler done 404 in 0s (outstanding 0)
+12:50:21.230135 req 12 start GET /api/status/500 (0 B body, outstanding 1)
+12:50:21.230302 req 12 handler done 500 in 0s (outstanding 0)
+12:50:21.235332 req 13 start GET /no/such/route (0 B body, outstanding 1)
+12:50:21.235429 req 13 handler done 404 in 0s (outstanding 0)
+12:50:21.236929 req 14 start GET /api/slow?tag=race (0 B body, outstanding 1)
+12:50:21.337374 req 15 start GET /api/query?fast=1 (0 B body, outstanding 2)
+12:50:21.337488 req 15 handler done 200 in 0s (outstanding 1)
+12:50:22.430645 inspector attached=true
+12:50:24.238471 req 14 handler done 200 in 3.001s (outstanding 0)
+12:50:24.246325 req 16 start GET /api/slow?tag=abort (0 B body, outstanding 1)
+12:50:24.628950 req 17 start POST /api/echo (1114112 B body, outstanding 2)
+12:50:24.629008 req 17 handler done 413 [request-too-large] (handler not run) (outstanding 1)
+12:50:24.630887 req 18 start GET /api/query?text=h%C3%A9llo+%E2%80%94+%E6%97%A5%E6%9C%AC%E8%AA%9E+%E2%9C%93+%F0%9F%99%82&n=1&n=2&empty= (0 B body, outstanding 2)
+12:50:24.631021 req 18 handler done 200 in 0s (outstanding 1)
+12:50:24.632928 req 19 start GET /api/big (0 B body, outstanding 2)
+12:50:24.633901 fixture: /api/big stopped after 1048576 bytes: adapt: response body exceeds the adapter's 1 MiB limit
+12:50:24.633973 req 19 handler done 502 [response-too-large] in 1ms (outstanding 1)
+12:50:24.635089 req 20 start GET /api/query?text=h%C3%A9llo+%E2%80%94+%E6%97%A5%E6%9C%AC%E8%AA%9E+%E2%9C%93+%F0%9F%99%82&n=1&n=2&empty= (0 B body, outstanding 2)
+12:50:24.635194 req 20 handler done 200 in 0s (outstanding 1)
+12:50:24.636831 new window refused (create)
+12:50:24.637534 new window refused (create)
+12:50:24.638564 req 21 start POST /api/report (68 B body, outstanding 2)
+12:50:24.638621 report: [inprocess] PASS assets: app.css applied: true; app.js running: true
+12:50:24.638637 req 21 handler done 204 in 0s (outstanding 1)
+12:50:24.639480 req 22 start POST /api/report (118 B body, outstanding 2)
+12:50:24.639500 report: [inprocess] PASS query: status 200, text "héllo — 日本語 ✓ 🙂", n=1,2, host spike, custom header query-check
+12:50:24.639517 req 22 handler done 204 in 0s (outstanding 1)
+12:50:24.640379 req 23 start POST /api/report (77 B body, outstanding 2)
+12:50:24.640447 report: [inprocess] PASS post: status 200, 40 B, Content-Length 40, sha256 match true
+12:50:24.640459 req 23 handler done 204 in 0s (outstanding 1)
+12:50:24.641317 req 24 start POST /api/report (94 B body, outstanding 2)
+12:50:24.641340 report: [inprocess] PASS post-binary: status 200, sent 65536 B, handler got 65536 B, sha256 match true
+12:50:24.641350 req 24 handler done 204 in 0s (outstanding 1)
+12:50:24.642043 req 25 start POST /api/report (99 B body, outstanding 2)
+12:50:24.642062 report: [inprocess] PASS binary: status 200, 267/267 B, bytes identical true, type application/octet-stream
+12:50:24.642069 req 25 handler done 204 in 0s (outstanding 1)
+12:50:24.642753 req 26 start POST /api/report (99 B body, outstanding 2)
+12:50:24.642772 report: [inprocess] PASS headers: x-spike-repeat "one, two" (fetch joins repeats), cache-control "no-store"
+12:50:24.642780 req 26 handler done 204 in 0s (outstanding 1)
+12:50:24.643407 req 27 start POST /api/report (86 B body, outstanding 2)
+12:50:24.643431 report: [inprocess] INFO header-utf8: handler sent "café" as UTF-8 bytes; page sees "cafÃ©"
+12:50:24.643442 req 27 handler done 204 in 0s (outstanding 1)
+12:50:24.644004 req 28 start POST /api/report (81 B body, outstanding 2)
+12:50:24.644024 report: [inprocess] PASS s404: status 404 Not Found, body {"from":"handler","status":404}
+12:50:24.644033 req 28 handler done 204 in 0s (outstanding 1)
+12:50:24.644600 req 29 start POST /api/report (93 B body, outstanding 2)
+12:50:24.644631 report: [inprocess] PASS s500: status 500 Internal Server Error, body {"from":"handler","status":500}
+12:50:24.644641 req 29 handler done 204 in 0s (outstanding 1)
+12:50:24.645207 req 30 start POST /api/report (97 B body, outstanding 2)
+12:50:24.645227 report: [inprocess] PASS unknown: status 404, body "404 page not found\n", type text/plain; charset=utf-8
+12:50:24.645236 req 30 handler done 204 in 0s (outstanding 1)
+12:50:24.645912 req 31 start POST /api/report (60 B body, outstanding 2)
+12:50:24.645930 report: [inprocess] PASS race: fast@101ms then slow(finished)@3005ms
+12:50:24.645938 req 31 handler done 204 in 0s (outstanding 1)
+12:50:24.646491 req 32 start POST /api/report (97 B body, outstanding 2)
+12:50:24.646510 report: [inprocess] INFO abort: browser side: AbortError after 301ms; Go side: see host log for tag=abort
+12:50:24.646517 req 32 handler done 204 in 0s (outstanding 1)
+12:50:24.647187 req 33 start POST /api/report (157 B body, outstanding 2)
+12:50:24.647206 report: [inprocess] PASS big-post: status 413, adapter error request-too-large, body "request body exceeds the adapter's 1048576-byte limit\n"; next request ok: true
+12:50:24.647214 req 33 handler done 204 in 0s (outstanding 1)
+12:50:24.647755 req 34 start POST /api/report (99 B body, outstanding 2)
+12:50:24.647773 report: [inprocess] PASS big-get: status 502, adapter error response-too-large, 99 B; next request ok: true
+12:50:24.647782 req 34 handler done 204 in 0s (outstanding 1)
+12:50:24.648303 req 35 start POST /api/report (84 B body, outstanding 2)
+12:50:24.648320 report: [inprocess] PASS open-outside: window.open returned null; host log shows the refusal
+12:50:24.648328 req 35 handler done 204 in 0s (outstanding 1)
+12:50:24.648832 req 36 start POST /api/report (89 B body, outstanding 2)
+12:50:24.648860 report: [inprocess] PASS open-same: window.open("./") returned null (all new windows are refused)
+12:50:24.648873 req 36 handler done 204 in 0s (outstanding 1)
+12:50:24.649309 req 37 start POST /api/report (29 B body, outstanding 2)
+12:50:24.649328 report: [inprocess] checks PASS 14/14
+12:50:24.649337 req 37 handler done 204 in 0s (outstanding 1)
+12:50:24.650577 navigation refused kind=0 uri=https://example.com/
+12:50:26.152610 req 38 start POST /api/report (89 B body, outstanding 2)
+12:50:26.152691 report: [inprocess] origin: still on the fixture 1.5 s after location.href = https://example.com/
+12:50:26.152739 req 38 handler done 204 in 0s (outstanding 1)
+12:50:27.247408 req 16 handler done 200 in 3.001s (outstanding 0)
+12:50:30.932558 closing: timed exit; native requests=0 async=0 handlers=0
+12:50:30.940288 closed: requests=0 native-async=0 handlers=0 stats={Started:38 Finished:38 Canceled:0 Dropped:0 Refused:0}

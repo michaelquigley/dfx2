@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
 """Run real GTK/WebKit windows; save evidence and fail on missing observations."""
 import argparse
+import json
 import os
 from pathlib import Path
 import subprocess
 import time
+
+from exitwatch import enable_subreaper, observe, fatal_log
 
 p = argparse.ArgumentParser()
 p.add_argument("binary", type=Path)
@@ -12,6 +15,7 @@ p.add_argument("output", type=Path)
 args = p.parse_args()
 args.output.mkdir(parents=True, exist_ok=True)
 binary = str(args.binary.resolve())
+enable_subreaper()
 summary = []
 environment = subprocess.check_output(["pkg-config", "--modversion", "webkit2gtk-4.1", "gtk+-3.0", "libsoup-3.0"], text=True)
 (args.output / "environment.txt").write_text(
@@ -27,7 +31,7 @@ def run(name, mode, flags, expected, code=0, sockets=False, terminate=False):
     with path.open("w") as out:
         out.write("command: " + " ".join(command) + "\n")
         out.flush()
-        proc = subprocess.Popen(command, stdout=out, stderr=subprocess.STDOUT)
+        proc = subprocess.Popen(command, stdout=out, stderr=subprocess.STDOUT, start_new_session=True)
         try:
             if sockets:
                 time.sleep(2)
@@ -41,7 +45,9 @@ def run(name, mode, flags, expected, code=0, sockets=False, terminate=False):
                     assert time.monotonic() < deadline, "slow request never started"
                     time.sleep(.05)
                 proc.terminate()
-            result = proc.wait(timeout=25)
+            observed = observe(proc, timeout=25)
+            (args.output / (name + "-exit.json")).write_text(json.dumps(observed, indent=2) + "\n")
+            result = observed["host_exit"]
         finally:
             if proc.poll() is None:
                 proc.kill()
@@ -49,9 +55,10 @@ def run(name, mode, flags, expected, code=0, sockets=False, terminate=False):
     elapsed = time.monotonic() - start
     text = path.read_text()
     assert result == code, (name, result, text[-2000:])
+    assert not any(observed[k] for k in ("timed_out", "children_pending", "child_failure")), (name, observed)
     for observation in [*expected, "closed: requests=0 native-async=0 handlers=0"]:
         assert observation in text, (name, "missing", observation)
-    assert "CRITICAL" not in text and "checks FAIL" not in text, name
+    assert not fatal_log(text), name
     line = f"PASS {name} ({elapsed:.2f}s)"
     summary.append(line)
     (args.output / "summary.txt").write_text("\n".join(summary) + "\n")
@@ -70,6 +77,9 @@ for mode in ("inprocess", "loopback"):
     run(mode + "-sigterm", mode, ["-autorun", "slow", "-quit-after", "10s"],
         ["closing: signal terminated", 'tag="busy" saw cancellation'], terminate=True)
     run(mode + "-startup-close", mode, ["-quit-after", "1ms"], ["closing: timed exit"])
+    run(mode + "-docked-close", mode,
+        ["-dock-devtools", "-autorun", "slow", "-close-busy", "2s", "-quit-after", "10s"],
+        ["inspector attached=true", "closing: close while busy", 'tag="busy" saw cancellation'])
 run("inprocess-close-reading", "inprocess", ["-autorun", "checks", "-close-reading", "-quit-after", "10s"],
     ["closing: close during native body read", "async=1"])
 run("loopback-listener-failure", "loopback", ["-break-listener", "2s", "-quit-after", "10s"],
