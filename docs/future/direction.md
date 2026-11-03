@@ -39,7 +39,7 @@ Keep the boundary as if the layer were separate: platform packages never import 
 - **The default text engine:** pure Go or Pango, and whether the engine is pluggable. Also whether LCD (subpixel) antialiasing matters. The target desktop uses it, but the hinted pure-Go engine without it already looked nearly identical.
 - **Where line breaking lives.** The recommendation is shared code, over shaped runs, with break opportunities from go-text's `segmenter`. That keeps "shape once, rewrap at any width" for every engine.
 - **How dfw maps in.**
-  - Support a single-process approach with an in-process HTTP endpoint, while retaining the loopback model. The exact in-process transport contract is still to be specified.
+  - Support a single-process approach with an in-process HTTP endpoint, while retaining the loopback model. The [Windows WebView2 spike](windows-webview2-spike.md) explores socket-free request interception into a Go `http.Handler` alongside loopback; the permanent transport contract remains to be specified.
   - Its HTTP-server boundary and its daemon + window topology are independent of rendering. What lifecycle behavior carries over?
   - Should dfx2 generate TypeScript types from Go API types, and serve pages from a custom scheme where server and window share a process?
 - **Platforms.** dfx and dfw target Linux and Windows. dfw's macOS support is deferred. Decide dfx2's scope.
