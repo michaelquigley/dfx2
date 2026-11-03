@@ -1,0 +1,5 @@
+command: /tmp/dfx2-webkitgtk-spike -mode inprocess -quit-after 1ms
+Overriding existing handler for signal 10. Set JSC_SIGNAL_FOR_GC if you want WebKit to use a different signal
+11:24:51.168605 WebKitGTK 2.52.6 mode=inprocess origin=dfx2://spike scale=1
+11:24:51.173184 closing: timed exit; native requests=0 async=0 handlers=0
+11:24:51.180512 closed: requests=0 native-async=0 handlers=0 stats={Started:0 Finished:0 Canceled:0 Dropped:0 Refused:0}

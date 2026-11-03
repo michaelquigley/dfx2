@@ -1,0 +1,5 @@
+command: /tmp/dfx2-webkitgtk-spike -mode loopback -quit-after 1ms
+Overriding existing handler for signal 10. Set JSC_SIGNAL_FOR_GC if you want WebKit to use a different signal
+11:25:11.214688 WebKitGTK 2.52.6 mode=loopback origin=http://127.0.0.1:40987 scale=1
+11:25:11.217747 closing: timed exit; native requests=0 async=0 handlers=0
+11:25:11.224002 closed: requests=0 native-async=0 handlers=0 stats={Started:0 Finished:0 Canceled:0 Dropped:0 Refused:0}

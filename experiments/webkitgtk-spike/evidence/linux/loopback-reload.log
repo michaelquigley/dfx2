@@ -1,0 +1,37 @@
+command: /tmp/dfx2-webkitgtk-spike -mode loopback -autorun reload -quit-after 6s
+Overriding existing handler for signal 10. Set JSC_SIGNAL_FOR_GC if you want WebKit to use a different signal
+11:25:01.733768 WebKitGTK 2.52.6 mode=loopback origin=http://127.0.0.1:34925 scale=1
+11:25:02.792733 load event=0 uri=http://127.0.0.1:34925/?autorun=reload
+11:25:02.794927 req 1 start GET /?autorun=reload from 127.0.0.1:50218 (0 B body, outstanding 1)
+11:25:02.795125 req 1 handler done 200 in 0s (outstanding 0)
+11:25:02.801471 load event=2 uri=http://127.0.0.1:34925/?autorun=reload
+11:25:02.804078 req 2 start GET /app.css from 127.0.0.1:50218 (0 B body, outstanding 1)
+11:25:02.804148 req 2 handler done 200 in 0s (outstanding 0)
+11:25:02.806073 req 3 start GET /app.js from 127.0.0.1:50218 (0 B body, outstanding 1)
+11:25:02.806516 req 3 handler done 200 in 0s (outstanding 0)
+11:25:02.900199 req 4 start POST /api/report from 127.0.0.1:50224 (66 B body, outstanding 1)
+11:25:02.900335 report: [loopback] loaded /?autorun=reload (assets app.css ✓ app.js ✓)
+11:25:02.900343 req 4 handler done 204 in 0s (outstanding 0)
+11:25:02.920998 load event=3 uri=http://127.0.0.1:34925/?autorun=reload
+11:25:02.923911 javascript: {"origin":"http://127.0.0.1:34925","secure":true,"crypto":true,"storage":"yes"}
+11:25:02.926840 req 5 start GET /api/slow?tag=reload from 127.0.0.1:50218 (0 B body, outstanding 1)
+11:25:02.927111 req 6 start POST /api/report from 127.0.0.1:50226 (70 B body, outstanding 2)
+11:25:02.927175 report: [loopback] reload: slow request tag=reload started; reloading in 500ms
+11:25:02.927182 req 6 handler done 204 in 0s (outstanding 1)
+11:25:03.429577 load event=0 uri=http://127.0.0.1:34925/?autorun=reload
+11:25:03.429867 fixture: /api/slow tag="reload" saw cancellation: context canceled
+11:25:03.430443 req 5 handler canceled (context canceled), returned 503 in 504ms (outstanding 0)
+11:25:03.431243 req 7 start GET /?autorun=reload from 127.0.0.1:50240 (0 B body, outstanding 1)
+11:25:03.431422 req 7 handler done 200 in 0s (outstanding 0)
+11:25:03.438306 load event=2 uri=http://127.0.0.1:34925/?autorun=reload
+11:25:03.439791 req 8 start GET /app.css from 127.0.0.1:50240 (0 B body, outstanding 1)
+11:25:03.439847 req 8 handler done 200 in 0s (outstanding 0)
+11:25:03.441795 req 9 start GET /app.js from 127.0.0.1:50246 (0 B body, outstanding 1)
+11:25:03.442339 req 9 handler done 200 in 0s (outstanding 0)
+11:25:03.461335 load event=3 uri=http://127.0.0.1:34925/?autorun=reload
+11:25:03.462155 req 10 start POST /api/report from 127.0.0.1:50260 (69 B body, outstanding 1)
+11:25:03.462341 report: [loopback] reload: page reloaded 537ms after starting slow tag=reload
+11:25:03.462388 req 10 handler done 204 in 0s (outstanding 0)
+11:25:03.469517 javascript: {"origin":"http://127.0.0.1:34925","secure":true,"crypto":true,"storage":"yes"}
+11:25:07.739575 closing: timed exit; native requests=0 async=0 handlers=0
+11:25:07.751831 closed: requests=0 native-async=0 handlers=0 stats={Started:0 Finished:0 Canceled:0 Dropped:0 Refused:0}

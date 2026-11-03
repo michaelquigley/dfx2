@@ -51,7 +51,7 @@ From `experiments/webview2-spike`, with `CGO_ENABLED=0`:
 - **Closing with work pending, loopback.** The server's `BaseContext` is the window's context, so closing cancels active handlers (`saw cancellation`). `Shutdown` then returns in about 1 ms.
 - **Close during startup.** Closing at 0, 50, 150 or 300 ms after the window appeared always landed in controller creation. `DestroyWindow` then delivers the controller callback with **`E_ABORT`, synchronously, inside `DestroyWindow`**, as WebView2.idl says. The callback sees closing and attaches nothing, and the process exits 9–19 ms later.
 - **Close during environment creation never happens on this host.** The environment-completed handler runs **inside** `CreateCoreWebView2EnvironmentWithOptions`, before it returns. A `WM_CLOSE` posted just before the call (`-close-during env`) is dispatched only after it, so nothing pumps our posted messages during the call. The host's other branch (hide, keep pumping for up to 5 s, then destroy) is implemented but **untested**. Don't rely on either ordering: the API is documented as asynchronous.
-- **Reload or abort doesn't reach an in-process handler: a real gap.** When the page aborts a fetch (`AbortController`) or reloads during `/api/slow`, the browser side ends at once. In-process, the Go handler runs its full 3 s, and its response is installed into the abandoned request with `S_OK`. WebView2 gives no signal for an abandoned request, and only closing the window cancels in-process handlers. In loopback, the same abort and reload cancel the handler in 300–520 ms, because the connection closes. Michael reproduced the reload case by hand (F5).
+- **Reload or abort doesn't reach an in-process handler: a real gap.** When the page aborts a fetch (`AbortController`) or reloads during `/api/slow`, the browser side ends at once. In-process, the Go handler runs its full 3 s, and its response is installed into the abandoned request with `S_OK`. This implementation receives no request-abandonment signal through the interfaces it uses; only closing the window cancels in-process handlers. That does not establish that every possible WebView2 integration lacks a cancellation strategy. In loopback, the same abort and reload cancel the handler in 300–520 ms, because the connection closes. Michael reproduced the reload case by hand (F5).
 - **A console event bypassed close entirely, and now doesn't.** In the first manual audition, both windows died together with exit `0xC000013A` (`STATUS_CONTROL_C_EXIT`) when the terminal that launched them was closed or interrupted: no request settled and no controller closed. The host is a console program. It now turns Ctrl+C, Ctrl+Break and console close (`os.Interrupt`, `SIGTERM`) into a posted `WM_CLOSE`. **Ctrl+Break was tested** (exit 0 in ~40 ms, the pending request settled). Console close (`CTRL_CLOSE_EVENT`), logoff and shutdown are **untested**.
 
 ### Capability
@@ -60,7 +60,7 @@ From `experiments/webview2-spike`, with `CGO_ENABLED=0`:
 | --- | --- |
 | Finite GET/POST, query, request headers, UTF-8 and binary bodies ≤ 1 MiB | **Demonstrated.** |
 | Status codes and reason phrases, content types, `Cache-Control` | **Demonstrated.** |
-| Repeated response headers | **Merged:** they reach JavaScript as `one, two` (the same in loopback), but devtools shows one joined value. Unsuitable for headers that can't be comma-joined (`Set-Cookie`). Building headers with `ICoreWebView2HttpResponseHeaders::AppendHeader` instead of a raw string is an **untested** alternative. |
+| Repeated response headers | **Observed for `X-Spike-Repeat`:** it reaches JavaScript as `one, two` (the same in loopback), and in-process devtools shows one joined value. This does not establish how `Set-Cookie` is handled; cookies and headers requiring separate values need direct tests before relying on them. Building headers with `ICoreWebView2HttpResponseHeaders::AppendHeader` instead of a raw string is an **untested** alternative. |
 | Non-ASCII header values | Arrive like loopback: the UTF-8 bytes are decoded as Latin-1 (`cafÃ©`). |
 | Bodies over 1 MiB | Explicit 413/502 by design. Larger finite bodies need a different stream strategy, which is **untested**. |
 | Cancellation when the page abandons a request | **Gap:** not delivered to the handler. Closing the window cancels. |
@@ -85,8 +85,60 @@ From `experiments/webview2-spike`, with `CGO_ENABLED=0`:
 - **In-process is viable for finite request/response work.** It needs no listener, the extra latency wasn't noticeable, and its limits fail explicitly. It is not a general `net/http` replacement. Products that stream, use WebSockets, or need abandon-cancellation or exact repeated headers (cookies) need loopback, or further work, before they migrate.
 - **The main-thread contract carries over from the native spike.** It's one STA UI thread with a pumping loop, a payload-free coalesced wakeup, and workers that never touch native objects. The platform layer's closing sequence: stop accepting work, cancel, settle on the owning thread, release, then destroy. Close must also catch console events.
 - **Expect re-entrancy.** Completion handlers may run before their Create call returns, and `DestroyWindow` can run a creation callback re-entrantly. Set state before calling, and let callbacks observe closing.
-- **Untested here, and still needed:** DPI changes and mixed DPI; the WebKitGTK side; a removed Runtime; console close/logoff; streaming and WebSockets; multiple windows.
+- **Untested on Windows, and still needed:** DPI changes and mixed DPI; a removed Runtime; console close/logoff; streaming and WebSockets; multiple windows. The Linux experiment is recorded below.
 
 ### Linux return checks
 
-Pending: the Linux session hasn't run these yet. See the handoff in [the 2026-11-03 journal](../journal/2026-11-03.md).
+Completed on 2026-11-03 after fast-forwarding local `main` to `050dc6e`. Go 1.27.1 linux/amd64, with `CGO_ENABLED=0`:
+
+- `go test ./...` passes, including the handler/adapter parity tests using a real local HTTP server. The first sandboxed run could not open the test socket; the rerun with loopback access passed.
+- `go vet ./...` passes for Linux and for `GOOS=windows GOARCH=amd64`.
+- The pinned SDK package was downloaded independently into `/tmp`. Its SHA-256 and the included x64 loader's SHA-256 both match the recorded pins. With its extracted `WebView2.idl`, `TestBindingsMatchIDL` **passed, not skipped**. The full test run also had `WEBVIEW2_IDL` set. This checks declared IIDs and method slots, not runtime ABI behavior or callback lifetimes.
+- The Linux executable builds and exits 1 with the documented windows/amd64-only message. The Windows amd64 host and audition driver both cross-build.
+- The driver summary, representative lifecycle logs, manual-audition logs, and all three PNGs were inspected. The logs corroborate window-close cancellation and the in-process reload gap. Every tracked file under `experiments/webview2-spike` arrived as mode 100644.
+
+These are portable-code and integration checks, not a second Windows runtime audition. The untested Windows cases above remain open; the existing native/text experiment was unchanged.
+
+## Linux WebKitGTK results (2026-11-03)
+
+The [Linux experiment](../../experiments/webkitgtk-spike/README.md) reuses the Windows spike's portable adapter, dispatcher and fixture through a local Go module replacement. The fixture wrapper changes labels and transport detection only. The host uses purego and builds with `CGO_ENABLED=0`; it introduces no root framework packages or changes to either earlier experiment.
+
+### Host and evidence
+
+WebKitGTK 2.52.6 (4.1/Soup 3 ABI), GTK 3.24.52, Soup 3.6.6; Go 1.27.1 linux/amd64. The desktop session is Wayland, with GTK's default backend and scale factor 1. X11 and scale changes were not tested. Runtime loading needs WebKit 2.40 or later for the request-body API.
+
+The [evidence directory](../../experiments/webkitgtk-spike/evidence/linux/) contains logs, application-listener observations and two WebKit snapshots. The [driver](../../experiments/webkitgtk-spike/audition.py) executes actual native windows and asserts the observations below. The two screenshots were visually inspected; this was an automated audition, **not a manual audition by Michael**. Resize/minimize/restore calls were issued; screenshots establish the resized content, not compositor acceptance of minimization.
+
+`go test ./...` and `go vet ./...` passed in the new module. The shared `adapt` and `fixture` tests passed too, with loopback permission for the fixture's real HTTP server. Terminus review could not start: the canon has no `projects/dfx2/rubric.yaml`. There is no code-review verdict.
+
+### Results
+
+| Check | In-process | Loopback |
+| --- | --- | --- |
+| Address and application listener | `dfx2://spike/`; no TCP listener owned by the Go host in `ss` | `http://127.0.0.1:<random>/`; one listener owned by the host |
+| Page and HTTP checks | **14/14 pass**, using the Windows checks | **14/14 pass** |
+| Origin and browser APIs | `location.origin` is `dfx2://spike`; secure context, crypto and session storage work | Secure context, crypto and session storage work |
+| Slow then fast | Fast finishes around 100 ms; slow around 3 s | Same |
+| Fetch abort / reload | Browser abandons the request; Go handler runs its full 3 s | Go handler sees cancellation, around 300 ms / 500 ms respectively |
+| Close with a handler pending | Context canceled, request settled, late result dropped; tracked work drains | Context canceled and server shuts down; tracked work drains |
+| Other close paths | Startup, SIGTERM with work pending, and close with native body read pending pass | Startup, SIGTERM with work pending, and listener failure pass; failure exits 1 |
+| Navigation | New windows return null; outside navigation refused | Same |
+| Headers and limits | Repeated custom header becomes `one, two`; UTF-8 header reads `cafÃ©`; >1 MiB request gets 413 and response gets 502; subsequent requests succeed | Same header observations; larger bodies served normally |
+
+All twelve driver scenarios passed. Every run ended with zero tracked native requests, zero native async operations and zero dispatcher handlers; loopback server shutdown also completed. This is explicit ownership accounting, not a leak-detector result. The two busy-close runs took about 10–27 ms from the closing log to the closed log. No GLib critical was logged.
+
+### What carries into the design
+
+**The common boundary is the Go handler, not a common URL implementation.** Windows intercepts an HTTPS origin. Linux registers a custom scheme as secure and CORS-enabled, without granting universal or local access. Relative URLs let the same fixture work in both. Before making the scheme a product default, test cookies, authentication, redirects, service workers and other origin-sensitive facilities directly; the passing fixture doesn't cover them.
+
+**“In-process” removes the application HTTP listener, not WebKit's child processes.** The Go application directly invokes its handler. WebKit still owns web/network processes; their sockets were not surveyed.
+
+**The ownership model carries over, but the native mechanics differ.** GTK objects remain on one locked UI thread. The request body is read with Gio's async API into bounded Go copies. Handler work happens on workers; one coalesced GLib idle source returns results to the owner. Avoid `g_main_context_invoke` for this wakeup: it can execute synchronously on the calling worker. Response bytes are copied into `GBytes` and a memory stream, so native objects do not retain Go memory. Four permanent callback trampolines route through numeric userdata.
+
+**Native cancellation has to drain before destroying the window.** Close stops new posts and dispatcher work, cancels handler and Gio contexts, settles dispatched requests, hides the window, and continues pumping until the native async callbacks release their objects. The pending-body-read scenario exercised that branch. This experiment has no deadline for native cancellation callbacks; a stuck runtime could hold that part of teardown open.
+
+**The same abandonment gap now has evidence on both platforms.** Neither in-process adapter propagates fetch abort or reload to its Go handler. Window close does cancel. Keep loopback first-class; don't promise `net/http` parity for a finite buffered transport or silently claim a per-request cancellation contract that these integrations don't implement.
+
+**JavaScriptCore signal coexistence is unfinished.** Every native run logs JSC replacing the existing signal-10 handler. dfw already studies an optional private `JSConfigureSignalForGC` entry point and selection of an unused real-time signal. That implementation uses cgo, so it was not pulled into this experiment. A no-cgo solution needs its own validation before production use; neither hard-coding a signal nor hiding the warning resolves ownership.
+
+Still untested: manual focus/typing/Tab/scrolling, inspector presentation, mixed DPI, X11, multiple windows, web-process crash recovery, cookies, redirects/authentication, streaming/SSE, WebSockets and aggregate load limits.

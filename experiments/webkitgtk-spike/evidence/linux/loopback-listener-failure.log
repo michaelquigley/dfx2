@@ -1,0 +1,20 @@
+command: /tmp/dfx2-webkitgtk-spike -mode loopback -break-listener 2s -quit-after 10s
+Overriding existing handler for signal 10. Set JSC_SIGNAL_FOR_GC if you want WebKit to use a different signal
+11:25:12.863738 WebKitGTK 2.52.6 mode=loopback origin=http://127.0.0.1:39869 scale=1
+11:25:13.925035 load event=0 uri=http://127.0.0.1:39869/
+11:25:13.926459 req 1 start GET / from 127.0.0.1:49914 (0 B body, outstanding 1)
+11:25:13.926605 req 1 handler done 200 in 0s (outstanding 0)
+11:25:13.930683 load event=2 uri=http://127.0.0.1:39869/
+11:25:13.932009 req 2 start GET /app.css from 127.0.0.1:49914 (0 B body, outstanding 1)
+11:25:13.932102 req 2 handler done 200 in 0s (outstanding 0)
+11:25:13.932955 req 3 start GET /app.js from 127.0.0.1:49928 (0 B body, outstanding 1)
+11:25:13.933166 req 3 handler done 200 in 0s (outstanding 0)
+11:25:14.017140 req 4 start POST /api/report from 127.0.0.1:49932 (51 B body, outstanding 1)
+11:25:14.017195 report: [loopback] loaded / (assets app.css ✓ app.js ✓)
+11:25:14.017199 req 4 handler done 204 in 0s (outstanding 0)
+11:25:14.038984 load event=3 uri=http://127.0.0.1:39869/
+11:25:14.053544 javascript: {"origin":"http://127.0.0.1:39869","secure":true,"crypto":true,"storage":"yes"}
+11:25:14.866616 audition: breaking loopback listener
+11:25:14.867230 closing: server failure; native requests=0 async=0 handlers=0
+11:25:14.909851 closed: requests=0 native-async=0 handlers=0 stats={Started:0 Finished:0 Canceled:0 Dropped:0 Refused:0}
+11:25:14.910318 loopback server: accept tcp4 127.0.0.1:39869: use of closed network connection

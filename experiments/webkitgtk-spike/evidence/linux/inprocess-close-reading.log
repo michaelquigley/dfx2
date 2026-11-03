@@ -1,0 +1,13 @@
+command: /tmp/dfx2-webkitgtk-spike -mode inprocess -autorun checks -close-reading -quit-after 10s
+Overriding existing handler for signal 10. Set JSC_SIGNAL_FOR_GC if you want WebKit to use a different signal
+11:25:11.466654 WebKitGTK 2.52.6 mode=inprocess origin=dfx2://spike scale=1
+11:25:12.517909 load event=0 uri=dfx2://spike/?autorun=checks
+11:25:12.518200 req 1 start GET /?autorun=checks (0 B body, outstanding 1)
+11:25:12.518417 req 1 handler done 200 in 0s (outstanding 0)
+11:25:12.520735 load event=2 uri=dfx2://spike/?autorun=checks
+11:25:12.521636 req 2 start GET /app.css (0 B body, outstanding 1)
+11:25:12.521839 req 2 handler done 200 in 0s (outstanding 0)
+11:25:12.522561 req 3 start GET /app.js (0 B body, outstanding 1)
+11:25:12.522765 req 3 handler done 200 in 0s (outstanding 0)
+11:25:12.602555 closing: close during native body read; native requests=1 async=1 handlers=0
+11:25:12.609331 closed: requests=0 native-async=0 handlers=0 stats={Started:3 Finished:3 Canceled:0 Dropped:0 Refused:0}

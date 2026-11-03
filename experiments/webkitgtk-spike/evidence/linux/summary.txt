@@ -1,0 +1,13 @@
+Final binary audition, 2026-11-03. Elapsed includes application startup.
+PASS inprocess-checks (10.32s)
+PASS inprocess-reload (6.28s)
+PASS inprocess-close-busy (1.72s)
+PASS inprocess-sigterm (1.44s)
+PASS inprocess-startup-close (0.26s)
+PASS loopback-checks (10.31s)
+PASS loopback-reload (6.28s)
+PASS loopback-close-busy (1.77s)
+PASS loopback-sigterm (1.42s)
+PASS loopback-startup-close (0.26s)
+PASS inprocess-close-reading (1.37s)
+PASS loopback-listener-failure (2.32s)
