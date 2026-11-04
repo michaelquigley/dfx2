@@ -22,6 +22,7 @@ type Backend struct {
 	OnCreate                                func(platform.ID)
 	OnDestroy                               func(platform.ID)
 	BeforePump                              func()
+	BeforeRelease                           func()
 	AfterEvent                              func(platform.Event)
 	OpenError                               error
 	PumpErrors                              []error
@@ -174,6 +175,9 @@ func (b *Backend) Pump() error {
 }
 
 func (b *Backend) Release() error {
+	if b.BeforeRelease != nil {
+		b.BeforeRelease()
+	}
 	b.mu.Lock()
 	defer b.mu.Unlock()
 	if len(b.windows) != 0 {

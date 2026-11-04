@@ -44,7 +44,9 @@ func (o *output) status(event string, a *dfx2.App) {
 	s := appcore.Inspect(a)
 	o.event(event, "windows", s.Windows, "tasks", s.Tasks, "native_completions", s.NativeCompletions,
 		"queued", s.Queued, "terminal", s.Terminal, "native_windows", s.Native.Windows,
-		"native_retired", s.Native.Retired, "wakes", s.Native.Wakes, "dispatches", s.Native.Dispatches)
+		"native_retired", s.Native.Retired, "dispatch_targets", s.Native.DispatchTargets,
+		"release_pending", s.ReleasePending, "native_problem", s.Native.Problem,
+		"wakes", s.Native.Wakes, "dispatches", s.Native.Dispatches)
 }
 
 type demoWindow struct {

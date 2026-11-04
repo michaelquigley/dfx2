@@ -311,6 +311,9 @@ func (b *Backend) Release() error {
 	b.flushRetired()
 	routes.Delete(b.token)
 	n.release(b.context)
+	b.mu.Lock()
+	b.token = 0
+	b.mu.Unlock()
 	return nil
 }
 
@@ -318,7 +321,11 @@ func (b *Backend) Release() error {
 func (b *Backend) Counters() platform.Counters {
 	b.mu.Lock()
 	defer b.mu.Unlock()
-	return platform.Counters{Wakes: b.wakes, Dispatches: b.dispatches, Windows: len(b.windows), Retired: len(b.retired)}
+	s := platform.Counters{Wakes: b.wakes, Dispatches: b.dispatches, Windows: len(b.windows), Retired: len(b.retired)}
+	if b.token != 0 {
+		s.DispatchTargets = 1
+	}
+	return s
 }
 
 // CloseNextCreation requests a close reentrantly before the next Create returns.

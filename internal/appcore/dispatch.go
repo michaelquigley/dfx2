@@ -62,6 +62,7 @@ func (a *App) dispatch() {
 	if a.state >= closing && len(a.windows) == 0 && len(a.tasks) == 0 && len(a.operations) == 0 && a.wakeFailures == 0 {
 		a.terminal = true
 		a.state = closed
+		a.signalLocked()
 		return
 	}
 	if a.pendingLocked() {

@@ -55,6 +55,7 @@ func run(ctx context.Context, options Options, setup func(*App) error, b platfor
 		parent: ctx, options: options, backend: b, clock: c,
 		windows: make(map[platform.ID]*Window), operations: make(map[platform.ID]*completion),
 		changed: make(chan struct{}, 1), stop: make(chan struct{}), supervised: make(chan struct{}),
+		wakesStopped: make(chan struct{}),
 	}
 	defer cancel()
 	if err := b.Open(a.event); err != nil {
@@ -97,10 +98,15 @@ func run(ctx context.Context, options Options, setup func(*App) error, b platfor
 			a.mu.Unlock()
 		}
 	}
-	// No timer/worker can post to the dispatch target after this join.
+	// Seal wake retries before target release, retaining independent shutdown
+	// diagnostics if native release itself gets stuck.
+	<-a.wakesStopped
+	err := b.Release()
+	a.mu.Lock()
+	a.dispatchReleased = true
+	a.mu.Unlock()
 	close(a.stop)
 	<-a.supervised
-	err := b.Release()
 	a.mu.Lock()
 	a.cleanupLocked(err)
 	if ctx.Err() != nil {

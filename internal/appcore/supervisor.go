@@ -5,6 +5,8 @@ import (
 	"sort"
 	"strings"
 	"time"
+
+	"github.com/michaelquigley/dfx2/internal/platform"
 )
 
 const retryDelay = 10 * time.Millisecond
@@ -57,13 +59,18 @@ func (a *App) supervise() {
 		}
 	}()
 	parentDone := a.parent.Done()
+	wakesSealed := false
 	for {
 		a.mu.Lock()
-		if a.terminal {
-			a.mu.Unlock()
-			return
+		if a.terminal && !wakesSealed {
+			if retry != nil {
+				retry.Stop()
+				retry = nil
+			}
+			wakesSealed = true
+			close(a.wakesStopped)
 		}
-		if a.wakeFailures > 0 && retry == nil {
+		if !a.terminal && a.wakeFailures > 0 && retry == nil {
 			retry = a.clock.NewTimer(retryDelay)
 		}
 		if a.state >= closing && diagnostic == nil {
@@ -108,6 +115,10 @@ func (a *App) supervise() {
 			a.mu.Lock()
 			message := a.diagnosticLocked()
 			a.mu.Unlock()
+			if b, ok := a.backend.(interface{ Counters() platform.Counters }); ok {
+				c := b.Counters()
+				message += fmt.Sprintf("; dispatch-targets=%d native-problem=%q", c.DispatchTargets, c.Problem)
+			}
 			a.log("%s", message)
 		}
 	}
@@ -137,6 +148,6 @@ func (a *App) diagnosticLocked() string {
 		parts = append(parts, fmt.Sprintf("app task=%d %q completion-pending=%t", id, t.name, t.finished))
 	}
 	sort.Strings(parts)
-	return fmt.Sprintf("dfx2 shutdown outstanding: windows=%d app-tasks=%d native-completions=%d wake-pending=%t wake-failures=%d; %s",
-		len(a.windows), len(a.tasks), len(a.operations), a.wakePending, a.wakeFailures, strings.Join(parts, "; "))
+	return fmt.Sprintf("dfx2 shutdown outstanding: windows=%d app-tasks=%d native-completions=%d wake-pending=%t wake-failures=%d release-pending=%t failure=%v; %s",
+		len(a.windows), len(a.tasks), len(a.operations), a.wakePending, a.wakeFailures, a.terminal && !a.dispatchReleased, a.failure, strings.Join(parts, "; "))
 }

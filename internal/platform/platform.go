@@ -9,6 +9,8 @@ type ID uint64
 type Counters struct {
 	Wakes, Dispatches uint64
 	Windows, Retired  int
+	DispatchTargets   int
+	Problem           string
 }
 
 type WindowOptions struct {

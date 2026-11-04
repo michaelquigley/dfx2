@@ -2,7 +2,7 @@
 
 Two blank native windows demonstrate shared application lifetime, independent window tasks and cooperative shutdown. Window titles update at about 10 Hz. No widgets, paint API, text engine or browser integration is involved.
 
-Linux/amd64 requires the system GTK 3 runtime and a desktop display. No development headers or cgo are needed to run. Windows currently compiles to the explicit unsupported-platform path; actual Windows support is stage 3.
+Linux/amd64 requires the system GTK 3 runtime and a desktop display. No development headers or cgo are needed to run. Windows/amd64 selects the Win32 backend without a browser loader or COM initialization. Its implementation is cross-built; [Windows native execution and audition](../../evidence/foundation/windows/README.md) are still required for stage 3 acceptance.
 
 ```sh
 CGO_ENABLED=0 go run ./examples/lifetime

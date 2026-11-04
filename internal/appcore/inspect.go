@@ -10,6 +10,7 @@ import (
 type Status struct {
 	Windows, Tasks, NativeCompletions, Queued int
 	WakePending, Closing, Terminal            bool
+	ReleasePending                            bool
 	Native                                    platform.Counters
 }
 
@@ -20,6 +21,7 @@ type Status struct {
 func Inspect(a *App) Status {
 	a.mu.Lock()
 	s := Status{Windows: len(a.windows), Tasks: len(a.tasks), NativeCompletions: len(a.operations), Queued: len(a.queue), WakePending: a.wakePending, Closing: a.state >= closing, Terminal: a.terminal}
+	s.ReleasePending = a.terminal && !a.dispatchReleased
 	for _, w := range a.windows {
 		s.Tasks += len(w.tasks)
 		s.Queued += len(w.queue)

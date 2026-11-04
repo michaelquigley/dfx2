@@ -70,25 +70,27 @@ type task struct {
 type App struct {
 	mu sync.Mutex
 	owner
-	backend      platform.Backend
-	clock        clock
-	options      Options
-	parent       context.Context
-	windows      map[platform.ID]*Window
-	operations   map[platform.ID]*completion
-	next         platform.ID
-	setupDone    bool
-	terminal     bool
-	wakePending  bool
-	wakeFailures int
-	wakeErr      error
-	wakeLog      bool
-	failure      error
-	cleanup      []error
-	callerErr    error
-	changed      chan struct{}
-	stop         chan struct{}
-	supervised   chan struct{}
+	backend          platform.Backend
+	clock            clock
+	options          Options
+	parent           context.Context
+	windows          map[platform.ID]*Window
+	operations       map[platform.ID]*completion
+	next             platform.ID
+	setupDone        bool
+	terminal         bool
+	dispatchReleased bool
+	wakePending      bool
+	wakeFailures     int
+	wakeErr          error
+	wakeLog          bool
+	failure          error
+	cleanup          []error
+	callerErr        error
+	changed          chan struct{}
+	stop             chan struct{}
+	supervised       chan struct{}
+	wakesStopped     chan struct{}
 }
 
 // Window owns one independent native window and its registered tasks.

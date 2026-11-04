@@ -114,7 +114,7 @@ def audition(binary, out, name, flags, env, signal_after_updates=False):
     if not returned or not drained:
         failures.append("missing return/drained event")
     elif any(drained[-1][key] != 0 for key in
-             ("windows", "tasks", "native_completions", "queued", "native_windows", "native_retired")) or not drained[-1]["terminal"]:
+             ("windows", "tasks", "native_completions", "queued", "native_windows", "native_retired", "dispatch_targets")) or not drained[-1]["terminal"] or drained[-1]["release_pending"]:
         failures.append("ownership did not drain")
     forbidden = [m for m in maps if any(x in m.lower() for x in ("webkit", "javascriptcore", "webview2"))]
     browser_children = [c for c in children if any(token in (c["comm"]+" "+c["exe"]).lower()
