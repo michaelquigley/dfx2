@@ -2,7 +2,7 @@
 
 Host: Microsoft Windows 10 Pro 10.0.19045, 64-bit, amd64; Go 1.27.3 windows/amd64 with module language version 1.26; Windows PowerShell 5.1.19041.6456; Cygwin git. The session is Remote Desktop (`RDP-Tcp#0`) on a Microsoft Remote Display Adapter at 3440×1440; a Microsoft Basic Display Adapter at 1024×768 is also enumerated. Revision `0d46ac7` was checked out clean before the first run. All Go builds, tests and vet use `CGO_ENABLED=0`. Host, commands and per-case results are retained in [run/host.json](run/host.json) and [run/summary.json](run/summary.json).
 
-Status: the automated Windows matrix below **passed natively on 2026-11-04**, nine cases, after two corrections to the runner, and [Michael's manual audition](#michaels-manual-audition) passed the same day with one recorded behavior: title updates for every window defer during an interactive resize. DPI changes could not be tested over RDP. **Stage 3 is not accepted.** Terminus did not review the Windows changes: neither Terminus, the `terminus-canon` rubric nor the grimoire is installed on this host, and absence is not a clean verdict. Those tools were absent during the Windows session. Markdown normalization and the Linux return checks have since completed on Linux; review status is recorded below. The runner-timeout correction and its regression [executed on Windows](#windows-execution-of-the-timeout-correction) at `b3a7214` and passed. Nothing remains to run on the Windows host for stage 3; Michael's stage review is pending, and DPI stays untested.
+Status: Michael accepted and committed stage 3 through `405adb3` before authorizing stage 4. The automated Windows matrix below **passed natively on 2026-11-04**, nine cases, after two corrections to the runner, and [Michael's manual audition](#michaels-manual-audition) passed the same day with one recorded behavior: title updates for every window defer during an interactive resize. DPI changes could not be tested over RDP. Terminus, the `terminus-canon` rubric and the grimoire were absent on Windows; that absence was not treated as a clean verdict. Markdown normalization, Linux return checks and Terminus review subsequently completed on Linux, as recorded below. The runner-timeout correction and its regression [executed on Windows](#windows-execution-of-the-timeout-correction) at `b3a7214` and passed. The [stage 4 record](../stage-4.md) collects final validation and review status; DPI stays untested.
 
 The [Linux preparation](#linux-preparation) section is the record the Linux session handed over; its cross-build facts stand but are superseded as Windows evidence by the native runs below.
 
@@ -77,7 +77,9 @@ go build -o "$env:TEMP\dfx2-lifetime.exe" .\examples\lifetime
 {"error":"context canceled","event":"return","time":"2026-11-04T14:36:59.1030788-05:00"}
 ```
 
-   A keyboard Ctrl+C reached the fixture as cancellation; both windows closed, ownership drained to zero and `Run` returned `context canceled`. Console close, logoff and shutdown were not observed. 5. DPI: display scaling cannot be changed in this RDP session, so **DPI transitions are untested**. The `WM_DPICHANGED` path has only the portable arithmetic/protocol test behind it.
+   A keyboard Ctrl+C reached the fixture as cancellation; both windows closed, ownership drained to zero and `Run` returned `context canceled`. Console close, logoff and shutdown were not observed.
+
+5. DPI: display scaling cannot be changed in this RDP session, so **DPI transitions are untested**. The `WM_DPICHANGED` path has only the portable arithmetic/protocol test behind it.
 
 ## Linux return checks
 
@@ -102,7 +104,7 @@ Terminus paths review `1d3aedfa3e99` returned clean for the 35 returned Windows 
 
 A subsequent local review identified a runner timeout gap, not a failure in the successful native results: the signal case runs the fixture as a child of `ctrlbreak`, while `Save-And-Check` kills only the driver and then awaits both output streams without a deadline. The fixture inherits the driver's stderr, so a stuck fixture can survive that kill and keep the runner waiting indefinitely. Michael approved correcting this finding. The runner now shares `process.ps1` with a failure-path regression: it invokes Windows `taskkill /PID <fixture> /T /F` before the parent is removed, bounds the termination command and process-exit waits, and bounds each output task. Cleanup/collection failures fail the audition and are saved in `<case>.completion.json`; they cannot become a clean exit. The process-inspection failure path uses the same cleanup. The 20-second execution deadline can be followed by up to ten seconds of bounded cleanup/output waits; inability to terminate or collect output is reported, not hidden.
 
-The new `timeout-test.ps1` starts a deliberately stalled parent and child sharing stderr, then checks that the same completion routine times out, terminates both processes, retains child stderr and finishes within a bounded allowance. It separately checks an output task that never reaches EOF. Its fixture lives under the existing separate `ctrlbreak` module. The fixture cross-build and Windows-targeted vet pass on Linux. PowerShell is unavailable here, so the corrected scripts and regression still require execution on Windows. Terminus review `e81c9ae5cc96` returned clean on the timeout correction, regression and Linux return evidence: 34 files covered, no findings or coverage gaps. This review does not replace the pending Windows execution.
+The new `timeout-test.ps1` starts a deliberately stalled parent and child sharing stderr, then checks that the same completion routine times out, terminates both processes, retains child stderr and finishes within a bounded allowance. It separately checks an output task that never reaches EOF. Its fixture lives under the existing separate `ctrlbreak` module. The fixture cross-build and Windows-targeted vet passed on Linux. PowerShell was unavailable there, so the corrected scripts and regression initially required execution on Windows. Terminus review `e81c9ae5cc96` returned clean on the timeout correction, regression and Linux return evidence: 34 files covered, no findings or coverage gaps. Native execution then completed as recorded below.
 
 Run from the same corrected revision on the Windows host:
 
@@ -111,7 +113,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File evidence\foundation\wind
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File evidence\foundation\windows\audition.ps1 -OutDir evidence/foundation/windows/timeout-fix-run
 ```
 
-Retain `timeout-run/` and `timeout-fix-run/`; do not overwrite the original successful matrix. The regression must report both processes exited, retained child stderr, and a reported deadline for the deliberately unfinished output task. Stage 4 remains unstarted.
+Retain `timeout-run/` and `timeout-fix-run/`; do not overwrite the original successful matrix. The regression must report both processes exited, retained child stderr, and a reported deadline for the deliberately unfinished output task. These were the Windows handoff instructions before stage 4.
 
 ## Windows execution of the timeout correction
 
@@ -120,6 +122,8 @@ Both commands above ran on the same Windows host, from a clean checkout of `b3a7
 [timeout-test.ps1](timeout-test.ps1) passed; its record is [timeout-run/summary.json](timeout-run/summary.json). The stalled parent timed out at the 200 ms test deadline, `taskkill /T /F` removed parent and child, and the whole completion took 351 ms, inside the bounded allowance. The child's `stalled child holds inherited stderr` line was retained in [timeout.stderr.log](timeout-run/timeout.stderr.log) despite the child holding the inherited pipe, and no cleanup failure was reported. The parent's recorded exit code 1 is the forced-termination code `taskkill` assigns, not a fixture result. The separately exercised output task that never reaches end-of-file was reported as `inherited-pipe collection timed out; output incomplete` within its 50 ms bound.
 
 The corrected [audition.ps1](audition.ps1) passed all nine cases again into [timeout-fix-run/](timeout-fix-run/), with every case's new `<case>.completion.json` showing `timed_out` false and no cleanup failures, every final `drained` record at zero, and the same 31 system modules and no descendants in the inspection. The original matrix under [run/](run/) is untouched. The `host.json` worktree field for this run lists only the two new untracked output directories.
+
+## Linux preparation
 
 Status when handed over: the Win32 implementation was built and tested with injected calls on Linux/amd64, and cross-built and vetted for Windows/amd64, with no Windows execution. Stage 2 was accepted and committed as `b2983e4`; its Linux observations remain in [the stage 2 record](../linux/README.md). The common shutdown changes made during stage 3 have a separate [Linux native preflight](../linux/stage-3-preflight/summary.json); those results do not stand in for Windows.
 

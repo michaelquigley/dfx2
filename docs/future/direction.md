@@ -1,6 +1,6 @@
 # dfx2 direction
 
-dfx2 is in planning. Nothing is built yet: this document holds what has been decided, why, and what is still open. It is intent, not description. When code exists, what it does goes into `docs/current/`.
+The foundation runtime is built: application/window lifetime and blank native windows on Linux/amd64 and Windows/amd64 are documented in [runtime.md](../current/runtime.md). Native UI, text, animation and webview integration remain future work. This document holds the broader design decisions, their rationale and open questions.
 
 ## What dfx2 is
 

@@ -1,8 +1,8 @@
 # dfx2 application and UI foundation
 
-Draft proposal for discussion. The next implementation should establish one application lifetime for native drawing and webview windows, then exercise it with a small synthetic mixer. The public API below is a sketch, not implemented Go. Accepted decisions are recorded in [direction.md](direction.md); other choices here remain proposals.
+Draft proposal for discussion. The [application/window runtime](../current/runtime.md) now supplies shared lifetime and blank native windows on Linux and Windows. The next implementation should exercise that foundation with a small synthetic mixer; webview integration follows. The content APIs below remain sketches, not implemented Go. Accepted decisions are recorded in [direction.md](direction.md); other choices here remain proposals.
 
-The [foundation runtime work order](foundation-work-order.md) specifies the first executable slice only: application lifetime and native windows. Mixer controls and webview hosting below remain subsequent work. Mercurius reviewed the spec and work order together for that bounded slice and returned `ready_to_build` with no blocking findings on 2026-11-03. Michael requested its implementation handoff; broader design proposals remain subsequent work.
+Mercurius reviewed the spec and runtime work order together for that bounded slice and returned `ready_to_build` with no blocking findings on 2026-11-03. The fulfilled runtime work order is retired; its [validation record](../../evidence/foundation/stage-4.md) and built contract carry the result. Mixer controls and webview hosting below remain subsequent work requiring their own work orders.
 
 The [native/text findings](text.md) and [webview findings](webview.md) support designing this foundation. They establish working no-cgo paths on Linux and Windows, including worker wakeups and request ownership. They do not establish a complete widget toolkit, multi-window behavior, or production readiness. Sessionmixer supplies the first native use case; source compatibility with dfx and dfw is deliberately absent.
 
@@ -162,9 +162,9 @@ Accepted boundaries are marked below; other recommendations remain for Michael's
 
 ## Proposed implementation sequence
 
-The [runtime work order](foundation-work-order.md) expands the first item below into numbered implementation stages and concrete acceptance checks. The remaining items need later work orders; this outline does not authorize their implementation.
+The first item below is built; its contract is in [runtime.md](../current/runtime.md). The remaining items need later work orders; this outline does not authorize their implementation.
 
-1. **Application lifetime.** Establish the root module, private platform contract, fake backend and native windows on Linux and Windows. Verify independent windows, resident operation and reopening, posting, cancellation and shutdown with a two-window fixture.
+1. **Application lifetime (built).** The root module, private platform contract, fake backend and native windows on Linux and Windows implement independent windows, resident operation and reopening, posting, cancellation and shutdown. The two-window fixture and retained host auditions validate this bounded slice.
 2. **Synthetic mixer.** Add CPU presentation, text, elementary layout and the four controls above. Drive meters and external fader changes independently. Audition drag, keyboard focus, reorder/removal during capture, resize, animation, pause and close on both hosts. Verify each input produces one command and external changes produce none. A fake clock checks scheduling; real desktop auditions check input and presentation.
 3. **Webview on the same lifetime.** Port only the needed mechanisms from the experiments into optional hosts. Exercise a native window and a webview together, both transports, close-one/keep-one behavior, body reads and handlers pending at close, admission limits and child exits. Retain the original experiments as comparison evidence.
 4. **Sessionmixer integration plan.** Use the synthetic result to scope a real strip and its controller, including command failure and hardware acknowledgement. Keep the existing application's hardware dependencies separate from dfx2's no-cgo guarantee. Expand toward the full product only after this slice feels right.

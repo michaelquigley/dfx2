@@ -2,6 +2,7 @@
 
 - [Stage 1](stage-1.md): portable lifecycle core, fake backend, concurrency/failure tests and clean Terminus review; committed as `82487b1` before stage 2.
 - [Stage 2 Linux](linux/README.md): GTK backend, lifetime fixture, native scripts and Michael's manual audition.
-- [Stage 3 Windows](windows/README.md): Win32 implementation, portable protocol/layout checks, and the native Windows matrix executed on 2026-11-04 (nine cases, including a console control event). Michael's manual audition passed the same day, with interactive resize deferring every window's callbacks and DPI untested over RDP. The Linux return checks pass on `87b628f`; Terminus return review is clean; the runner-timeout correction passed Terminus (`e81c9ae5cc96`) and then executed on Windows at `b3a7214`, where the regression and the full matrix passed again; Michael's stage review remains pending.
+- [Stage 3 Windows](windows/README.md): Win32 implementation, portable protocol/layout checks, native Windows matrix and manual audition. The runner-timeout correction passed review and native Windows execution. Michael accepted stage 3 through `405adb3` before stage 4.
+- [Stage 4](stage-4.md): final Linux return checks, common-tree acceptance matrix, retained Windows execution, platform limits and final review status.
 
-The [runtime contract](../../docs/current/runtime.md) describes built behavior. The [work order](../../docs/future/foundation-work-order.md) controls the remaining stages; the broader UI/webview design remains future work.
+The [runtime contract](../../docs/current/runtime.md) describes built behavior. The fulfilled runtime work order is retired; the broader [foundation proposal](../../docs/future/foundation.md) retains subsequent UI/webview work.
