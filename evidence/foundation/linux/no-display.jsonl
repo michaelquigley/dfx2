@@ -1,0 +1,2 @@
+{"event":"start","pause_after":"0s","resident":false,"script":"lifecycle","time":"2026-11-03T22:27:19.405305289-05:00"}
+{"error":"dfx2 backend open: GTK 3 could not open the display; check DISPLAY/WAYLAND_DISPLAY and the desktop session","event":"return","time":"2026-11-03T22:27:19.41492698-05:00"}

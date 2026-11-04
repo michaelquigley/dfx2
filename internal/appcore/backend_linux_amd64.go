@@ -1,6 +1,8 @@
 package appcore
 
-import "github.com/michaelquigley/dfx2/internal/platform"
+import (
+	"github.com/michaelquigley/dfx2/internal/platform"
+	"github.com/michaelquigley/dfx2/internal/platform/gtk"
+)
 
-// Stage 1 is deliberately headless. The GTK selector lands in stage 2.
-func newBackend() (platform.Backend, error) { return nil, ErrUnsupportedPlatform }
+func newBackend() (platform.Backend, error) { return &gtk.Backend{}, nil }

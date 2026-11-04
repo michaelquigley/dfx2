@@ -6,6 +6,6 @@ dfx2 is a Go framework for desktop applications. It draws native user interfaces
 
 ## Status
 
-The root module contains the portable application/window lifecycle core and a controllable fake backend (foundation runtime stage 1). Native backend selection currently returns `ErrUnsupportedPlatform` on every target. There is no GUI example yet. Built behavior and validation are in [runtime.md](docs/current/runtime.md).
+The root module contains the portable application/window lifecycle core, a controllable fake backend, and a Linux/amd64 GTK 3 backend (foundation runtime through stage 2). The [lifetime example](examples/lifetime/README.md) opens independent blank windows with worker-updated titles and demonstrates both application modes. Builds use `CGO_ENABLED=0`; GTK loads only inside `Run`. Windows and other targets currently return `ErrUnsupportedPlatform`. Built behavior is in [runtime.md](docs/current/runtime.md), with [Linux validation](evidence/foundation/linux/README.md).
 
 The broader framework remains in planning. The design work lives in [`docs/future/`](docs/future): start with [direction.md](docs/future/direction.md). Experiments live in [`experiments/`](experiments), each its own Go module.

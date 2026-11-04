@@ -1,0 +1,6 @@
+{"event":"start","pause_after":"0s","resident":false,"script":"create-close","time":"2026-11-03T22:40:46.924463153-05:00"}
+{"event":"verified-create-close","time":"2026-11-03T22:40:46.993961772-05:00"}
+{"applied":0,"event":"closed","time":"2026-11-03T22:40:46.994373522-05:00","window":"starting"}
+{"dispatches":2,"event":"ownership","native_completions":0,"native_retired":0,"native_windows":0,"queued":0,"tasks":0,"terminal":true,"time":"2026-11-03T22:40:46.994439933-05:00","wakes":2,"windows":0}
+{"dispatches":2,"event":"drained","native_completions":0,"native_retired":0,"native_windows":0,"queued":0,"tasks":0,"terminal":true,"time":"2026-11-03T22:40:46.994507172-05:00","wakes":2,"windows":0}
+{"error":"","event":"return","time":"2026-11-03T22:40:46.994519098-05:00"}

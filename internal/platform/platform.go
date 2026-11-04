@@ -4,6 +4,13 @@ package platform
 
 type ID uint64
 
+// Counters supports internal native auditions without exposing native handles
+// or instrumentation on the public App/Window API.
+type Counters struct {
+	Wakes, Dispatches uint64
+	Windows, Retired  int
+}
+
 type WindowOptions struct {
 	Title         string
 	Width, Height int

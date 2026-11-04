@@ -1,0 +1,16 @@
+{"event":"start","pause_after":"0s","resident":false,"script":"","time":"2026-11-03T22:40:47.000264243-05:00"}
+{"event":"opened","time":"2026-11-03T22:40:47.12649184-05:00","window":"A"}
+{"dispatches":0,"event":"ownership","native_completions":0,"native_retired":0,"native_windows":1,"queued":0,"tasks":1,"terminal":false,"time":"2026-11-03T22:40:47.126546505-05:00","wakes":1,"windows":1}
+{"event":"opened","time":"2026-11-03T22:40:47.128159166-05:00","window":"B"}
+{"dispatches":0,"event":"ownership","native_completions":0,"native_retired":0,"native_windows":2,"queued":0,"tasks":2,"terminal":false,"time":"2026-11-03T22:40:47.128166712-05:00","wakes":1,"windows":2}
+{"count":1,"event":"update","time":"2026-11-03T22:40:47.22698212-05:00","window":"A"}
+{"count":1,"event":"update","time":"2026-11-03T22:40:47.22918156-05:00","window":"B"}
+{"count":2,"event":"update","time":"2026-11-03T22:40:47.327446944-05:00","window":"A"}
+{"event":"task-ended","task":"counter-B","time":"2026-11-03T22:40:47.327803913-05:00"}
+{"event":"task-ended","task":"counter-A","time":"2026-11-03T22:40:47.327840898-05:00"}
+{"applied":2,"event":"closed","time":"2026-11-03T22:40:47.329012039-05:00","window":"A"}
+{"dispatches":6,"event":"ownership","native_completions":0,"native_retired":0,"native_windows":0,"queued":0,"tasks":0,"terminal":true,"time":"2026-11-03T22:40:47.329053694-05:00","wakes":6,"windows":0}
+{"applied":1,"event":"closed","time":"2026-11-03T22:40:47.329105521-05:00","window":"B"}
+{"dispatches":6,"event":"ownership","native_completions":0,"native_retired":0,"native_windows":0,"queued":0,"tasks":0,"terminal":true,"time":"2026-11-03T22:40:47.329118407-05:00","wakes":6,"windows":0}
+{"dispatches":6,"event":"drained","native_completions":0,"native_retired":0,"native_windows":0,"queued":0,"tasks":0,"terminal":true,"time":"2026-11-03T22:40:47.329141421-05:00","wakes":6,"windows":0}
+{"error":"context canceled","event":"return","time":"2026-11-03T22:40:47.329151532-05:00"}

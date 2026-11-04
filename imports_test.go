@@ -15,22 +15,24 @@ import (
 	"github.com/michaelquigley/dfx2"
 )
 
-func TestPublicRunStubAndSingleInvocation(t *testing.T) {
+func TestPublicRunValidationAndSingleInvocation(t *testing.T) {
 	// Each subprocess owns one process-wide Run guard, including under -count.
 	if os.Getenv("DFX2_TEST_SINGLE_RUN") != "1" {
-		cmd := exec.Command(os.Args[0], "-test.run=^TestPublicRunStubAndSingleInvocation$")
+		cmd := exec.Command(os.Args[0], "-test.run=^TestPublicRunValidationAndSingleInvocation$")
 		cmd.Env = append(os.Environ(), "DFX2_TEST_SINGLE_RUN=1")
 		if out, err := cmd.CombinedOutput(); err != nil {
 			t.Fatalf("public Run subprocess: %v\n%s", err, out)
 		}
 		return
 	}
-	err := dfx2.Run(context.Background(), dfx2.Options{}, func(*dfx2.App) error {
-		t.Error("unsupported backend invoked setup")
+	// Validation must precede backend loading, on supported and unsupported
+	// hosts alike. This test never needs a display or native libraries.
+	err := dfx2.Run(nil, dfx2.Options{}, func(*dfx2.App) error {
+		t.Error("invalid Run invoked setup")
 		return nil
 	})
-	if !errors.Is(err, dfx2.ErrUnsupportedPlatform) {
-		t.Fatalf("stage 1 stub: %v", err)
+	if err == nil || !strings.Contains(err.Error(), "nil context") {
+		t.Fatalf("invalid Run: %v", err)
 	}
 	if err := dfx2.Run(context.Background(), dfx2.Options{}, func(*dfx2.App) error { return nil }); !errors.Is(err, dfx2.ErrAlreadyRun) {
 		t.Fatalf("second Run: %v", err)
