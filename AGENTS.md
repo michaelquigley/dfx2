@@ -1,6 +1,6 @@
 # AGENTS.md — dfx2
 
-dfx2 is the planned successor to dfx (immediate-mode UI on Dear ImGui) and dfw (webview windows around a Go HTTP server): one Go framework, without cgo, that draws native UI itself and shows web UI in the system webview, above `df`'s foundation. The root module contains the portable foundation runtime core, fake backend, Linux/amd64 GTK 3 backend and Windows/amd64 Win32 backend, with `examples/lifetime` for native auditions. Windows is cross-built but awaits stage 3 execution on the Windows host; read `evidence/foundation/windows/README.md` for the handoff. See `docs/current/runtime.md` for built behavior. The wider UI is in planning.
+dfx2 is the planned successor to dfx (immediate-mode UI on Dear ImGui) and dfw (webview windows around a Go HTTP server): one Go framework, without cgo, that draws native UI itself and shows web UI in the system webview, above `df`'s foundation. The root module contains the portable foundation runtime core, fake backend, Linux/amd64 GTK 3 backend and Windows/amd64 Win32 backend, with `examples/lifetime` for native auditions. Windows passed its native scripted matrix and manual audition on 2026-11-04 but still awaits review and the Linux return checks; read `evidence/foundation/windows/README.md` for the state of stage 3. See `docs/current/runtime.md` for built behavior. The wider UI is in planning.
 
 ## Start here
 

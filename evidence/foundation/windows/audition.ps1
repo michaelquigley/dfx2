@@ -7,10 +7,16 @@ if ([Environment]::OSVersion.Platform -ne [PlatformID]::Win32NT) {
     throw "This audition requires actual Windows execution."
 }
 $env:CGO_ENABLED = "0"
+# .NET Framework's Process builds each fixture's stdin writer from the console
+# input encoding and flushes its preamble at start. With code page 65001 that
+# is a UTF-8 byte order mark, so the fixture's first console line arrived as
+# "﻿quit" and was rejected (observed 2026-11-04). Use UTF-8 without one.
+[Console]::InputEncoding = New-Object Text.UTF8Encoding($false)
 $out = [IO.Path]::GetFullPath($OutDir)
 $scratch = Join-Path $env:TEMP "dfx2-foundation-audition"
 New-Item -ItemType Directory -Force $out, $scratch | Out-Null
 $binary = Join-Path $scratch "lifetime.exe"
+$driver = Join-Path $scratch "ctrlbreak.exe"
 $utf8 = New-Object Text.UTF8Encoding($false)
 function Write-Utf8([string]$Path, [string]$Text) {
     [IO.File]::WriteAllText($Path, $Text, $utf8)
@@ -32,6 +38,8 @@ function Invoke-Go([string]$Name, [string[]]$GoArgs) {
 Invoke-Go "tests" @("test", "./...", "-count=1", "-timeout=120s")
 Invoke-Go "vet" @("vet", "./...")
 Invoke-Go "build" @("build", "-o", $binary, "./examples/lifetime")
+# The console-signal driver is its own module (see ctrlbreak/main.go).
+Invoke-Go "build-ctrlbreak" @("build", "-C", "evidence/foundation/windows/ctrlbreak", "-o", $driver, ".")
 $hostInfo = [ordered]@{
     revision = (& git rev-parse HEAD | Out-String).Trim()
     worktree = (& git status --short | Out-String).Trim()
@@ -47,12 +55,16 @@ $hostInfo = [ordered]@{
 }
 Write-Utf8 (Join-Path $out "host.json") ($hostInfo | ConvertTo-Json -Depth 8)
 
-function Start-Fixture([string[]]$Arguments) {
+function Start-Fixture([string[]]$Arguments, [string]$FileName = $binary, [bool]$OwnConsole = $false) {
     $info = New-Object Diagnostics.ProcessStartInfo
-    $info.FileName = $binary
-    # Fixture arguments are fixed words/durations from the case list, not paths.
+    $info.FileName = $FileName
+    # Fixture arguments are fixed words/durations from the case list; the one
+    # path (the driver's -fixture) is quoted by the case.
     $info.Arguments = $Arguments -join " "
     $info.UseShellExecute = $false
+    # CREATE_NO_WINDOW gives the process a hidden console of its own, which the
+    # signal driver needs so GenerateConsoleCtrlEvent reaches its child.
+    $info.CreateNoWindow = $OwnConsole
     $info.RedirectStandardOutput = $true
     $info.RedirectStandardError = $true
     $info.RedirectStandardInput = $true
@@ -96,6 +108,10 @@ function Save-And-Check($Process, $StdoutTask, $StderrTask, [string]$Name, [stri
         if ($Name -eq "lifecycle-resident" -and @($events | Where-Object event -eq "verified-reopen").Count -eq 0) { $failures.Add("resident reopening absent") }
     }
     if ($Name -eq "create-close" -and @($events | Where-Object event -eq "verified-create-close").Count -eq 0) { $failures.Add("creation-close hook absent") }
+    if ($Name -eq "signal") {
+        if (@($events | Where-Object event -eq "ctrl-break-sent").Count -eq 0) { $failures.Add("console control event not delivered") }
+        if ($returns.Count -eq 0 -or $returns[-1].error -notlike "*context canceled*") { $failures.Add("console control event not observed as cancellation") }
+    }
     $result = [ordered]@{ name = $Name; exit_code = $Process.ExitCode; timed_out = $timedOut; events = $events.Count; failures = @($failures.ToArray()) }
     return $result
 }
@@ -108,9 +124,15 @@ foreach ($case in @(
     @{ name="idle-resident"; args=@("-resident", "-script", "idle"); expected=0 },
     @{ name="failure"; args=@("-script", "failure"); expected=1 },
     @{ name="cancel"; args=@("-script", "cancel"); expected=0 },
-    @{ name="create-close"; args=@("-script", "create-close"); expected=0 }
+    @{ name="create-close"; args=@("-script", "create-close"); expected=0 },
+    # Default mode under the driver: a CTRL_BREAK_EVENT generated through the
+    # console subsystem after both windows have applied updates. Not a keyboard
+    # Ctrl+C, console close, logoff or shutdown; those remain the operator's.
+    @{ name="signal"; file=$driver; ownConsole=$true; args=@("-fixture", ('"' + $binary + '"')); expected=0 }
 )) {
-    $p = Start-Fixture $case.args
+    $file = $binary
+    if ($case.ContainsKey("file")) { $file = $case.file }
+    $p = Start-Fixture $case.args $file ([bool]$case.ownConsole)
     $stdoutTask = $p.StandardOutput.ReadToEndAsync()
     $stderrTask = $p.StandardError.ReadToEndAsync()
     $result = Save-And-Check $p $stdoutTask $stderrTask $case.name "" $case.expected
@@ -156,6 +178,7 @@ try {
     $probeSaved = $true
     if ($browserModules.Count -gt 0 -or $browserChildren.Count -gt 0) { $result.failures += "browser runtime/process detected" }
     $results.Add($result)
+    Write-Host ($result | ConvertTo-Json -Compress)
 } finally {
     if (-not $p.HasExited) { $p.Kill(); $p.WaitForExit() }
     if (-not $probeSaved) {
@@ -167,6 +190,6 @@ try {
     $p.Dispose()
 }
 
-Write-Utf8 (Join-Path $out "summary.json") (@{ host=$hostInfo; results=@($results.ToArray()); manual_audition="pending: native close/resize, resident console reopen, Ctrl+C, and DPI observation" } | ConvertTo-Json -Depth 10)
+Write-Utf8 (Join-Path $out "summary.json") (@{ host=$hostInfo; results=@($results.ToArray()); manual_audition="pending: native close/resize, resident console reopen, keyboard Ctrl+C, and DPI observation" } | ConvertTo-Json -Depth 10)
 if (@($results | Where-Object { $_.failures.Count -gt 0 }).Count -gt 0) { throw "Native audition failures: see $out" }
-Write-Host "Automated Windows matrix passed. Manual controls/signal/DPI observation still required."
+Write-Host "Automated Windows matrix passed. Manual controls/keyboard-signal/DPI observation still required."
