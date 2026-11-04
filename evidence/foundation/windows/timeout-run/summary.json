@@ -1,0 +1,23 @@
+{
+    "revision":  "b3a7214d417023b2cfb7827dd9c724ff907d2482",
+    "powershell":  "5.1.19041.6456",
+    "elapsed_ms":  351,
+    "parent_exited":  true,
+    "child_exited":  true,
+    "completion":  {
+                       "timed_out":  true,
+                       "exit_code":  1,
+                       "stdout":  "",
+                       "stderr":  "stalled child holds inherited stderr\n",
+                       "cleanup_failures":  [
+
+                                            ]
+                   },
+    "unfinished_output":  {
+                              "text":  "",
+                              "failure":  "inherited-pipe collection timed out; output incomplete"
+                          },
+    "failures":  [
+
+                 ]
+}

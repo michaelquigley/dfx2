@@ -1,0 +1,6 @@
+ok  	github.com/michaelquigley/dfx2	2.002s
+?   	github.com/michaelquigley/dfx2/examples/lifetime	[no test files]
+ok  	github.com/michaelquigley/dfx2/internal/appcore	0.596s
+?   	github.com/michaelquigley/dfx2/internal/platform	[no test files]
+?   	github.com/michaelquigley/dfx2/internal/platform/fake	[no test files]
+ok  	github.com/michaelquigley/dfx2/internal/platform/win32	0.635s
