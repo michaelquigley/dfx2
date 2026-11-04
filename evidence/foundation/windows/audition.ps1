@@ -6,6 +6,7 @@ $ErrorActionPreference = "Stop"
 if ([Environment]::OSVersion.Platform -ne [PlatformID]::Win32NT) {
     throw "This audition requires actual Windows execution."
 }
+. (Join-Path $PSScriptRoot "process.ps1")
 $env:CGO_ENABLED = "0"
 # .NET Framework's Process builds each fixture's stdin writer from the console
 # input encoding and flushes its preamble at start. With code page 65001 that
@@ -77,17 +78,20 @@ function Start-Fixture([string[]]$Arguments, [string]$FileName = $binary, [bool]
 }
 
 function Save-And-Check($Process, $StdoutTask, $StderrTask, [string]$Name, [string]$Prefix, [int]$Expected) {
-    $timedOut = -not $Process.WaitForExit(20000)
-    if ($timedOut) { $Process.Kill(); $Process.WaitForExit() }
-    $stdout = $Prefix + $StdoutTask.GetAwaiter().GetResult()
-    $stderr = $StderrTask.GetAwaiter().GetResult()
+    $completion = Complete-Fixture $Process $StdoutTask $StderrTask
+    $timedOut = $completion.timed_out
+    $stdout = $Prefix + $completion.stdout
+    $stderr = $completion.stderr
     Write-Utf8 (Join-Path $out ($Name + ".jsonl")) $stdout
     Write-Utf8 (Join-Path $out ($Name + ".stderr.log")) $stderr
+    # Preserve timeout/collection facts even if a truncated JSON line cannot parse.
+    Write-Utf8 (Join-Path $out ($Name + ".completion.json")) ($completion | Select-Object timed_out, exit_code, cleanup_failures | ConvertTo-Json -Depth 4)
     $events = @($stdout -split "`n" | Where-Object { $_.Trim() } | ForEach-Object { $_ | ConvertFrom-Json })
     $returns = @($events | Where-Object event -eq "return")
     $drains = @($events | Where-Object event -eq "drained")
     $failures = New-Object 'Collections.Generic.List[string]'
-    if ($timedOut -or $Process.ExitCode -ne $Expected) { $failures.Add("exit=$($Process.ExitCode), expected=$Expected, timeout=$timedOut") }
+    foreach ($problem in $completion.cleanup_failures) { $failures.Add($problem) }
+    if ($timedOut -or $completion.exit_code -ne $Expected) { $failures.Add("exit=$($completion.exit_code), expected=$Expected, timeout=$timedOut") }
     if ($returns.Count -eq 0 -or $drains.Count -eq 0) { $failures.Add("missing return/drained events") }
     else {
         $last = $drains[-1]
@@ -112,7 +116,7 @@ function Save-And-Check($Process, $StdoutTask, $StderrTask, [string]$Name, [stri
         if (@($events | Where-Object event -eq "ctrl-break-sent").Count -eq 0) { $failures.Add("console control event not delivered") }
         if ($returns.Count -eq 0 -or $returns[-1].error -notlike "*context canceled*") { $failures.Add("console control event not observed as cancellation") }
     }
-    $result = [ordered]@{ name = $Name; exit_code = $Process.ExitCode; timed_out = $timedOut; events = $events.Count; failures = @($failures.ToArray()) }
+    $result = [ordered]@{ name = $Name; exit_code = $completion.exit_code; timed_out = $timedOut; events = $events.Count; failures = @($failures.ToArray()) }
     return $result
 }
 
@@ -180,12 +184,11 @@ try {
     $results.Add($result)
     Write-Host ($result | ConvertTo-Json -Compress)
 } finally {
-    if (-not $p.HasExited) { $p.Kill(); $p.WaitForExit() }
     if (-not $probeSaved) {
-        $remaining = ""
-        if ($null -ne $stdoutTask) { $remaining = $stdoutTask.GetAwaiter().GetResult() }
-        Write-Utf8 (Join-Path $out "inspection.jsonl") ($prefix + $remaining)
-        Write-Utf8 (Join-Path $out "inspection.stderr.log") ($stderrTask.GetAwaiter().GetResult())
+        $completion = Complete-Fixture $p $stdoutTask $stderrTask 0
+        Write-Utf8 (Join-Path $out "inspection.jsonl") ($prefix + $completion.stdout)
+        Write-Utf8 (Join-Path $out "inspection.stderr.log") $completion.stderr
+        Write-Utf8 (Join-Path $out "inspection.completion.json") ($completion | Select-Object timed_out, exit_code, cleanup_failures | ConvertTo-Json -Depth 4)
     }
     $p.Dispose()
 }

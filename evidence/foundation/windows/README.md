@@ -2,7 +2,7 @@
 
 Host: Microsoft Windows 10 Pro 10.0.19045, 64-bit, amd64; Go 1.27.3 windows/amd64 with module language version 1.26; Windows PowerShell 5.1.19041.6456; Cygwin git. The session is Remote Desktop (`RDP-Tcp#0`) on a Microsoft Remote Display Adapter at 3440×1440; a Microsoft Basic Display Adapter at 1024×768 is also enumerated. Revision `0d46ac7` was checked out clean before the first run. All Go builds, tests and vet use `CGO_ENABLED=0`. Host, commands and per-case results are retained in [run/host.json](run/host.json) and [run/summary.json](run/summary.json).
 
-Status: the automated Windows matrix below **passed natively on 2026-11-04**, nine cases, after two corrections to the runner, and [Michael's manual audition](#michaels-manual-audition) passed the same day with one recorded behavior: title updates for every window defer during an interactive resize. DPI changes could not be tested over RDP. **Stage 3 is not accepted.** Terminus did not review the Windows changes: neither Terminus, the `terminus-canon` rubric nor the grimoire is installed on this host, and absence is not a clean verdict. `unfurl` is also absent, so the Markdown authored here is unchecked. The Linux return checks have not run.
+Status: the automated Windows matrix below **passed natively on 2026-11-04**, nine cases, after two corrections to the runner, and [Michael's manual audition](#michaels-manual-audition) passed the same day with one recorded behavior: title updates for every window defer during an interactive resize. DPI changes could not be tested over RDP. **Stage 3 is not accepted.** Terminus did not review the Windows changes: neither Terminus, the `terminus-canon` rubric nor the grimoire is installed on this host, and absence is not a clean verdict. Those tools were absent during the Windows session. Markdown normalization and the Linux return checks have since completed on Linux; review status is recorded below.
 
 The [Linux preparation](#linux-preparation) section is the record the Linux session handed over; its cross-build facts stand but are superseded as Windows evidence by the native runs below.
 
@@ -77,12 +77,41 @@ go build -o "$env:TEMP\dfx2-lifetime.exe" .\examples\lifetime
 {"error":"context canceled","event":"return","time":"2026-11-04T14:36:59.1030788-05:00"}
 ```
 
-   A keyboard Ctrl+C reached the fixture as cancellation; both windows closed, ownership drained to zero and `Run` returned `context canceled`. Console close, logoff and shutdown were not observed.
-5. DPI: display scaling cannot be changed in this RDP session, so **DPI transitions are untested**. The `WM_DPICHANGED` path has only the portable arithmetic/protocol test behind it.
+   A keyboard Ctrl+C reached the fixture as cancellation; both windows closed, ownership drained to zero and `Run` returned `context canceled`. Console close, logoff and shutdown were not observed. 5. DPI: display scaling cannot be changed in this RDP session, so **DPI transitions are untested**. The `WM_DPICHANGED` path has only the portable arithmetic/protocol test behind it.
 
 ## Linux return checks
 
-After Michael commits this tree and it is pulled on Linux: rerun `CGO_ENABLED=0 go test ./... -count=1`, `go vet ./...`, the Linux example build, the Windows and darwin cross-builds, `GOOS=windows GOARCH=amd64 go vet -C evidence/foundation/windows/ctrlbreak .`, and the affected Linux native scenarios; confirm the Windows files arrived as mode 100644. Terminus must review the Windows changes on a host that has the canon. Stage 4 does not start before those checks and Michael's stage review.
+The returned tree is committed as `87b628f`, based on preparation commit `0d46ac7`. The root runtime, backends and example Go code are unchanged by the Windows session; only the audition runner, separate console-signal helper, evidence and documentation changed. All Windows evidence/helper files arrived as mode 100644.
+
+On Linux/amd64 with Go 1.27.1, the following passed with `CGO_ENABLED=0`:
+
+```sh
+go test ./... -count=1 -timeout=60s
+go vet ./...
+go build -o /tmp/dfx2-stage3-return-lifetime ./examples/lifetime
+GOOS=windows GOARCH=amd64 go build ./...
+GOOS=windows GOARCH=amd64 go vet ./...
+GOOS=darwin GOARCH=amd64 go build ./...
+GOOS=windows GOARCH=amd64 go vet -C evidence/foundation/windows/ctrlbreak .
+GOOS=windows GOARCH=amd64 go build -C evidence/foundation/windows/ctrlbreak -o /tmp/dfx2-stage3-return-ctrlbreak.exe .
+```
+
+The rebuilt Linux example passed all eight native Wayland cases through `python3 evidence/foundation/linux/drive.py /tmp/dfx2-stage3-return-lifetime --out evidence/foundation/linux/stage-3-return --gdk-backend wayland`. The [return record](../linux/stage-3-return/summary.json) retains exits, zero idle wakes, final ownership drain and process inspection, separately from the earlier preflight. The Windows-authored Markdown was processed with `unfurl` on return. These Linux runs do not replace the retained native Windows evidence.
+
+Terminus paths review `1d3aedfa3e99` returned clean for the 35 returned Windows files and associated documentation, with no findings or uncovered files. The new Linux return logs were separately checked for all final ownership counts; they were untracked and outside that paths-review manifest.
+
+A subsequent local review identified a runner timeout gap, not a failure in the successful native results: the signal case runs the fixture as a child of `ctrlbreak`, while `Save-And-Check` kills only the driver and then awaits both output streams without a deadline. The fixture inherits the driver's stderr, so a stuck fixture can survive that kill and keep the runner waiting indefinitely. Michael approved correcting this finding. The runner now shares `process.ps1` with a failure-path regression: it invokes Windows `taskkill /PID <fixture> /T /F` before the parent is removed, bounds the termination command and process-exit waits, and bounds each output task. Cleanup/collection failures fail the audition and are saved in `<case>.completion.json`; they cannot become a clean exit. The process-inspection failure path uses the same cleanup. The 20-second execution deadline can be followed by up to ten seconds of bounded cleanup/output waits; inability to terminate or collect output is reported, not hidden.
+
+The new `timeout-test.ps1` starts a deliberately stalled parent and child sharing stderr, then checks that the same completion routine times out, terminates both processes, retains child stderr and finishes within a bounded allowance. It separately checks an output task that never reaches EOF. Its fixture lives under the existing separate `ctrlbreak` module. The fixture cross-build and Windows-targeted vet pass on Linux. PowerShell is unavailable here, so the corrected scripts and regression still require execution on Windows. Terminus review `e81c9ae5cc96` returned clean on the timeout correction, regression and Linux return evidence: 34 files covered, no findings or coverage gaps. This review does not replace the pending Windows execution.
+
+Run from the same corrected revision on the Windows host:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File evidence\foundation\windows\timeout-test.ps1
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File evidence\foundation\windows\audition.ps1 -OutDir evidence/foundation/windows/timeout-fix-run
+```
+
+Retain `timeout-run/` and `timeout-fix-run/`; do not overwrite the original successful matrix. The regression must report both processes exited, retained child stderr, and a reported deadline for the deliberately unfinished output task. Stage 4 remains unstarted.
 
 ## Linux preparation
 
