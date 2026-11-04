@@ -141,7 +141,7 @@ All root builds/tests use `CGO_ENABLED=0`. Run `go test ./...`, `go vet ./...` a
 
 Native auditions are essential: the fake cannot verify toolkit thread ownership or OS message-loop behavior. A passing host exit counter is not browser-child evidence; this slice intentionally has no browser. Preserve its native-only dependency test when later hosts arrive.
 
-Each implementation stage goes through Terminus and Michael's review. The current dfx2 Terminus rubric is absent at `../terminus-canon/projects/dfx2/rubric.yaml`; establish the project rubric through the canon workflow before the first code stage can be accepted. A missing rubric is not a clean review. Mercurius reviews this plan independently of that code-review prerequisite. Review findings are triaged with Michael one at a time under the grimoire convention.
+Each implementation stage goes through Terminus and Michael's review. The dfx2 rubric lives at `../terminus-canon/projects/dfx2/rubric.yaml`; it was established and successfully loaded on 2026-11-03. Ensure the shared canon is available on the reviewing host. Rubric validation is not a code-review verdict. Review findings are triaged with Michael one at a time under the grimoire convention.
 
 ## Completion boundary
 
