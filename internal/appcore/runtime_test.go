@@ -91,9 +91,26 @@ func (t *manualTimer) fire() {
 type manualClock struct {
 	created chan *manualTimer
 	waiting []*manualTimer // only the test controller accesses this slice
+	mu      sync.Mutex
+	now     time.Time
 }
 
-func newClock() *manualClock { return &manualClock{created: make(chan *manualTimer, 100)} }
+// Now is monotonic test time: it only moves when a test advances it.
+func (c *manualClock) Now() time.Time {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	return c.now
+}
+
+func (c *manualClock) advance(d time.Duration) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	c.now = c.now.Add(d)
+}
+
+func newClock() *manualClock {
+	return &manualClock{created: make(chan *manualTimer, 100), now: time.Unix(1_000_000, 0)}
+}
 func (c *manualClock) NewTimer(d time.Duration) timer {
 	t := &manualTimer{d: d, c: make(chan time.Time, 1)}
 	c.created <- t

@@ -111,6 +111,11 @@ func (b *Backend) Open(sink func(platform.Event)) error {
 func (b *Backend) IsOwner() bool { return b.api.threadID() == b.owner }
 
 func (b *Backend) Create(id platform.ID, options platform.WindowOptions) error {
+	if options.Content {
+		// Stage 2 of the synthetic mixer adds Win32 presentation. Until then,
+		// refuse before any native work so ordinary windows keep working.
+		return platform.ErrUnsupportedContent
+	}
 	if options.Width <= 0 || options.Height <= 0 || options.Width > math.MaxInt32 || options.Height > math.MaxInt32 {
 		return errors.New("Win32 client dimensions must fit positive int values")
 	}
@@ -304,6 +309,9 @@ func (b *Backend) closeRequested(w *window) {
 	w.closing = true
 	b.sink(platform.Event{Kind: platform.CloseRequested, Window: w.id})
 }
+
+// Present is unreachable until Win32 content windows exist: Create refuses them.
+func (b *Backend) Present(platform.ID, platform.Image) error { return platform.ErrUnsupportedContent }
 
 func (b *Backend) SetTitle(id platform.ID, title string) error {
 	value, err := text(title)

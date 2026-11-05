@@ -10,7 +10,9 @@ import (
 
 // NewWindow creates a native window synchronously on the UI thread. Creation
 // failures are returned and latched as application failures even if ignored.
-func (a *App) NewWindow(options WindowOptions) (*Window, error) {
+func (a *App) NewWindow(options WindowOptions) (*Window, error) { return a.newWindow(options, nil) }
+
+func (a *App) newWindow(options WindowOptions, content Content) (*Window, error) {
 	if !a.backend.IsOwner() {
 		return nil, ErrWrongThread
 	}
@@ -29,13 +31,29 @@ func (a *App) NewWindow(options WindowOptions) (*Window, error) {
 	ctx, cancel := context.WithCancel(a.ctx)
 	w := &Window{app: a, owner: owner{id: a.nextLocked(), ctx: ctx, cancel: cancel,
 		state: starting, tasks: make(map[platform.ID]*task)}, creating: true, native: true, done: make(chan struct{})}
-	// Register before Create: it can synchronously request close or destruction.
+	if content != nil {
+		// Generation 1 is unconsumed: the first visible, sized surface renders.
+		w.attachment = &attachment{impl: content, generation: 1}
+	}
+	// Register before Create: it can synchronously request close or destruction,
+	// and content surface notifications route through this record.
 	a.windows[w.id] = w
 	a.mu.Unlock()
-	err := a.backend.Create(w.id, platform.WindowOptions(options))
+	err := a.backend.Create(w.id, platform.WindowOptions{Title: options.Title, Width: options.Width, Height: options.Height, Content: content != nil})
 	a.mu.Lock()
 	defer a.mu.Unlock()
 	w.creating = false
+	if content != nil && errors.Is(err, platform.ErrUnsupportedContent) {
+		// Refused before native work: drain the record (releasing content)
+		// without latching an application failure.
+		w.native = false
+		a.closeWindowLocked(w)
+		// The refused record was a live starting window and may have
+		// postponed last-window shutdown; nonfatal, but it still counts.
+		a.lastWindowLocked()
+		a.notifyLocked()
+		return nil, err
+	}
 	if err != nil {
 		w.native = false // Create's failure contract releases partial objects.
 		err = fmt.Errorf("dfx2 NewWindow: %w", err)

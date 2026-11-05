@@ -4,6 +4,7 @@ package gtk
 import (
 	"fmt"
 	"sync"
+	"unsafe"
 
 	"github.com/ebitengine/purego"
 )
@@ -28,6 +29,35 @@ type native struct {
 	iteration      func(uintptr, int32) int32
 	idleAdd        func(int32, uintptr, uintptr, uintptr) uint32
 	removeSource   func(uint32) int32
+
+	// Content surfaces. GdkWindowState is a flags enum returned in a 32-bit
+	// register; cairo_format_t and cairo_status_t are int-sized enums.
+	drawingAreaNew  func() uintptr
+	containerAdd    func(uintptr, uintptr)
+	queueDraw       func(uintptr)
+	allocatedWidth  func(uintptr) int32
+	allocatedHeight func(uintptr) int32
+	mapped          func(uintptr) int32
+	widgetWindow    func(uintptr) uintptr
+	windowState     func(uintptr) uint32
+
+	imageSurfaceCreate func(int32, int32, int32) uintptr
+	imageSurfaceData   func(uintptr) unsafe.Pointer
+	imageSurfaceStride func(uintptr) int32
+	surfaceStatus      func(uintptr) int32
+	surfaceFlush       func(uintptr)
+	surfaceMarkDirty   func(uintptr)
+	surfaceSetScale    func(uintptr, float64, float64)
+	surfaceDestroy     func(uintptr)
+	setSourceSurface   func(uintptr, uintptr, float64, float64)
+	paint              func(uintptr)
+
+	// Internal audition hooks only.
+	windowResize    func(uintptr, int32, int32)
+	windowIconify   func(uintptr)
+	windowDeiconify func(uintptr)
+	windowPresent   func(uintptr)
+	surfaceWritePNG func(uintptr, string) int32
 }
 
 var n native
@@ -54,6 +84,21 @@ func load() error {
 				"gtk_window_set_title": &n.setTitle, "gtk_window_set_default_size": &n.setDefaultSize,
 				"gtk_widget_show_all": &n.show,
 				"gtk_widget_destroy":  &n.destroy, "gtk_widget_get_scale_factor": &n.getScale,
+				"gtk_drawing_area_new": &n.drawingAreaNew, "gtk_container_add": &n.containerAdd,
+				"gtk_widget_queue_draw": &n.queueDraw, "gtk_widget_get_allocated_width": &n.allocatedWidth,
+				"gtk_widget_get_allocated_height": &n.allocatedHeight, "gtk_widget_get_mapped": &n.mapped,
+				"gtk_widget_get_window": &n.widgetWindow, "gtk_window_resize": &n.windowResize,
+				"gtk_window_iconify": &n.windowIconify, "gtk_window_deiconify": &n.windowDeiconify,
+				"gtk_window_present": &n.windowPresent,
+			}},
+			{"libgdk-3.so.0", map[string]any{"gdk_window_get_state": &n.windowState}},
+			{"libcairo.so.2", map[string]any{
+				"cairo_image_surface_create": &n.imageSurfaceCreate, "cairo_image_surface_get_data": &n.imageSurfaceData,
+				"cairo_image_surface_get_stride": &n.imageSurfaceStride, "cairo_surface_status": &n.surfaceStatus,
+				"cairo_surface_flush": &n.surfaceFlush, "cairo_surface_mark_dirty": &n.surfaceMarkDirty,
+				"cairo_surface_set_device_scale": &n.surfaceSetScale, "cairo_surface_destroy": &n.surfaceDestroy,
+				"cairo_set_source_surface": &n.setSourceSurface, "cairo_paint": &n.paint,
+				"cairo_surface_write_to_png": &n.surfaceWritePNG,
 			}},
 		}
 		for _, group := range groups {

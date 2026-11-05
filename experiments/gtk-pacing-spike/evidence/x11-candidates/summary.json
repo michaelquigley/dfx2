@@ -1,0 +1,87 @@
+{
+  "backend": "x11",
+  "scale": "1",
+  "platform": "Linux-7.0.0-42-generic-x86_64-with-glibc2.43",
+  "results": [
+    {
+      "mode": "paced",
+      "exit": 0,
+      "timeout": false,
+      "failures": [],
+      "observations": {
+        "minimized_window_1": {
+          "frames": 0,
+          "paints": 0,
+          "ticks": 0,
+          "requests": 0,
+          "timers": 0,
+          "samples": 240
+        },
+        "quiet_window_1": {
+          "frames": 0,
+          "ticks": 0,
+          "requests": 0,
+          "timers": 0,
+          "samples": 0
+        },
+        "minimized_window_2": {
+          "frames": 304,
+          "paints": 304,
+          "ticks": 304,
+          "requests": 0,
+          "timers": 304,
+          "samples": 240
+        },
+        "quiet_window_2": {
+          "frames": 0,
+          "ticks": 0,
+          "requests": 0,
+          "timers": 0,
+          "samples": 0
+        },
+        "minimized_interval_seconds": 8.013053602,
+        "restored_sample_lag": 0
+      }
+    },
+    {
+      "mode": "continuous",
+      "exit": 0,
+      "timeout": false,
+      "failures": [],
+      "observations": {
+        "minimized_window_1": {
+          "frames": 0,
+          "paints": 0,
+          "ticks": 0,
+          "requests": 0,
+          "timers": 0,
+          "samples": 240
+        },
+        "quiet_window_1": {
+          "frames": 0,
+          "ticks": 0,
+          "requests": 0,
+          "timers": 0,
+          "samples": 0
+        },
+        "minimized_window_2": {
+          "frames": 4604,
+          "paints": 4604,
+          "ticks": 4604,
+          "requests": 0,
+          "timers": 0,
+          "samples": 240
+        },
+        "quiet_window_2": {
+          "frames": 0,
+          "ticks": 0,
+          "requests": 0,
+          "timers": 0,
+          "samples": 0
+        },
+        "minimized_interval_seconds": 8.012805793,
+        "restored_sample_lag": 0
+      }
+    }
+  ]
+}

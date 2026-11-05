@@ -56,6 +56,7 @@ func (a *App) dispatch() {
 			break
 		}
 	}
+	a.frames()
 	a.drainInternal()
 	a.mu.Lock()
 	defer a.mu.Unlock()
@@ -121,19 +122,19 @@ func (a *App) drainInternal() {
 		a.mu.Unlock()
 	}
 	a.mu.Lock()
-	defer a.mu.Unlock()
 	for id, t := range a.tasks {
 		if t.finished {
 			delete(a.tasks, id)
 		}
 	}
+	var finished []*Window
 	for id, w := range a.windows {
 		for taskID, t := range w.tasks {
 			if t.finished {
 				delete(w.tasks, taskID)
 			}
 		}
-		if w.state != closing || w.creating || w.native || len(w.tasks) != 0 {
+		if w.state != closing || w.creating || w.native || w.releasing || len(w.tasks) != 0 {
 			continue
 		}
 		pending := false
@@ -146,9 +147,28 @@ func (a *App) drainInternal() {
 		if pending {
 			continue
 		}
+		// Stay registered, and visible to diagnostics, until content release
+		// returns: a stalled release is unfinished cleanup, not a drained window.
+		w.releasing = true
+		finished = append(finished, w)
+	}
+	a.mu.Unlock()
+	// Content is released after native teardown and its final callback, on the
+	// UI thread and outside the mutex. Only then is the window removed and Done
+	// closed.
+	for _, w := range finished {
+		var err error
+		if w.attachment != nil {
+			err = invoke("ui release", func() error { w.attachment.impl.Release(); return nil })
+		}
+		a.mu.Lock()
+		// A release failure is a cleanup failure: keep it alongside any
+		// earlier application failure rather than behind it.
+		a.cleanupLocked(err)
 		w.state = closed
+		delete(a.windows, w.id)
+		a.mu.Unlock()
 		close(w.done)
-		delete(a.windows, id)
 	}
 }
 
@@ -156,6 +176,7 @@ func (a *App) pendingLocked() bool {
 	if len(a.queue) != 0 {
 		return true
 	}
+	now := a.clock.Now()
 	for _, t := range a.tasks {
 		if t.finished {
 			return true
@@ -167,7 +188,7 @@ func (a *App) pendingLocked() bool {
 		}
 	}
 	for _, w := range a.windows {
-		if len(w.queue) != 0 || (w.state == closing && !w.creating && w.native && !w.destroyStarted) {
+		if len(w.queue) != 0 || (w.state == closing && !w.creating && w.native && !w.destroyStarted) || a.frameDueLocked(w, now) {
 			return true
 		}
 		for _, t := range w.tasks {

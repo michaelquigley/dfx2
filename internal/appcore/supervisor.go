@@ -49,13 +49,19 @@ func (a *App) wakeLocked() {
 
 func (a *App) supervise() {
 	defer close(a.supervised)
-	var retry, diagnostic timer
+	var retry, diagnostic, frame timer
+	// frameAt is the deadline the frame timer was armed for. It survives the
+	// timer firing so an unconsumed deadline is never re-armed in a loop.
+	var frameAt time.Time
 	defer func() {
 		if retry != nil {
 			retry.Stop()
 		}
 		if diagnostic != nil {
 			diagnostic.Stop()
+		}
+		if frame != nil {
+			frame.Stop()
 		}
 	}()
 	parentDone := a.parent.Done()
@@ -67,8 +73,15 @@ func (a *App) supervise() {
 				retry.Stop()
 				retry = nil
 			}
+			if frame != nil {
+				frame.Stop()
+				frame = nil
+			}
 			wakesSealed = true
 			close(a.wakesStopped)
+		}
+		if !a.terminal {
+			a.scheduleFrameLocked(&frame, &frameAt)
 		}
 		if !a.terminal && a.wakeFailures > 0 && retry == nil {
 			retry = a.clock.NewTimer(retryDelay)
@@ -85,7 +98,10 @@ func (a *App) supervise() {
 		if wakeMessage != "" {
 			a.log("%s", wakeMessage)
 		}
-		var retryC, diagnosticC <-chan time.Time
+		var retryC, diagnosticC, frameC <-chan time.Time
+		if frame != nil {
+			frameC = frame.C()
+		}
 		if retry != nil {
 			retryC = retry.C()
 		}
@@ -110,6 +126,15 @@ func (a *App) supervise() {
 				a.wakeLocked()
 			}
 			a.mu.Unlock()
+		case <-frameC:
+			// Deliver through the private wake path; rendering stays on the UI
+			// thread and only the dispatch turn decides what is due.
+			frame = nil
+			a.mu.Lock()
+			if !a.terminal {
+				a.notifyLocked()
+			}
+			a.mu.Unlock()
 		case <-diagnosticC:
 			diagnostic = nil
 			a.mu.Lock()
@@ -121,6 +146,39 @@ func (a *App) supervise() {
 			}
 			a.log("%s", message)
 		}
+	}
+}
+
+// scheduleFrameLocked keeps one app-owned one-shot timer for the earliest live
+// deadline; no live deadline means no armed timer. at is the deadline last
+// armed or delivered, kept after firing so an unconsumed deadline is never
+// re-armed in a loop. The supervisor can evaluate late: an armed timer keeps
+// owning its deadline even once it is past, so a pending fire is never
+// discarded, and a deadline first seen already due is delivered through the
+// wake path at once. Either way it cannot be lost while no dispatch is pending.
+func (a *App) scheduleFrameLocked(frame *timer, at *time.Time) {
+	now := a.clock.Now()
+	want := a.nextDeadlineLocked()
+	stop := func() {
+		if *frame != nil {
+			(*frame).Stop()
+			*frame = nil
+		}
+	}
+	switch {
+	case want.IsZero():
+		stop()
+		*at = time.Time{}
+	case want.Equal(*at):
+		// Armed, or already delivered and awaiting its frame.
+	case !want.After(now):
+		stop()
+		*at = want
+		a.notifyLocked()
+	default:
+		stop()
+		*frame, *at = a.clock.NewTimer(want.Sub(now)), want
+		a.frameTimers++
 	}
 }
 
@@ -139,7 +197,7 @@ func (a *App) log(format string, args ...any) {
 func (a *App) diagnosticLocked() string {
 	var parts []string
 	for id, w := range a.windows {
-		parts = append(parts, fmt.Sprintf("window=%d state=%s native=%t creating=%t", id, w.state, w.native, w.creating))
+		parts = append(parts, fmt.Sprintf("window=%d state=%s native=%t creating=%t content-release-pending=%t", id, w.state, w.native, w.creating, w.releasing))
 		for taskID, t := range w.tasks {
 			parts = append(parts, fmt.Sprintf("window=%d task=%d %q completion-pending=%t", id, taskID, t.name, t.finished))
 		}

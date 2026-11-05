@@ -93,7 +93,8 @@ func TestDependencyBoundaries(t *testing.T) {
 				return
 			}
 			seen[dependency] = true
-			for _, forbidden := range []string{module, module + "/internal/appcore", module + "/ui", module + "/webview"} {
+			for _, forbidden := range []string{module, module + "/internal/appcore", module + "/ui", module + "/webview",
+				module + "/internal/text", module + "/internal/render"} {
 				if dependency == forbidden || (forbidden != module && strings.HasPrefix(dependency, forbidden+"/")) {
 					t.Errorf("%s transitively reaches %s", path, dependency)
 				}
@@ -106,7 +107,8 @@ func TestDependencyBoundaries(t *testing.T) {
 			walk(dependency)
 		}
 	}
-	// Native-only applications must stay free of browser/content dependencies.
+	// Native-only applications must stay free of browser/content dependencies,
+	// including the UI, renderer, text system and their font libraries.
 	seen := make(map[string]bool)
 	var nativeOnly func(string)
 	nativeOnly = func(path string) {
@@ -115,7 +117,8 @@ func TestDependencyBoundaries(t *testing.T) {
 		}
 		seen[path] = true
 		lower := strings.ToLower(path)
-		for _, excluded := range []string{"webkit", "javascriptcore", "webview", module + "/ui"} {
+		for _, excluded := range []string{"webkit", "javascriptcore", "webview", module + "/ui", module + "/internal/text",
+			module + "/internal/render", "github.com/go-text/", "golang.org/x/image"} {
 			if strings.Contains(lower, excluded) {
 				t.Errorf("root pulls content dependency %s", path)
 			}
@@ -125,4 +128,11 @@ func TestDependencyBoundaries(t *testing.T) {
 		}
 	}
 	nativeOnly(module)
+	// The content packages are present and reachable from ui, so the walk
+	// above is not vacuous.
+	for _, required := range []string{module + "/ui", module + "/internal/text/gotext", "github.com/go-text/typesetting/shaping"} {
+		if _, ok := packages[required]; !ok {
+			t.Errorf("dependency walk did not see %s", required)
+		}
+	}
 }

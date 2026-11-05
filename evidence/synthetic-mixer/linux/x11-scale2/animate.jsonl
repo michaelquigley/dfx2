@@ -1,0 +1,11 @@
+{"event":"opened","time":"2026-11-05T16:04:44.248865912-05:00","window":"A"}
+{"animating":0,"dispatch_targets":1,"dispatches":64,"event":"animating","first_frames":63,"first_surface":"1120x520@2 visible=true","frame_timers":4,"frames":63,"native_completions":0,"native_problem":"","native_retired":0,"native_windows":1,"paints":62,"presents":62,"queued":0,"release_pending":false,"tasks":2,"terminal":false,"time":"2026-11-05T16:04:46.249930522-05:00","wakes":64,"windows":1}
+{"event":"snapshot","path":"/home/michael/Repos/q/products/dfx2/evidence/synthetic-mixer/linux/x11-scale2/snapshots/animate-running.png","time":"2026-11-05T16:04:46.301282842-05:00"}
+{"event":"feed","running":false,"time":"2026-11-05T16:04:46.301356752-05:00"}
+{"animating":0,"dispatch_targets":1,"dispatches":67,"event":"settled","first_frames":66,"first_surface":"1120x520@2 visible=true","frame_timers":6,"frames":66,"native_completions":0,"native_problem":"","native_retired":0,"native_windows":1,"paints":66,"presents":66,"queued":0,"release_pending":false,"tasks":2,"terminal":false,"time":"2026-11-05T16:04:46.575187018-05:00","wakes":67,"windows":1}
+{"animating":0,"dispatches":0,"event":"quiet","frame_timers":0,"frames":0,"paints":0,"presents":0,"seconds":5,"time":"2026-11-05T16:04:51.576062415-05:00","wakes":0}
+{"event":"snapshot","path":"/home/michael/Repos/q/products/dfx2/evidence/synthetic-mixer/linux/x11-scale2/snapshots/animate-settled.png","time":"2026-11-05T16:04:51.596312674-05:00"}
+{"event":"closed","time":"2026-11-05T16:04:51.597106897-05:00","window":"A"}
+{"animating":0,"dispatch_targets":1,"dispatches":70,"event":"ownership","frame_timers":6,"frames":0,"native_completions":0,"native_problem":"","native_retired":0,"native_windows":0,"paints":66,"presents":66,"queued":0,"release_pending":true,"tasks":0,"terminal":true,"time":"2026-11-05T16:04:51.597140584-05:00","wakes":70,"windows":0}
+{"error":"\u003cnil\u003e","event":"return","invalidations_refused_after_close":0,"time":"2026-11-05T16:04:51.597193869-05:00"}
+{"animating":0,"dispatch_targets":0,"dispatches":70,"event":"drained","frame_timers":6,"frames":0,"native_completions":0,"native_problem":"","native_retired":0,"native_windows":0,"paints":66,"presents":66,"queued":0,"release_pending":false,"tasks":0,"terminal":true,"time":"2026-11-05T16:04:51.597206439-05:00","wakes":70,"windows":0}

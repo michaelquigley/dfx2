@@ -1,0 +1,47 @@
+{
+  "backend": "x11",
+  "scale": "2",
+  "platform": "Linux-7.0.0-42-generic-x86_64-with-glibc2.43",
+  "results": [
+    {
+      "mode": "continuous",
+      "exit": 0,
+      "timeout": false,
+      "failures": [],
+      "observations": {
+        "minimized_window_1": {
+          "frames": 0,
+          "paints": 0,
+          "ticks": 0,
+          "requests": 0,
+          "timers": 0,
+          "samples": 240
+        },
+        "quiet_window_1": {
+          "frames": 0,
+          "ticks": 0,
+          "requests": 0,
+          "timers": 0,
+          "samples": 0
+        },
+        "minimized_window_2": {
+          "frames": 2914,
+          "paints": 2914,
+          "ticks": 2914,
+          "requests": 0,
+          "timers": 0,
+          "samples": 240
+        },
+        "quiet_window_2": {
+          "frames": 0,
+          "ticks": 0,
+          "requests": 0,
+          "timers": 0,
+          "samples": 0
+        },
+        "minimized_interval_seconds": 8.015337232,
+        "restored_sample_lag": 0
+      }
+    }
+  ]
+}

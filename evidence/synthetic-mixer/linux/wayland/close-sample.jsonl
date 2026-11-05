@@ -1,0 +1,7 @@
+{"event":"opened","time":"2026-11-05T16:03:49.758233425-05:00","window":"A"}
+{"animating":0,"dispatch_targets":1,"dispatches":16,"event":"sampling","first_frames":16,"first_surface":"560x260@1 visible=true","frame_timers":2,"frames":16,"native_completions":0,"native_problem":"","native_retired":0,"native_windows":1,"paints":15,"presents":15,"queued":0,"release_pending":false,"tasks":2,"terminal":false,"time":"2026-11-05T16:03:50.25956003-05:00","wakes":16,"windows":1}
+{"event":"closed","time":"2026-11-05T16:03:51.262082843-05:00","window":"A"}
+{"animating":0,"dispatch_targets":1,"dispatches":926,"event":"ownership","frame_timers":214,"frames":0,"native_completions":0,"native_problem":"","native_retired":0,"native_windows":0,"paints":76,"presents":924,"queued":0,"release_pending":false,"tasks":1,"terminal":false,"time":"2026-11-05T16:03:51.262203646-05:00","wakes":926,"windows":0}
+{"accepted":905,"event":"close-sample","refused_after_close":458,"time":"2026-11-05T16:03:51.760189332-05:00"}
+{"error":"\u003cnil\u003e","event":"return","invalidations_refused_after_close":0,"time":"2026-11-05T16:03:51.760524742-05:00"}
+{"animating":0,"dispatch_targets":0,"dispatches":927,"event":"drained","frame_timers":214,"frames":0,"native_completions":0,"native_problem":"","native_retired":0,"native_windows":0,"paints":76,"presents":924,"queued":0,"release_pending":false,"tasks":0,"terminal":true,"time":"2026-11-05T16:03:51.760544975-05:00","wakes":927,"windows":0}

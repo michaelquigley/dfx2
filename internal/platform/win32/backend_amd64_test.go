@@ -511,3 +511,18 @@ func TestDispatchReleaseFailureRetainsRoutingAndSealsPosts(t *testing.T) {
 		t.Fatal("dispatch target still alive after release")
 	}
 }
+
+// Until Win32 presentation exists, content windows are refused before any
+// native call (a nil API would panic on use), so nothing is left to destroy.
+func TestContentWindowsAreUnsupportedBeforeNativeWork(t *testing.T) {
+	b := &Backend{}
+	if err := b.Create(7, platform.WindowOptions{Width: 320, Height: 240, Content: true}); !errors.Is(err, platform.ErrUnsupportedContent) {
+		t.Fatalf("content create: %v", err)
+	}
+	if err := b.Present(7, platform.Image{}); !errors.Is(err, platform.ErrUnsupportedContent) {
+		t.Fatalf("present: %v", err)
+	}
+	if len(b.windows) != 0 {
+		t.Fatal("refused content window was registered")
+	}
+}

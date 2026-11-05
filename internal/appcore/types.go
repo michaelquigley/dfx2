@@ -91,6 +91,8 @@ type App struct {
 	stop             chan struct{}
 	supervised       chan struct{}
 	wakesStopped     chan struct{}
+	frameCursor      platform.ID // rotating frame order across content windows
+	frameTimers      uint64      // animation deadline timers armed, for auditions
 }
 
 // Window owns one independent native window and its registered tasks.
@@ -101,6 +103,8 @@ type Window struct {
 	creating       bool
 	native         bool
 	destroyStarted bool
+	attachment     *attachment // UI content bridge; nil for ordinary windows
+	releasing      bool        // native teardown done; content release in progress
 	done           chan struct{}
 }
 
@@ -116,10 +120,16 @@ type timer interface {
 	C() <-chan time.Time
 	Stop()
 }
-type clock interface{ NewTimer(time.Duration) timer }
+
+// clock is monotonic: frame deadlines and animation use Now's monotonic reading.
+type clock interface {
+	NewTimer(time.Duration) timer
+	Now() time.Time
+}
 type realClock struct{}
 type realTimer struct{ *time.Timer }
 
 func (realClock) NewTimer(d time.Duration) timer { return realTimer{time.NewTimer(d)} }
+func (realClock) Now() time.Time                 { return time.Now() }
 func (t realTimer) C() <-chan time.Time          { return t.Timer.C }
 func (t realTimer) Stop()                        { t.Timer.Stop() }

@@ -1,0 +1,49 @@
+{
+  "backend": "wayland",
+  "scale": "1",
+  "platform": "Linux-7.0.0-42-generic-x86_64-with-glibc2.43",
+  "results": [
+    {
+      "mode": "paced",
+      "exit": 0,
+      "timeout": false,
+      "failures": [
+        "nonzero minimized frame work: strict suspension not established"
+      ],
+      "observations": {
+        "minimized_window_1": {
+          "frames": 1,
+          "paints": 0,
+          "ticks": 1,
+          "requests": 0,
+          "timers": 1,
+          "samples": 241
+        },
+        "quiet_window_1": {
+          "frames": 0,
+          "ticks": 0,
+          "requests": 0,
+          "timers": 0,
+          "samples": 0
+        },
+        "minimized_window_2": {
+          "frames": 335,
+          "paints": 334,
+          "ticks": 335,
+          "requests": 5,
+          "timers": 330,
+          "samples": 241
+        },
+        "quiet_window_2": {
+          "frames": 0,
+          "ticks": 0,
+          "requests": 0,
+          "timers": 0,
+          "samples": 0
+        },
+        "minimized_interval_seconds": 8.013814459999999,
+        "restored_sample_lag": 1
+      }
+    }
+  ]
+}

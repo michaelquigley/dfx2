@@ -9,8 +9,10 @@ import (
 )
 
 type Window struct {
-	Handle  uintptr
-	Options platform.WindowOptions
+	Handle   uintptr
+	Options  platform.WindowOptions
+	Presents int
+	Last     platform.Image // a copy, as native retained storage would hold
 }
 
 // Backend's hooks and Owner are configured before Open. Hooks execute on the
@@ -18,7 +20,10 @@ type Window struct {
 // safe to call from test control goroutines. The fake deliberately reuses one
 // handle: routing must depend on IDs rather than handles.
 type Backend struct {
-	Owner                                   func() bool
+	Owner func() bool
+	// BeforeCreate runs at the start of Create, before any refusal, for races
+	// against creation that has been admitted but not yet answered.
+	BeforeCreate                            func(platform.ID)
 	OnCreate                                func(platform.ID)
 	OnDestroy                               func(platform.ID)
 	BeforePump                              func()
@@ -28,6 +33,10 @@ type Backend struct {
 	PumpErrors                              []error
 	CreateError, DestroyError, ReleaseError error
 	DelayDestroy                            bool
+	// ContentUnsupported mimics a backend without content surfaces. OnPresent
+	// runs before a Present copy and may fail it.
+	ContentUnsupported bool
+	OnPresent          func(platform.ID, platform.Image) error
 
 	mu           sync.Mutex
 	sink         func(platform.Event)
@@ -37,6 +46,7 @@ type Backend struct {
 	wakeErrors   []error
 	wakes, pumps int
 	released     bool
+	violations   []string
 }
 
 func (b *Backend) Open(sink func(platform.Event)) error {
@@ -54,6 +64,12 @@ func (b *Backend) Open(sink func(platform.Event)) error {
 func (b *Backend) IsOwner() bool { return b.Owner == nil || b.Owner() }
 
 func (b *Backend) Create(id platform.ID, options platform.WindowOptions) error {
+	if b.BeforeCreate != nil {
+		b.BeforeCreate(id)
+	}
+	if options.Content && b.ContentUnsupported {
+		return platform.ErrUnsupportedContent
+	}
 	b.mu.Lock()
 	b.windows[id] = Window{Handle: 1, Options: options}
 	b.mu.Unlock()
@@ -88,6 +104,58 @@ func (b *Backend) SetTitle(id platform.ID, title string) error {
 	w.Options.Title = title
 	b.windows[id] = w
 	return nil
+}
+
+// Present is the fake presentation sink. Use after teardown, on a window
+// without content, or after Release is recorded as a violation and rejected.
+func (b *Backend) Present(id platform.ID, image platform.Image) error {
+	if err := image.Validate(); err != nil {
+		return err
+	}
+	b.mu.Lock()
+	w, ok := b.windows[id]
+	switch {
+	case b.released:
+		b.violations = append(b.violations, "present after release")
+	case !ok:
+		b.violations = append(b.violations, "present after teardown")
+	case !w.Options.Content:
+		b.violations = append(b.violations, "present on a window without content")
+	}
+	b.mu.Unlock()
+	if b.released || !ok || !w.Options.Content {
+		return errors.New("fake: present rejected")
+	}
+	if b.OnPresent != nil {
+		if err := b.OnPresent(id, image); err != nil {
+			return err
+		}
+	}
+	copied := image
+	copied.Pix = append([]byte(nil), image.Pix...)
+	b.mu.Lock()
+	defer b.mu.Unlock()
+	if w, ok = b.windows[id]; ok {
+		w.Presents++
+		w.Last = copied
+		b.windows[id] = w
+	}
+	return nil
+}
+
+// Violations lists rejected presentation uses, for assertions.
+func (b *Backend) Violations() []string {
+	b.mu.Lock()
+	defer b.mu.Unlock()
+	return append([]string(nil), b.violations...)
+}
+
+// Window returns a copy of one live fake window.
+func (b *Backend) Window(id platform.ID) (Window, bool) {
+	b.mu.Lock()
+	defer b.mu.Unlock()
+	w, ok := b.windows[id]
+	return w, ok
 }
 
 // Emit delivers on the calling thread, for reentrancy tests. Use Enqueue from
