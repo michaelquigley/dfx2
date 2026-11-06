@@ -1,0 +1,76 @@
+screen bitspixel=32 planes=1
+base round=0 560x260: ok 260 lines
+base round=0 984x761: GetDIBits: 0 lines (The operation completed successfully.)
+base round=0 1240x900: GetDIBits: 0 lines (The operation completed successfully.)
+base round=0 1600x1000: ok 1000 lines
+base round=0 2400x1300: GetDIBits: 0 lines (The operation completed successfully.)
+base round=0 3200x1400: GetDIBits: 0 lines (The operation completed successfully.)
+base round=0 984x760: GetDIBits: 0 lines (The operation completed successfully.)
+base round=0 985x761: ok 761 lines
+base round=1 560x260: ok 260 lines
+base round=1 984x761: GetDIBits: 0 lines (The operation completed successfully.)
+base round=1 1240x900: ok 900 lines
+base round=1 1600x1000: GetDIBits: 0 lines (The operation completed successfully.)
+base round=1 2400x1300: GetDIBits: 0 lines (The operation completed successfully.)
+base round=1 3200x1400: GetDIBits: 0 lines (The operation completed successfully.)
+base round=1 984x760: GetDIBits: 0 lines (The operation completed successfully.)
+base round=1 985x761: ok 761 lines
+base round=2 560x260: ok 260 lines
+base round=2 984x761: GetDIBits: 0 lines (The operation completed successfully.)
+base round=2 1240x900: ok 900 lines
+base round=2 1600x1000: GetDIBits: 0 lines (The operation completed successfully.)
+base round=2 2400x1300: GetDIBits: 0 lines (The operation completed successfully.)
+base round=2 3200x1400: GetDIBits: 0 lines (The operation completed successfully.)
+base round=2 984x760: GetDIBits: 0 lines (The operation completed successfully.)
+base round=2 985x761: ok 761 lines
+== base: 15 of 24 failed
+valloc round=0 560x260: ok 260 lines
+valloc round=0 984x761: ok 761 lines
+valloc round=0 1240x900: ok 900 lines
+valloc round=0 1600x1000: ok 1000 lines
+valloc round=0 2400x1300: ok 1300 lines
+valloc round=0 3200x1400: ok 1400 lines
+valloc round=0 984x760: ok 760 lines
+valloc round=0 985x761: ok 761 lines
+valloc round=1 560x260: ok 260 lines
+valloc round=1 984x761: ok 761 lines
+valloc round=1 1240x900: ok 900 lines
+valloc round=1 1600x1000: ok 1000 lines
+valloc round=1 2400x1300: ok 1300 lines
+valloc round=1 3200x1400: ok 1400 lines
+valloc round=1 984x760: ok 760 lines
+valloc round=1 985x761: ok 761 lines
+valloc round=2 560x260: ok 260 lines
+valloc round=2 984x761: ok 761 lines
+valloc round=2 1240x900: ok 900 lines
+valloc round=2 1600x1000: ok 1000 lines
+valloc round=2 2400x1300: ok 1300 lines
+valloc round=2 3200x1400: ok 1400 lines
+valloc round=2 984x760: ok 760 lines
+valloc round=2 985x761: ok 761 lines
+== valloc: 0 of 24 failed
+query round=0 560x260: GetDIBits: 0 lines (The operation completed successfully.); allocations=2 [+0:alloc=0x17107fc00000,size=180224,state=0x1000,protect=0x4 +180224:alloc=0x171080000000,size=3014656,state=0x1000,protect=0x4]
+query round=0 984x761: ok 761 lines; allocations=1 [+0:alloc=0x171080000000,size=2998272,state=0x1000,protect=0x4]
+query round=0 1240x900: ok 900 lines; allocations=1 [+0:alloc=0x171080000000,size=4464640,state=0x1000,protect=0x4]
+query round=0 1600x1000: GetDIBits: 0 lines (The operation completed successfully.); allocations=2 [+0:alloc=0x171080000000,size=516096,state=0x1000,protect=0x4 +516096:alloc=0x171080800000,size=12582912,state=0x1000,protect=0x4]
+query round=0 2400x1300: GetDIBits: 0 lines (The operation completed successfully.); allocations=2 [+0:alloc=0x171080800000,size=6291456,state=0x1000,protect=0x4 +6291456:alloc=0x171081400000,size=20971520,state=0x1000,protect=0x4]
+query round=0 3200x1400: GetDIBits: 0 lines (The operation completed successfully.); allocations=2 [+0:alloc=0x171081400000,size=14778368,state=0x1000,protect=0x4 +14778368:alloc=0x171082800000,size=3145728,state=0x1000,protect=0x4]
+query round=0 984x760: GetDIBits: 0 lines (The operation completed successfully.); allocations=2 [+0:alloc=0x17107f800000,size=2637824,state=0x1000,protect=0x4 +2637824:alloc=0x17107fc00000,size=4194304,state=0x1000,protect=0x4]
+query round=0 985x761: ok 761 lines; allocations=1 [+0:alloc=0x17107fc00000,size=3186688,state=0x1000,protect=0x4]
+query round=1 560x260: GetDIBits: 0 lines (The operation completed successfully.); allocations=2 [+0:alloc=0x17107fc00000,size=180224,state=0x1000,protect=0x4 +180224:alloc=0x171080000000,size=8060928,state=0x1000,protect=0x4]
+query round=1 984x761: ok 761 lines; allocations=1 [+0:alloc=0x171080000000,size=7651328,state=0x1000,protect=0x4]
+query round=1 1240x900: ok 900 lines; allocations=1 [+0:alloc=0x171080000000,size=4653056,state=0x1000,protect=0x4]
+query round=1 1600x1000: GetDIBits: 0 lines (The operation completed successfully.); allocations=2 [+0:alloc=0x171080000000,size=516096,state=0x1000,protect=0x4 +516096:alloc=0x171080800000,size=5922816,state=0x1000,protect=0x4]
+query round=1 2400x1300: GetDIBits: 0 lines (The operation completed successfully.); allocations=2 [+0:alloc=0x171080800000,size=6692864,state=0x1000,protect=0x4 +6692864:alloc=0x171081400000,size=5791744,state=0x1000,protect=0x4]
+query round=1 3200x1400: GetDIBits: 0 lines (The operation completed successfully.); allocations=2 [+0:alloc=0x171081400000,size=15179776,state=0x1000,protect=0x4 +15179776:alloc=0x171082800000,size=2744320,state=0x1000,protect=0x4]
+query round=1 984x760: GetDIBits: 0 lines (The operation completed successfully.); allocations=2 [+0:alloc=0x17107f800000,size=2637824,state=0x1000,protect=0x4 +2637824:alloc=0x17107fc00000,size=4194304,state=0x1000,protect=0x4]
+query round=1 985x761: ok 761 lines; allocations=1 [+0:alloc=0x17107fc00000,size=3186688,state=0x1000,protect=0x4]
+query round=2 560x260: GetDIBits: 0 lines (The operation completed successfully.); allocations=2 [+0:alloc=0x17107fc00000,size=180224,state=0x1000,protect=0x4 +180224:alloc=0x171080000000,size=7929856,state=0x1000,protect=0x4]
+query round=2 984x761: ok 761 lines; allocations=1 [+0:alloc=0x171080000000,size=7520256,state=0x1000,protect=0x4]
+query round=2 1240x900: ok 900 lines; allocations=1 [+0:alloc=0x171080000000,size=4521984,state=0x1000,protect=0x4]
+query round=2 1600x1000: GetDIBits: 0 lines (The operation completed successfully.); allocations=2 [+0:alloc=0x171080000000,size=516096,state=0x1000,protect=0x4 +516096:alloc=0x171080800000,size=5890048,state=0x1000,protect=0x4]
+query round=2 2400x1300: GetDIBits: 0 lines (The operation completed successfully.); allocations=2 [+0:alloc=0x171080800000,size=6692864,state=0x1000,protect=0x4 +6692864:alloc=0x171081400000,size=5791744,state=0x1000,protect=0x4]
+query round=2 3200x1400: GetDIBits: 0 lines (The operation completed successfully.); allocations=2 [+0:alloc=0x171081400000,size=15179776,state=0x1000,protect=0x4 +15179776:alloc=0x171082800000,size=2744320,state=0x1000,protect=0x4]
+query round=2 984x760: GetDIBits: 0 lines (The operation completed successfully.); allocations=2 [+0:alloc=0x17107f800000,size=2637824,state=0x1000,protect=0x4 +2637824:alloc=0x17107fc00000,size=524288,state=0x1000,protect=0x4]
+query round=2 985x761: ok 761 lines; allocations=1 [+0:alloc=0x17107fc00000,size=3006464,state=0x1000,protect=0x4]
+== query: 15 of 24 failed

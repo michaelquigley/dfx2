@@ -1,0 +1,114 @@
+{
+    "host":  {
+                 "revision":  "c9f23578e634983ddccff6f34e5a4c7975a53f9e",
+                 "worktree":  "M evidence/synthetic-mixer/windows/desk/main.go\r\n?? evidence/synthetic-mixer/windows/large-capture-diagnosis/\r\n?? evidence/synthetic-mixer/windows/results.md\r\n?? evidence/synthetic-mixer/windows/run-2/\r\n?? evidence/synthetic-mixer/windows/run/",
+                 "go":  "go version go1.27.3 windows/amd64",
+                 "cgo_enabled":  "0",
+                 "os":  {
+                            "Caption":  "Microsoft Windows 10 Pro",
+                            "Version":  "10.0.19045",
+                            "OSArchitecture":  "64-bit"
+                        },
+                 "session":  "RDP-Tcp#0",
+                 "powershell":  "5.1.19041.6456",
+                 "process64":  true,
+                 "display":  [
+                                 {
+                                     "Name":  "Microsoft Remote Display Adapter",
+                                     "CurrentHorizontalResolution":  3440,
+                                     "CurrentVerticalResolution":  1440
+                                 },
+                                 {
+                                     "Name":  "Microsoft Basic Display Adapter",
+                                     "CurrentHorizontalResolution":  1024,
+                                     "CurrentVerticalResolution":  768
+                                 }
+                             ],
+                 "observed_at":  "2026-11-06T15:42:35.3179762-05:00",
+                 "dpi_variation":  "not tested by this script; record operator observation separately"
+             },
+    "manual_audition":  "pending: native close/resize, resident console reopen, keyboard Ctrl+C, and DPI observation",
+    "results":  [
+                    {
+                        "name":  "lifecycle-window",
+                        "exit_code":  0,
+                        "timed_out":  false,
+                        "events":  23,
+                        "failures":  [
+
+                                     ]
+                    },
+                    {
+                        "name":  "lifecycle-resident",
+                        "exit_code":  0,
+                        "timed_out":  false,
+                        "events":  33,
+                        "failures":  [
+
+                                     ]
+                    },
+                    {
+                        "name":  "idle-window",
+                        "exit_code":  0,
+                        "timed_out":  false,
+                        "events":  27,
+                        "failures":  [
+
+                                     ]
+                    },
+                    {
+                        "name":  "idle-resident",
+                        "exit_code":  0,
+                        "timed_out":  false,
+                        "events":  26,
+                        "failures":  [
+
+                                     ]
+                    },
+                    {
+                        "name":  "failure",
+                        "exit_code":  1,
+                        "timed_out":  false,
+                        "events":  20,
+                        "failures":  [
+
+                                     ]
+                    },
+                    {
+                        "name":  "cancel",
+                        "exit_code":  0,
+                        "timed_out":  false,
+                        "events":  20,
+                        "failures":  [
+
+                                     ]
+                    },
+                    {
+                        "name":  "create-close",
+                        "exit_code":  0,
+                        "timed_out":  false,
+                        "events":  6,
+                        "failures":  [
+
+                                     ]
+                    },
+                    {
+                        "name":  "signal",
+                        "exit_code":  0,
+                        "timed_out":  false,
+                        "events":  20,
+                        "failures":  [
+
+                                     ]
+                    },
+                    {
+                        "name":  "inspection",
+                        "exit_code":  0,
+                        "timed_out":  false,
+                        "events":  13,
+                        "failures":  [
+
+                                     ]
+                    }
+                ]
+}

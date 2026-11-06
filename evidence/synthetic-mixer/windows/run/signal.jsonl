@@ -1,0 +1,15 @@
+{"event":"opened","time":"2026-11-06T13:50:33.6859966-05:00","window":"A"}
+{"event":"opened","time":"2026-11-06T13:50:33.7050131-05:00","window":"B"}
+{"applied":1,"event":"update","frames":2,"time":"2026-11-06T13:50:33.8632922-05:00","window":"A"}
+{"applied":1,"event":"update","frames":1,"time":"2026-11-06T13:50:33.8632922-05:00","window":"B"}
+{"applied":2,"event":"update","frames":4,"time":"2026-11-06T13:50:33.9096119-05:00","window":"A"}
+{"applied":2,"event":"update","frames":3,"time":"2026-11-06T13:50:33.9096119-05:00","window":"B"}
+{"applied":3,"event":"update","frames":7,"time":"2026-11-06T13:50:34.0095186-05:00","window":"A"}
+{"applied":3,"event":"update","frames":6,"time":"2026-11-06T13:50:34.0095186-05:00","window":"B"}
+{"applied_a":3,"applied_b":3,"event":"ctrl-break-sent","pid":5308,"time":"2026-11-06T13:50:34.0095186-05:00"}
+{"event":"closed","time":"2026-11-06T13:50:34.0234821-05:00","window":"A"}
+{"animating":0,"dispatch_targets":1,"dispatches":11,"event":"ownership","frame_timers":1,"frames":0,"modal_active":false,"modal_loops":0,"modal_refusals":0,"modal_timers":0,"modal_turns":0,"native_completions":0,"native_problem":"","native_retired":0,"native_windows":0,"paint_failures":0,"paints":12,"presents":13,"queued":0,"release_pending":true,"tasks":0,"terminal":true,"time":"2026-11-06T13:50:34.0244843-05:00","wakes":11,"windows":0}
+{"event":"closed","time":"2026-11-06T13:50:34.0244843-05:00","window":"B"}
+{"animating":0,"dispatch_targets":0,"dispatches":11,"event":"ownership","frame_timers":1,"frames":0,"modal_active":false,"modal_loops":0,"modal_refusals":0,"modal_timers":0,"modal_turns":0,"native_completions":0,"native_problem":"","native_retired":0,"native_windows":0,"paint_failures":0,"paints":12,"presents":13,"queued":0,"release_pending":true,"tasks":0,"terminal":true,"time":"2026-11-06T13:50:34.0244843-05:00","wakes":11,"windows":0}
+{"error":"context canceled","event":"return","invalidations_refused_after_close":0,"time":"2026-11-06T13:50:34.0244843-05:00"}
+{"animating":0,"dispatch_targets":0,"dispatches":11,"event":"drained","frame_timers":1,"frames":0,"modal_active":false,"modal_loops":0,"modal_refusals":0,"modal_timers":0,"modal_turns":0,"native_completions":0,"native_problem":"","native_retired":0,"native_windows":0,"paint_failures":0,"paints":12,"presents":13,"queued":0,"release_pending":false,"tasks":0,"terminal":true,"time":"2026-11-06T13:50:34.0244843-05:00","wakes":11,"windows":0}

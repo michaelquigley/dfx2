@@ -35,8 +35,12 @@ import (
 )
 
 var (
-	user32 = syscall.NewLazyDLL("user32.dll")
-	gdi32  = syscall.NewLazyDLL("gdi32.dll")
+	user32   = syscall.NewLazyDLL("user32.dll")
+	gdi32    = syscall.NewLazyDLL("gdi32.dll")
+	kernel32 = syscall.NewLazyDLL("kernel32.dll")
+
+	pVirtualAlloc = kernel32.NewProc("VirtualAlloc")
+	pVirtualFree  = kernel32.NewProc("VirtualFree")
 
 	pSetProcessDpiAwarenessContext = user32.NewProc("SetProcessDpiAwarenessContext")
 	pEnumWindows                   = user32.NewProc("EnumWindows")
@@ -79,6 +83,9 @@ const (
 	mouseLeftUp                = 0x0004
 	spiGetDragFullWindows      = 0x0026
 	srcCopy                    = 0x00cc0020
+	memCommitReserve           = 0x3000
+	memRelease                 = 0x8000
+	pageReadWrite              = 0x04
 )
 
 type rect struct{ left, top, right, bottom int32 }
@@ -415,8 +422,20 @@ func (d *driver) capture(name, file string) error {
 	}
 	info := bitmapInfo{width: width, height: -height, planes: 1, bitCount: 32}
 	info.size = uint32(unsafe.Offsetof(info.colors))
-	pixels := make([]byte, int(width)*int(height)*4)
-	lines, _, err := pGetDIBits.Call(memory, bitmap, 0, uintptr(height), uintptr(unsafe.Pointer(&pixels[0])), uintptr(unsafe.Pointer(&info)), 0)
+	// The destination is one VirtualAlloc reservation, not Go heap memory: a
+	// buffer that spans two reservations (Go's Windows heap arenas are 4 MiB
+	// apart) makes GetDIBits return zero lines with no error, the same failure
+	// the text spike recorded for SetDIBitsToDevice. Observed on 2026-11-06 in
+	// the first stage 2 matrix on four of five large captures; the probe is in
+	// ../large-capture-diagnosis.
+	size := int(width) * int(height) * 4
+	base, _, err := pVirtualAlloc.Call(0, uintptr(size), memCommitReserve, pageReadWrite)
+	if base == 0 {
+		return fmt.Errorf("VirtualAlloc: %w", err)
+	}
+	defer pVirtualFree.Call(base, 0, memRelease)
+	pixels := unsafe.Slice((*byte)(unsafe.Add(unsafe.Pointer(nil), base)), size)
+	lines, _, err := pGetDIBits.Call(memory, bitmap, 0, uintptr(height), base, uintptr(unsafe.Pointer(&info)), 0)
 	if lines == 0 {
 		return fmt.Errorf("GetDIBits: %w", err)
 	}

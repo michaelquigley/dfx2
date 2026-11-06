@@ -1,0 +1,28 @@
+{
+    "revision":  "c9f23578e634983ddccff6f34e5a4c7975a53f9e",
+    "worktree":  "?? evidence/synthetic-mixer/windows/run/",
+    "go":  "go version go1.27.3 windows/amd64",
+    "cgo_enabled":  "0",
+    "os":  {
+               "Caption":  "Microsoft Windows 10 Pro",
+               "Version":  "10.0.19045",
+               "OSArchitecture":  "64-bit"
+           },
+    "session":  "RDP-Tcp#0",
+    "powershell":  "5.1.19041.6456",
+    "process64":  true,
+    "display":  [
+                    {
+                        "Name":  "Microsoft Remote Display Adapter",
+                        "CurrentHorizontalResolution":  3440,
+                        "CurrentVerticalResolution":  1440
+                    },
+                    {
+                        "Name":  "Microsoft Basic Display Adapter",
+                        "CurrentHorizontalResolution":  1024,
+                        "CurrentVerticalResolution":  768
+                    }
+                ],
+    "observed_at":  "2026-11-06T13:48:00.1482183-05:00",
+    "dpi_variation":  "not exercised by this script; first_surface records the DPI scale of each run. Record monitor transitions separately."
+}

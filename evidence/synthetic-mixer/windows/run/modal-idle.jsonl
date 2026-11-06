@@ -1,0 +1,21 @@
+{"event":"driver-host","show_contents_while_dragging":true,"time":"2026-11-06T13:49:44.9734767-05:00"}
+{"event":"opened","time":"2026-11-06T13:49:45.0092626-05:00","window":"A"}
+{"event":"opened","time":"2026-11-06T13:49:45.0211764-05:00","window":"B"}
+{"animating":0,"dispatch_targets":1,"dispatches":38,"event":"modal-before","first_frames":28,"first_surface":"560x260@1 visible=true","frame_timers":3,"frames":56,"modal_active":false,"modal_loops":0,"modal_refusals":0,"modal_timers":0,"modal_turns":0,"native_completions":0,"native_problem":"","native_retired":0,"native_windows":2,"paint_failures":0,"paints":55,"presents":56,"queued":0,"release_pending":false,"tasks":4,"terminal":false,"time":"2026-11-06T13:49:46.0212986-05:00","wakes":38,"windows":2}
+{"event":"drag-request","mode":"hold","seconds":18,"time":"2026-11-06T13:49:46.0212986-05:00","window":"A"}
+{"event":"driver-drag-start","hit_test":2,"mode":"hold","time":"2026-11-06T13:49:46.2917729-05:00","window":"A","x":340,"y":61}
+{"event":"feed","running":false,"time":"2026-11-06T13:49:46.3243311-05:00"}
+{"animating":0,"dispatch_targets":1,"dispatches":53,"event":"settled","first_frames":38,"first_surface":"560x260@1 visible=true","frame_timers":4,"frames":76,"modal_active":true,"modal_loops":1,"modal_refusals":0,"modal_timers":1,"modal_turns":1,"native_completions":0,"native_problem":"","native_retired":0,"native_windows":2,"paint_failures":0,"paints":75,"presents":76,"queued":0,"release_pending":false,"tasks":4,"terminal":false,"time":"2026-11-06T13:49:46.5770845-05:00","wakes":53,"windows":2}
+{"animating":0,"dispatches":0,"event":"quiet","frame_timers":0,"frames":0,"paints":0,"presents":0,"seconds":5,"time":"2026-11-06T13:49:51.5773606-05:00","wakes":0}
+{"dispatches":0,"event":"modal-quiet","frames":0,"modal_active":true,"modal_timers":0,"modal_turns":0,"seconds":3,"time":"2026-11-06T13:49:54.5779536-05:00","wakes":0}
+{"event":"modal-post-after-idle","latency_ms":17,"modal_active":true,"time":"2026-11-06T13:49:54.5950168-05:00"}
+{"event":"feed","running":true,"time":"2026-11-06T13:49:54.5950168-05:00"}
+{"event":"modal-resume","frames":30,"modal_active":true,"time":"2026-11-06T13:49:55.5954117-05:00"}
+{"event":"feed","running":false,"time":"2026-11-06T13:49:55.5954117-05:00"}
+{"elapsed_ms":18002,"event":"driver-drag-done","mode":"hold","moves":1,"time":"2026-11-06T13:50:04.2941947-05:00","window":"A","window_alive":true}
+{"event":"closed","time":"2026-11-06T13:50:04.3199339-05:00","window":"A"}
+{"event":"closed","time":"2026-11-06T13:50:04.3199339-05:00","window":"B"}
+{"animating":0,"dispatch_targets":1,"dispatches":87,"event":"ownership","frame_timers":12,"frames":0,"modal_active":false,"modal_loops":1,"modal_refusals":0,"modal_timers":33,"modal_turns":33,"native_completions":0,"native_problem":"","native_retired":0,"native_windows":0,"paint_failures":0,"paints":137,"presents":138,"queued":0,"release_pending":true,"tasks":0,"terminal":true,"time":"2026-11-06T13:50:04.3199339-05:00","wakes":87,"windows":0}
+{"animating":0,"dispatch_targets":1,"dispatches":87,"event":"ownership","frame_timers":12,"frames":0,"modal_active":false,"modal_loops":1,"modal_refusals":0,"modal_timers":33,"modal_turns":33,"native_completions":0,"native_problem":"","native_retired":0,"native_windows":0,"paint_failures":0,"paints":137,"presents":138,"queued":0,"release_pending":true,"tasks":0,"terminal":true,"time":"2026-11-06T13:50:04.3199339-05:00","wakes":87,"windows":0}
+{"error":"\u003cnil\u003e","event":"return","invalidations_refused_after_close":0,"time":"2026-11-06T13:50:04.320472-05:00"}
+{"animating":0,"dispatch_targets":0,"dispatches":87,"event":"drained","frame_timers":12,"frames":0,"modal_active":false,"modal_loops":1,"modal_refusals":0,"modal_timers":33,"modal_turns":33,"native_completions":0,"native_problem":"","native_retired":0,"native_windows":0,"paint_failures":0,"paints":137,"presents":138,"queued":0,"release_pending":false,"tasks":0,"terminal":true,"time":"2026-11-06T13:50:04.320472-05:00","wakes":87,"windows":0}

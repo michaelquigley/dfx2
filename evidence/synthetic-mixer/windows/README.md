@@ -1,6 +1,6 @@
 # Synthetic mixer stage 2: Windows handoff
 
-Status: **prepared on Linux; nothing here has executed on Windows.** Cross-builds and injected tests are preparation, not acceptance. Stage 2 is accepted only after this audition runs on a Windows host, the results return for Linux checks and review, and Michael accepts them. The [stage 2 record](../stage-2.md) has the Linux preparation and its limits.
+Status: **prepared on Linux; executed on Windows on 2026-11-06, with the results in [results.md](results.md).** Cross-builds and injected tests are preparation, not acceptance. Stage 2 is accepted only after this audition runs on a Windows host, the results return for Linux checks and review, and Michael accepts them. The [stage 2 record](../stage-2.md) has the Linux preparation and its limits.
 
 You do not need the grimoire or Terminus on the Windows host. Everything you need is in this repository. Do not commit from an agent session; Michael commits and transfers the work.
 

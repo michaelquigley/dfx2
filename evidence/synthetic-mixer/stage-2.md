@@ -1,6 +1,6 @@
 # Synthetic mixer stage 2: Windows presentation and modal scheduling
 
-Stage 2 of the [work order](../../docs/future/synthetic-mixer-work-order.md) is implemented in the working tree on top of `0d1efec`; nothing is committed. **Nothing from this stage has executed on Windows.** It is at the Windows-host handoff, not accepted: the [Windows README](windows/README.md) has the audition, and acceptance requires its native results, Linux return checks, review and Michael's decision. `docs/current/runtime.md`'s modal-loop paragraph stays as it is until a native run establishes the replacement. Stage 3 has not started.
+Stage 2 of the [work order](../../docs/future/synthetic-mixer-work-order.md) is implemented in the working tree on top of `0d1efec`; nothing is committed. **The Windows host executed the handoff on 2026-11-06; its results are in [windows/results.md](windows/results.md) and await the Linux return checks and review.** It is not accepted: the [Windows README](windows/README.md) has the audition, and acceptance requires its native results, Linux return checks, review and Michael's decision. `docs/current/runtime.md`'s modal-loop paragraph stays as it is until a native run establishes the replacement. Stage 3 has not started.
 
 Host: Linux 7.0.0-42-generic amd64, Go 1.27.1 (module language 1.26), GNOME on Wayland with XWayland. Every build, test and vet uses `CGO_ENABLED=0`. No dependency changed. PowerShell is unavailable here, so `audition.ps1` has only had a coarse structural check.
 
