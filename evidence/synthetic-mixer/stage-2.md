@@ -1,8 +1,8 @@
 # Synthetic mixer stage 2: Windows presentation and modal scheduling
 
-Stage 2 of the [work order](../../docs/future/synthetic-mixer-work-order.md) is implemented in the working tree on top of `0d1efec`; nothing is committed. **The Windows host executed the handoff on 2026-11-06; its results are in [windows/results.md](windows/results.md) and await the Linux return checks and review.** It is not accepted: the [Windows README](windows/README.md) has the audition, and acceptance requires its native results, Linux return checks, review and Michael's decision. `docs/current/runtime.md`'s modal-loop paragraph stays as it is until a native run establishes the replacement. Stage 3 has not started.
+Stage 2 of the [work order](../../docs/future/synthetic-mixer-work-order.md) was transferred at `c9f2357`; the Windows results and screenshot-driver correction returned in `5dd6ce2`. The [native Windows results](windows/results.md) and Linux return checks below establish execution on both platforms. Final review and Michael's acceptance remain pending; stage 3 has not started. Built behavior, including the now-observed size/move dispatch, is in [runtime.md](../../docs/current/runtime.md) and [ui.md](../../docs/current/ui.md).
 
-Host: Linux 7.0.0-42-generic amd64, Go 1.27.1 (module language 1.26), GNOME on Wayland with XWayland. Every build, test and vet uses `CGO_ENABLED=0`. No dependency changed. PowerShell is unavailable here, so `audition.ps1` has only had a coarse structural check.
+Host: Linux 7.0.0-42-generic amd64, Go 1.27.1 (module language 1.26), GNOME on Wayland with XWayland. Every build, test and vet uses `CGO_ENABLED=0`. No dependency changed. PowerShell is unavailable on the Linux host; Windows PowerShell 5.1 subsequently executed `audition.ps1`, as recorded in the returned native results.
 
 ## Portable checks
 
@@ -56,7 +56,7 @@ Discrimination was checked by fault injection through `go test -overlay`, which 
 
 ## Validation summary
 
-Everything in this table ran on 2026-11-06 against the working tree on `0d1efec`, after the cleanup-error fix, with Go 1.27.1 on Linux/amd64. No Go source, `drive.py` or `test_drive.py` changed after it. The only later edits are to this record, `docs/current/` and the journal.
+This table records Linux preparation before transfer at `c9f2357`, after the cleanup-error fix, with Go 1.27.1 on Linux/amd64. Its Windows execution limits describe that preparation point. The Windows host subsequently corrected the screenshot driver and ran the native validation; the return section below supersedes those pending-execution statements. Framework, backend, example and Linux runner sources remain unchanged since transfer.
 
 | Check | Result |
 | --- | --- |
@@ -86,9 +86,11 @@ These limits remain open for assessment.
 
 The fallback also dispatches a zero `WM_NULL` message when the queue is empty. No Windows host has run that call.
 
-**Windows:** nothing from this stage has executed there. Native validation and the [host items below](#what-only-a-windows-host-can-establish) remain pending, and acceptance requires them.
+**Windows:** the [returned results](windows/results.md) now establish native presentation, modal progress, lifecycle and session-transition behavior on the tested Windows 10 RDP host. Real DPI transitions and native cleanup/timer-failure paths remain untested.
 
-## What only a Windows host can establish
+## Windows host questions at handoff
+
+These were the native questions sent with the candidate. The returned results answer the modal, presentation, session-transition and font questions on the tested host; real DPI transitions remain untested.
 
 - That the real size/move loop dispatches `WM_APP` and `WM_TIMER` to a **message-only** window. The whole approach rests on this.
 - What the loop does when its own window is destroyed from a timer inside it. The modeled behavior, no `WM_EXITSIZEMOVE` and the loop returning, is an assumption.
@@ -172,7 +174,7 @@ python3 evidence/synthetic-mixer/linux/drive.py mixer --out evidence/synthetic-m
 | X11 | the same five | 17,920,000 bytes | pass; all five snapshots match |
 | X11, scale 2 | 1968×1522, 2480×1530, 3200×1530, 3840×1530, 3840×1530 | 23,500,800 bytes | pass; host clamped the later requests, and all five snapshots match the physical surfaces |
 
-Wayland growing here does not explain the earlier failure. The earlier run came after over 16 minutes of desktop idle and this one did not, which fits an idle-session cause without establishing it. **The cause remains unresolved**, and only `large` was rerun: the resize, minimize and expose failures above still stand. The Windows runner has equivalent checks in `Test-LargeImages`, **pending Windows execution**.
+Wayland growing here does not explain the earlier failure. The earlier run came after over 16 minutes of desktop idle and this one did not, which fits an idle-session cause without establishing it. **The cause remains unresolved**, and only `large` was rerun: the resize, minimize and expose failures above still stand. The Windows runner's equivalent `Test-LargeImages` checks subsequently passed in the returned `run-2` matrix.
 
 ### Signal progress
 
@@ -189,7 +191,7 @@ timeout --foreground -s TERM 5 mixer -script signal
 | Paused | `(A, 1, 1)`, `(B, 1, 1)` | Exit 1: `window A: no frame progress within 10s (applied 101, frames 1)`; drained |
 | Active | `(A, 1, 2)`, `(B, 1, 2)`, `(A, 2, 5)`, `(B, 2, 6)`, `(A, 3, 9)`, `(B, 3, 10)` | SIGTERM gives `context canceled`; drained; 124 is `timeout`'s own exit code |
 
-These runs show the script, not the console event. `drive.py`'s Linux `signal` case runs `-script animate`, so the Linux matrix never runs this script. The runner's `Test-SignalProgress` check and the `ctrlbreak` delivery are **pending Windows execution**.
+These runs show the script, not the console event. `drive.py`'s Linux `signal` case runs `-script animate`, so the Linux matrix never runs this script. The runner's `Test-SignalProgress` check and real `ctrlbreak` delivery subsequently passed in both returned Windows matrices.
 
 Font coverage in that session, from the new `fonts` case: Noto Sans for Latin, Greek and Cyrillic; DejaVu Sans for Hebrew and Arabic; Noto Sans CJK JP; Noto Color Emoji as PNG bitmaps. It matches stage 1's manual finding.
 
@@ -204,6 +206,35 @@ Font coverage in that session, from the new `fonts` case: Noto Sans for Latin, G
 - **The system menu and other non-size/move modal loops still pause callbacks.** The work order covers size/move only. Wakes stay latched and delivery resumes afterward. The manual audition records it.
 - **The refusal path stays.** No shipping backend returns `ErrUnsupportedContent` now, but it remains in the backend contract and core, exercised with the fake.
 
+## Linux return at `5dd6ce2`
+
+The Windows return changed only the `desk` screen-capture utility and added a standalone diagnostic probe, evidence and documentation. A source comparison against `c9f2357` confirms no changes to the framework, platform backends, examples, module dependencies or Linux runners. The existing 20/20 Linux matrix in `linux/stage-2-cleanup-matrix/` therefore remains applicable; it was not rerun for Windows-only tooling and documentation changes. Its tested binary is identified above. No new production code was changed during the return review.
+
+Return checks on Linux/amd64, Go 1.27.1, all passed:
+
+```sh
+CGO_ENABLED=0 GOCACHE=/tmp/dfx2-pacing-go-cache go test ./... -count=1 -timeout=180s
+CGO_ENABLED=0 GOCACHE=/tmp/dfx2-pacing-go-cache go vet ./...
+CGO_ENABLED=0 GOCACHE=/tmp/dfx2-pacing-go-cache go build ./...
+CGO_ENABLED=0 GOCACHE=/tmp/dfx2-pacing-go-cache GOOS=windows GOARCH=amd64 go build ./...
+CGO_ENABLED=0 GOCACHE=/tmp/dfx2-pacing-go-cache GOOS=windows GOARCH=amd64 go vet ./...
+CGO_ENABLED=0 GOCACHE=/tmp/dfx2-pacing-go-cache GOOS=darwin GOARCH=amd64 go build ./...
+CGO_ENABLED=0 GOCACHE=/tmp/dfx2-pacing-go-cache GOOS=darwin GOARCH=amd64 go vet ./...
+CGO_ENABLED=0 GOCACHE=/tmp/dfx2-pacing-go-cache GOOS=windows GOARCH=amd64 go build -C evidence/synthetic-mixer/windows/desk -o /tmp/dfx2-return-desk.exe .
+CGO_ENABLED=0 GOCACHE=/tmp/dfx2-pacing-go-cache GOOS=windows GOARCH=amd64 go vet -C evidence/synthetic-mixer/windows/desk .
+CGO_ENABLED=0 GOCACHE=/tmp/dfx2-pacing-go-cache GOOS=windows GOARCH=amd64 go build -C evidence/synthetic-mixer/windows/large-capture-diagnosis -o /tmp/dfx2-return-capture-probe.exe .
+CGO_ENABLED=0 GOCACHE=/tmp/dfx2-pacing-go-cache GOOS=windows GOARCH=amd64 go vet -C evidence/synthetic-mixer/windows/large-capture-diagnosis .
+python3 -m unittest discover -s evidence/synthetic-mixer/linux -p test_drive.py -v
+```
+
+The Python suite passed 21 tests. Windows and Darwin commands here are compilation/static analysis only; native execution comes from the returned host logs. No affected concurrency logic changed on return, so the earlier repeated suites were not repeated again.
+
+The return audit read `windows/run-2`'s raw logs as well as its summaries: all 17 mixer cases and nine foundation cases have their expected exits, one final zero-ownership drain and empty stderr. The foundation's intentional task-failure case correctly exits 1. Both windows' frames and titles advance in all 12 recorded whole seconds of each move/size case. Both windows report three strictly increasing title/frame records before the console signal. All five large-image captures and retained PNGs match their physical surfaces, reaching 17,920,000 bytes. All 110 lock and 522 RDP status samples show zero paint failures, with paint counts increasing between samples and nil final returns. The font capture and the spike-size 984×761 capture were visually checked; the largest capture has the documented screen-edge limitation, not full unobscured display coverage.
+
+The cleanup fallback was also read directly on return: no pending cleanup uses the ordinary blocking message retrieval; failed timer setup selects the 10 ms retry path, retains ownership and diagnoses failure. The three limits listed above remain, including deferred retries during a native loop without a timer. This inspection is not native fault-injection evidence. The earlier Linux failures and historical appcore failure remain unresolved. The dfx2 canon still has stage-1 characteristics and Windows-unsupported wording conditional on stage 2; flag these for deliberate alignment at acceptance, without silently editing the sibling repo.
+
 ## Review status
 
 Terminus `20228367ad3f` on 2026-11-06, the full rubric over the working tree before the Windows handoff, is clean with no uncovered files. It reviews this tree on Linux and does not stand in for native acceptance. See the journal for the full Terminus record of this stage: [2026-11-05](../../docs/journal/2026-11-05.md) and [2026-11-06](../../docs/journal/2026-11-06.md).
+
+The Linux return review `28534323927a` used full-tree scope so the committed implementation and returned evidence were included alongside the documentation edits. It selected all 11 qualities over 1,108 files: 894 covered, 212 excluded and two uncovered font-fixture files. Verdict: **clean**, zero blockers and one advisory. The advisory identified the stale introductory sentence at `docs/current/runtime.md:5` still saying Windows UI awaited native execution; Michael accepted correcting it to the completed Linux and Windows auditions while retaining the untested Windows DPI qualification. That documentation-only correction is applied; Markdown formatting and `git diff --check` pass. No code changed and no further Terminus round has run. Stage 2 acceptance and deliberate canon alignment remain pending; stage 3 has not started.

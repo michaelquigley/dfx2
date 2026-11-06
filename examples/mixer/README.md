@@ -2,7 +2,7 @@
 
 The synthetic mixer, at stage 2: one window with text and an animated level meter, drawn by `ui` from an application-owned synthetic source. No audio device or Sessionmixer code is involved. Later stages add channel strips, faders, mute checkboxes and two windows over one model.
 
-Linux/amd64 needs the system GTK 3 and Cairo runtime and a desktop display; no headers or cgo. Windows/amd64 needs only system DLLs; its presentation and size/move scripts await their first [native audition](../../evidence/synthetic-mixer/windows/README.md).
+Linux/amd64 needs the system GTK 3 and Cairo runtime and a desktop display; no headers or cgo. Windows/amd64 needs only system DLLs; its presentation and size/move scripts passed the [native audition](../../evidence/synthetic-mixer/windows/results.md) on Windows 10 over Remote Desktop. Real Windows DPI transitions remain untested.
 
 ```sh
 CGO_ENABLED=0 go run ./examples/mixer
