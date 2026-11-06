@@ -1,0 +1,10 @@
+{"event":"opened","time":"2026-11-05T21:47:50.872783445-05:00","window":"A"}
+{"event":"opened","time":"2026-11-05T21:47:50.874768472-05:00","window":"B"}
+{"applied":1,"event":"update","frames":1,"time":"2026-11-05T21:47:50.978532352-05:00","window":"A"}
+{"applied":1,"event":"update","frames":1,"time":"2026-11-05T21:47:50.978609056-05:00","window":"B"}
+{"event":"closed","time":"2026-11-05T21:48:00.98055452-05:00","window":"B"}
+{"animating":0,"dispatch_targets":0,"dispatches":104,"event":"ownership","frame_timers":0,"frames":0,"modal_active":false,"modal_loops":0,"modal_refusals":0,"modal_timers":0,"modal_turns":0,"native_completions":0,"native_problem":"","native_retired":0,"native_windows":0,"paint_failures":0,"paints":25,"presents":2,"queued":0,"release_pending":false,"tasks":0,"terminal":true,"time":"2026-11-05T21:48:00.980789279-05:00","wakes":104,"windows":0}
+{"event":"closed","time":"2026-11-05T21:48:00.980559895-05:00","window":"A"}
+{"animating":0,"dispatch_targets":0,"dispatches":104,"event":"ownership","frame_timers":0,"frames":0,"modal_active":false,"modal_loops":0,"modal_refusals":0,"modal_timers":0,"modal_turns":0,"native_completions":0,"native_problem":"","native_retired":0,"native_windows":0,"paint_failures":0,"paints":25,"presents":2,"queued":0,"release_pending":false,"tasks":0,"terminal":true,"time":"2026-11-05T21:48:00.980919128-05:00","wakes":104,"windows":0}
+{"error":"window A: no frame progress within 10s (applied 101, frames 1)","event":"return","invalidations_refused_after_close":0,"time":"2026-11-05T21:48:00.980988372-05:00"}
+{"animating":0,"dispatch_targets":0,"dispatches":104,"event":"drained","frame_timers":0,"frames":0,"modal_active":false,"modal_loops":0,"modal_refusals":0,"modal_timers":0,"modal_turns":0,"native_completions":0,"native_problem":"","native_retired":0,"native_windows":0,"paint_failures":0,"paints":25,"presents":2,"queued":0,"release_pending":false,"tasks":0,"terminal":true,"time":"2026-11-05T21:48:00.981009125-05:00","wakes":104,"windows":0}

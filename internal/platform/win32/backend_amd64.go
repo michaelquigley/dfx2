@@ -26,11 +26,20 @@ type window struct {
 	dpi                                                   uint32
 	logicalWidth, logicalHeight                           float64
 	pixelWidth, pixelHeight                               int32
+
+	// Content windows only. The client size survives minimization, so restoring
+	// an unchanged window does not read as a resize.
+	content, shown, minimized bool
+	reported                  platform.Surface
+	image                     retained
+	unfreed                   [][]byte // allocations whose free failed; retirement waits for them
+	cleanupErrs               []error  // each failed free's first error, kept for the acknowledgment
 }
 
 // Backend owns the message-only dispatch window until appcore authorizes
-// release. All native callbacks latch state; public dispatch waits until the
-// native call stack has returned to Pump.
+// release. Native callbacks latch state; public dispatch runs when the native
+// call stack has returned to Pump or, during an established size/move loop,
+// from the dispatch window's one-shot timer under the guards in modal_amd64.go.
 type Backend struct {
 	mu                                sync.Mutex
 	api                               *native
@@ -47,6 +56,9 @@ type Backend struct {
 	messageFailed                     bool
 	waitRetry                         func() // injected failure-path barrier
 	wakes, dispatches                 uint64
+	presents, paints, paintFailures   uint64
+	modal                             modalState
+	cleanup                           cleanupState
 }
 
 func text(s string) ([]uint16, error) {
@@ -111,11 +123,6 @@ func (b *Backend) Open(sink func(platform.Event)) error {
 func (b *Backend) IsOwner() bool { return b.api.threadID() == b.owner }
 
 func (b *Backend) Create(id platform.ID, options platform.WindowOptions) error {
-	if options.Content {
-		// Stage 2 of the synthetic mixer adds Win32 presentation. Until then,
-		// refuse before any native work so ordinary windows keep working.
-		return platform.ErrUnsupportedContent
-	}
 	if options.Width <= 0 || options.Height <= 0 || options.Width > math.MaxInt32 || options.Height > math.MaxInt32 {
 		return errors.New("Win32 client dimensions must fit positive int values")
 	}
@@ -125,11 +132,16 @@ func (b *Backend) Create(id platform.ID, options platform.WindowOptions) error {
 	}
 	w := b.record(id, false)
 	w.logicalWidth, w.logicalHeight = float64(options.Width), float64(options.Height)
+	w.content = options.Content
 	w.closeOnCreate, b.closeNext = b.closeNext, false
 	b.mu.Lock()
 	b.windows[id] = w
 	b.mu.Unlock()
-	hwnd, createErr := b.api.create(&b.className[0], &title[0], wsOverlappedWindow, 0, b.instance, w.token)
+	var hwnd uintptr
+	var createErr error
+	b.operation(func() {
+		hwnd, createErr = b.api.create(&b.className[0], &title[0], wsOverlappedWindow, 0, b.instance, w.token)
+	})
 	w.creating = false
 	if hwnd == 0 {
 		// WM_CREATE returning -1 makes Windows destroy the partial window
@@ -147,7 +159,7 @@ func (b *Backend) Create(id platform.ID, options platform.WindowOptions) error {
 		return createErr
 	}
 	if !w.closing && !w.destroyed {
-		b.api.show(hwnd)
+		b.operation(func() { b.api.show(hwnd, swShow) })
 	}
 	return nil
 }
@@ -257,6 +269,7 @@ func windowMessage(api *native, hwnd, msg, wp, lp uintptr) uintptr {
 			b.mu.Lock()
 			b.retired = append(b.retired, w.token)
 			b.mu.Unlock()
+			b.loopOwnerDestroyed(w)
 		}
 	case wmWake:
 		if w.dispatch {
@@ -265,11 +278,43 @@ func windowMessage(api *native, hwnd, msg, wp, lp uintptr) uintptr {
 				b.ready = true
 			}
 			b.mu.Unlock()
+			b.armModal() // schedules delivery; never runs callbacks in this handler
 		}
 		return 0
 	case wmSize:
 		if !w.dispatch && !w.closing {
-			b.nativeFailure(w, b.updateClient(w))
+			w.minimized = wp == sizeMinimized
+			if !w.minimized {
+				b.nativeFailure(w, b.updateClient(w))
+			}
+			b.reportSurface(w)
+		}
+	case wmShowWindow:
+		if w.content && !w.closing {
+			w.shown = wp != 0
+			b.reportSurface(w)
+		}
+	case wmEraseBkgnd:
+		if w.content {
+			b.erase(w, wp)
+			return 1 // the paint covers what erasing leaves: no background flash
+		}
+	case wmPaint:
+		if w.content && b.paint(w) {
+			return 0
+		}
+	case wmEnterSizeMove:
+		b.enterSizeMove(w)
+	case wmExitSizeMove:
+		b.exitSizeMove(w)
+	case wmTimer:
+		if w.dispatch {
+			if wp > cleanupTimerBase {
+				b.cleanupTimerFired(wp)
+			} else {
+				b.modalTimer(wp)
+			}
+			return 0
 		}
 	case wmDPIChanged:
 		if !w.dispatch && !w.closing {
@@ -280,7 +325,9 @@ func windowMessage(api *native, hwnd, msg, wp, lp uintptr) uintptr {
 			}
 			var suggested rect
 			api.copyMemory(unsafe.Pointer(&suggested), lp, unsafe.Sizeof(suggested))
-			b.nativeFailure(w, api.setPosition(hwnd, suggested, swpNoZOrder|swpNoActivate))
+			b.operation(func() { b.nativeFailure(w, api.setPosition(hwnd, suggested, swpNoZOrder|swpNoActivate)) })
+			// The suggested rectangle may leave the client size unchanged.
+			b.reportSurface(w)
 		}
 		return 0
 	}
@@ -310,9 +357,6 @@ func (b *Backend) closeRequested(w *window) {
 	b.sink(platform.Event{Kind: platform.CloseRequested, Window: w.id})
 }
 
-// Present is unreachable until Win32 content windows exist: Create refuses them.
-func (b *Backend) Present(platform.ID, platform.Image) error { return platform.ErrUnsupportedContent }
-
 func (b *Backend) SetTitle(id platform.ID, title string) error {
 	value, err := text(title)
 	if err != nil {
@@ -324,7 +368,8 @@ func (b *Backend) SetTitle(id platform.ID, title string) error {
 	if w == nil || w.destroyed {
 		return errors.New("Win32 title target no longer exists")
 	}
-	return b.api.setTitle(w.hwnd, &value[0])
+	b.operation(func() { err = b.api.setTitle(w.hwnd, &value[0]) })
+	return err
 }
 
 func (b *Backend) Destroy(id platform.ID) error {
@@ -335,7 +380,9 @@ func (b *Backend) Destroy(id platform.ID) error {
 		return nil
 	}
 	w.closing = true
-	return b.api.destroy(w.hwnd)
+	var err error
+	b.operation(func() { err = b.api.destroy(w.hwnd) })
+	return err
 }
 
 func (b *Backend) Wake() error {
@@ -383,17 +430,29 @@ func (b *Backend) deliverReady() bool {
 			b.api.dispatch(&m)
 		}
 	}
-	// Native callbacks may have latched a failure while servicing messages.
-	// Let appcore cancel before any further ordinary callback can start.
+	return b.deliver(false)
+}
+
+// deliver runs one core turn if a wake is still latched: servicing native
+// messages above can enter a size/move loop whose timer already spent it. A
+// latched native failure leaves the wake in place, so appcore cancels through
+// Pump before any further ordinary callback can start.
+func (b *Backend) deliver(modal bool) bool {
 	b.mu.Lock()
-	if b.backendErr != nil {
+	if b.backendErr != nil || !b.ready {
 		b.mu.Unlock()
 		return false
 	}
 	b.ready, b.pending = false, false
 	b.dispatches++
+	if modal {
+		b.modal.turns++
+	}
 	b.mu.Unlock()
+	b.modal.inTurn = true
 	b.sink(platform.Event{Kind: platform.Wake})
+	b.modal.inTurn = false
+	b.armModal()
 	return true
 }
 
@@ -411,7 +470,7 @@ func (b *Backend) Pump() error {
 			b.pauseRetry()
 		}
 		var m message
-		result, err := b.api.getMessage(&m)
+		result, err := b.nextMessage(&m)
 		if result == -1 {
 			b.messageFailed = true
 			if err == nil {
@@ -436,11 +495,16 @@ func (b *Backend) Pump() error {
 		}
 		b.deliverReady()
 	}
-	b.flushRetired()
+	// Control is back at the pump: no size/move loop remains on the stack, even
+	// one whose window was destroyed without a closing notification.
+	b.modal.owner = nil
+	b.flushRetired(nil)
 	return b.takeError()
 }
 
-func (b *Backend) flushRetired() {
+// flushRetired acknowledges windows whose native stacks have returned. keep is
+// a window whose callback stack is still beneath this call.
+func (b *Backend) flushRetired(keep *window) {
 	b.mu.Lock()
 	retired := b.retired
 	b.retired = nil
@@ -451,7 +515,11 @@ func (b *Backend) flushRetired() {
 			continue
 		} // failed creation already rolled itself back
 		w := value.(*window)
-		if w.creating {
+		if !w.creating && w != keep {
+			// The window's final native use has returned; its pixels go with it.
+			b.releaseImage(w)
+		}
+		if w.creating || w == keep || len(w.unfreed) != 0 {
 			b.mu.Lock()
 			b.retired = append(b.retired, token)
 			b.mu.Unlock()
@@ -461,7 +529,7 @@ func (b *Backend) flushRetired() {
 		b.mu.Lock()
 		delete(b.windows, w.id)
 		b.mu.Unlock()
-		b.sink(platform.Event{Kind: platform.Destroyed, Window: w.id})
+		b.sink(platform.Event{Kind: platform.Destroyed, Window: w.id, Err: errors.Join(w.cleanupErrs...)})
 	}
 }
 
@@ -474,6 +542,8 @@ func (b *Backend) Release() error {
 	b.closed = true
 	target := b.application.hwnd
 	b.mu.Unlock()
+	b.stopModalTimer()
+	b.stopCleanupTimer()
 	var m message
 	for b.api.peekMessage(&m, target, wmWake, wmWake) {
 	}
@@ -515,7 +585,9 @@ func (b *Backend) pauseRetry() {
 func (b *Backend) Counters() platform.Counters {
 	b.mu.Lock()
 	defer b.mu.Unlock()
-	s := platform.Counters{Wakes: b.wakes, Dispatches: b.dispatches, Windows: len(b.windows), Retired: len(b.retired), Problem: b.problem}
+	s := platform.Counters{Wakes: b.wakes, Dispatches: b.dispatches, Windows: len(b.windows), Retired: len(b.retired), Problem: joinProblems(b.problem, b.cleanupProblem()),
+		Presents: b.presents, Paints: b.paints, PaintFailures: b.paintFailures, ModalActive: b.modal.active,
+		ModalLoops: b.modal.loops, ModalTurns: b.modal.turns, ModalTimers: b.modal.timers, ModalRefusals: b.modal.refusals}
 	if b.application != nil && b.application.hwnd != 0 {
 		s.DispatchTargets = 1
 	}
@@ -523,5 +595,12 @@ func (b *Backend) Counters() platform.Counters {
 }
 
 func (b *Backend) CloseNextCreation() { b.closeNext = true }
+
+func joinProblems(first, second string) string {
+	if first == "" || second == "" {
+		return first + second
+	}
+	return first + "; " + second
+}
 
 var _ platform.Backend = (*Backend)(nil)

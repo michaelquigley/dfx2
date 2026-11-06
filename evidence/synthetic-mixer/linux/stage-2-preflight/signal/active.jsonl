@@ -1,0 +1,14 @@
+{"event":"opened","time":"2026-11-05T21:48:01.174805622-05:00","window":"A"}
+{"event":"opened","time":"2026-11-05T21:48:01.179511962-05:00","window":"B"}
+{"applied":1,"event":"update","frames":2,"time":"2026-11-05T21:48:01.284015685-05:00","window":"A"}
+{"applied":1,"event":"update","frames":2,"time":"2026-11-05T21:48:01.284076645-05:00","window":"B"}
+{"applied":2,"event":"update","frames":5,"time":"2026-11-05T21:48:01.389506821-05:00","window":"A"}
+{"applied":2,"event":"update","frames":6,"time":"2026-11-05T21:48:01.389569045-05:00","window":"B"}
+{"applied":3,"event":"update","frames":9,"time":"2026-11-05T21:48:01.483874038-05:00","window":"A"}
+{"applied":3,"event":"update","frames":10,"time":"2026-11-05T21:48:01.48400157-05:00","window":"B"}
+{"event":"closed","time":"2026-11-05T21:48:05.995351111-05:00","window":"B"}
+{"animating":0,"dispatch_targets":0,"dispatches":256,"event":"ownership","frame_timers":73,"frames":0,"modal_active":false,"modal_loops":0,"modal_refusals":0,"modal_timers":0,"modal_turns":0,"native_completions":0,"native_problem":"","native_retired":0,"native_windows":0,"paint_failures":0,"paints":358,"presents":363,"queued":0,"release_pending":false,"tasks":0,"terminal":true,"time":"2026-11-05T21:48:05.995407621-05:00","wakes":256,"windows":0}
+{"event":"closed","time":"2026-11-05T21:48:05.995365974-05:00","window":"A"}
+{"animating":0,"dispatch_targets":0,"dispatches":256,"event":"ownership","frame_timers":73,"frames":0,"modal_active":false,"modal_loops":0,"modal_refusals":0,"modal_timers":0,"modal_turns":0,"native_completions":0,"native_problem":"","native_retired":0,"native_windows":0,"paint_failures":0,"paints":358,"presents":363,"queued":0,"release_pending":false,"tasks":0,"terminal":true,"time":"2026-11-05T21:48:05.995467735-05:00","wakes":256,"windows":0}
+{"error":"context canceled","event":"return","invalidations_refused_after_close":0,"time":"2026-11-05T21:48:05.995533775-05:00"}
+{"animating":0,"dispatch_targets":0,"dispatches":256,"event":"drained","frame_timers":73,"frames":0,"modal_active":false,"modal_loops":0,"modal_refusals":0,"modal_timers":0,"modal_turns":0,"native_completions":0,"native_problem":"","native_retired":0,"native_windows":0,"paint_failures":0,"paints":358,"presents":363,"queued":0,"release_pending":false,"tasks":0,"terminal":true,"time":"2026-11-05T21:48:05.995545913-05:00","wakes":256,"windows":0}

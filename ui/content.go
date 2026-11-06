@@ -11,7 +11,7 @@ import (
 	"github.com/michaelquigley/dfx2/internal/text/gotext"
 )
 
-// Logical metrics of the stage 1 root column.
+// Logical metrics of the root column.
 const (
 	padding     = 16.0
 	gap         = 10.0

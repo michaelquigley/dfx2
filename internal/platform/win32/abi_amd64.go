@@ -12,9 +12,13 @@ const (
 	wmPaint                       = 0x000f
 	wmClose                       = 0x0010
 	wmQuit                        = 0x0012
+	wmEraseBkgnd                  = 0x0014
+	wmShowWindow                  = 0x0018
 	wmNCCreate                    = 0x0081
 	wmNCDestroy                   = 0x0082
 	wmTimer                       = 0x0113
+	wmEnterSizeMove               = 0x0231
+	wmExitSizeMove                = 0x0232
 	wmDPIChanged                  = 0x02e0
 	wmWake                        = 0x8001
 	wmKeyFirst, wmKeyLast         = 0x0100, 0x0109
@@ -24,6 +28,11 @@ const (
 	swpNoMove                     = 0x0002
 	swpNoZOrder                   = 0x0004
 	swpNoActivate                 = 0x0010
+	sizeMinimized                 = 1
+	swShow                        = 5
+	swMinimize                    = 6
+	swRestore                     = 9
+	biRGB                         = 0
 	windowClass                   = "dfx2FoundationRuntime"
 )
 
@@ -56,6 +65,25 @@ type createStruct struct {
 	name, class                    uintptr
 	extendedStyle                  uint32
 }
+type paintStruct struct {
+	hdc             uintptr
+	erase           int32
+	paint           rect
+	restore, incUpd int32
+	reserved        [32]byte
+}
+
+// bitmapInfo is a BITMAPINFO: a BITMAPINFOHEADER and the one color-table entry
+// its declaration carries, unused for BI_RGB at 32 bits per pixel.
+type bitmapInfo struct {
+	size                   uint32
+	width, height          int32
+	planes, bitCount       uint16
+	compression, sizeImage uint32
+	xPPM, yPPM             int32
+	clrUsed, clrImportant  uint32
+	colors                 [1]uint32
+}
 
 // Pointer-bearing calls stay typed through this seam. The Windows bridge
 // converts to uintptr directly in syscall.Proc.Call, which marks escapes;
@@ -83,5 +111,16 @@ type native struct {
 	adjustRect  func(*rect, uint32) error
 	setPosition func(uintptr, rect, uint32) error
 	clientRect  func(uintptr, *rect) error
-	show        func(uintptr)
+	show        func(hwnd uintptr, command int32)
+	// Native presentation. allocate returns storage from one native allocation,
+	// valid until free; it is never Go heap memory on the real bridge.
+	allocate   func(size int) ([]byte, error)
+	free       func([]byte) error
+	invalidate func(hwnd uintptr) error
+	beginPaint func(uintptr, *paintStruct) (uintptr, error)
+	endPaint   func(uintptr, *paintStruct)
+	setDIBits  func(hdc uintptr, width, height int32, bits *byte, info *bitmapInfo) (int32, error)
+	fillBlack  func(hdc uintptr, r *rect) error
+	setTimer   func(hwnd, id uintptr, milliseconds uint32) error
+	killTimer  func(hwnd, id uintptr)
 }

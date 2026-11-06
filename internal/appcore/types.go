@@ -91,6 +91,7 @@ type App struct {
 	stop             chan struct{}
 	supervised       chan struct{}
 	wakesStopped     chan struct{}
+	inTurn           bool        // setup or a dispatch turn is on the UI thread's stack
 	frameCursor      platform.ID // rotating frame order across content windows
 	frameTimers      uint64      // animation deadline timers armed, for auditions
 }

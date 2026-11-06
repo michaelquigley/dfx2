@@ -173,6 +173,22 @@ func (b *Backend) Emit(e platform.Event) {
 	}
 }
 
+// DeliverNext pops the oldest queued event and delivers it on the calling
+// thread, as a native loop running inside application code would, consuming
+// that event for good. It reports whether an event was queued.
+func (b *Backend) DeliverNext() bool {
+	b.mu.Lock()
+	if len(b.events) == 0 {
+		b.mu.Unlock()
+		return false
+	}
+	e := b.events[0]
+	b.events = b.events[1:]
+	b.mu.Unlock()
+	b.Emit(e)
+	return true
+}
+
 func (b *Backend) Enqueue(e platform.Event) {
 	b.mu.Lock()
 	defer b.mu.Unlock()

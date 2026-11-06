@@ -30,11 +30,40 @@ type systemModel struct {
 	postError, getError, adjustError, targetDestroyError error
 	shown                                                int
 	insideCreate, insideDestroy                          bool
+
+	// Native presentation and timers. Allocations are Go slices here; only the
+	// Windows bridge returns VirtualAlloc memory.
+	storage                   map[*byte]int
+	allocError, timerError    error
+	allocations, frees        int
+	timers                    map[uintptr]uint32
+	invalidated, paintBalance int
+	blits                     []blit
+	blitLines                 int32
+	fills                     []rect
+	client                    func(uintptr, *rect) error
+}
+
+type blit struct {
+	bits          *byte
+	info          bitmapInfo
+	width, height int32
 }
 
 func model(t *testing.T) *systemModel {
 	t.Helper()
-	f := &systemModel{data: make(map[uintptr]uintptr), clients: make(map[uintptr]rect), memory: make(map[uintptr]rect), live: make(map[uintptr]bool), next: 100, dpi: 96}
+	f := unopenedModel(t)
+	if err := f.b.Open(func(e platform.Event) { f.events = append(f.events, e) }); err != nil {
+		t.Fatal(err)
+	}
+	return f
+}
+
+// unopenedModel leaves Backend.Open to its caller, as the core does.
+func unopenedModel(t *testing.T) *systemModel {
+	t.Helper()
+	f := &systemModel{data: make(map[uintptr]uintptr), clients: make(map[uintptr]rect), memory: make(map[uintptr]rect), live: make(map[uintptr]bool), next: 100, dpi: 96,
+		storage: make(map[*byte]int), timers: make(map[uintptr]uint32), blitLines: -1}
 	f.api.threadID = func() uint32 { return 7 }
 	f.api.perMonitor = func() error { f.trace = append(f.trace, "dpi-awareness"); return nil }
 	f.api.module = func() (uintptr, error) { return 1, nil }
@@ -98,12 +127,89 @@ func model(t *testing.T) *systemModel {
 		return nil
 	}
 	f.api.setPosition = func(hwnd uintptr, r rect, flags uint32) error {
-		f.clients[hwnd] = rect{right: r.right - r.left - 16, bottom: r.bottom - r.top - 39}
-		windowMessage(&f.api, hwnd, wmSize, 0, 0)
+		client := rect{right: r.right - r.left - 16, bottom: r.bottom - r.top - 39}
+		changed := f.clients[hwnd] != client
+		f.clients[hwnd] = client
+		if changed { // Windows sends no WM_SIZE for an unchanged size
+			windowMessage(&f.api, hwnd, wmSize, 0, 0)
+		}
 		return nil
 	}
-	f.api.clientRect = func(hwnd uintptr, r *rect) error { *r = f.clients[hwnd]; return nil }
-	f.api.show = func(uintptr) { f.shown++ }
+	f.api.clientRect = func(hwnd uintptr, r *rect) error {
+		if f.client != nil {
+			return f.client(hwnd, r)
+		}
+		*r = f.clients[hwnd]
+		return nil
+	}
+	f.api.show = func(hwnd uintptr, command int32) {
+		f.shown++
+		switch command {
+		case swShow:
+			windowMessage(&f.api, hwnd, wmShowWindow, 1, 0)
+		case swMinimize:
+			windowMessage(&f.api, hwnd, wmSize, sizeMinimized, 0)
+		case swRestore:
+			windowMessage(&f.api, hwnd, wmSize, 0, 0)
+		}
+	}
+	f.api.allocate = func(size int) ([]byte, error) {
+		if f.allocError != nil {
+			return nil, f.allocError
+		}
+		f.allocations++
+		pixels := make([]byte, size)
+		f.storage[&pixels[0]] = size
+		f.trace = append(f.trace, "allocate")
+		return pixels, nil
+	}
+	f.api.free = func(pixels []byte) error {
+		if _, ok := f.storage[&pixels[0]]; !ok {
+			t.Error("freed storage that is not a live allocation")
+		}
+		delete(f.storage, &pixels[0])
+		f.frees++
+		f.trace = append(f.trace, "free")
+		return nil
+	}
+	f.api.invalidate = func(hwnd uintptr) error {
+		if !f.live[hwnd] {
+			return errors.New("invalidate on dead window")
+		}
+		f.invalidated++
+		return nil
+	}
+	f.api.beginPaint = func(hwnd uintptr, p *paintStruct) (uintptr, error) { f.paintBalance++; return 900, nil }
+	f.api.endPaint = func(hwnd uintptr, p *paintStruct) { f.paintBalance-- }
+	f.api.setDIBits = func(hdc uintptr, width, height int32, bits *byte, info *bitmapInfo) (int32, error) {
+		if _, ok := f.storage[bits]; !ok {
+			t.Error("blit source is not live backend-owned storage")
+		}
+		f.blits = append(f.blits, blit{bits, *info, width, height})
+		if f.blitLines >= 0 {
+			return f.blitLines, nil
+		}
+		return height, nil
+	}
+	f.api.fillBlack = func(hdc uintptr, r *rect) error { f.fills = append(f.fills, *r); return nil }
+	f.api.setTimer = func(hwnd, id uintptr, milliseconds uint32) error {
+		if hwnd != f.b.application.hwnd {
+			t.Error("modal timer not owned by the dispatch window")
+		}
+		if milliseconds == 0 {
+			t.Error("modal timer without a positive delay")
+		}
+		if f.timerError != nil {
+			return f.timerError
+		}
+		f.timers[id] = milliseconds
+		f.trace = append(f.trace, "arm")
+		return nil
+	}
+	f.api.killTimer = func(hwnd, id uintptr) {
+		delete(f.timers, id)
+		f.trace = append(f.trace, "kill")
+	}
 	f.api.setTitle = func(hwnd uintptr, title *uint16) error {
 		if !f.live[hwnd] {
 			return errors.New("title on dead window")
@@ -169,7 +275,7 @@ func model(t *testing.T) *systemModel {
 		f.queueMu.Lock()
 		defer f.queueMu.Unlock()
 		for i, candidate := range f.queue {
-			if candidate.id == wmQuit || ((hwnd == 0 || candidate.hwnd == hwnd) && candidate.id >= min && candidate.id <= max) {
+			if candidate.id == wmQuit || ((hwnd == 0 || candidate.hwnd == hwnd) && ((min == 0 && max == 0) || (candidate.id >= min && candidate.id <= max))) {
 				*m = candidate
 				f.queue = append(f.queue[:i], f.queue[i+1:]...)
 				return true
@@ -189,15 +295,15 @@ func model(t *testing.T) *systemModel {
 		windowMessage(&f.api, m.hwnd, uintptr(m.id), m.wparam, m.lparam)
 	}
 	f.b = &Backend{api: &f.api}
-	if err := f.b.Open(func(e platform.Event) { f.events = append(f.events, e) }); err != nil {
-		t.Fatal(err)
-	}
 	t.Cleanup(func() {
+		if f.b.application == nil {
+			return
+		}
 		// Every deliberate native ownership in this model has a release path.
 		for id := range f.b.windows {
 			_ = f.b.Destroy(id)
 		}
-		f.b.flushRetired()
+		f.b.flushRetired(nil)
 		if f.b.application.hwnd != 0 {
 			f.b.closed = true
 			_ = f.api.destroy(f.b.application.hwnd)
@@ -274,7 +380,7 @@ func TestFailedSizingRollsBackBeforeCreateReturns(t *testing.T) {
 	if len(f.b.windows) != 0 || len(f.live) != 1 {
 		t.Fatal("failed creation retained a content window")
 	}
-	f.b.flushRetired()
+	f.b.flushRetired(nil)
 	for _, event := range f.events {
 		if event.Kind == platform.Destroyed {
 			t.Fatal("failed creation emitted an owed destruction acknowledgment")
@@ -509,20 +615,5 @@ func TestDispatchReleaseFailureRetainsRoutingAndSealsPosts(t *testing.T) {
 	}
 	if b.Counters().DispatchTargets != 0 {
 		t.Fatal("dispatch target still alive after release")
-	}
-}
-
-// Until Win32 presentation exists, content windows are refused before any
-// native call (a nil API would panic on use), so nothing is left to destroy.
-func TestContentWindowsAreUnsupportedBeforeNativeWork(t *testing.T) {
-	b := &Backend{}
-	if err := b.Create(7, platform.WindowOptions{Width: 320, Height: 240, Content: true}); !errors.Is(err, platform.ErrUnsupportedContent) {
-		t.Fatalf("content create: %v", err)
-	}
-	if err := b.Present(7, platform.Image{}); !errors.Is(err, platform.ErrUnsupportedContent) {
-		t.Fatalf("present: %v", err)
-	}
-	if len(b.windows) != 0 {
-		t.Fatal("refused content window was registered")
 	}
 }

@@ -1,5 +1,5 @@
-// Command mixer is the synthetic mixer example. Stage 1 shows text and one
-// animated meter fed by a synthetic, application-owned sampler.
+// Command mixer is the synthetic mixer example. It shows text and one animated
+// meter fed by a synthetic, application-owned sampler, on Linux and Windows.
 package main
 
 import (
@@ -30,6 +30,7 @@ type config struct {
 	pauseAfter time.Duration
 	script     string
 	snapshots  string
+	modalWait  time.Duration
 }
 
 func main() {
@@ -37,7 +38,8 @@ func main() {
 	flag.BoolVar(&c.resident, "resident", false, "keep running with zero windows; console commands open, close, pause, resume, status, quit")
 	flag.BoolVar(&c.paused, "paused", false, "start with the synthetic feed paused")
 	flag.DurationVar(&c.pauseAfter, "pause-after", 0, "pause the synthetic feed after this long, for idle checks")
-	flag.StringVar(&c.script, "script", "", "bounded native audition: animate, resize, minimize, close-sample, reopen or two")
+	flag.StringVar(&c.script, "script", "", "bounded native audition: animate, resize, minimize, close-sample, reopen, two, expose, large, fonts, signal, session, modal-move, modal-size, modal-idle, modal-close-self, modal-close-other or modal-quit")
+	flag.DurationVar(&c.modalWait, "modal-wait", 20*time.Second, "how long modal scripts wait for a size/move loop to start, from the audition driver or a person dragging")
 	flag.StringVar(&c.snapshots, "snapshots", "", "directory for retained-image PNG snapshots written by scripts")
 	fonts := flag.String("font", "sans-serif", "font families, comma-separated, in order of preference")
 	flag.Parse()
@@ -82,7 +84,9 @@ func status(a *dfx2.App) []any {
 	return []any{"windows", s.Windows, "tasks", s.Tasks, "queued", s.Queued, "native_completions", s.NativeCompletions,
 		"terminal", s.Terminal, "release_pending", s.ReleasePending, "frames", s.Frames, "animating", s.Animating,
 		"frame_timers", s.FrameTimers, "wakes", s.Native.Wakes, "dispatches", s.Native.Dispatches,
-		"presents", s.Native.Presents, "paints", s.Native.Paints, "native_windows", s.Native.Windows,
+		"presents", s.Native.Presents, "paints", s.Native.Paints, "paint_failures", s.Native.PaintFailures,
+		"modal_active", s.Native.ModalActive, "modal_loops", s.Native.ModalLoops, "modal_turns", s.Native.ModalTurns,
+		"modal_timers", s.Native.ModalTimers, "modal_refusals", s.Native.ModalRefusals, "native_windows", s.Native.Windows,
 		"native_retired", s.Native.Retired, "dispatch_targets", s.Native.DispatchTargets, "native_problem", s.Native.Problem}
 }
 
@@ -218,6 +222,7 @@ type mixer struct {
 	watchers sync.WaitGroup
 	opened   int
 	initial  []*ui.Window
+	titles   []*titleCounter
 }
 
 func (m *mixer) draw(f *ui.Frame) {
@@ -226,7 +231,7 @@ func (m *mixer) draw(f *ui.Frame) {
 	if !s.running {
 		state = "paused"
 	}
-	f.Label("dfx2 synthetic mixer — stage 1: text and an animated meter")
+	f.Label("dfx2 synthetic mixer — text and an animated meter")
 	f.Label(fmt.Sprintf("Level %6.1f dB · tick %d · feed %s", s.db, s.tick, state))
 	f.Meter("level", s.level)
 	f.Label("Fallback: Ελληνικά, Кириллица, עברית, العربية, 日本語, emoji 🎛️🎚️🎹 — mixed שלום world direction.")
@@ -282,12 +287,16 @@ func (m *mixer) setup(a *dfx2.App) error {
 			return err
 		}
 		return nil
-	case "animate", "resize", "minimize", "close-sample", "reopen", "two":
+	case "animate", "resize", "minimize", "close-sample", "reopen", "two", "expose", "large", "fonts", "signal", "session",
+		"modal-move", "modal-size", "modal-idle", "modal-close-self", "modal-close-other", "modal-quit":
 		// Window mode exits when setup leaves no window, so scripts open
 		// their first windows here; resident reopen starts with none.
-		count := map[string]int{"two": 2, "reopen": 0}[m.c.script]
-		if _, ok := map[string]int{"two": 2, "reopen": 0}[m.c.script]; !ok {
-			count = 1
+		count := 1
+		switch {
+		case m.c.script == "reopen":
+			count = 0
+		case m.c.script == "two", m.c.script == "signal", strings.HasPrefix(m.c.script, "modal-"):
+			count = 2
 		}
 		for range count {
 			w, err := m.open()
@@ -295,6 +304,11 @@ func (m *mixer) setup(a *dfx2.App) error {
 				return err
 			}
 			m.initial = append(m.initial, w)
+		}
+		if count == 2 && m.c.script != "two" {
+			if err := m.startTitles(); err != nil {
+				return err
+			}
 		}
 		return a.Go("script-"+m.c.script, m.runScript)
 	}
@@ -338,7 +352,7 @@ func (m *mixer) console(ctx context.Context, in io.Reader) error {
 			case "resume":
 				m.src.setRunning(true)
 			case "status":
-				m.o.event("status", status(m.a)...)
+				m.record("status")
 			case "quit":
 				m.a.Quit()
 				return nil

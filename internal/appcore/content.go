@@ -14,7 +14,9 @@ import (
 const frameInterval = time.Second / 60
 
 // Content is the private bridge between a window and the UI package. Every
-// method runs on the UI thread, never from a native callback stack.
+// method runs on the UI thread inside a guarded dispatch turn, never from a
+// window's own native notification. On Win32 that turn may be delivered from
+// inside a native size/move loop, by the application dispatch window's timer.
 type Content interface {
 	// Frame evaluates the view once and renders it. The returned image is only
 	// borrowed until Present returns; Animate requests another paced frame.

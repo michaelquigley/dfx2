@@ -13,6 +13,13 @@ var nativeOnce sync.Once
 var nativeAPI *native
 var nativeError error
 
+const (
+	memCommit, memReserve, memRelease = 0x1000, 0x2000, 0x8000
+	pageReadWrite                     = 0x04
+	dibRGBColors                      = 0
+	blackBrush                        = 4
+)
+
 func callError(name string, err error) error {
 	if err == nil || errors.Is(err, syscall.Errno(0)) {
 		return fmt.Errorf("%s failed without an error code", name)
@@ -26,6 +33,7 @@ func systemAPI() (*native, error) {
 		// renderer or third-party loader is initialized by this backend.
 		user := syscall.NewLazyDLL("user32.dll")
 		kernel := syscall.NewLazyDLL("kernel32.dll")
+		gdi := syscall.NewLazyDLL("gdi32.dll")
 		proc := make(map[string]*syscall.LazyProc)
 		for _, group := range []struct {
 			dll   *syscall.LazyDLL
@@ -35,8 +43,10 @@ func systemAPI() (*native, error) {
 				"GetWindowLongPtrW", "SetWindowLongPtrW", "GetMessageW", "PeekMessageW", "TranslateMessage", "DispatchMessageW",
 				"PostMessageW", "SetWindowTextW", "ShowWindow", "LoadCursorW", "GetClientRect", "SetWindowPos",
 				"GetDpiForWindow", "AdjustWindowRectExForDpi", "SetProcessDpiAwarenessContext",
-				"GetThreadDpiAwarenessContext", "GetAwarenessFromDpiAwarenessContext"}},
-			{kernel, []string{"GetCurrentThreadId", "GetModuleHandleW", "SetLastError", "RtlMoveMemory"}},
+				"GetThreadDpiAwarenessContext", "GetAwarenessFromDpiAwarenessContext",
+				"BeginPaint", "EndPaint", "InvalidateRect", "FillRect", "SetTimer", "KillTimer"}},
+			{kernel, []string{"GetCurrentThreadId", "GetModuleHandleW", "SetLastError", "RtlMoveMemory", "VirtualAlloc", "VirtualFree"}},
+			{gdi, []string{"SetDIBitsToDevice", "GetStockObject"}},
 		} {
 			for _, name := range group.names {
 				p := group.dll.NewProc(name)
@@ -185,7 +195,65 @@ func systemAPI() (*native, error) {
 			}
 			return nil
 		}
-		a.show = func(hwnd uintptr) { proc["ShowWindow"].Call(hwnd, 5) } // SW_SHOW; return is previous visibility, not failure
+		// The return is previous visibility, not failure.
+		a.show = func(hwnd uintptr, command int32) { proc["ShowWindow"].Call(hwnd, uintptr(command)) }
+		a.allocate = func(size int) ([]byte, error) {
+			r, _, err := proc["VirtualAlloc"].Call(0, uintptr(size), memCommit|memReserve, pageReadWrite)
+			if r == 0 {
+				return nil, callError("VirtualAlloc", err)
+			}
+			// Outside the Go heap; freed only through a.free.
+			return unsafe.Slice((*byte)(unsafe.Add(unsafe.Pointer(nil), r)), size), nil
+		}
+		a.free = func(pixels []byte) error {
+			r, _, err := proc["VirtualFree"].Call(uintptr(unsafe.Pointer(&pixels[0])), 0, memRelease)
+			if int32(r) == 0 {
+				return callError("VirtualFree", err)
+			}
+			return nil
+		}
+		a.invalidate = func(hwnd uintptr) error {
+			r, _, err := proc["InvalidateRect"].Call(hwnd, 0, 0)
+			if int32(r) == 0 {
+				return callError("InvalidateRect", err)
+			}
+			return nil
+		}
+		a.beginPaint = func(hwnd uintptr, p *paintStruct) (uintptr, error) {
+			r, _, err := proc["BeginPaint"].Call(hwnd, uintptr(unsafe.Pointer(p)))
+			if r == 0 {
+				return 0, callError("BeginPaint", err)
+			}
+			return r, nil
+		}
+		a.endPaint = func(hwnd uintptr, p *paintStruct) { proc["EndPaint"].Call(hwnd, uintptr(unsafe.Pointer(p))) }
+		a.setDIBits = func(hdc uintptr, width, height int32, bits *byte, info *bitmapInfo) (int32, error) {
+			r, _, err := proc["SetDIBitsToDevice"].Call(hdc, 0, 0, uintptr(width), uintptr(height), 0, 0, 0, uintptr(height),
+				uintptr(unsafe.Pointer(bits)), uintptr(unsafe.Pointer(info)), dibRGBColors)
+			if lines := int32(r); lines > 0 {
+				return lines, nil
+			}
+			return int32(r), callError("SetDIBitsToDevice", err)
+		}
+		a.fillBlack = func(hdc uintptr, r *rect) error {
+			brush, _, err := proc["GetStockObject"].Call(blackBrush)
+			if brush == 0 {
+				return callError("GetStockObject", err)
+			}
+			ok, _, err := proc["FillRect"].Call(hdc, uintptr(unsafe.Pointer(r)), brush)
+			if int32(ok) == 0 {
+				return callError("FillRect", err)
+			}
+			return nil
+		}
+		a.setTimer = func(hwnd, id uintptr, milliseconds uint32) error {
+			r, _, err := proc["SetTimer"].Call(hwnd, id, uintptr(milliseconds), 0)
+			if r == 0 {
+				return callError("SetTimer", err)
+			}
+			return nil
+		}
+		a.killTimer = func(hwnd, id uintptr) { proc["KillTimer"].Call(hwnd, id) } // a timer already gone is not a failure
 		// One process-lifetime callback for every window and every creation.
 		a.procedure = syscall.NewCallback(func(hwnd uintptr, msg uint32, wp, lp uintptr) uintptr {
 			return windowMessage(a, hwnd, uintptr(msg), wp, lp)

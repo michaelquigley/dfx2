@@ -76,7 +76,7 @@ def run(binary, out, name, flags, env, signal_after=None):
             lines.append(line)
             event = json.loads(line)
             events.append(event)
-            if event["event"] in ("animating", "two-running", "before-minimize", "reopen-cycle", "resized", "sampling") and not inspected:
+            if event["event"] in ("animating", "two-running", "before-minimize", "reopen-cycle", "resized", "sampling", "large-size", "exposure", "font-coverage") and not inspected:
                 maps = sorted(set(m.split()[-1] for m in Path(f"/proc/{proc.pid}/maps").read_text().splitlines() if "/" in m))
                 children = child_processes(proc.pid)
                 inspected = True
@@ -102,6 +102,59 @@ def by(events, name):
 def size_of(surface):
     dims = surface.split("@")[0].split("x")
     return int(dims[0]), int(dims[1])
+
+
+# The spike's black windows were frames of 1.9-3.0 MB.
+LARGE_FAILURE_BYTES = 3_000_000
+
+
+def large_size_failures(steps):
+    """Sizes the host reached. It may clamp a request, so requests are not compared."""
+    if len(steps) != 5:
+        return [f"{len(steps)} large image steps, not 5"]
+    sizes = [e["bytes"] for e in steps]
+    failures = []
+    if any(later < earlier for earlier, later in zip(sizes, sizes[1:])):
+        failures.append(f"large surface shrank: {sizes}")
+    if sizes[-1] <= sizes[0]:
+        failures.append(f"missing coverage: large surface did not grow: {sizes}")
+    if max(sizes) <= LARGE_FAILURE_BYTES:
+        failures.append(f"missing coverage: largest surface {max(sizes)} bytes is not beyond the spike's failure sizes")
+    return failures
+
+
+def png_size(path):
+    with open(path, "rb") as f:
+        header = f.read(24)
+    if len(header) != 24 or header[:8] != b"\x89PNG\r\n\x1a\n" or header[12:16] != b"IHDR":
+        raise ValueError("not a PNG")
+    return int.from_bytes(header[16:20], "big"), int.from_bytes(header[20:24], "big")
+
+
+def large_snapshot_failures(steps, snapshots):
+    """Each step's retained image, written during this run, has the size of the
+    physical surface observed at that step. The event is required because a file
+    alone could be left over from an earlier run."""
+    written = {Path(e["path"]).name: e["path"] for e in snapshots}
+    failures = []
+    for e in steps:
+        where = f'large step {e["requested"]}'
+        path = written.get(e.get("snapshot"))
+        if path is None:
+            failures.append(f"{where}: no snapshot written")
+            continue
+        try:
+            got = png_size(path)
+        except (OSError, ValueError) as err:
+            failures.append(f"{where}: unreadable snapshot: {err}")
+            continue
+        if got != size_of(e["first_surface"]):
+            failures.append(f'{where}: snapshot {got[0]}x{got[1]} does not match surface {e["first_surface"]}')
+    return failures
+
+
+def large_failures(steps, snapshots):
+    return large_size_failures(steps) + large_snapshot_failures(steps, snapshots)
 
 
 def audition(binary, out, name, flags, env, scale, signal_after=None):
@@ -162,6 +215,19 @@ def audition(binary, out, name, flags, env, scale, signal_after=None):
         one = by(events, "one-running")
         if not one or one[-1]["frames_after_close"] == 0:
             failures.append("remaining window stopped after the other closed")
+    if name.startswith("expose"):
+        exposure = by(events, "exposure")
+        observations["exposure"] = exposure[-1] if exposure else None
+        if not exposure or exposure[-1]["frames"] != 0 or exposure[-1]["presents"] != 0 or exposure[-1]["paints"] == 0:
+            failures.append("exposure did not repaint the retained image alone")
+    if name.startswith("large"):
+        steps = by(events, "large-size")
+        observations["large"] = [(e["requested"], e["first_surface"], e["bytes"]) for e in steps]
+        failures += large_failures(steps, by(events, "snapshot"))
+    if name.startswith("fonts"):
+        observations["fonts"] = {e["sample"]: e["faces"] for e in by(events, "font-coverage")}
+        if len(observations["fonts"]) != 7:
+            failures.append("font samples missing")
     if signal_after:
         returned = by(events, "return")
         if not signaled or not returned or "context canceled" not in returned[-1]["error"]:
@@ -190,7 +256,7 @@ def main():
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--gdk-backend", choices=("wayland", "x11"), default="wayland")
     parser.add_argument("--gdk-scale", type=int, default=0, help="force GTK's integer scale (X11 only); 0 leaves the session's")
-    parser.add_argument("--cases", default="animate,resize,minimize,close-sample,reopen,two,signal")
+    parser.add_argument("--cases", default="animate,resize,minimize,close-sample,reopen,two,expose,large,fonts,signal")
     args = parser.parse_args()
     args.out.mkdir(parents=True, exist_ok=True)
     snapshots = args.out / "snapshots"
@@ -209,6 +275,7 @@ def main():
     cases = dict(animate=(["-script", "animate", *snap], None), resize=(["-script", "resize", *snap], None),
                  minimize=(["-script", "minimize"], None), **{"close-sample": (["-script", "close-sample"], None)},
                  reopen=(["-script", "reopen"], None), two=(["-script", "two"], None),
+                 expose=(["-script", "expose"], None), large=(["-script", "large", *snap], None), fonts=(["-script", "fonts"], None),
                  signal=(["-script", "animate"], "animating"))
     results = [audition(binary, args.out, name, cases[name][0], env, scale, cases[name][1]) for name in args.cases.split(",")]
     (args.out / "summary.json").write_text(json.dumps(dict(host=host, results=results), indent=2) + "\n")

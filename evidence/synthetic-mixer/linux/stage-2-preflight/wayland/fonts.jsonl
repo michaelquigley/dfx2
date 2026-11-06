@@ -1,0 +1,13 @@
+{"event":"opened","time":"2026-11-05T16:40:12.494478408-05:00","window":"A"}
+{"event":"font-coverage","faces":["notosans: outline"],"sample":"latin","text":"Level","time":"2026-11-05T16:40:12.99509131-05:00"}
+{"event":"font-coverage","faces":["notosans: outline"],"sample":"greek","text":"Ελληνικά","time":"2026-11-05T16:40:12.995154882-05:00"}
+{"event":"font-coverage","faces":["notosans: outline"],"sample":"cyrillic","text":"Кириллица","time":"2026-11-05T16:40:12.99547353-05:00"}
+{"event":"font-coverage","faces":["dejavusans: outline"],"sample":"hebrew","text":"עברית","time":"2026-11-05T16:40:12.995715306-05:00"}
+{"event":"font-coverage","faces":["dejavusans: outline"],"sample":"arabic","text":"العربية","time":"2026-11-05T16:40:12.995927379-05:00"}
+{"event":"font-coverage","faces":["notosanscjkjp: outline"],"sample":"japanese","text":"日本語","time":"2026-11-05T16:40:12.996107068-05:00"}
+{"event":"font-coverage","faces":["notocoloremoji: png bitmap"],"sample":"emoji","text":"🎛️🎚️🎹","time":"2026-11-05T16:40:12.996563262-05:00"}
+{"event":"capture-request","name":"fonts","time":"2026-11-05T16:40:12.996647949-05:00","window":"A"}
+{"event":"closed","time":"2026-11-05T16:40:13.700211919-05:00","window":"A"}
+{"animating":0,"dispatch_targets":0,"dispatches":41,"event":"ownership","frame_timers":3,"frames":0,"modal_active":false,"modal_loops":0,"modal_refusals":0,"modal_timers":0,"modal_turns":0,"native_completions":0,"native_problem":"","native_retired":0,"native_windows":0,"paint_failures":0,"paints":1,"presents":38,"queued":0,"release_pending":false,"tasks":0,"terminal":true,"time":"2026-11-05T16:40:13.700372694-05:00","wakes":41,"windows":0}
+{"error":"\u003cnil\u003e","event":"return","invalidations_refused_after_close":0,"time":"2026-11-05T16:40:13.700560408-05:00"}
+{"animating":0,"dispatch_targets":0,"dispatches":41,"event":"drained","frame_timers":3,"frames":0,"modal_active":false,"modal_loops":0,"modal_refusals":0,"modal_timers":0,"modal_turns":0,"native_completions":0,"native_problem":"","native_retired":0,"native_windows":0,"paint_failures":0,"paints":1,"presents":38,"queued":0,"release_pending":false,"tasks":0,"terminal":true,"time":"2026-11-05T16:40:13.700618228-05:00","wakes":41,"windows":0}

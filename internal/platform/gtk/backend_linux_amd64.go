@@ -611,6 +611,17 @@ func (b *Backend) AuditionSnapshot(id platform.ID, path string) error {
 	return nil
 }
 
+// AuditionExpose queues a native redraw of the drawing area, as an exposure
+// would. The draw handler paints only the retained image.
+func (b *Backend) AuditionExpose(id platform.ID) error {
+	w, err := b.auditionTarget(id)
+	if err != nil {
+		return err
+	}
+	n.queueDraw(w.area)
+	return nil
+}
+
 func (b *Backend) auditionTarget(id platform.ID) (*window, error) {
 	b.mu.Lock()
 	w := b.windows[id]

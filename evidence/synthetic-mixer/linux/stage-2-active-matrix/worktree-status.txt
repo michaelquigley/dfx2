@@ -1,0 +1,37 @@
+ M CHANGELOG.md
+ M README.md
+ M docs/current/runtime.md
+ M docs/current/ui.md
+ M docs/journal/2026-11-05.md
+ M evidence/synthetic-mixer/linux/drive.py
+ M examples/mixer/README.md
+ M examples/mixer/main.go
+ M examples/mixer/scripts.go
+ M internal/appcore/content.go
+ M internal/appcore/dispatch.go
+ M internal/appcore/inspect.go
+ M internal/appcore/run.go
+ M internal/appcore/types.go
+ M internal/platform/fake/fake.go
+ M internal/platform/gtk/backend_linux_amd64.go
+ M internal/platform/platform.go
+ M internal/platform/win32/abi_amd64.go
+ M internal/platform/win32/abi_amd64_test.go
+ M internal/platform/win32/backend_amd64.go
+ M internal/platform/win32/backend_amd64_test.go
+ M internal/platform/win32/native_windows_amd64.go
+ M ui/content.go
+ M ui/ui.go
+?? evidence/synthetic-mixer/linux/stage-2-active-matrix/
+?? evidence/synthetic-mixer/linux/stage-2-large-rerun/
+?? evidence/synthetic-mixer/linux/stage-2-preflight/
+?? evidence/synthetic-mixer/linux/test_drive.py
+?? evidence/synthetic-mixer/stage-2.md
+?? evidence/synthetic-mixer/windows/
+?? examples/mixer/modal.go
+?? examples/mixer/modal_test.go
+?? internal/appcore/turn_test.go
+?? internal/platform/win32/modal_amd64.go
+?? internal/platform/win32/modal_amd64_test.go
+?? internal/platform/win32/present_amd64.go
+?? internal/platform/win32/present_amd64_test.go

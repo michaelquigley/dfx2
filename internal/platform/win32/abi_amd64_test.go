@@ -35,6 +35,12 @@ func TestWindowsX64Layouts(t *testing.T) {
 		{"CREATESTRUCTW.dwExStyle", unsafe.Offsetof(createStruct{}.extendedStyle), 72},
 		{"RECT.sizeof", unsafe.Sizeof(rect{}), 16},
 		{"POINT.sizeof", unsafe.Sizeof(point{}), 8},
+		{"PAINTSTRUCT.sizeof", unsafe.Sizeof(paintStruct{}), 72},
+		{"PAINTSTRUCT.rcPaint", unsafe.Offsetof(paintStruct{}.paint), 12},
+		{"BITMAPINFOHEADER.sizeof", unsafe.Offsetof(bitmapInfo{}.colors), 40},
+		{"BITMAPINFOHEADER.biHeight", unsafe.Offsetof(bitmapInfo{}.height), 8},
+		{"BITMAPINFOHEADER.biBitCount", unsafe.Offsetof(bitmapInfo{}.bitCount), 14},
+		{"BITMAPINFOHEADER.biCompression", unsafe.Offsetof(bitmapInfo{}.compression), 16},
 	} {
 		if c.got != c.want {
 			t.Errorf("%s=%d want %d", c.name, c.got, c.want)
@@ -55,6 +61,9 @@ func TestSyscallArgumentCounts(t *testing.T) {
 		"GetCurrentThreadId": 0, "GetModuleHandleW": 1, "SetLastError": 1,
 		"RtlMoveMemory": 3, "SetProcessDpiAwarenessContext": 1,
 		"GetThreadDpiAwarenessContext": 0, "GetAwarenessFromDpiAwarenessContext": 1,
+		"BeginPaint": 2, "EndPaint": 2, "InvalidateRect": 3, "FillRect": 3,
+		"SetTimer": 4, "KillTimer": 2, "VirtualAlloc": 4, "VirtualFree": 3,
+		"SetDIBitsToDevice": 12, "GetStockObject": 1,
 	}
 	file, err := parser.ParseFile(token.NewFileSet(), "native_windows_amd64.go", nil, 0)
 	if err != nil {

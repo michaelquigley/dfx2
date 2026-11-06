@@ -15,6 +15,14 @@ func (a *App) dispatch() {
 	// Producers and this consumer use the same lock to transfer wake ownership.
 	// A producer arriving during a callback will queue the next dispatch turn.
 	a.wakePending = false
+	if a.inTurn {
+		// One turn at a time, whichever native path delivered this one: no
+		// application callback or frame ever nests inside another. Its wake is
+		// spent, so the running turn's closing check re-requests remaining work.
+		a.mu.Unlock()
+		return
+	}
+	a.inTurn = true
 	a.mu.Unlock()
 	a.drainInternal()
 	// A single turn has a global budget of 64 callbacks. Cross-owner order is
@@ -60,6 +68,7 @@ func (a *App) dispatch() {
 	a.drainInternal()
 	a.mu.Lock()
 	defer a.mu.Unlock()
+	a.inTurn = false
 	if a.state >= closing && len(a.windows) == 0 && len(a.tasks) == 0 && len(a.operations) == 0 && a.wakeFailures == 0 {
 		a.terminal = true
 		a.state = closed

@@ -4,11 +4,15 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"maps"
 	"path/filepath"
+	"slices"
 	"time"
 
 	"github.com/michaelquigley/dfx2"
 	"github.com/michaelquigley/dfx2/internal/appcore"
+	"github.com/michaelquigley/dfx2/internal/text"
+	"github.com/michaelquigley/dfx2/internal/text/gotext"
 	"github.com/michaelquigley/dfx2/ui"
 )
 
@@ -134,6 +138,9 @@ func (m *mixer) runScript(ctx context.Context) error {
 		if err := m.snapshot(ctx, "animate-running"); err != nil {
 			return err
 		}
+		if err := m.capture(ctx, "A", "animate-running"); err != nil {
+			return err
+		}
 		if err := m.pauseAndSettle(ctx); err != nil {
 			return err
 		}
@@ -252,6 +259,139 @@ func (m *mixer) runScript(ctx context.Context) error {
 			return err
 		}
 		b.Close()
+	case "expose":
+		w := m.initial[0]
+		if err := sleep(ctx, time.Second); err != nil {
+			return err
+		}
+		if err := m.pauseAndSettle(ctx); err != nil {
+			return err
+		}
+		before := appcore.Inspect(m.a)
+		for range 5 {
+			if err := m.onFirst(ctx, appcore.AuditionExpose); err != nil {
+				return err
+			}
+			if err := sleep(ctx, 200*time.Millisecond); err != nil {
+				return err
+			}
+		}
+		after := appcore.Inspect(m.a)
+		m.o.event("exposure", "requests", 5, "frames", after.Frames-before.Frames, "presents", after.Native.Presents-before.Native.Presents,
+			"paints", after.Native.Paints-before.Native.Paints, "paint_failures", after.Native.PaintFailures-before.Native.PaintFailures)
+		if err := m.capture(ctx, "A", "expose"); err != nil {
+			return err
+		}
+		w.Close()
+	case "large":
+		w := m.initial[0]
+		// 984×761 is the spike's recorded failure size; the others leave its
+		// 1.9–3.0 MB failure range and cross several 4 MiB boundaries. The
+		// host may clamp a request, so the surface is the result.
+		for i, size := range [][2]int{{984, 761}, {1240, 900}, {1600, 1000}, {2400, 1300}, {3200, 1400}} {
+			if err := m.onFirst(ctx, func(w *appcore.Window) error { return appcore.AuditionResize(w, size[0], size[1]) }); err != nil {
+				return err
+			}
+			if err := sleep(ctx, 800*time.Millisecond); err != nil {
+				return err
+			}
+			name := fmt.Sprintf("large-%d-%dx%d", i, size[0], size[1])
+			if err := m.capture(ctx, "A", name); err != nil {
+				return err
+			}
+			ws := appcore.ContentWindows(m.a)
+			if len(ws) == 0 {
+				return errors.New("no content window")
+			}
+			s, _ := appcore.InspectContent(ws[0])
+			m.record("large-size", "requested", fmt.Sprintf("%dx%d", size[0], size[1]), "bytes", s.Surface.Width*s.Surface.Height*4, "snapshot", name+".png")
+			if err := m.snapshot(ctx, name); err != nil {
+				return err
+			}
+		}
+		if err := m.pauseAndSettle(ctx); err != nil {
+			return err
+		}
+		w.Close()
+	case "fonts":
+		w := m.initial[0]
+		if err := sleep(ctx, 500*time.Millisecond); err != nil {
+			return err
+		}
+		if err := m.call(ctx, func() error { return m.fontCoverage() }); err != nil {
+			return err
+		}
+		if err := m.capture(ctx, "A", "fonts"); err != nil {
+			return err
+		}
+		w.Close()
+	case "signal":
+		// The console-signal driver waits for three applied updates per window,
+		// so each one reports progress observed on that window.
+		cores := appcore.ContentWindows(m.a)
+		if len(cores) != 2 {
+			return fmt.Errorf("signal script needs two windows, have %d", len(cores))
+		}
+		observed := make([]windowProgress, len(cores))
+		for i, w := range cores {
+			observed[i] = windowProgress{m.titles[i].name, func() (uint64, uint64) { return m.titles[i].applied.Load(), m.framesOf(w) }}
+		}
+		err := awaitProgress(ctx, observed, 3, progressBound, func(name string, applied, frames uint64) {
+			m.o.event("update", "window", name, "applied", applied, "frames", frames)
+		})
+		if ctx.Err() != nil {
+			return nil
+		}
+		if err != nil {
+			return err
+		}
+		select {
+		case <-ctx.Done():
+		case <-time.After(15 * time.Second):
+			return errors.New("no console signal arrived within 15s")
+		}
+	case "session":
+		// For a person changing the session underneath a live window, so it is
+		// the one script with no bound: closing the window ends it.
+		for {
+			m.record("session-status")
+			if err := sleep(ctx, time.Second); err != nil {
+				return nil
+			}
+		}
+	case "modal-move", "modal-size", "modal-idle", "modal-close-self", "modal-close-other", "modal-quit":
+		return m.runModal(ctx)
+	}
+	return nil
+}
+
+// capture asks an attached audition driver to screenshot a window. With no
+// driver the request is inert; the wait is compositor pacing either way.
+func (m *mixer) capture(ctx context.Context, window, name string) error {
+	m.o.event("capture-request", "window", window, "name", name)
+	return sleep(ctx, 700*time.Millisecond)
+}
+
+// fontCoverage records which face and glyph format serve each sample, so a
+// host's result names real fonts rather than assuming them.
+func (m *mixer) fontCoverage() error {
+	engine, err := gotext.Shared()
+	if err != nil {
+		return err
+	}
+	for _, sample := range []struct{ name, text string }{{"latin", "Level"}, {"greek", "Ελληνικά"}, {"cyrillic", "Кириллица"},
+		{"hebrew", "עברית"}, {"arabic", "العربية"}, {"japanese", "日本語"}, {"emoji", "🎛️🎚️🎹"}} {
+		shaped, err := engine.Shape([]rune(sample.text), text.FixedOf(14))
+		if err != nil {
+			return err
+		}
+		faces := map[string]bool{}
+		for _, run := range shaped.Runs {
+			for _, g := range run.Glyphs {
+				faces[engine.Family(run.Font)+": "+engine.GlyphKind(run.Font, g.ID)] = true
+			}
+		}
+		m.o.event("font-coverage", "sample", sample.name, "text", sample.text, "faces", slices.Sorted(maps.Keys(faces)))
 	}
 	return nil
 }

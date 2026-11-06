@@ -1,0 +1,82 @@
+{
+  "host": {
+    "os": "Linux-7.0.0-42-generic-x86_64-with-glibc2.43",
+    "architecture": "x86_64",
+    "go": "go version go1.27.1 linux/amd64",
+    "gtk": "3.24.52",
+    "cairo": "1.18.4",
+    "session": "wayland",
+    "gdk_backend": "x11",
+    "gdk_scale": null,
+    "wayland_display": "wayland-0",
+    "display": ":0",
+    "date": "2026-11-05T21:59:16-05:00"
+  },
+  "results": [
+    {
+      "name": "large",
+      "command": [
+        "/tmp/claude-1000/-home-michael-Repos-q-products-dfx2/91291d39-d1e0-4385-9124-581f381952df/scratchpad/mixer",
+        "-script",
+        "large",
+        "-snapshots",
+        "/home/michael/Repos/q/products/dfx2/evidence/synthetic-mixer/linux/stage-2-large-rerun/x11/snapshots"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "inspected": true,
+      "cairo_loaded": true,
+      "children": [],
+      "snapshots": [
+        "large-0-984x761.png",
+        "large-1-1240x900.png",
+        "large-2-1600x1000.png",
+        "large-3-2400x1300.png",
+        "large-4-3200x1400.png"
+      ],
+      "observations": {
+        "quiet": {
+          "animating": 0,
+          "dispatches": 0,
+          "event": "quiet",
+          "frame_timers": 0,
+          "frames": 0,
+          "paints": 0,
+          "presents": 0,
+          "seconds": 5,
+          "time": "2026-11-05T21:59:29.918423816-05:00",
+          "wakes": 0
+        },
+        "large": [
+          [
+            "984x761",
+            "984x761@1 visible=true",
+            2995296
+          ],
+          [
+            "1240x900",
+            "1240x900@1 visible=true",
+            4464000
+          ],
+          [
+            "1600x1000",
+            "1600x1000@1 visible=true",
+            6400000
+          ],
+          [
+            "2400x1300",
+            "2400x1300@1 visible=true",
+            12480000
+          ],
+          [
+            "3200x1400",
+            "3200x1400@1 visible=true",
+            17920000
+          ]
+        ]
+      },
+      "events": 23,
+      "failures": []
+    }
+  ]
+}

@@ -1,0 +1,375 @@
+{
+  "host": {
+    "os": "Linux-7.0.0-42-generic-x86_64-with-glibc2.43",
+    "architecture": "x86_64",
+    "go": "go version go1.27.1 linux/amd64",
+    "gtk": "3.24.52",
+    "cairo": "1.18.4",
+    "session": "wayland",
+    "gdk_backend": "x11",
+    "gdk_scale": null,
+    "wayland_display": "wayland-0",
+    "display": ":0",
+    "date": "2026-11-05T16:40:15-05:00"
+  },
+  "results": [
+    {
+      "name": "animate",
+      "command": [
+        "/tmp/claude-1000/-home-michael-Repos-q-products-dfx2/91291d39-d1e0-4385-9124-581f381952df/scratchpad/mixer",
+        "-script",
+        "animate",
+        "-snapshots",
+        "/home/michael/Repos/q/products/dfx2/evidence/synthetic-mixer/linux/stage-2-preflight/x11/snapshots"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "inspected": true,
+      "cairo_loaded": true,
+      "children": [],
+      "snapshots": [
+        "animate-running.png",
+        "animate-settled.png"
+      ],
+      "observations": {
+        "quiet": {
+          "animating": 0,
+          "dispatches": 0,
+          "event": "quiet",
+          "frame_timers": 0,
+          "frames": 0,
+          "paints": 0,
+          "presents": 0,
+          "seconds": 5,
+          "time": "2026-11-05T16:40:24.025132956-05:00",
+          "wakes": 0
+        }
+      },
+      "events": 12,
+      "failures": []
+    },
+    {
+      "name": "resize",
+      "command": [
+        "/tmp/claude-1000/-home-michael-Repos-q-products-dfx2/91291d39-d1e0-4385-9124-581f381952df/scratchpad/mixer",
+        "-script",
+        "resize",
+        "-snapshots",
+        "/home/michael/Repos/q/products/dfx2/evidence/synthetic-mixer/linux/stage-2-preflight/x11/snapshots"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "inspected": true,
+      "cairo_loaded": true,
+      "children": [],
+      "snapshots": [
+        "resize-0-760x320.png",
+        "resize-1-380x240.png",
+        "resize-2-980x420.png",
+        "resize-3-560x260.png"
+      ],
+      "observations": {
+        "quiet": {
+          "animating": 0,
+          "dispatches": 0,
+          "event": "quiet",
+          "frame_timers": 0,
+          "frames": 0,
+          "paints": 0,
+          "presents": 0,
+          "seconds": 5,
+          "time": "2026-11-05T16:40:32.797834243-05:00",
+          "wakes": 0
+        },
+        "resized": [
+          [
+            "760x320",
+            "560x260@1 visible=true"
+          ],
+          [
+            "380x240",
+            "560x260@1 visible=true"
+          ],
+          [
+            "980x420",
+            "560x260@1 visible=true"
+          ],
+          [
+            "560x260",
+            "560x260@1 visible=true"
+          ]
+        ]
+      },
+      "events": 16,
+      "failures": [
+        "surface 560x260@1 visible=true for requested 760x320 at scale 1",
+        "surface 560x260@1 visible=true for requested 380x240 at scale 1",
+        "surface 560x260@1 visible=true for requested 980x420 at scale 1"
+      ]
+    },
+    {
+      "name": "minimize",
+      "command": [
+        "/tmp/claude-1000/-home-michael-Repos-q-products-dfx2/91291d39-d1e0-4385-9124-581f381952df/scratchpad/mixer",
+        "-script",
+        "minimize"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "inspected": true,
+      "cairo_loaded": true,
+      "children": [],
+      "snapshots": [],
+      "observations": {
+        "quiet": {
+          "animating": 0,
+          "dispatches": 0,
+          "event": "quiet",
+          "frame_timers": 0,
+          "frames": 0,
+          "paints": 0,
+          "presents": 0,
+          "seconds": 5,
+          "time": "2026-11-05T16:40:42.167456138-05:00",
+          "wakes": 0
+        },
+        "minimize": {
+          "visible_while_minimized": "560x260@1 visible=true",
+          "frames_while_minimized": 62,
+          "timers_while_minimized": 31,
+          "paints_while_minimized": 16,
+          "restored": "560x260@1 visible=true"
+        }
+      },
+      "events": 12,
+      "failures": [
+        "iconify did not suspend and restore: {'visible_while_minimized': '560x260@1 visible=true', 'frames_while_minimized': 62, 'timers_while_minimized': 31, 'paints_while_minimized': 16, 'restored': '560x260@1 visible=true'}"
+      ]
+    },
+    {
+      "name": "close-sample",
+      "command": [
+        "/tmp/claude-1000/-home-michael-Repos-q-products-dfx2/91291d39-d1e0-4385-9124-581f381952df/scratchpad/mixer",
+        "-script",
+        "close-sample"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "inspected": true,
+      "cairo_loaded": true,
+      "children": [],
+      "snapshots": [],
+      "observations": {
+        "close-sample": {
+          "accepted": 894,
+          "event": "close-sample",
+          "refused_after_close": 439,
+          "time": "2026-11-05T16:40:44.223073342-05:00"
+        }
+      },
+      "events": 7,
+      "failures": []
+    },
+    {
+      "name": "reopen",
+      "command": [
+        "/tmp/claude-1000/-home-michael-Repos-q-products-dfx2/91291d39-d1e0-4385-9124-581f381952df/scratchpad/mixer",
+        "-script",
+        "reopen"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "inspected": true,
+      "cairo_loaded": true,
+      "children": [],
+      "snapshots": [],
+      "observations": {},
+      "events": 22,
+      "failures": []
+    },
+    {
+      "name": "two",
+      "command": [
+        "/tmp/claude-1000/-home-michael-Repos-q-products-dfx2/91291d39-d1e0-4385-9124-581f381952df/scratchpad/mixer",
+        "-script",
+        "two"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "inspected": true,
+      "cairo_loaded": true,
+      "children": [],
+      "snapshots": [],
+      "observations": {
+        "quiet": {
+          "animating": 0,
+          "dispatches": 0,
+          "event": "quiet",
+          "frame_timers": 0,
+          "frames": 0,
+          "paints": 0,
+          "presents": 0,
+          "seconds": 5,
+          "time": "2026-11-05T16:40:54.131798463-05:00",
+          "wakes": 0
+        }
+      },
+      "events": 13,
+      "failures": []
+    },
+    {
+      "name": "expose",
+      "command": [
+        "/tmp/claude-1000/-home-michael-Repos-q-products-dfx2/91291d39-d1e0-4385-9124-581f381952df/scratchpad/mixer",
+        "-script",
+        "expose"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "inspected": true,
+      "cairo_loaded": true,
+      "children": [],
+      "snapshots": [],
+      "observations": {
+        "quiet": {
+          "animating": 0,
+          "dispatches": 0,
+          "event": "quiet",
+          "frame_timers": 0,
+          "frames": 0,
+          "paints": 0,
+          "presents": 0,
+          "seconds": 5,
+          "time": "2026-11-05T16:41:00.439253659-05:00",
+          "wakes": 0
+        },
+        "exposure": {
+          "event": "exposure",
+          "frames": 0,
+          "paint_failures": 0,
+          "paints": 5,
+          "presents": 0,
+          "requests": 5,
+          "time": "2026-11-05T16:41:01.442491254-05:00"
+        }
+      },
+      "events": 10,
+      "failures": []
+    },
+    {
+      "name": "large",
+      "command": [
+        "/tmp/claude-1000/-home-michael-Repos-q-products-dfx2/91291d39-d1e0-4385-9124-581f381952df/scratchpad/mixer",
+        "-script",
+        "large"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "inspected": true,
+      "cairo_loaded": true,
+      "children": [],
+      "snapshots": [],
+      "observations": {
+        "quiet": {
+          "animating": 0,
+          "dispatches": 0,
+          "event": "quiet",
+          "frame_timers": 0,
+          "frames": 0,
+          "paints": 0,
+          "presents": 0,
+          "seconds": 5,
+          "time": "2026-11-05T16:41:15.149208528-05:00",
+          "wakes": 0
+        },
+        "large": [
+          [
+            "984x761",
+            "984x761@1 visible=true",
+            2995296
+          ],
+          [
+            "1240x900",
+            "1240x900@1 visible=true",
+            4464000
+          ],
+          [
+            "1600x1000",
+            "1600x1000@1 visible=true",
+            6400000
+          ],
+          [
+            "2400x1300",
+            "2400x1300@1 visible=true",
+            12480000
+          ],
+          [
+            "3200x1400",
+            "3200x1400@1 visible=true",
+            17920000
+          ]
+        ]
+      },
+      "events": 18,
+      "failures": []
+    },
+    {
+      "name": "fonts",
+      "command": [
+        "/tmp/claude-1000/-home-michael-Repos-q-products-dfx2/91291d39-d1e0-4385-9124-581f381952df/scratchpad/mixer",
+        "-script",
+        "fonts"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "inspected": true,
+      "cairo_loaded": true,
+      "children": [],
+      "snapshots": [],
+      "observations": {
+        "fonts": {
+          "latin": [
+            "notosans: outline"
+          ],
+          "greek": [
+            "notosans: outline"
+          ],
+          "cyrillic": [
+            "notosans: outline"
+          ],
+          "hebrew": [
+            "dejavusans: outline"
+          ],
+          "arabic": [
+            "dejavusans: outline"
+          ],
+          "japanese": [
+            "notosanscjkjp: outline"
+          ],
+          "emoji": [
+            "notocoloremoji: png bitmap"
+          ]
+        }
+      },
+      "events": 13,
+      "failures": []
+    },
+    {
+      "name": "signal",
+      "command": [
+        "/tmp/claude-1000/-home-michael-Repos-q-products-dfx2/91291d39-d1e0-4385-9124-581f381952df/scratchpad/mixer",
+        "-script",
+        "animate"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "inspected": true,
+      "cairo_loaded": true,
+      "children": [],
+      "snapshots": [],
+      "observations": {},
+      "events": 7,
+      "failures": []
+    }
+  ]
+}

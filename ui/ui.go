@@ -7,10 +7,9 @@
 // draw. Ordinary Go functions compose the view: there is no component base
 // type and no framework-owned application state.
 //
-// This is stage 1 of the synthetic mixer: labels and keyed, animated meters in
-// a single column, rendered on the CPU with pure-Go text. Linux/amd64 (GTK 3)
-// presents it; on Windows, Open returns an unsupported-content error until the
-// Win32 presentation stage, while ordinary dfx2 windows keep working.
+// So far this holds labels and keyed, animated meters in a single column,
+// rendered on the CPU with pure-Go text. Linux/amd64 presents it through GTK 3
+// and Windows/amd64 through GDI.
 package ui
 
 import (

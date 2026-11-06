@@ -26,9 +26,16 @@ type Counters struct {
 	Windows, Retired  int
 	DispatchTargets   int
 	// Presents counts images copied into retained native storage; Paints counts
-	// native exposure callbacks that painted a retained image.
-	Presents, Paints uint64
-	Problem          string
+	// native exposure callbacks that painted a retained image. PaintFailures
+	// counts failed native paint steps; each one also fails the application.
+	Presents, Paints, PaintFailures uint64
+	// ModalActive reports an established native size/move loop. ModalLoops
+	// counts those entered, ModalTurns the dispatch turns delivered from inside
+	// them, ModalTimers the one-shot timers armed for that delivery, and
+	// ModalRefusals the timer deliveries a guard refused. Zero outside Win32.
+	ModalActive                                        bool
+	ModalLoops, ModalTurns, ModalTimers, ModalRefusals uint64
+	Problem                                            string
 }
 
 type WindowOptions struct {
@@ -139,7 +146,11 @@ type Backend interface {
 	// freed after the window's final native use. It never delivers events.
 	Present(ID, Image) error
 	// Wake is nonblocking, safe from any goroutine and never delivers inline.
-	// It queues a Wake event or returns an error without queuing one.
+	// It queues a Wake event or returns an error without queuing one. A Wake
+	// event normally arrives from Pump. A backend whose native toolkit runs its
+	// own loop may also deliver it from there, but never while a native creation
+	// or destruction it started is unfinished. The core refuses a Wake that
+	// arrives during another turn and re-requests any remaining work afterward.
 	Wake() error
 	// Pump processes one native dispatch turn, blocking when idle. On failure
 	// the target and routing remain valid: the core cancels and keeps pumping.

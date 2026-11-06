@@ -80,6 +80,7 @@ type auditionBackend interface {
 	AuditionResize(platform.ID, int, int) error
 	AuditionIconify(platform.ID, bool) error
 	AuditionSnapshot(platform.ID, string) error
+	AuditionExpose(platform.ID) error
 }
 
 func audition(w *Window) (auditionBackend, error) {
@@ -93,7 +94,7 @@ func audition(w *Window) (auditionBackend, error) {
 	return b, nil
 }
 
-// AuditionResize, AuditionIconify and AuditionSnapshot drive native content
+// AuditionResize, AuditionIconify, AuditionSnapshot and AuditionExpose drive native content
 // windows for internal auditions, on the UI thread. They add nothing to the
 // public API and deliver results through the ordinary native notifications.
 func AuditionResize(w *Window, width, height int) error {
@@ -118,4 +119,14 @@ func AuditionSnapshot(w *Window, path string) error {
 		return err
 	}
 	return b.AuditionSnapshot(w.id, path)
+}
+
+// AuditionExpose asks the native toolkit to repaint the window, as an exposure
+// would. It requests no frame: only the retained image is painted.
+func AuditionExpose(w *Window) error {
+	b, err := audition(w)
+	if err != nil {
+		return err
+	}
+	return b.AuditionExpose(w.id)
 }
