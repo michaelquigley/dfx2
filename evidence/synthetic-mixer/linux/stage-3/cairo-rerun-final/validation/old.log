@@ -1,0 +1,27 @@
+--- FAIL: TestPaintFailureReachesPump (0.00s)
+    --- FAIL: TestPaintFailureReachesPump/source/outside=false (0.00s)
+        content_linux_amd64_test.go:333: failed paint counters: {Wakes:0 Dispatches:0 Windows:1 Retired:0 DispatchTargets:0 Presents:1 Paints:1 PaintFailures:0 ModalActive:false ModalLoops:0 ModalTurns:0 ModalTimers:0 ModalRefusals:0 Problem:}
+        content_linux_amd64_test.go:329: application turn admitted before paint failure reached Pump
+        content_linux_amd64_test.go:345: Pump lost paint error: <nil>
+    --- FAIL: TestPaintFailureReachesPump/source/outside=true (0.00s)
+        content_linux_amd64_test.go:333: failed paint counters: {Wakes:0 Dispatches:0 Windows:1 Retired:0 DispatchTargets:0 Presents:1 Paints:1 PaintFailures:0 ModalActive:false ModalLoops:0 ModalTurns:0 ModalTimers:0 ModalRefusals:0 Problem:}
+        content_linux_amd64_test.go:329: application turn admitted before paint failure reached Pump
+        content_linux_amd64_test.go:339: Pump blocked with a paint failure already pending
+        content_linux_amd64_test.go:345: Pump lost paint error: <nil>
+    --- FAIL: TestPaintFailureReachesPump/paint/outside=false (0.00s)
+        content_linux_amd64_test.go:333: failed paint counters: {Wakes:0 Dispatches:0 Windows:1 Retired:0 DispatchTargets:0 Presents:1 Paints:1 PaintFailures:0 ModalActive:false ModalLoops:0 ModalTurns:0 ModalTimers:0 ModalRefusals:0 Problem:}
+        content_linux_amd64_test.go:329: application turn admitted before paint failure reached Pump
+        content_linux_amd64_test.go:345: Pump lost paint error: <nil>
+    --- FAIL: TestPaintFailureReachesPump/paint/outside=true (0.00s)
+        content_linux_amd64_test.go:333: failed paint counters: {Wakes:0 Dispatches:0 Windows:1 Retired:0 DispatchTargets:0 Presents:1 Paints:1 PaintFailures:0 ModalActive:false ModalLoops:0 ModalTurns:0 ModalTimers:0 ModalRefusals:0 Problem:}
+        content_linux_amd64_test.go:329: application turn admitted before paint failure reached Pump
+        content_linux_amd64_test.go:339: Pump blocked with a paint failure already pending
+        content_linux_amd64_test.go:345: Pump lost paint error: <nil>
+--- FAIL: TestCairoPaintFailureCancelsDrainsAndReachesRun (0.00s)
+    --- FAIL: TestCairoPaintFailureCancelsDrainsAndReachesRun/1 (0.00s)
+        core_linux_amd64_test.go:49: Run lost Cairo paint failure: <nil>
+    --- FAIL: TestCairoPaintFailureCancelsDrainsAndReachesRun/7 (0.00s)
+        core_linux_amd64_test.go:49: Run lost Cairo paint failure: <nil>
+FAIL
+FAIL	github.com/michaelquigley/dfx2/internal/platform/gtk	0.003s
+FAIL

@@ -1,0 +1,173 @@
+{
+  "method": "Re-run size and snapshot validation against retained large.jsonl events. Resolve each emitted snapshot basename in that run's snapshots directory; do not change the original logs or summaries. This checks retained pixels, not native presentation.",
+  "driver_sha256": "a94f03dd198450493ae4d6189c3805f804f5910cdb8c775760c0f7ea6ee7b703",
+  "runs": [
+    {
+      "log": "evidence/synthetic-mixer/linux/stage-2-active-matrix/wayland/large.jsonl",
+      "steps": 5,
+      "snapshot_events": 5,
+      "failures": []
+    },
+    {
+      "log": "evidence/synthetic-mixer/linux/stage-2-active-matrix/x11/large.jsonl",
+      "steps": 5,
+      "snapshot_events": 5,
+      "failures": []
+    },
+    {
+      "log": "evidence/synthetic-mixer/linux/stage-2-cleanup-matrix/wayland/large.jsonl",
+      "steps": 5,
+      "snapshot_events": 5,
+      "failures": []
+    },
+    {
+      "log": "evidence/synthetic-mixer/linux/stage-2-cleanup-matrix/x11/large.jsonl",
+      "steps": 5,
+      "snapshot_events": 5,
+      "failures": []
+    },
+    {
+      "log": "evidence/synthetic-mixer/linux/stage-2-large-rerun/wayland/large.jsonl",
+      "steps": 5,
+      "snapshot_events": 5,
+      "failures": []
+    },
+    {
+      "log": "evidence/synthetic-mixer/linux/stage-2-large-rerun/x11/large.jsonl",
+      "steps": 5,
+      "snapshot_events": 5,
+      "failures": []
+    },
+    {
+      "log": "evidence/synthetic-mixer/linux/stage-2-large-rerun/x11-scale2/large.jsonl",
+      "steps": 5,
+      "snapshot_events": 5,
+      "failures": []
+    },
+    {
+      "log": "evidence/synthetic-mixer/linux/stage-2-preflight/wayland/large.jsonl",
+      "steps": 5,
+      "snapshot_events": 0,
+      "failures": [
+        "missing coverage: large surface did not grow: [2995296, 2995296, 2995296, 2995296, 2995296]",
+        "missing coverage: largest surface 2995296 bytes is not beyond the spike's failure sizes",
+        "large step 984x761: no snapshot written",
+        "large step 1240x900: no snapshot written",
+        "large step 1600x1000: no snapshot written",
+        "large step 2400x1300: no snapshot written",
+        "large step 3200x1400: no snapshot written"
+      ]
+    },
+    {
+      "log": "evidence/synthetic-mixer/linux/stage-2-preflight/x11/large.jsonl",
+      "steps": 5,
+      "snapshot_events": 0,
+      "failures": [
+        "large step 984x761: no snapshot written",
+        "large step 1240x900: no snapshot written",
+        "large step 1600x1000: no snapshot written",
+        "large step 2400x1300: no snapshot written",
+        "large step 3200x1400: no snapshot written"
+      ]
+    },
+    {
+      "log": "evidence/synthetic-mixer/linux/stage-3/cairo-rerun/regression-wayland/large.jsonl",
+      "steps": 5,
+      "snapshot_events": 5,
+      "failures": []
+    },
+    {
+      "log": "evidence/synthetic-mixer/linux/stage-3/cairo-rerun/regression-x11/large.jsonl",
+      "steps": 5,
+      "snapshot_events": 5,
+      "failures": []
+    },
+    {
+      "log": "evidence/synthetic-mixer/linux/stage-3/cairo-rerun/regression-x11-scale2/large.jsonl",
+      "steps": 5,
+      "snapshot_events": 5,
+      "failures": []
+    },
+    {
+      "log": "evidence/synthetic-mixer/linux/stage-3/cairo-rerun-final/regression-wayland/large.jsonl",
+      "steps": 5,
+      "snapshot_events": 5,
+      "failures": []
+    },
+    {
+      "log": "evidence/synthetic-mixer/linux/stage-3/cairo-rerun-final/regression-x11/large.jsonl",
+      "steps": 5,
+      "snapshot_events": 5,
+      "failures": []
+    },
+    {
+      "log": "evidence/synthetic-mixer/linux/stage-3/cairo-rerun-final/regression-x11-scale2/large.jsonl",
+      "steps": 5,
+      "snapshot_events": 5,
+      "failures": []
+    },
+    {
+      "log": "evidence/synthetic-mixer/linux/stage-3/flex-rerun/regression-wayland/large.jsonl",
+      "steps": 5,
+      "snapshot_events": 5,
+      "failures": []
+    },
+    {
+      "log": "evidence/synthetic-mixer/linux/stage-3/flex-rerun/regression-x11/large.jsonl",
+      "steps": 5,
+      "snapshot_events": 5,
+      "failures": []
+    },
+    {
+      "log": "evidence/synthetic-mixer/linux/stage-3/flex-rerun/regression-x11-scale2/large.jsonl",
+      "steps": 5,
+      "snapshot_events": 5,
+      "failures": []
+    },
+    {
+      "log": "evidence/synthetic-mixer/linux/stage-3/regression-wayland/large.jsonl",
+      "steps": 5,
+      "snapshot_events": 5,
+      "failures": []
+    },
+    {
+      "log": "evidence/synthetic-mixer/linux/stage-3/regression-x11/large.jsonl",
+      "steps": 5,
+      "snapshot_events": 5,
+      "failures": []
+    },
+    {
+      "log": "evidence/synthetic-mixer/linux/stage-3/regression-x11-scale2/large.jsonl",
+      "steps": 5,
+      "snapshot_events": 5,
+      "failures": []
+    },
+    {
+      "log": "evidence/synthetic-mixer/windows/large-capture-diagnosis/large-rerun-disconnected/large.jsonl",
+      "steps": 5,
+      "snapshot_events": 5,
+      "failures": []
+    },
+    {
+      "log": "evidence/synthetic-mixer/windows/run/large.jsonl",
+      "steps": 5,
+      "snapshot_events": 5,
+      "failures": []
+    },
+    {
+      "log": "evidence/synthetic-mixer/windows/run-2/large.jsonl",
+      "steps": 5,
+      "snapshot_events": 5,
+      "failures": []
+    },
+    {
+      "log": "evidence/synthetic-mixer/windows/stage-3/run/matrix-native/large.jsonl",
+      "steps": 5,
+      "snapshot_events": 5,
+      "failures": []
+    }
+  ],
+  "validated_snapshots": 115,
+  "passing_runs": 23,
+  "historical_runs_without_snapshots": 2
+}

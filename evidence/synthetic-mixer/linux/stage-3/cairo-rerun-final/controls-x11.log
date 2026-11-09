@@ -1,0 +1,3 @@
+SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry
+{"out": "/home/michael/Repos/q/products/dfx2/evidence/synthetic-mixer/linux/stage-3/cairo-rerun-final/controls-x11", "passed": true, "failure": null, "cases": [["drag_outside_window", true], ["checkbox", true], ["keyboard", true], ["independent_focus", true], ["external_during_drag", true], ["reorder_during_drag", true], ["remove_during_drag", true], ["focus_loss_during_drag", true], ["hover_is_idle", true], ["close_during_drag", true]]}
+gnome-shell-calendar-server[700554]: Lost (or failed to acquire) the name org.gnome.Shell.CalendarServer - exiting

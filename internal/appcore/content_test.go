@@ -172,8 +172,18 @@ func (r *barrier) show(t *testing.T, visible bool, ws ...*Window) {
 // Negative frame assertions follow it, after any relevant surface barrier.
 func (r *barrier) turn(t *testing.T, a *App) {
 	t.Helper()
+	r.dispatch(t, a, nil)
+}
+
+// dispatch runs f on the UI thread and waits for that complete dispatch,
+// including frames. Arming in the same callback ties completion to f.
+func (r *barrier) dispatch(t *testing.T, a *App, f func()) {
+	t.Helper()
 	done := make(chan struct{})
 	if err := a.Post(func() {
+		if f != nil {
+			f()
+		}
 		r.mu.Lock()
 		r.requested = append(r.requested, done)
 		r.mu.Unlock()

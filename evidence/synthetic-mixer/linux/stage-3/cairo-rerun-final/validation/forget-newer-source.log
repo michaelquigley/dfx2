@@ -1,0 +1,12 @@
+--- FAIL: TestPaintFailureReachesPump (0.00s)
+    --- FAIL: TestPaintFailureReachesPump/source/outside=false (0.00s)
+        content_linux_amd64_test.go:363: deferred wakes=1, newer source=0
+    --- FAIL: TestPaintFailureReachesPump/source/outside=true (0.00s)
+        content_linux_amd64_test.go:363: deferred wakes=1, newer source=0
+    --- FAIL: TestPaintFailureReachesPump/paint/outside=false (0.00s)
+        content_linux_amd64_test.go:363: deferred wakes=1, newer source=0
+    --- FAIL: TestPaintFailureReachesPump/paint/outside=true (0.00s)
+        content_linux_amd64_test.go:363: deferred wakes=1, newer source=0
+FAIL
+FAIL	github.com/michaelquigley/dfx2/internal/platform/gtk	0.003s
+FAIL

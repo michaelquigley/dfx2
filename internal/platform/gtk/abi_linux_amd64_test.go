@@ -50,6 +50,7 @@ func TestBindingsMatchHeaders(t *testing.T) {
 		"cairo_surface_flush": n.surfaceFlush, "cairo_surface_mark_dirty": n.surfaceMarkDirty,
 		"cairo_surface_set_device_scale": n.surfaceSetScale, "cairo_surface_destroy": n.surfaceDestroy,
 		"cairo_set_source_surface": n.setSourceSurface, "cairo_paint": n.paint,
+		"cairo_status":      n.contextStatus,
 		"gtk_window_resize": n.windowResize, "gtk_window_iconify": n.windowIconify,
 		"gtk_window_deiconify": n.windowDeiconify, "gtk_window_present": n.windowPresent, "cairo_surface_write_to_png": n.surfaceWritePNG,
 		"gtk_widget_add_events": n.addEvents, "gtk_widget_set_can_focus": n.setCanFocus, "gtk_widget_grab_focus": n.grabFocus,

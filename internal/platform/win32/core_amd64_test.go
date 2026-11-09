@@ -61,8 +61,8 @@ func (a *application) presented(t *testing.T, n uint64) {
 // each retry firing from its own tick.
 func (a *application) holdPending(t *testing.T, allocations int, windows ...*appcore.Window) {
 	t.Helper()
-	a.host.Await("a failed free", func() bool {
-		return strings.Contains(a.host.Counters().Problem, "unreleased allocations")
+	a.host.Await("all failed frees and retired windows", func() bool {
+		return a.cleanupReady(allocations, len(windows))
 	})
 	for range heldRetries {
 		attempts := a.host.FreeAttempts()
@@ -87,6 +87,15 @@ func (a *application) holdPending(t *testing.T, allocations int, windows ...*app
 			t.Fatalf("ownership not visible: %+v", c)
 		}
 	}
+}
+
+// A replacement failure can appear before teardown has freed the current
+// image. Start measuring retries only after every initial failure is recorded
+// and retirement is complete. No retry ticks have been sent at this point.
+func (a *application) cleanupReady(allocations, windows int) bool {
+	c := a.host.Counters()
+	return a.host.PendingFrees() == allocations && c.Windows == windows && c.Retired == windows &&
+		strings.Contains(c.Problem, "unreleased allocations")
 }
 
 // release lets the retry succeed and returns Run's result.
@@ -218,5 +227,40 @@ func TestAcknowledgmentKeepsTheFailureNotYetReported(t *testing.T) {
 	}
 	if text := err.Error(); strings.Count(text, "present: ") != 1 {
 		t.Fatalf("want one record through Present: %v", err)
+	}
+}
+
+func TestRetryBaselineWaitsForTeardownFreeToBeRecorded(t *testing.T) {
+	windows := make(chan *appcore.Window, 1)
+	redraw := make(chan struct{})
+	a := launch(t, func(app *appcore.App) error {
+		w := opened(t, app)
+		windows <- w
+		return app.Go("redraw", func(context.Context) error { <-redraw; return appcore.Invalidate(w) })
+	})
+	w := <-windows
+	a.presented(t, 1)
+	entered, release := a.host.HoldFree(2)
+	a.host.FailFrees(true)
+	close(redraw)
+	select {
+	case <-entered:
+	case <-time.After(5 * time.Second):
+		t.Fatal("teardown's first free never started")
+	}
+	// The replacement's failure is visible, but the current image's first
+	// free is still on the stack. A parked notification cannot make this a
+	// valid baseline, even though the old readiness predicate accepts it.
+	if c := a.host.Counters(); !strings.Contains(c.Problem, "unreleased allocations") || a.host.PendingFrees() != 1 {
+		t.Errorf("did not isolate the replacement failure: %+v", c)
+	}
+	if a.cleanupReady(2, 1) {
+		t.Error("retry baseline accepted before teardown's free was recorded")
+	}
+	release()
+	a.holdPending(t, 2, w)
+	err := a.release(t)
+	if got := cleanupWindows(err); len(got) != 2 || got[0] != got[1] {
+		t.Fatalf("want both records for one window, got %v: %v", got, err)
 	}
 }

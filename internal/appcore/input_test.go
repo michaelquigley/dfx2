@@ -6,6 +6,7 @@ import (
 	"slices"
 	"strings"
 	"sync"
+	"sync/atomic"
 	"testing"
 
 	"github.com/michaelquigley/dfx2/internal/platform"
@@ -26,10 +27,76 @@ var (
 
 func queueInput(t *testing.T, b *fake.Backend, h harness, r *barrier, w *Window, inputs ...platform.Input) {
 	t.Helper()
-	for _, in := range inputs {
-		b.Enqueue(inputOf(w, in))
+	// A pending wake may precede individually enqueued events. Deliver the
+	// entire batch in the callback whose completed dispatch we wait for.
+	r.dispatch(t, h.app, func() {
+		for _, in := range inputs {
+			b.Emit(inputOf(w, in))
+		}
+	})
+}
+
+func TestQueueInputDeliversWholeBatchBeforeReturningWithAWakePending(t *testing.T) {
+	b, clock, c := &fake.Backend{}, newFrameClock(t), newFakeContent()
+	r := watch(b)
+	parked, resume := make(chan struct{}), make(chan struct{})
+	boundary, release := make(chan struct{}), make(chan struct{})
+	var park, hold atomic.Bool
+	b.BeforePump = func() {
+		if park.Swap(false) {
+			close(parked)
+			<-resume
+		}
 	}
-	r.turn(t, h.app)
+	after := b.AfterEvent
+	b.AfterEvent = func(e platform.Event) {
+		after(e)
+		if e.Kind == platform.Wake && hold.Swap(false) {
+			close(boundary)
+			<-release
+		}
+	}
+	var w *Window
+	h := launch(t, quietOptions(WindowApplication), b, clock, func(a *App) (err error) {
+		w, err = OpenContent(a, WindowOptions{Width: 4, Height: 3}, c)
+		return err
+	})
+	// Release both gates before launch's cancellation cleanup on any failure.
+	resumePump, releaseBoundary := sync.OnceFunc(func() { close(resume) }), sync.OnceFunc(func() { close(release) })
+	t.Cleanup(releaseBoundary)
+	t.Cleanup(resumePump)
+	receive(t, h.ready)
+	r.show(t, false, w)
+	if err := h.app.Post(func() { park.Store(true) }); err != nil {
+		t.Fatal(err)
+	}
+	receive(t, parked)
+	// Put a wake ahead of any input that the old helper would enqueue.
+	if err := h.app.Post(func() {}); err != nil {
+		t.Fatal(err)
+	}
+	done := make(chan struct{})
+	go func() {
+		defer close(done)
+		queueInput(t, b, h, r, w, leftDown, spaceKey, leftUp)
+	}()
+	eventually(t, "the batch's posted callback", func() bool {
+		h.app.mu.Lock()
+		defer h.app.mu.Unlock()
+		return len(h.app.owner.queue) == 2
+	})
+	hold.Store(true)
+	resumePump()
+	receive(t, boundary)
+	receive(t, done)
+	// The pump cannot deliver anything else until this assertion completes.
+	// With individual Enqueue calls, all three inputs remain behind the wake
+	// even though the old turn barrier has already reported completion.
+	if s, _ := InspectContent(w); s.InputQueued != 3 || s.Frames != 0 {
+		t.Fatalf("batch barrier returned before delivery: %+v", s)
+	}
+	releaseBoundary()
+	closeAll(t, h, w)
 }
 
 func TestAdjacentMotionCoalescesButNeverAcrossEdges(t *testing.T) {

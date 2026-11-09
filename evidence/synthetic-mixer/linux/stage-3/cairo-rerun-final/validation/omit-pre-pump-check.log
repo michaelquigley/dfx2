@@ -1,0 +1,12 @@
+--- FAIL: TestPaintFailureReachesPump (0.00s)
+    --- FAIL: TestPaintFailureReachesPump/source/outside=true (0.00s)
+        content_linux_amd64_test.go:329: application turn admitted before paint failure reached Pump
+        content_linux_amd64_test.go:358: deferred wake was lost before shutdown
+        content_linux_amd64_test.go:363: deferred wakes=0, newer source=123
+    --- FAIL: TestPaintFailureReachesPump/paint/outside=true (0.00s)
+        content_linux_amd64_test.go:329: application turn admitted before paint failure reached Pump
+        content_linux_amd64_test.go:358: deferred wake was lost before shutdown
+        content_linux_amd64_test.go:363: deferred wakes=0, newer source=123
+FAIL
+FAIL	github.com/michaelquigley/dfx2/internal/platform/gtk	0.003s
+FAIL

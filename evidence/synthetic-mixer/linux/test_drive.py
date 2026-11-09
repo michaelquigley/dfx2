@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
-"""Regression tests for the large case's checks. No display needed:
+"""Regression tests for the large case's checks. Requires Pillow; no display needed:
 python3 evidence/synthetic-mixer/linux/test_drive.py"""
 import json
 import tempfile
 import unittest
+import zlib
 from pathlib import Path
+
+from PIL import Image
 
 import drive
 
@@ -32,6 +35,19 @@ CLAMPED = steps_of((984, 761), (1240, 900), (1600, 1000), (1600, 1000), (1600, 1
 
 def png_header(width, height):
     return b"\x89PNG\r\n\x1a\n" + b"\0\0\0\x0dIHDR" + width.to_bytes(4, "big") + height.to_bytes(4, "big")
+
+
+def write_png(path, width, height):
+    Image.new("RGB", (width, height), (12, 34, 56)).save(path, format="PNG")
+
+
+def replace_idat(data, payload, bad_crc=False):
+    """Keep a real PNG's header and end, changing only its compressed pixels."""
+    start = data.index(b"IDAT") - 4
+    length = int.from_bytes(data[start:start + 4], "big")
+    chunk = b"IDAT" + payload
+    crc = zlib.crc32(chunk) ^ int(bad_crc)
+    return data[:start] + len(payload).to_bytes(4, "big") + chunk + crc.to_bytes(4, "big") + data[start + 12 + length:]
 
 
 class LargeSizes(unittest.TestCase):
@@ -87,7 +103,7 @@ class LargeSnapshots(unittest.TestCase):
         for i, e in enumerate(steps):
             width, height = (sizes or {}).get(i, drive.size_of(e["first_surface"]))
             path = self.directory / e["snapshot"]
-            path.write_bytes(png_header(width, height))
+            write_png(path, width, height)
             events.append(dict(event="snapshot", path=str(path)))
         return events
 
@@ -142,6 +158,31 @@ class LargeSnapshots(unittest.TestCase):
         self.assertEqual(len(failures), 1, failures)
         self.assertIn("unreadable snapshot", failures[0])
 
+    def test_incomplete_or_corrupt_png_fails(self):
+        # Small images isolate file validation from the separate size gate.
+        steps = steps_of((8, 6))
+        path = self.directory / steps[0]["snapshot"]
+        write_png(path, 8, 6)
+        valid = path.read_bytes()
+        start = valid.index(b"IDAT") - 4
+        length = int.from_bytes(valid[start:start + 4], "big")
+        payload = valid[start + 8:start + 8 + length]
+        damaged = {
+            "header only": png_header(8, 6),
+            "truncated pixel data": valid[:start + 8 + length // 2],
+            "missing end": valid[:-12],
+            "truncated end CRC": valid[:-4],
+            "bad pixel chunk CRC": replace_idat(valid, payload, bad_crc=True),
+            "invalid compressed pixels with valid CRC": replace_idat(valid, b"not zlib"),
+            "short decoded pixels with valid CRC": replace_idat(valid, zlib.compress(b"\0")),
+        }
+        for name, data in damaged.items():
+            with self.subTest(name=name):
+                path.write_bytes(data)
+                failures = drive.large_snapshot_failures(steps, [dict(event="snapshot", path=str(path))])
+                self.assertEqual(len(failures), 1, failures)
+                self.assertIn("unreadable snapshot", failures[0])
+
     def test_retained_x11_run_took_no_snapshots_so_it_cannot_pass_now(self):
         self.assertEqual(len(drive.large_failures(retained_steps("x11"), [])), 5)
 
@@ -164,6 +205,16 @@ class LargeCase(unittest.TestCase):
     def test_missing_snapshots_fail_the_case(self):
         failures = self.audition(GROWING, [])
         self.assertEqual(sum("no snapshot written" in f for f in failures), 5, failures)
+
+    def test_header_only_snapshots_fail_the_case(self):
+        with tempfile.TemporaryDirectory() as directory:
+            events = []
+            for e in GROWING:
+                path = Path(directory) / e["snapshot"]
+                path.write_bytes(png_header(*drive.size_of(e["first_surface"])))
+                events.append(dict(event="snapshot", path=str(path)))
+            failures = self.audition(GROWING, events)
+        self.assertEqual(sum("unreadable snapshot" in f for f in failures), 5, failures)
 
     def test_a_run_that_never_grew_fails_the_case(self):
         failures = self.audition(retained_steps("wayland"), [])

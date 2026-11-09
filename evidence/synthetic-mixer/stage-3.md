@@ -1,6 +1,6 @@
 # Synthetic mixer stage 3: layout and interactive controls
 
-Stage 3 of the [work order](../../docs/future/synthetic-mixer-work-order.md) is implemented in the working tree on top of `631d339`; nothing is committed. Built behavior is in [ui.md](../../docs/current/ui.md). **Windows execution happened on 2026-11-09** at `35dc8c4`; the [handoff](windows/stage-3/README.md) ran, and its results, including two timing-sensitive unit tests found on that host, are in [windows/stage-3/results.md](windows/stage-3/results.md) and await the Linux return checks and review. Review status is recorded at the end. Stage 4 has not started.
+Stage 3 of the [work order](../../docs/future/synthetic-mixer-work-order.md) was committed at `35dc8c4`, with the Windows return at `9b700d2`. Built behavior is in [ui.md](../../docs/current/ui.md). Windows controls passed 10/10 natively, and Michael's manual audition found nothing wrong in what was testable. Two intermittent unit tests blocked the regression runners; their native cases passed through diagnostic copies that omitted the failing test gates. Both test defects are fixed in the Linux working tree, with Windows execution of those fixes still pending. The full return review found a GTK paint-error propagation gap; Michael accepted its fix, which now passes the Linux native matrices and the complete-scope Terminus review `bbb7390ad464`. An earlier review in this return round found a separate PNG-validation defect. Michael accepted its fix; the driver and fixtures are corrected, and full return review `aeda6d4e169a` is clean with no findings. The [Windows results](windows/stage-3/results.md) retain the original observations; the Linux return section below records subsequent work. Stage 3 is not accepted and stage 4 has not started.
 
 Host: Linux 7.0.0-42-generic amd64, Go 1.27.1 (module language 1.26), GTK 3.24.52, Cairo 1.18.4. Every build, test and vet uses `CGO_ENABLED=0`.
 
@@ -44,9 +44,9 @@ GOOS=windows GOARCH=amd64 go vet .        # in windows/stage-3/controlsdrive
 GOOS=windows GOARCH=amd64 go build -o /dev/null .
 ```
 
-All 13 exit 0 at the current binary hash, `aff24bf6…` (see the native reruns below). `TestBindingsMatchHeaders` reports PASS, not SKIP, including the new GDK event accessors. The race detector needs cgo and was not run. Repetition does not make a fixture deterministic, and does not show that one is; see the core-path fixtures below. Windows and Darwin results are compilation and static analysis only.
+Before transfer, all 13 exited 0 at the tested binary hash, `aff24bf6…` (see the native reruns below). `TestBindingsMatchHeaders` reports PASS, not SKIP, including the new GDK event accessors. The race detector needs cgo and was not run. Repetition does not make a fixture deterministic, and does not show that one is; see the core-path fixtures below. The Windows and Darwin commands in this list are compilation and static analysis only; subsequent native Windows execution is recorded separately below.
 
-The Win32 tests still run an injected model on Linux. That model encodes assumptions about `SetCapture` and `WM_CAPTURECHANGED` that the Windows run has to confirm.
+The Win32 unit tests use an injected model on both operating systems. Native Windows controls now exercise capture, signed coordinates, keyboard delivery and focus loss; capture release inside a real size/move loop remains modeled only.
 
 | Contract | Tests |
 | --- | --- |
@@ -113,6 +113,8 @@ A separate bug appeared during the first native X11 attempt: `examples/mixer` pa
 
 ## Native Linux auditions
 
+The Linux regression driver and its tests require Python 3 with Pillow (`python3-pil` on Debian/Ubuntu). PNG acceptance checks chunk integrity, decodes all pixels and requires the complete end chunk; dimension metadata alone is insufficient.
+
 Both drivers ran inside an **isolated headless GNOME Shell 50.1**, with its own home, runtime directory, session bus and a 2560×1400 virtual monitor. Nothing reached the operator's desktop. Input is real to the toolkit: Clutter virtual devices inject into the compositor, which delivers it over Wayland or through XWayland. `controls_drive.py` needs unsafe mode only to read window geometry and create those devices.
 
 ```sh
@@ -150,12 +152,44 @@ Each run's `controls-focused.png` is the retained image after the keyboard case.
 
 The stage 1 matrix passed with no failures in all three configurations: 10 of 10 cases each, with 5 s quiet intervals of 0 frames, timers, wakes, dispatches, presents and paints. The `minimize` case still shows the accepted GTK/Wayland exception: 62 frames and 31 timers while minimized, against 0 and 0 under XWayland.
 
+## Windows return and Linux follow-up
+
+The Windows return at `9b700d2` changes evidence and documentation only. Its controls matrix passed 10/10. The 17 mixer and 9 foundation native regression cases passed through scratch runners with their failing unit-test gates omitted; the original runner failures and logs remain unchanged. Michael's Windows manual report was "everything that was testable seems fine", with manual close-during-drag and DPI unavailable. See the [complete Windows record](windows/stage-3/results.md).
+
+Michael accepted two test fixes on Linux:
+
+- **Input delivery:** `queueInput` now emits its whole batch on the UI thread in the same posted callback that arms its completed-dispatch barrier. A regression parks the pump, places a wake ahead of any individually queued input, and holds the pump after the barrier reports completion. Restoring the old helper through an overlay failed the intended assertion 100/100 times: all three inputs were still undelivered. The fixed helper and overflow tests passed 100 repetitions.
+- **Cleanup retry baseline:** `holdPending` waits for all expected failed allocations to be recorded and all expected windows to be retired. A replacement failure alone is insufficient. `CoreHost.Await` observes parking but does not hold the UI thread there. The regression holds teardown's first free, checks that the shared readiness predicate rejects that incomplete state, then releases it and runs the exact retry and error-retention assertions. Restoring the old readiness predicate through an overlay failed that assertion 100/100 times, without timeouts. The acknowledgment and new regression tests passed 100 repetitions.
+
+On the resulting tree, all with `CGO_ENABLED=0`:
+
+- `go test ./... -count=1 -timeout=180s` and Linux `go vet ./...` pass.
+- `go test ./internal/appcore ./internal/platform/win32 -count=300 -timeout=180s` passes.
+- Windows `go vet ./...` passes. The appcore and Win32 test binaries compile for Windows/amd64 and Darwin/amd64; this is not execution on those systems.
+- The separate Windows controls driver builds and vets; the Linux driver regression suite passes 21/21.
+- Inspection of the 27 returned native JSONL logs finds exactly one drained record per run, zero outstanding ownership and paint failures, and empty stderr files.
+
+At this point only `_test.go` files and documentation had changed after the Windows return, so the retained native evidence still applied. The subsequent Cairo fix changes the Linux backend and requires fresh Linux runs, recorded below; Windows runtime sources remain unchanged. The Windows runners must still run with their original test gates enabled after transfer of these fixes. The Linux manual audition, final review and canon alignment remain pending. The historical failures listed below are not explained or closed by these test fixes.
+
+## Cairo paint-error fix after return review
+
+Terminus `de2919d40d6a` found that GTK draw callbacks ignored Cairo context errors. Michael accepted checking `cairo_status` after drawing and reporting the error through `Pump`. Failed paints now count separately from successful paints; the pending diagnostic names the window, retained image size and status. `Pump` checks before blocking as well as after native iteration, and dispatch defers application callbacks until the core receives the failure. The deferred dispatch retains the wake already owned by the core, which can coalesce shutdown work into it. The next `Pump` delivers that wake after the error without clearing any newer queued native source. Cleanup still releases the retained image and native references through the ordinary path.
+
+Validation on Linux, all Go commands using `CGO_ENABLED=0`:
+
+- The four backend failure cases (source or paint error, inside or outside native iteration) and two backend/core failure cases fail on assertions with the old backend overlaid. Both core cases previously returned nil after a later ordinary close. The successful-paint control remains green.
+- With the fix, the full root suite and vet pass, and the GTK package passes 100 repetitions. `TestBindingsMatchHeaders` passes, including `cairo_status`, without skipping. Windows/amd64 and Darwin/amd64 root cross-builds pass.
+- Six targeted mutations are caught on assertions: ignoring context status, dropping the pre-iteration error check, dropping the post-iteration error check, dispatching application callbacks with an error pending, losing the deferred wake, and forgetting a newer native source while delivering that wake. These are additional checks; the earlier scratch-only 98-mutation suite was not rerun. The overlay failure logs are retained under `linux/stage-3/cairo-rerun-final/validation/`; the original-backend run predates the extra deferred-wake assertions, and the six targeted mutation logs use the final tests.
+- The backend/core tests use injected native calls and bypass native startup and widget creation. They exercise the real core and GTK presentation, draw, pump, destruction and release paths, checking the returned error, owned task cancellation, content release, window completion and zero native ownership. They do not provoke an actual Cairo failure on a desktop.
+
+The first Cairo build, SHA-256 `e710770c7f5a4017bb0995d84647ae97d3d6f6501c6e730b0bb15ee8230e1ab6`, passed all 60 cases in [`linux/stage-3/cairo-rerun/`](linux/stage-3/cairo-rerun/). Inspection during that validation found the deferred wake needed explicit preservation; those runs therefore do not validate the final code. The corrected Linux mixer SHA-256 is `4b83ab0ac90d9d85c607f6fa769d3ea4ddfae93f9da00934ef44efb5c65ee5d5`. Its controls and regression runs passed **60/60** in [`linux/stage-3/cairo-rerun-final/`](linux/stage-3/cairo-rerun-final/): 10 controls and 10 regression cases each on Wayland, XWayland and XWayland at `GDK_SCALE=2`. All 33 mixer processes drained to zero ownership with empty application stderr and no paint failures. Each controls run reports 35 edits; the scale-2 retained image was inspected and remains consistent with the previous audition. Wayland minimization retains the accepted 62 frames / 31 timers, and settled quiet intervals remain idle. The manifest records commands and exit codes; the earlier runs are untouched. These use the same isolated headless GNOME session and virtual monitor as the previous matrices. They do not close the live Linux manual-audition gap. Terminus `bbb7390ad464` reviewed this fix with the new tests and evidence included and returned clean; the separate PNG-validation finding described below remains unresolved.
+
 ## Unavailable coverage
 
 Stated plainly, because a green run does not cover these:
 
-- **Windows:** nothing here has executed. `controlsdrive`, `controls.ps1` and the input path are cross-built only.
-- **The operator's live desktop:** these runs are in a nested headless shell on a virtual monitor. No person has dragged a fader or used the keyboard, and there is no hardware input device in the path. A hand audition on Michael's Linux desktop has not happened; steps 1 to 8 of the [Windows manual audition](windows/stage-3/README.md#manual-audition) apply equally there.
+- **Windows test fixes:** the returned controls passed natively, but the two Linux-side test fixes have not run on Windows. Neither regression runner has a passing run with its original test gate enabled at the corrected revision. Actual DPI transitions and manual closing during a drag remain untested on this host.
+- **The operator's live desktop:** these runs are in a nested headless shell on a virtual monitor. These automated Linux runs contain no human input or hardware input device; the separate Windows manual audition does not close this Linux coverage gap. A hand audition on Michael's Linux desktop has not happened; steps 1 to 8 of the [Windows manual audition](windows/stage-3/README.md#manual-audition) apply equally there.
 - **Native capture loss on GTK:** `grab-broken-event` and `grab-notify` are connected and tested with injected calls. Nothing in these runs provokes one natively; `focus_loss_during_drag` exercises focus-out, through shell window activation.
 - **A true X11 server** and **fractional or native Wayland scale:** X11 here is XWayland, and scale 2 is `GDK_SCALE`.
 - **Overflow natively:** 257 events between frames is not reachable through this driver. The queue, UI and core handling are tested deterministically, through real core and content with a fake backend.
@@ -179,3 +213,19 @@ Not edited, per the work order. Stage 3 makes these stale for deliberate canon w
 - **Terminus `5fc97cd2e8ac`** (full rubric, 196 files, none uncovered): not clean. Its one blocking finding was that huge finite flex weights hang layout. Michael accepted the fix: per-pass weight scaling and a guard that fails the frame visibly. It changed the binary to `aff24bf6…`.
 - After the flex fix, all 13 portable checks exit 0, fault injection catches 96 of 98 (the two survivors are explained above), and both native Linux matrices pass in all three configurations.
 - **Terminus `2e1844d373da`** (full rubric, 346 files, none uncovered): **clean**, superseding the three rounds above for the Linux-side tree. That is not acceptance: the Windows execution, the Linux return checks, the Linux manual audition and the final review remain.
+
+- Linux return: both Windows-discovered test defects are fixed and the checks above pass. Full-repository Terminus `de2919d40d6a` is **not clean**: one blocker, GTK paint callbacks do not check Cairo context status, so painting errors cannot reach `Run`. Michael accepted the fix; it is implemented and has not had a new Terminus review. Coverage: 1,347 covered, 212 excluded, and the two existing Hebrew font fixture/license paths uncovered. The review raised no finding on the two test fixes; that is not proof of exhaustive examination.
+
+- **Return review scope correction:** `a3ff5842a6dd` used full scope before the new GTK integration tests and Cairo native evidence were staged; full scope selects tracked paths, so those files were absent from its manifest. It returned not clean with one blocker in the unchanged Linux driver: `png_size` accepts a 24-byte PNG header without decoding an image.
+- **Terminus `bbb7390ad464`: clean**, no blocking or advisory findings, after staging the new files (no commit). Its manifest explicitly includes both GTK integration-test files and the final native manifest. Coverage is 1,678 covered, 212 excluded, and the same two Hebrew font fixture/license paths uncovered.
+- The earlier PNG finding remains valid despite the later clean result. A temporary five-step probe using only 24-byte PNG headers returned no failures from `large_failures`; the existing passing test fixtures write those same incomplete headers. Michael accepted the driver fix, recorded below. Stage 3 is not accepted.
+
+## PNG validation fix
+
+The Linux driver now uses Pillow to verify PNG chunk integrity, then reopens the same stream and fully decodes its pixels before accepting dimensions. Pillow's verification stops at the IEND header without checking its CRC, so the driver also requires the complete fixed zero-length end chunk. Truncated-image loading is not enabled. Passing fixtures now write real RGB PNGs. Runtime code and the Windows runner are unchanged.
+
+- All **23 driver tests pass** with Pillow 12.1.1. Seven corrupt-file cases cover a header alone, truncated pixel data, missing IEND, incomplete IEND CRC, a bad IDAT CRC, invalid compressed pixels with a valid CRC, and insufficient decoded pixels with a valid CRC. A separate test proves the large audition itself rejects five header-only snapshots.
+- Against the old driver, all eight new rejection assertions fail. Three targeted mutations are caught independently: skipping chunk verification accepts the bad IDAT CRC; skipping pixel decoding accepts the two correctly checksummed but undecodable payloads; skipping the end check accepts an incomplete IEND CRC.
+- Revalidation of the retained large-run events and images passes **115 snapshots across 23 runs**, including the final Cairo runs and the returned Windows snapshots. The two original stage 2 preflight runs still fail for their missing snapshots (and Wayland's missing growth). The [revalidation record](linux/stage-3/png-validation.json) preserves every result, the driver hash and the relocation method for retained paths. Original native logs and summaries are untouched; this checks retained image data, not a new native execution or a pass of the previously blocked Windows test gates.
+
+Only the Linux validation tooling, its fixtures and documentation changed in this fix. The tested mixer binary remains `4b83ab0a…`, so no native matrix or Go test rerun was needed. Full-repository Terminus `aeda6d4e169a` is **clean**, with no blocking or advisory findings. Its manifest includes the new GTK integration tests and PNG revalidation record: 1,679 files covered, 212 excluded, and the two existing Hebrew font fixture/license paths uncovered. It reviews both runtime and validation fixes, superseding the outstanding findings from this return review arc. Only this review-status note and the journal changed after the verdict. Windows test-gate reruns, the Linux manual audition and canon alignment remain pending; stage 3 is not accepted.

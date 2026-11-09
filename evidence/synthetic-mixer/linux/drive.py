@@ -2,7 +2,7 @@
 """Run bounded Linux native auditions of examples/mixer and retain logs, exits,
 retained-image snapshots and process facts. Waits are compositor pacing and
 hang backstops; ownership and idle results come from the example's own
-synchronized counters."""
+synchronized counters. Requires Python 3 and Pillow for PNG validation."""
 import argparse
 import json
 import os
@@ -13,6 +13,8 @@ import signal
 import subprocess
 import threading
 import time
+
+from PIL import Image
 
 OWNERSHIP = ("windows", "tasks", "native_completions", "queued", "native_windows", "native_retired", "dispatch_targets")
 
@@ -124,11 +126,28 @@ def large_size_failures(steps):
 
 
 def png_size(path):
+    """Check chunk integrity and decode pixels before accepting a snapshot.
+    Pillow's verify does not decode IDAT, and its decoder alone can overlook
+    chunk CRCs. Both checks are required. Keep truncated-image loading disabled.
+    """
     with open(path, "rb") as f:
-        header = f.read(24)
-    if len(header) != 24 or header[:8] != b"\x89PNG\r\n\x1a\n" or header[12:16] != b"IHDR":
-        raise ValueError("not a PNG")
-    return int.from_bytes(header[16:20], "big"), int.from_bytes(header[20:24], "big")
+        # verify stops at the IEND header without checking its CRC. Our
+        # snapshots must end with the complete, zero-length IEND chunk.
+        f.seek(-12, os.SEEK_END)
+        if f.read() != b"\0\0\0\0IEND\xae\x42\x60\x82":
+            raise ValueError("missing or incomplete PNG end chunk")
+        f.seek(0)
+        try:
+            with Image.open(f) as image:
+                if image.format != "PNG":
+                    raise ValueError("not a PNG")
+                image.verify()
+            f.seek(0)
+            with Image.open(f) as image:
+                image.load()
+                return image.size
+        except (SyntaxError, Image.DecompressionBombError) as err:
+            raise ValueError(f"invalid PNG: {err}") from err
 
 
 def large_snapshot_failures(steps, snapshots):

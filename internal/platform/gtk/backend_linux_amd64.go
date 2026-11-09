@@ -181,6 +181,9 @@ type Backend struct {
 	closeNext         bool // internal native audition hook, UI-thread only
 	wakes, dispatches uint64
 	presents, paints  uint64
+	paintFailures     uint64
+	paintErr          error // first callback failure awaiting delivery through Pump
+	deferredWake      bool  // native idle fired while a paint error awaited delivery
 }
 
 func (b *Backend) Open(sink func(platform.Event)) error {
@@ -513,8 +516,16 @@ func (b *Backend) paint(id platform.ID, cr uintptr) int32 {
 	}
 	n.setSourceSurface(cr, w.surface, 0, 0)
 	n.paint(cr)
+	status := n.contextStatus(cr)
 	b.mu.Lock()
-	b.paints++
+	if status != 0 {
+		b.paintFailures++
+		if b.paintErr == nil {
+			b.paintErr = fmt.Errorf("GTK paint: window %d, %dx%d image: cairo status %d", id, w.surfaceWidth, w.surfaceHeight, status)
+		}
+	} else {
+		b.paints++
+	}
 	b.mu.Unlock()
 	return 1
 }
@@ -660,15 +671,49 @@ func (b *Backend) dispatch() {
 		return
 	}
 	b.source = 0 // a producer during draining may queue the next source
+	if b.paintErr != nil {
+		// The core still owns this wake and may coalesce shutdown into it.
+		// Deliver it from the next Pump, after the core receives the error.
+		b.deferredWake = true
+		b.mu.Unlock()
+		return
+	}
 	b.dispatches++
 	b.mu.Unlock()
 	b.sink(platform.Event{Kind: platform.Wake})
 }
 
 func (b *Backend) Pump() error {
+	// A native call outside iteration can also deliver a draw callback. Do
+	// not block waiting for another event when that call has already failed.
+	if err := b.takePaintError(); err != nil {
+		return err
+	}
+	b.mu.Lock()
+	deferred := b.deferredWake
+	b.deferredWake = false
+	if deferred {
+		b.dispatches++
+	}
+	b.mu.Unlock()
+	if deferred {
+		// Do not consume source: a producer may already have queued another
+		// native idle, which Release must still be able to remove.
+		b.sink(platform.Event{Kind: platform.Wake})
+		b.flushRetired()
+		return b.takePaintError()
+	}
 	n.iteration(b.context, 1) // false is a legitimate interrupted/empty turn
 	b.flushRetired()
-	return nil
+	return b.takePaintError()
+}
+
+func (b *Backend) takePaintError() error {
+	b.mu.Lock()
+	defer b.mu.Unlock()
+	err := b.paintErr
+	b.paintErr = nil
+	return err
 }
 
 func (b *Backend) flushRetired() {
@@ -718,7 +763,10 @@ func (b *Backend) Counters() platform.Counters {
 	b.mu.Lock()
 	defer b.mu.Unlock()
 	s := platform.Counters{Wakes: b.wakes, Dispatches: b.dispatches, Windows: len(b.windows), Retired: len(b.retired),
-		Presents: b.presents, Paints: b.paints}
+		Presents: b.presents, Paints: b.paints, PaintFailures: b.paintFailures}
+	if b.paintErr != nil {
+		s.Problem = b.paintErr.Error()
+	}
 	if b.token != 0 {
 		s.DispatchTargets = 1
 	}

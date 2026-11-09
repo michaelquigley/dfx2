@@ -62,6 +62,7 @@ type native struct {
 	surfaceDestroy     func(uintptr)
 	setSourceSurface   func(uintptr, uintptr, float64, float64)
 	paint              func(uintptr)
+	contextStatus      func(uintptr) int32
 
 	// Internal audition hooks only.
 	windowResize    func(uintptr, int32, int32)
@@ -115,6 +116,7 @@ func load() error {
 				"cairo_surface_flush": &n.surfaceFlush, "cairo_surface_mark_dirty": &n.surfaceMarkDirty,
 				"cairo_surface_set_device_scale": &n.surfaceSetScale, "cairo_surface_destroy": &n.surfaceDestroy,
 				"cairo_set_source_surface": &n.setSourceSurface, "cairo_paint": &n.paint,
+				"cairo_status":               &n.contextStatus,
 				"cairo_surface_write_to_png": &n.surfaceWritePNG,
 			}},
 		}

@@ -1,0 +1,185 @@
+{
+  "gdk_backend": "wayland",
+  "gdk_scale": null,
+  "cases": [
+    {
+      "case": "drag_outside_window",
+      "ok": true,
+      "seconds": 2.56,
+      "edits": 5,
+      "release_outside": true
+    },
+    {
+      "case": "checkbox",
+      "ok": true,
+      "seconds": 1.29
+    },
+    {
+      "case": "keyboard",
+      "ok": true,
+      "seconds": 5.99,
+      "values": [
+        0.51,
+        0.52,
+        0.53,
+        0.52,
+        0.51,
+        0.61,
+        0.51,
+        0,
+        1
+      ]
+    },
+    {
+      "case": "independent_focus",
+      "ok": true,
+      "seconds": 2.38,
+      "sequence": [
+        [
+          "B",
+          "c"
+        ],
+        [
+          "A",
+          "a"
+        ],
+        [
+          "B",
+          "c"
+        ]
+      ]
+    },
+    {
+      "case": "external_during_drag",
+      "ok": true,
+      "seconds": 1.55,
+      "edits": 2
+    },
+    {
+      "case": "reorder_during_drag",
+      "ok": true,
+      "seconds": 1.87
+    },
+    {
+      "case": "remove_during_drag",
+      "ok": true,
+      "seconds": 2.58
+    },
+    {
+      "case": "focus_loss_during_drag",
+      "ok": true,
+      "seconds": 2.13
+    },
+    {
+      "case": "hover_is_idle",
+      "ok": true,
+      "seconds": 4.1,
+      "hover_frames": 0,
+      "quiet": {
+        "frames": 0,
+        "frame_timers": 0,
+        "presents": 0,
+        "evaluations": 0
+      },
+      "status_evaluations": 196
+    },
+    {
+      "case": "close_during_drag",
+      "ok": true,
+      "seconds": 1.83,
+      "edits_before_close": 1
+    }
+  ],
+  "windows": [
+    {
+      "title": "dfx2 mixer B",
+      "x": 700,
+      "y": 80,
+      "w": 460,
+      "h": 337,
+      "focused": false
+    },
+    {
+      "title": "dfx2 mixer A",
+      "x": 40,
+      "y": 80,
+      "w": 460,
+      "h": 337,
+      "focused": true
+    }
+  ],
+  "first_status": {
+    "animating": 0,
+    "dispatch_targets": 1,
+    "dispatches": 2,
+    "evaluations": 4,
+    "event": "status",
+    "first_frames": 2,
+    "first_surface": "460x300@1 visible=true",
+    "frame_timers": 0,
+    "frames": 4,
+    "input_queued": 0,
+    "modal_active": false,
+    "modal_loops": 0,
+    "modal_refusals": 0,
+    "modal_timers": 0,
+    "modal_turns": 0,
+    "native_completions": 0,
+    "native_problem": "",
+    "native_retired": 0,
+    "native_windows": 2,
+    "paint_failures": 0,
+    "paints": 14,
+    "presents": 4,
+    "queued": 0,
+    "release_pending": false,
+    "tasks": 2,
+    "terminal": false,
+    "time": "2026-11-09T13:07:20.075831122-05:00",
+    "wakes": 2,
+    "windows": 2
+  },
+  "origins": {
+    "A": [
+      40,
+      117.0
+    ],
+    "B": [
+      700,
+      117.0
+    ]
+  },
+  "exit": 0,
+  "returned": "<nil>",
+  "drained": {
+    "animating": 0,
+    "dispatch_targets": 0,
+    "dispatches": 152,
+    "event": "drained",
+    "frame_timers": 0,
+    "frames": 0,
+    "input_queued": 0,
+    "modal_active": false,
+    "modal_loops": 0,
+    "modal_refusals": 0,
+    "modal_timers": 0,
+    "modal_turns": 0,
+    "native_completions": 0,
+    "native_problem": "",
+    "native_retired": 0,
+    "native_windows": 0,
+    "paint_failures": 0,
+    "paints": 322,
+    "presents": 205,
+    "queued": 0,
+    "release_pending": false,
+    "tasks": 0,
+    "terminal": true,
+    "time": "2026-11-09T13:07:47.418180516-05:00",
+    "wakes": 152,
+    "windows": 0
+  },
+  "ownership_problems": [],
+  "edits": 35,
+  "passed": true
+}

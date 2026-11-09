@@ -5,6 +5,7 @@ import (
 	"errors"
 	"runtime"
 	"strconv"
+	"sync"
 	"sync/atomic"
 	"testing"
 	"time"
@@ -25,8 +26,15 @@ type CoreHost struct {
 	f                *systemModel
 	failing          atomic.Bool
 	attempts         atomic.Int64
+	freeGate         atomic.Pointer[freeGate]
 	posted           chan struct{}
 	parked, fireTick chan struct{}
+}
+
+type freeGate struct {
+	attempt int
+	entered chan struct{}
+	release chan struct{}
 }
 
 func NewCoreHost(t *testing.T) *CoreHost {
@@ -38,7 +46,11 @@ func NewCoreHost(t *testing.T) *CoreHost {
 	f.api.threadID = goroutineID
 	free := f.api.free
 	f.api.free = func(pixels []byte) error {
-		h.attempts.Add(1)
+		attempt := int(h.attempts.Add(1))
+		if gate := h.freeGate.Load(); gate != nil && gate.attempt == attempt {
+			close(gate.entered)
+			<-gate.release
+		}
 		if h.failing.Load() {
 			return ErrHostFree
 		}
@@ -95,8 +107,28 @@ func (h *CoreHost) FailFrees(fail bool) { h.failing.Store(fail) }
 
 func (h *CoreHost) FreeAttempts() int { return int(h.attempts.Load()) }
 
-// Await returns once the UI thread is parked in GetMessage, with an empty queue,
-// and ready holds.
+// PendingFrees counts allocations already recorded for retry, rather than free
+// calls that have started but whose failures have not reached the backend yet.
+func (h *CoreHost) PendingFrees() int {
+	h.f.b.mu.Lock()
+	defer h.f.b.mu.Unlock()
+	return h.f.b.cleanup.pending
+}
+
+// HoldFree stops the numbered free before its result reaches the backend. It
+// may be installed while the UI thread is running. Cleanup releases the gate
+// if the test fails before releasing it explicitly.
+func (h *CoreHost) HoldFree(attempt int) (<-chan struct{}, func()) {
+	gate := &freeGate{attempt: attempt, entered: make(chan struct{}), release: make(chan struct{})}
+	release := sync.OnceFunc(func() { close(gate.release) })
+	h.t.Cleanup(release)
+	h.freeGate.Store(gate)
+	return gate.entered, release
+}
+
+// Await checks ready after observing GetMessage with an empty queue. That
+// observation does not hold the UI thread: it may resume before ready runs.
+// Callers must test the complete state they need, not infer it from parking.
 func (h *CoreHost) Await(what string, ready func() bool) {
 	h.t.Helper()
 	deadline := time.After(5 * time.Second)

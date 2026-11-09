@@ -1,6 +1,7 @@
 package gtk
 
 import (
+	"fmt"
 	"reflect"
 	"slices"
 	"strings"
@@ -52,6 +53,7 @@ func installCairo(t *testing.T) *fakeCairo {
 	n.surfaceMarkDirty = func(uintptr) { c.dirty++ }
 	n.surfaceSetScale = func(_ uintptr, x, y float64) { c.scales = append(c.scales, x) }
 	n.surfaceDestroy = func(s uintptr) { c.destroyed = append(c.destroyed, s); delete(c.buffers, s) }
+	n.contextStatus = func(uintptr) int32 { return 0 }
 	return c
 }
 
@@ -292,5 +294,82 @@ func TestContentTeardownReleasesPixelsAfterFinalNativeUse(t *testing.T) {
 	}
 	if err := b.Present(7, image(2, 2, 0)); err == nil {
 		t.Fatal("present after teardown accepted")
+	}
+}
+
+// Both Cairo operations return void; errors accumulate on the context.
+func TestPaintFailureReachesPump(t *testing.T) {
+	for _, step := range []string{"source", "paint"} {
+		for _, outside := range []bool{false, true} {
+			t.Run(fmt.Sprintf("%s/outside=%t", step, outside), func(t *testing.T) {
+				replaceNative(t)
+				installCairo(t)
+				n.queueDraw = func(uintptr) {}
+				b := contentBackend()
+				if err := b.Present(7, image(2, 3, 0)); err != nil {
+					t.Fatal(err)
+				}
+				var status int32
+				n.setSourceSurface = func(uintptr, uintptr, float64, float64) {
+					if step == "source" {
+						status = 1
+					}
+				}
+				n.paint = func(uintptr) {
+					if step == "paint" {
+						status = 1
+					}
+				}
+				n.contextStatus = func(cr uintptr) int32 {
+					if cr != 99 {
+						t.Errorf("checked wrong context %d", cr)
+					}
+					return status
+				}
+				b.sink = func(platform.Event) { t.Error("application turn admitted before paint failure reached Pump") }
+				paint := func() {
+					b.paint(7, 99)
+					if c := b.Counters(); c.PaintFailures != 1 || c.Paints != 0 || !strings.Contains(c.Problem, "cairo status 1") {
+						t.Errorf("failed paint counters: %+v", c)
+					}
+					b.dispatch()
+				}
+				if outside {
+					paint()
+					n.iteration = func(uintptr, int32) int32 { t.Error("Pump blocked with a paint failure already pending"); return 0 }
+				} else {
+					n.iteration = func(uintptr, int32) int32 { paint(); return 1 }
+				}
+				err := b.Pump()
+				if err == nil || !strings.Contains(err.Error(), "GTK paint: window 7, 2x3 image: cairo status 1") {
+					t.Fatalf("Pump lost paint error: %v", err)
+				}
+				// dispatch's native source has fired, but the core still owns
+				// that wake. It must be delivered after the error, without
+				// waiting for another native message or dropping a newer source.
+				b.source = 123
+				var wakes int
+				b.sink = func(e platform.Event) {
+					if e.Kind != platform.Wake {
+						t.Error(e)
+					}
+					wakes++
+				}
+				n.iteration = func(uintptr, int32) int32 { t.Error("deferred wake was lost before shutdown"); return 0 }
+				if err := b.Pump(); err != nil {
+					t.Fatalf("error reported twice: %v", err)
+				}
+				if wakes != 1 || b.source != 123 {
+					t.Fatalf("deferred wakes=%d, newer source=%d", wakes, b.source)
+				}
+				n.iteration = func(uintptr, int32) int32 { return 0 }
+				if err := b.Pump(); err != nil || wakes != 1 {
+					t.Fatalf("deferred wake repeated: wakes=%d error=%v", wakes, err)
+				}
+				if b.Counters().Problem != "" {
+					t.Fatal("delivered paint error still pending")
+				}
+			})
+		}
 	}
 }
