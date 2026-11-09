@@ -1,0 +1,180 @@
+﻿--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:203 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:116 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:189 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:156 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:135 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:169 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:159 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:233 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:163 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:119 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:227 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:79 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:156 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:217 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:159 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:201 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:186 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:81 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:147 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:252 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:205 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:200 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:166 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:172 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:139 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:129 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:55 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:220 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:234 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:187 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:105 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:61 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:234 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:215 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:145 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:150 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:230 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:90 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:119 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:204 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:224 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:206 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:244 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:235 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:132 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:165 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:191 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:188 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:240 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:65 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:67 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:185 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:135 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:73 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:127 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:141 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:122 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:184 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:62 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:211 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:214 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:166 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:219 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:251 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:208 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:248 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:112 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:166 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:224 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:105 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:170 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:170 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:229 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:225 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:208 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:129 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:147 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:234 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:239 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:177 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:221 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:62 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:69 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:168 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:209 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:152 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:99 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:144 InputOverflows:0}
+FAIL
+FAIL	github.com/michaelquigley/dfx2/internal/appcore	1.244s
+FAIL
+

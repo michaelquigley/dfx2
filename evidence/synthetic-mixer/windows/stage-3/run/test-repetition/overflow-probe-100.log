@@ -1,0 +1,90 @@
+﻿--- FAIL: TestProbeOverflowBarrier (0.00s)
+    zz_probe_overlay_test.go:40: short: inspected=158 fake_queued_at_inspect=98 fake_queued_before_show=0 fake_queued_after_show=0 frames=0; after drain inspected=256 frames=0 overflows=0
+--- FAIL: TestProbeOverflowBarrier (0.00s)
+    zz_probe_overlay_test.go:40: short: inspected=237 fake_queued_at_inspect=19 fake_queued_before_show=0 fake_queued_after_show=0 frames=0; after drain inspected=256 frames=0 overflows=0
+--- FAIL: TestProbeOverflowBarrier (0.00s)
+    zz_probe_overlay_test.go:40: short: inspected=130 fake_queued_at_inspect=126 fake_queued_before_show=0 fake_queued_after_show=0 frames=0; after drain inspected=256 frames=0 overflows=0
+--- FAIL: TestProbeOverflowBarrier (0.00s)
+    zz_probe_overlay_test.go:40: short: inspected=105 fake_queued_at_inspect=151 fake_queued_before_show=0 fake_queued_after_show=0 frames=0; after drain inspected=256 frames=0 overflows=0
+--- FAIL: TestProbeOverflowBarrier (0.00s)
+    zz_probe_overlay_test.go:40: short: inspected=160 fake_queued_at_inspect=96 fake_queued_before_show=0 fake_queued_after_show=0 frames=0; after drain inspected=256 frames=0 overflows=0
+--- FAIL: TestProbeOverflowBarrier (0.00s)
+    zz_probe_overlay_test.go:40: short: inspected=99 fake_queued_at_inspect=158 fake_queued_before_show=0 fake_queued_after_show=0 frames=0; after drain inspected=256 frames=0 overflows=0
+--- FAIL: TestProbeOverflowBarrier (0.00s)
+    zz_probe_overlay_test.go:40: short: inspected=235 fake_queued_at_inspect=21 fake_queued_before_show=0 fake_queued_after_show=0 frames=0; after drain inspected=256 frames=0 overflows=0
+--- FAIL: TestProbeOverflowBarrier (0.00s)
+    zz_probe_overlay_test.go:40: short: inspected=157 fake_queued_at_inspect=97 fake_queued_before_show=0 fake_queued_after_show=0 frames=0; after drain inspected=256 frames=0 overflows=0
+--- FAIL: TestProbeOverflowBarrier (0.00s)
+    zz_probe_overlay_test.go:40: short: inspected=145 fake_queued_at_inspect=111 fake_queued_before_show=0 fake_queued_after_show=0 frames=0; after drain inspected=256 frames=0 overflows=0
+--- FAIL: TestProbeOverflowBarrier (0.00s)
+    zz_probe_overlay_test.go:40: short: inspected=129 fake_queued_at_inspect=127 fake_queued_before_show=0 fake_queued_after_show=0 frames=0; after drain inspected=256 frames=0 overflows=0
+--- FAIL: TestProbeOverflowBarrier (0.00s)
+    zz_probe_overlay_test.go:40: short: inspected=71 fake_queued_at_inspect=185 fake_queued_before_show=0 fake_queued_after_show=0 frames=0; after drain inspected=256 frames=0 overflows=0
+--- FAIL: TestProbeOverflowBarrier (0.00s)
+    zz_probe_overlay_test.go:40: short: inspected=174 fake_queued_at_inspect=82 fake_queued_before_show=0 fake_queued_after_show=0 frames=0; after drain inspected=256 frames=0 overflows=0
+--- FAIL: TestProbeOverflowBarrier (0.00s)
+    zz_probe_overlay_test.go:40: short: inspected=127 fake_queued_at_inspect=129 fake_queued_before_show=0 fake_queued_after_show=0 frames=0; after drain inspected=256 frames=0 overflows=0
+--- FAIL: TestProbeOverflowBarrier (0.00s)
+    zz_probe_overlay_test.go:40: short: inspected=234 fake_queued_at_inspect=22 fake_queued_before_show=0 fake_queued_after_show=0 frames=0; after drain inspected=256 frames=0 overflows=0
+--- FAIL: TestProbeOverflowBarrier (0.00s)
+    zz_probe_overlay_test.go:40: short: inspected=136 fake_queued_at_inspect=120 fake_queued_before_show=0 fake_queued_after_show=0 frames=0; after drain inspected=256 frames=0 overflows=0
+--- FAIL: TestProbeOverflowBarrier (0.00s)
+    zz_probe_overlay_test.go:40: short: inspected=159 fake_queued_at_inspect=97 fake_queued_before_show=1 fake_queued_after_show=0 frames=0; after drain inspected=256 frames=0 overflows=0
+--- FAIL: TestProbeOverflowBarrier (0.00s)
+    zz_probe_overlay_test.go:40: short: inspected=185 fake_queued_at_inspect=72 fake_queued_before_show=0 fake_queued_after_show=0 frames=0; after drain inspected=256 frames=0 overflows=0
+--- FAIL: TestProbeOverflowBarrier (0.00s)
+    zz_probe_overlay_test.go:40: short: inspected=112 fake_queued_at_inspect=144 fake_queued_before_show=0 fake_queued_after_show=0 frames=0; after drain inspected=256 frames=0 overflows=0
+--- FAIL: TestProbeOverflowBarrier (0.00s)
+    zz_probe_overlay_test.go:40: short: inspected=41 fake_queued_at_inspect=215 fake_queued_before_show=0 fake_queued_after_show=0 frames=0; after drain inspected=256 frames=0 overflows=0
+--- FAIL: TestProbeOverflowBarrier (0.00s)
+    zz_probe_overlay_test.go:40: short: inspected=207 fake_queued_at_inspect=49 fake_queued_before_show=0 fake_queued_after_show=0 frames=0; after drain inspected=256 frames=0 overflows=0
+--- FAIL: TestProbeOverflowBarrier (0.00s)
+    zz_probe_overlay_test.go:40: short: inspected=190 fake_queued_at_inspect=66 fake_queued_before_show=0 fake_queued_after_show=0 frames=0; after drain inspected=256 frames=0 overflows=0
+--- FAIL: TestProbeOverflowBarrier (0.00s)
+    zz_probe_overlay_test.go:40: short: inspected=101 fake_queued_at_inspect=155 fake_queued_before_show=0 fake_queued_after_show=0 frames=0; after drain inspected=256 frames=0 overflows=0
+--- FAIL: TestProbeOverflowBarrier (0.00s)
+    zz_probe_overlay_test.go:40: short: inspected=132 fake_queued_at_inspect=124 fake_queued_before_show=0 fake_queued_after_show=0 frames=0; after drain inspected=256 frames=0 overflows=0
+--- FAIL: TestProbeOverflowBarrier (0.00s)
+    zz_probe_overlay_test.go:40: short: inspected=20 fake_queued_at_inspect=236 fake_queued_before_show=0 fake_queued_after_show=0 frames=0; after drain inspected=256 frames=0 overflows=0
+--- FAIL: TestProbeOverflowBarrier (0.00s)
+    zz_probe_overlay_test.go:40: short: inspected=224 fake_queued_at_inspect=32 fake_queued_before_show=0 fake_queued_after_show=0 frames=0; after drain inspected=256 frames=0 overflows=0
+--- FAIL: TestProbeOverflowBarrier (0.00s)
+    zz_probe_overlay_test.go:40: short: inspected=123 fake_queued_at_inspect=133 fake_queued_before_show=0 fake_queued_after_show=0 frames=0; after drain inspected=256 frames=0 overflows=0
+--- FAIL: TestProbeOverflowBarrier (0.00s)
+    zz_probe_overlay_test.go:40: short: inspected=96 fake_queued_at_inspect=161 fake_queued_before_show=0 fake_queued_after_show=0 frames=0; after drain inspected=256 frames=0 overflows=0
+--- FAIL: TestProbeOverflowBarrier (0.00s)
+    zz_probe_overlay_test.go:40: short: inspected=181 fake_queued_at_inspect=75 fake_queued_before_show=0 fake_queued_after_show=0 frames=0; after drain inspected=256 frames=0 overflows=0
+--- FAIL: TestProbeOverflowBarrier (0.00s)
+    zz_probe_overlay_test.go:40: short: inspected=129 fake_queued_at_inspect=127 fake_queued_before_show=0 fake_queued_after_show=0 frames=0; after drain inspected=256 frames=0 overflows=0
+--- FAIL: TestProbeOverflowBarrier (0.00s)
+    zz_probe_overlay_test.go:40: short: inspected=146 fake_queued_at_inspect=110 fake_queued_before_show=0 fake_queued_after_show=0 frames=0; after drain inspected=256 frames=0 overflows=0
+--- FAIL: TestProbeOverflowBarrier (0.00s)
+    zz_probe_overlay_test.go:40: short: inspected=201 fake_queued_at_inspect=55 fake_queued_before_show=0 fake_queued_after_show=0 frames=0; after drain inspected=256 frames=0 overflows=0
+--- FAIL: TestProbeOverflowBarrier (0.00s)
+    zz_probe_overlay_test.go:40: short: inspected=186 fake_queued_at_inspect=68 fake_queued_before_show=0 fake_queued_after_show=0 frames=0; after drain inspected=256 frames=0 overflows=0
+--- FAIL: TestProbeOverflowBarrier (0.00s)
+    zz_probe_overlay_test.go:40: short: inspected=246 fake_queued_at_inspect=10 fake_queued_before_show=0 fake_queued_after_show=0 frames=0; after drain inspected=256 frames=0 overflows=0
+--- FAIL: TestProbeOverflowBarrier (0.00s)
+    zz_probe_overlay_test.go:40: short: inspected=236 fake_queued_at_inspect=20 fake_queued_before_show=0 fake_queued_after_show=0 frames=0; after drain inspected=256 frames=0 overflows=0
+--- FAIL: TestProbeOverflowBarrier (0.00s)
+    zz_probe_overlay_test.go:40: short: inspected=183 fake_queued_at_inspect=73 fake_queued_before_show=0 fake_queued_after_show=0 frames=0; after drain inspected=256 frames=0 overflows=0
+--- FAIL: TestProbeOverflowBarrier (0.00s)
+    zz_probe_overlay_test.go:40: short: inspected=154 fake_queued_at_inspect=101 fake_queued_before_show=0 fake_queued_after_show=0 frames=0; after drain inspected=256 frames=0 overflows=0
+--- FAIL: TestProbeOverflowBarrier (0.00s)
+    zz_probe_overlay_test.go:40: short: inspected=177 fake_queued_at_inspect=79 fake_queued_before_show=0 fake_queued_after_show=0 frames=0; after drain inspected=256 frames=0 overflows=0
+--- FAIL: TestProbeOverflowBarrier (0.00s)
+    zz_probe_overlay_test.go:40: short: inspected=166 fake_queued_at_inspect=88 fake_queued_before_show=0 fake_queued_after_show=0 frames=0; after drain inspected=256 frames=0 overflows=0
+--- FAIL: TestProbeOverflowBarrier (0.00s)
+    zz_probe_overlay_test.go:40: short: inspected=87 fake_queued_at_inspect=170 fake_queued_before_show=0 fake_queued_after_show=0 frames=0; after drain inspected=256 frames=0 overflows=0
+--- FAIL: TestProbeOverflowBarrier (0.00s)
+    zz_probe_overlay_test.go:40: short: inspected=206 fake_queued_at_inspect=50 fake_queued_before_show=0 fake_queued_after_show=0 frames=0; after drain inspected=256 frames=0 overflows=0
+--- FAIL: TestProbeOverflowBarrier (0.00s)
+    zz_probe_overlay_test.go:40: short: inspected=166 fake_queued_at_inspect=91 fake_queued_before_show=0 fake_queued_after_show=0 frames=0; after drain inspected=256 frames=0 overflows=0
+--- FAIL: TestProbeOverflowBarrier (0.00s)
+    zz_probe_overlay_test.go:40: short: inspected=133 fake_queued_at_inspect=123 fake_queued_before_show=0 fake_queued_after_show=1 frames=0; after drain inspected=256 frames=0 overflows=0
+--- FAIL: TestProbeOverflowBarrier (0.00s)
+    zz_probe_overlay_test.go:40: short: inspected=67 fake_queued_at_inspect=189 fake_queued_before_show=1 fake_queued_after_show=0 frames=0; after drain inspected=256 frames=0 overflows=0
+FAIL
+FAIL	github.com/michaelquigley/dfx2/internal/appcore	1.167s
+FAIL
+

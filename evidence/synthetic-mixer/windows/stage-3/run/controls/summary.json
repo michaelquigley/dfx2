@@ -1,0 +1,61 @@
+{
+  "cases": [
+    {
+      "case": "drag_outside_window",
+      "ok": true,
+      "seconds": 2.1912197
+    },
+    {
+      "case": "checkbox",
+      "ok": true,
+      "seconds": 1.1084867
+    },
+    {
+      "case": "keyboard",
+      "ok": true,
+      "seconds": 4.2943343
+    },
+    {
+      "case": "independent_focus",
+      "ok": true,
+      "seconds": 1.6797172
+    },
+    {
+      "case": "external_during_drag",
+      "ok": true,
+      "seconds": 1.3677164
+    },
+    {
+      "case": "reorder_during_drag",
+      "ok": true,
+      "seconds": 1.7490963000000002
+    },
+    {
+      "case": "remove_during_drag",
+      "ok": true,
+      "seconds": 2.1095858
+    },
+    {
+      "case": "focus_loss_during_drag",
+      "ok": true,
+      "seconds": 1.8437203
+    },
+    {
+      "case": "hover_is_idle",
+      "ok": true,
+      "seconds": 4.2941131
+    },
+    {
+      "case": "close_during_drag",
+      "ok": true,
+      "seconds": 1.1751431
+    }
+  ],
+  "clean": true,
+  "edits": 33,
+  "exit": 0,
+  "first_surface": "460x300@1 visible=true",
+  "ownership_problems": [],
+  "passed": true,
+  "returned": "\u003cnil\u003e"
+}

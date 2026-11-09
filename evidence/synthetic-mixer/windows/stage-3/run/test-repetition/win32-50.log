@@ -1,0 +1,6 @@
+﻿--- FAIL: TestAcknowledgmentKeepsTheFailureNotYetReported (0.00s)
+    core_amd64_test.go:214: 3 free attempts on one retry, want 2
+FAIL
+FAIL	github.com/michaelquigley/dfx2/internal/platform/win32	1.870s
+FAIL
+

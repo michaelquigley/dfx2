@@ -1,6 +1,6 @@
 # Synthetic mixer stage 3: layout and interactive controls
 
-Stage 3 of the [work order](../../docs/future/synthetic-mixer-work-order.md) is implemented in the working tree on top of `631d339`; nothing is committed. Built behavior is in [ui.md](../../docs/current/ui.md). **Windows execution is pending:** the Windows input path has run only against injected calls and a cross-build, and the [handoff](windows/stage-3/README.md) is ready but has never run. Review status is recorded at the end. Stage 4 has not started.
+Stage 3 of the [work order](../../docs/future/synthetic-mixer-work-order.md) is implemented in the working tree on top of `631d339`; nothing is committed. Built behavior is in [ui.md](../../docs/current/ui.md). **Windows execution happened on 2026-11-09** at `35dc8c4`; the [handoff](windows/stage-3/README.md) ran, and its results, including two timing-sensitive unit tests found on that host, are in [windows/stage-3/results.md](windows/stage-3/results.md) and await the Linux return checks and review. Review status is recorded at the end. Stage 4 has not started.
 
 Host: Linux 7.0.0-42-generic amd64, Go 1.27.1 (module language 1.26), GTK 3.24.52, Cairo 1.18.4. Every build, test and vet uses `CGO_ENABLED=0`.
 

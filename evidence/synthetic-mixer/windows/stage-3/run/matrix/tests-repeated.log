@@ -1,0 +1,33 @@
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:62 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:110 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:140 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:187 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:201 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:190 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:189 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:152 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:175 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:132 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:205 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:76 InputOverflows:0}
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 Scale:1 Visible:false} InputQueued:223 InputOverflows:0}
+FAIL
+FAIL	github.com/michaelquigley/dfx2/internal/appcore	1.929s
+--- FAIL: TestAcknowledgmentKeepsTheFailureNotYetReported (0.00s)
+    core_amd64_test.go:214: 3 free attempts on one retry, want 2
+FAIL
+FAIL	github.com/michaelquigley/dfx2/internal/platform/win32	1.884s
+FAIL

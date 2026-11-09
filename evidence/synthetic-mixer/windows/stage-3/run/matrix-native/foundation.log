@@ -1,0 +1,47 @@
+powershell.exe : go test ./... -count=1 -timeout=120s failed (1): ok  	github.com/michaelquigley/dfx2	2.211s
+At C:\Cygwin64\tmp\claude\C--Repos-q-products-dfx2\17b8b8d1-3519-4587-be90-b09c093d3896\scratchpad\audition-native-only
+.ps1:413 char:9
++         & powershell.exe -NoProfile -ExecutionPolicy Bypass -File (Jo ...
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (go test ./... -...ley/dfx2	2.211s:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+?   	github.com/michaelquigley/dfx2/examples/lifetime	[no test files]
+ok  	github.com/michaelquigley/dfx2/examples/mixer	1.242s
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+    input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 
+Scale:1 Visible:false} InputQueued:199 InputOverflows:0}
+FAIL
+FAIL	github.com/michaelquigley/dfx2/internal/appcore	1.202s
+ok  	github.com/michaelquigley/dfx2/internal/platform	0.976s
+?   	github.com/michaelquigley/dfx2/internal/platform/fake	[no test files]
+ok  	github.com/michaelquigley/dfx2/internal/platform/win32	1.352s
+ok  	github.com/michaelquigley/dfx2/internal/render	1.034s
+ok  	github.com/michaelquigley/dfx2/internal/text	0.836s
+ok  	github.com/michaelquigley/dfx2/internal/text/gotext	1.224s
+ok  	github.com/michaelquigley/dfx2/ui	1.815s
+FAIL
+At C:\Repos\q\products\dfx2\evidence\foundation\windows\audition.ps1:35 char:24
++     if ($code -ne 0) { throw "go $GoArgs failed ($code): $text" }
++                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (go test ./... -...	1.815s
+FAIL
+:String) [], RuntimeException
+    + FullyQualifiedErrorId : go test ./... -count=1 -timeout=120s failed (1): ok  	github.com/michaelquigley/dfx2	2.2 
+   11s
+?   	github.com/michaelquigley/dfx2/examples/lifetime	[no test files]
+ok  	github.com/michaelquigley/dfx2/examples/mixer	1.242s
+--- FAIL: TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame (0.00s)
+        input_test.go:136: at the limit: {Frames:0 Generation:2 Consumed:0 Animating:false Surface:{Width:4 Height:3 S 
+   cale:1 Visible:false} InputQueued:199 InputOverflows:0}
+FAIL
+FAIL	github.com/michaelquigley/dfx2/internal/appcore	1.202s
+ok  	github.com/michaelquigley/dfx2/internal/platform	0.976s
+?   	github.com/michaelquigley/dfx2/internal/platform/fake	[no test files]
+ok  	github.com/michaelquigley/dfx2/internal/platform/win32	1.352s
+ok  	github.com/michaelquigley/dfx2/internal/render	1.034s
+ok  	github.com/michaelquigley/dfx2/internal/text	0.836s
+ok  	github.com/michaelquigley/dfx2/internal/text/gotext	1.224s
+ok  	github.com/michaelquigley/dfx2/ui	1.815s
+FAIL
+ 

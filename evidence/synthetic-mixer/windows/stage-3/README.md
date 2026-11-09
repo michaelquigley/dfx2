@@ -1,6 +1,6 @@
 # Synthetic mixer stage 3: Windows handoff
 
-Status: **prepared on Linux; not yet executed on Windows.** Cross-builds and injected tests are preparation, not acceptance. Stage 3 is accepted only after this audition runs on a Windows host, the results return for Linux checks and review, and Michael accepts them. The [stage 3 record](../../stage-3.md) has the Linux preparation and its limits.
+Status: **prepared on Linux; executed on Windows on 2026-11-09, with the results in [results.md](results.md).** Cross-builds and injected tests are preparation, not acceptance. Stage 3 is accepted only after this audition runs on a Windows host, the results return for Linux checks and review, and Michael accepts them. The [stage 3 record](../../stage-3.md) has the Linux preparation and its limits.
 
 **Candidate.** The revision to run is Michael's commit of the stage 3 working tree as validated on Linux after the flex-weight fix of Terminus `5fc97cd2e8ac`. On Linux that tree builds `examples/mixer` with SHA-256 `aff24bf6b17bf5e26ed178b40ef301044561ee0a2b8c095a1803465ad92ce819`, and its native results are in [`linux/stage-3/flex-rerun/`](../../linux/stage-3/flex-rerun/). Windows binaries hash differently, so compare revisions, not binaries. The checkout must contain `TestHugeEqualFlexWeightsShareEquallyAndFinish` in `ui/layout_test.go`; if it does not, the transfer predates the candidate, so stop and report it. `controls.ps1` records the revision it ran in `run\controls\revision.txt`.
 

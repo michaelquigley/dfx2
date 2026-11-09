@@ -1,0 +1,44 @@
+package appcore
+
+// Diagnostic probe for TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame,
+// applied through go test -overlay so the tree stays untouched. It repeats the
+// test's first step and, when the inspected queue is short, records how many
+// events the fake backend still holds undelivered. If the missing events are
+// still in the fake's queue, the barrier returned early; if they are nowhere,
+// the core lost them.
+
+import (
+	"testing"
+
+	"github.com/michaelquigley/dfx2/internal/platform"
+	"github.com/michaelquigley/dfx2/internal/platform/fake"
+)
+
+func TestProbeOverflowBarrier(t *testing.T) {
+	b, clock, c := &fake.Backend{}, newFrameClock(t), newFakeContent()
+	r := watch(b)
+	var w *Window
+	h := launch(t, quietOptions(WindowApplication), b, clock, func(a *App) (err error) {
+		w, err = OpenContent(a, WindowOptions{Width: 4, Height: 3}, c)
+		return err
+	})
+	receive(t, h.ready)
+	queuedBeforeShow := b.Queued()
+	r.show(t, false, w)
+	queuedAfterShow := b.Queued()
+	var inputs []platform.Input
+	for range inputLimit {
+		inputs = append(inputs, spaceKey)
+	}
+	queueInput(t, b, h, r, w, inputs...)
+	s, _ := InspectContent(w)
+	stillInFake := b.Queued()
+	if s.InputQueued != inputLimit {
+		// Let the pump finish, then look again.
+		eventually(t, "the fake queue to drain", func() bool { return b.Queued() == 0 })
+		after, _ := InspectContent(w)
+		t.Fatalf("short: inspected=%d fake_queued_at_inspect=%d fake_queued_before_show=%d fake_queued_after_show=%d frames=%d; after drain inspected=%d frames=%d overflows=%d",
+			s.InputQueued, stillInFake, queuedBeforeShow, queuedAfterShow, s.Frames, after.InputQueued, after.Frames, after.InputOverflows)
+	}
+	closeAll(t, h, w)
+}

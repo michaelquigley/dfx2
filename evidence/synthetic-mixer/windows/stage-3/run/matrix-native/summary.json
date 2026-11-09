@@ -1,0 +1,196 @@
+{
+    "foundation":  "exit 1; see foundation/ and foundation.log",
+    "host":  {
+                 "revision":  "35dc8c474cb6a0f26e3040c52eda4ac9cac062a6",
+                 "worktree":  "?? evidence/synthetic-mixer/windows/stage-3/run/",
+                 "go":  "go version go1.27.3 windows/amd64",
+                 "cgo_enabled":  "0",
+                 "os":  {
+                            "Caption":  "Microsoft Windows 10 Pro",
+                            "Version":  "10.0.19045",
+                            "OSArchitecture":  "64-bit"
+                        },
+                 "session":  "RDP-Tcp#0",
+                 "powershell":  "5.1.19041.6456",
+                 "process64":  true,
+                 "display":  [
+                                 {
+                                     "Name":  "Microsoft Remote Display Adapter",
+                                     "CurrentHorizontalResolution":  3440,
+                                     "CurrentVerticalResolution":  1440
+                                 },
+                                 {
+                                     "Name":  "Microsoft Basic Display Adapter",
+                                     "CurrentHorizontalResolution":  1024,
+                                     "CurrentVerticalResolution":  768
+                                 }
+                             ],
+                 "observed_at":  "2026-11-09T11:16:16.4203303-05:00",
+                 "dpi_variation":  "not exercised by this script; first_surface records the DPI scale of each run. Record monitor transitions separately."
+             },
+    "manual_audition":  "pending: see README.md",
+    "results":  [
+                    {
+                        "name":  "fonts",
+                        "exit_code":  0,
+                        "timed_out":  false,
+                        "events":  15,
+                        "failures":  [
+
+                                     ]
+                    },
+                    {
+                        "name":  "animate",
+                        "exit_code":  0,
+                        "timed_out":  false,
+                        "events":  14,
+                        "failures":  [
+
+                                     ]
+                    },
+                    {
+                        "name":  "resize",
+                        "exit_code":  0,
+                        "timed_out":  false,
+                        "events":  17,
+                        "failures":  [
+
+                                     ]
+                    },
+                    {
+                        "name":  "minimize",
+                        "exit_code":  0,
+                        "timed_out":  false,
+                        "events":  13,
+                        "failures":  [
+
+                                     ]
+                    },
+                    {
+                        "name":  "expose",
+                        "exit_code":  0,
+                        "timed_out":  false,
+                        "events":  12,
+                        "failures":  [
+
+                                     ]
+                    },
+                    {
+                        "name":  "large",
+                        "exit_code":  0,
+                        "timed_out":  false,
+                        "events":  29,
+                        "failures":  [
+
+                                     ]
+                    },
+                    {
+                        "name":  "close-sample",
+                        "exit_code":  0,
+                        "timed_out":  false,
+                        "events":  8,
+                        "failures":  [
+
+                                     ]
+                    },
+                    {
+                        "name":  "reopen",
+                        "exit_code":  0,
+                        "timed_out":  false,
+                        "events":  23,
+                        "failures":  [
+
+                                     ]
+                    },
+                    {
+                        "name":  "two",
+                        "exit_code":  0,
+                        "timed_out":  false,
+                        "events":  14,
+                        "failures":  [
+
+                                     ]
+                    },
+                    {
+                        "name":  "modal-move",
+                        "exit_code":  0,
+                        "timed_out":  false,
+                        "events":  29,
+                        "failures":  [
+
+                                     ]
+                    },
+                    {
+                        "name":  "modal-size",
+                        "exit_code":  0,
+                        "timed_out":  false,
+                        "events":  29,
+                        "failures":  [
+
+                                     ]
+                    },
+                    {
+                        "name":  "modal-idle",
+                        "exit_code":  0,
+                        "timed_out":  false,
+                        "events":  21,
+                        "failures":  [
+
+                                     ]
+                    },
+                    {
+                        "name":  "modal-close-self",
+                        "exit_code":  0,
+                        "timed_out":  false,
+                        "events":  17,
+                        "failures":  [
+
+                                     ]
+                    },
+                    {
+                        "name":  "modal-close-other",
+                        "exit_code":  0,
+                        "timed_out":  false,
+                        "events":  17,
+                        "failures":  [
+
+                                     ]
+                    },
+                    {
+                        "name":  "modal-quit",
+                        "exit_code":  0,
+                        "timed_out":  false,
+                        "events":  14,
+                        "failures":  [
+
+                                     ]
+                    },
+                    {
+                        "name":  "signal",
+                        "exit_code":  0,
+                        "timed_out":  false,
+                        "events":  15,
+                        "failures":  [
+
+                                     ]
+                    },
+                    {
+                        "name":  "inspection",
+                        "exit_code":  0,
+                        "timed_out":  false,
+                        "events":  5,
+                        "failures":  [
+
+                                     ]
+                    },
+                    {
+                        "name":  "foundation-matrix",
+                        "exit_code":  1,
+                        "timed_out":  false,
+                        "events":  0,
+                        "failures":  [
+                                         "foundation matrix exit 1"
+                                     ]
+                    }
+                ]
+}

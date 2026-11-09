@@ -1,0 +1,17 @@
+Scratch runner copies used for run/matrix-native (2026-11-09). Each is the tracked script with $PSScriptRoot replaced by that script's absolute directory (so the copy could live outside the tree) and exactly one line changed: the go test gate that failed on TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame. Nothing else differs. <= lines are the tracked script, => lines the copy. The foundation comment line quoting the byte order mark differs only because the copy was written through Windows PowerShell's default encoding; it is a comment and does not run.
+
+== evidence/synthetic-mixer/windows/audition.ps1 vs audition-native-only.ps1 (mixer cases, into run/matrix-native)
+=> . (Join-Path "C:\Repos\q\products\dfx2\evidence\synthetic-mixer\windows" "..\..\foundation\windows\process.ps1")
+=> # Native-only diagnostic copy: the repeated-test gate is omitted here. It failed in run/matrix (see results.md); this copy exists so the native cases can run while that failure is triaged.
+=>         & powershell.exe -NoProfile -ExecutionPolicy Bypass -File (Join-Path "C:\Repos\q\products\dfx2\evidence\synthetic-mixer\windows" "..\..\foundation\windows\audition.ps1") -OutDir $foundationDir 2>&1 | Out-String | ForEach-Object { Write-Utf8 (Join-Path $out "foundation.log") $_ }
+<= . (Join-Path $PSScriptRoot "..\..\foundation\windows\process.ps1")
+<= Invoke-Go "tests-repeated" @("test", "./internal/appcore", "./internal/platform/win32", "-count=50", "-timeout=300s")
+<=         & powershell.exe -NoProfile -ExecutionPolicy Bypass -File (Join-Path $PSScriptRoot "..\..\foundation\windows\audition.ps1") -OutDir $foundationDir 2>&1 | Out-String | ForEach-Object { Write-Utf8 (Join-Path $out "foundation.log") $_ }
+
+== evidence/foundation/windows/audition.ps1 vs foundation-native-only.ps1 (lifecycle cases, into run/matrix-native/foundation-native)
+=> . (Join-Path "C:\Repos\q\products\dfx2\evidence\foundation\windows" "process.ps1")
+=> # "ï»¿quit" and was rejected (observed 2026-11-04). Use UTF-8 without one.
+=> # Native-only diagnostic copy: the single-pass test gate is omitted here. It failed on TestOverflowDiscardsPendingInputReportsOnceAndRequestsAFrame in stage-3/run/matrix-native/foundation/tests.log (see stage-3/results.md); this copy exists so the lifecycle cases can run while that failure is triaged.
+<= . (Join-Path $PSScriptRoot "process.ps1")
+<= # "﻿quit" and was rejected (observed 2026-11-04). Use UTF-8 without one.
+<= Invoke-Go "tests" @("test", "./...", "-count=1", "-timeout=120s")
