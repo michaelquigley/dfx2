@@ -300,6 +300,10 @@ func (a *App) event(e platform.Event) {
 		if w != nil {
 			a.surfaceChangedLocked(w, e.Surface)
 		}
+	case platform.InputReceived:
+		if w != nil {
+			a.inputLocked(w, e.Input)
+		}
 	case platform.Completed:
 		if op := a.operations[e.Completion]; op != nil && op.window == e.Window && !op.ready {
 			op.ready, op.err = true, e.Err

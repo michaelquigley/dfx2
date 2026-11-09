@@ -1,6 +1,6 @@
 # dfx2 direction
 
-The foundation runtime is built: application/window lifetime on Linux/amd64 and Windows/amd64 is documented in [runtime.md](../current/runtime.md). The first native UI stages also provide text and animated meters on both platforms; [ui.md](../current/ui.md) describes built behavior. Measured layout, interactive controls and webview integration remain future work. This document holds the broader design decisions, their rationale and open questions.
+The foundation runtime is built: application/window lifetime on Linux/amd64 and Windows/amd64 is documented in [runtime.md](../current/runtime.md). The first native UI stages also provide text, measured layout, animated meters and interactive controls; [ui.md](../current/ui.md) describes built behavior, including what still awaits native Windows validation. Webview integration remains future work. This document holds the broader design decisions, their rationale and open questions.
 
 ## What dfx2 is
 

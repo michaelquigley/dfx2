@@ -94,9 +94,13 @@ func (a *App) supervise() {
 			wakeMessage = fmt.Sprintf("dfx2 wake failure (attempt %d): %v; retry pending", a.wakeFailures, a.wakeErr)
 			a.wakeLog = false
 		}
+		inputMessages := a.inputDiagnosticsLocked()
 		a.mu.Unlock()
 		if wakeMessage != "" {
 			a.log("%s", wakeMessage)
+		}
+		for _, message := range inputMessages {
+			a.log("%s", message)
 		}
 		var retryC, diagnosticC, frameC <-chan time.Time
 		if frame != nil {

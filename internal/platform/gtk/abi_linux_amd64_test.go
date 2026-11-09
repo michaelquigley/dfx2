@@ -19,6 +19,7 @@ func TestBindingsMatchHeaders(t *testing.T) {
 		"/usr/include/gtk-3.0/gtk/gtkmain.h", "/usr/include/gtk-3.0/gtk/gtkwindow.h", "/usr/include/gtk-3.0/gtk/gtkwidget.h",
 		"/usr/include/glib-2.0/glib/gmain.h", "/usr/include/glib-2.0/gobject/gsignal.h", "/usr/include/glib-2.0/gobject/gobject.h",
 		"/usr/include/gtk-3.0/gtk/gtkdrawingarea.h", "/usr/include/gtk-3.0/gtk/gtkcontainer.h", "/usr/include/gtk-3.0/gdk/gdkwindow.h",
+		"/usr/include/gtk-3.0/gdk/gdkevents.h",
 		"/usr/include/cairo/cairo.h",
 	}
 	var corpus strings.Builder
@@ -51,6 +52,9 @@ func TestBindingsMatchHeaders(t *testing.T) {
 		"cairo_set_source_surface": n.setSourceSurface, "cairo_paint": n.paint,
 		"gtk_window_resize": n.windowResize, "gtk_window_iconify": n.windowIconify,
 		"gtk_window_deiconify": n.windowDeiconify, "gtk_window_present": n.windowPresent, "cairo_surface_write_to_png": n.surfaceWritePNG,
+		"gtk_widget_add_events": n.addEvents, "gtk_widget_set_can_focus": n.setCanFocus, "gtk_widget_grab_focus": n.grabFocus,
+		"gdk_event_get_event_type": n.eventType, "gdk_event_get_coords": n.eventCoords, "gdk_event_get_button": n.eventButton,
+		"gdk_event_get_keyval": n.eventKeyval, "gdk_event_get_state": n.eventState,
 	}
 	stripName := regexp.MustCompile(`[A-Za-z_][A-Za-z0-9_]*\s*$`)
 	for name, binding := range bindings {
@@ -88,11 +92,11 @@ func TestBindingsMatchHeaders(t *testing.T) {
 func matchesC(ctype string, kind reflect.Kind) bool {
 	ctype = strings.Join(strings.Fields(ctype), " ")
 	if strings.Contains(ctype, "*") {
-		return kind == reflect.Uintptr || kind == reflect.UnsafePointer ||
+		return kind == reflect.Uintptr || kind == reflect.UnsafePointer || kind == reflect.Pointer ||
 			(kind == reflect.String && (strings.Contains(ctype, "char") || strings.Contains(ctype, "gchar")))
 	}
 	switch ctype {
-	case "int", "gint", "gboolean", "GtkWindowType", "GConnectFlags", "cairo_format_t", "cairo_status_t":
+	case "int", "gint", "gboolean", "GtkWindowType", "GConnectFlags", "cairo_format_t", "cairo_status_t", "GdkEventType":
 		return kind == reflect.Int32
 	case "guint", "GdkWindowState":
 		return kind == reflect.Uint32

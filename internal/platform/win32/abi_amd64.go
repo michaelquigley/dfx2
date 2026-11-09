@@ -9,6 +9,8 @@ const (
 	wmCreate                      = 0x0001
 	wmDestroy                     = 0x0002
 	wmSize                        = 0x0005
+	wmSetFocus                    = 0x0007
+	wmKillFocus                   = 0x0008
 	wmPaint                       = 0x000f
 	wmClose                       = 0x0010
 	wmQuit                        = 0x0012
@@ -16,7 +18,17 @@ const (
 	wmShowWindow                  = 0x0018
 	wmNCCreate                    = 0x0081
 	wmNCDestroy                   = 0x0082
+	wmKeyDown                     = 0x0100
+	wmKeyUp                       = 0x0101
 	wmTimer                       = 0x0113
+	wmMouseMove                   = 0x0200
+	wmLButtonDown                 = 0x0201
+	wmLButtonUp                   = 0x0202
+	wmRButtonDown                 = 0x0204
+	wmRButtonUp                   = 0x0205
+	wmMButtonDown                 = 0x0207
+	wmMButtonUp                   = 0x0208
+	wmCaptureChanged              = 0x0215
 	wmEnterSizeMove               = 0x0231
 	wmExitSizeMove                = 0x0232
 	wmDPIChanged                  = 0x02e0
@@ -123,4 +135,8 @@ type native struct {
 	fillBlack  func(hdc uintptr, r *rect) error
 	setTimer   func(hwnd, id uintptr, milliseconds uint32) error
 	killTimer  func(hwnd, id uintptr)
+	// Input. keyState is GetKeyState's return; its sign bit means the key is down.
+	setCapture     func(hwnd uintptr)
+	releaseCapture func() error
+	keyState       func(virtualKey int32) int16
 }

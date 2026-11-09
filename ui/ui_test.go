@@ -19,13 +19,18 @@ import (
 // scheduling and native presentation are covered in appcore and the backends.
 func testContent(t *testing.T, draw func(*Frame)) *content {
 	t.Helper()
+	c := newContent(draw)
+	c.engine = testEngine(t)
+	return c
+}
+
+func testEngine(t *testing.T) func() (text.Engine, error) {
+	t.Helper()
 	engine, err := gotext.NewFaces(goregular.TTF)
 	if err != nil {
 		t.Fatal(err)
 	}
-	c := newContent(draw)
-	c.engine = func() (text.Engine, error) { return engine, nil }
-	return c
+	return func() (text.Engine, error) { return engine, nil }
 }
 
 var epoch = time.Unix(3_000_000, 0)
@@ -170,6 +175,9 @@ func TestOverflowIsClippedToTheWidget(t *testing.T) {
 	})
 	r := frame(t, c, request(0, 80, 200, 1))
 	label := c.last.rects[0]
+	if label.Dx() != 80-32 {
+		t.Fatalf("an unbreakable word widened its label past the column: %v", label)
+	}
 	for y := range r.Image.Height {
 		for x := label.Max.X; x < r.Image.Width; x++ {
 			p := r.Image.Pix[y*r.Image.Stride+x*4:]

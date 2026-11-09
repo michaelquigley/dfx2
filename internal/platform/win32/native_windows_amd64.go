@@ -44,7 +44,8 @@ func systemAPI() (*native, error) {
 				"PostMessageW", "SetWindowTextW", "ShowWindow", "LoadCursorW", "GetClientRect", "SetWindowPos",
 				"GetDpiForWindow", "AdjustWindowRectExForDpi", "SetProcessDpiAwarenessContext",
 				"GetThreadDpiAwarenessContext", "GetAwarenessFromDpiAwarenessContext",
-				"BeginPaint", "EndPaint", "InvalidateRect", "FillRect", "SetTimer", "KillTimer"}},
+				"BeginPaint", "EndPaint", "InvalidateRect", "FillRect", "SetTimer", "KillTimer",
+				"SetCapture", "ReleaseCapture", "GetKeyState"}},
 			{kernel, []string{"GetCurrentThreadId", "GetModuleHandleW", "SetLastError", "RtlMoveMemory", "VirtualAlloc", "VirtualFree"}},
 			{gdi, []string{"SetDIBitsToDevice", "GetStockObject"}},
 		} {
@@ -254,6 +255,19 @@ func systemAPI() (*native, error) {
 			return nil
 		}
 		a.killTimer = func(hwnd, id uintptr) { proc["KillTimer"].Call(hwnd, id) } // a timer already gone is not a failure
+		// The return is the previous capture owner, not failure.
+		a.setCapture = func(hwnd uintptr) { proc["SetCapture"].Call(hwnd) }
+		a.releaseCapture = func() error {
+			r, _, err := proc["ReleaseCapture"].Call()
+			if int32(r) == 0 {
+				return callError("ReleaseCapture", err)
+			}
+			return nil
+		}
+		a.keyState = func(virtualKey int32) int16 {
+			r, _, _ := proc["GetKeyState"].Call(uintptr(virtualKey))
+			return int16(r)
+		}
 		// One process-lifetime callback for every window and every creation.
 		a.procedure = syscall.NewCallback(func(hwnd uintptr, msg uint32, wp, lp uintptr) uintptr {
 			return windowMessage(a, hwnd, uintptr(msg), wp, lp)

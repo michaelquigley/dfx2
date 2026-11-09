@@ -15,6 +15,7 @@ import (
 	"os/signal"
 	"strings"
 	"sync"
+	"sync/atomic"
 	"syscall"
 	"time"
 
@@ -31,6 +32,7 @@ type config struct {
 	script     string
 	snapshots  string
 	modalWait  time.Duration
+	controls   bool
 }
 
 func main() {
@@ -41,6 +43,7 @@ func main() {
 	flag.StringVar(&c.script, "script", "", "bounded native audition: animate, resize, minimize, close-sample, reopen, two, expose, large, fonts, signal, session, modal-move, modal-size, modal-idle, modal-close-self, modal-close-other or modal-quit")
 	flag.DurationVar(&c.modalWait, "modal-wait", 20*time.Second, "how long modal scripts wait for a size/move loop to start, from the audition driver or a person dragging")
 	flag.StringVar(&c.snapshots, "snapshots", "", "directory for retained-image PNG snapshots written by scripts")
+	flag.BoolVar(&c.controls, "controls", false, "two windows of channel strips with faders and mute checkboxes over one model; console commands below")
 	fonts := flag.String("font", "sans-serif", "font families, comma-separated, in order of preference")
 	flag.Parse()
 	gotext.Families = strings.Split(*fonts, ",")
@@ -52,11 +55,13 @@ func main() {
 	if c.resident || c.script == "reopen" {
 		mode = dfx2.ResidentApplication
 	}
-	m := &mixer{c: c, o: o, src: newSource(!c.paused)}
+	m := &mixer{c: c, o: o, src: newSource(!c.paused), desk: newDesk()}
 	err := dfx2.Run(ctx, dfx2.Options{Mode: mode}, m.setup)
 	m.watchers.Wait()
 	o.event("return", "error", fmt.Sprint(err), "invalidations_refused_after_close", m.src.refused())
-	o.event("drained", status(m.a)...)
+	if m.a != nil { // Run can fail before setup, when the backend cannot open
+		o.event("drained", status(m.a)...)
+	}
 	// A signal cancels cooperatively and drains; that is a clean exit.
 	if err != nil && !(errors.Is(err, context.Canceled) && ctx.Err() != nil) {
 		fmt.Fprintln(os.Stderr, err)
@@ -83,7 +88,7 @@ func status(a *dfx2.App) []any {
 	s := appcore.Inspect(a)
 	return []any{"windows", s.Windows, "tasks", s.Tasks, "queued", s.Queued, "native_completions", s.NativeCompletions,
 		"terminal", s.Terminal, "release_pending", s.ReleasePending, "frames", s.Frames, "animating", s.Animating,
-		"frame_timers", s.FrameTimers, "wakes", s.Native.Wakes, "dispatches", s.Native.Dispatches,
+		"frame_timers", s.FrameTimers, "input_queued", inputQueued(a), "wakes", s.Native.Wakes, "dispatches", s.Native.Dispatches,
 		"presents", s.Native.Presents, "paints", s.Native.Paints, "paint_failures", s.Native.PaintFailures,
 		"modal_active", s.Native.ModalActive, "modal_loops", s.Native.ModalLoops, "modal_turns", s.Native.ModalTurns,
 		"modal_timers", s.Native.ModalTimers, "modal_refusals", s.Native.ModalRefusals, "native_windows", s.Native.Windows,
@@ -223,6 +228,9 @@ type mixer struct {
 	opened   int
 	initial  []*ui.Window
 	titles   []*titleCounter
+	desk     *desk
+
+	evaluations atomic.Uint64 // -controls view evaluations
 }
 
 func (m *mixer) draw(f *ui.Frame) {
@@ -241,7 +249,11 @@ func (m *mixer) draw(f *ui.Frame) {
 func (m *mixer) open() (*ui.Window, error) {
 	m.opened++
 	name := fmt.Sprintf("%c", 'A'+(m.opened-1)%26)
-	w, err := ui.Open(m.a, dfx2.WindowOptions{Title: "dfx2 mixer " + name, Width: 560, Height: 260}, m.draw)
+	options, view := dfx2.WindowOptions{Title: "dfx2 mixer " + name, Width: 560, Height: 260}, m.draw
+	if m.c.controls {
+		options.Width, options.Height, view = 460, 300, m.controlsView(name)
+	}
+	w, err := ui.Open(m.a, options, view)
 	if err != nil {
 		return nil, err
 	}
@@ -275,13 +287,21 @@ func (m *mixer) setup(a *dfx2.App) error {
 			return err
 		}
 	}
-	if m.c.resident {
+	if m.c.resident || m.c.controls {
 		if err := a.Go("console", func(ctx context.Context) error { return m.console(ctx, os.Stdin) }); err != nil {
 			return err
 		}
 	}
 	switch m.c.script {
 	case "":
+		if m.c.controls {
+			for range 2 {
+				if _, err := m.open(); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
 		if !m.c.resident {
 			_, err := m.open()
 			return err
@@ -334,6 +354,9 @@ func (m *mixer) console(ctx context.Context, in io.Reader) error {
 			if !ok {
 				return nil
 			}
+			if m.deskCommand(line) {
+				continue
+			}
 			switch line {
 			case "open":
 				m.post(func() {
@@ -352,7 +375,7 @@ func (m *mixer) console(ctx context.Context, in io.Reader) error {
 			case "resume":
 				m.src.setRunning(true)
 			case "status":
-				m.record("status")
+				m.record("status", "evaluations", m.evaluations.Load())
 			case "quit":
 				m.a.Quit()
 				return nil

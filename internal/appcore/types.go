@@ -94,6 +94,7 @@ type App struct {
 	inTurn           bool        // setup or a dispatch turn is on the UI thread's stack
 	frameCursor      platform.ID // rotating frame order across content windows
 	frameTimers      uint64      // animation deadline timers armed, for auditions
+	inputLog         bool        // an input overflow awaits the supervisor's diagnostic
 }
 
 // Window owns one independent native window and its registered tasks.

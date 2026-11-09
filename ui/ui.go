@@ -2,14 +2,16 @@
 //
 // Open creates a window whose content is the application's draw function.
 // The framework calls draw once per frame on the UI thread; a frame arises
-// from Invalidate, resize, scale or visibility changes, or active animation.
-// Exposing an unchanged window repaints its retained image without calling
-// draw. Ordinary Go functions compose the view: there is no component base
-// type and no framework-owned application state.
+// from input, Invalidate, resize, scale or visibility changes, or active
+// animation. Exposing an unchanged window repaints its retained image without
+// calling draw. Ordinary Go functions compose the view: there is no component
+// base type and no framework-owned application state.
 //
-// So far this holds labels and keyed, animated meters in a single column,
-// rendered on the CPU with pure-Go text. Linux/amd64 presents it through GTK 3
-// and Windows/amd64 through GDI.
+// A view nests rows, columns and scopes around labels, meters, faders and
+// checkboxes, rendered on the CPU with pure-Go text. The application owns its
+// values. Controls keep only interaction state, under the path of their keys, and
+// report user edits, never a value the application supplied. Linux/amd64 presents
+// through GTK 3 and Windows/amd64 through GDI.
 package ui
 
 import (

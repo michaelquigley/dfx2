@@ -1,6 +1,6 @@
 # UI content
 
-Stages 1 and 2 of the [synthetic mixer](../future/synthetic-mixer.md) are built: windows whose content is an immediate-mode view drawn by the framework, with labels and keyed animated meters in one column, CPU rendering and pure-Go text. Linux/amd64 presents it through GTK and has passed native auditions. Windows/amd64 presents it through GDI and has passed [native automated and manual auditions](../../evidence/synthetic-mixer/windows/results.md) on Windows 10 over Remote Desktop, including progress during size/move loops, large images, lock and disconnect/reconnect. Actual Windows DPI transitions remain untested; native cleanup-failure handling is exercised with injected calls only. Layout primitives and interactive controls are later stages. The [stage 1](../../evidence/synthetic-mixer/stage-1.md) and [stage 2](../../evidence/synthetic-mixer/stage-2.md) records hold the commands, native coverage and limits.
+Stages 1 to 3 of the [synthetic mixer](../future/synthetic-mixer.md) are built: windows whose content is an immediate-mode view drawn by the framework, with measured rows and columns, labels, keyed animated meters, faders and checkboxes, CPU rendering and pure-Go text. Linux/amd64 presents it through GTK and has passed native auditions, including real pointer and keyboard input. Windows/amd64 presents it through GDI and passed [native automated and manual auditions](../../evidence/synthetic-mixer/windows/results.md) of stage 2's presentation on Windows 10 over Remote Desktop, including progress during size/move loops, large images, lock and disconnect/reconnect. **Windows input and controls have run only against injected calls and a cross-build; their native audition is pending.** Actual Windows DPI transitions remain untested; native cleanup-failure handling is exercised with injected calls only. The [stage 1](../../evidence/synthetic-mixer/stage-1.md), [stage 2](../../evidence/synthetic-mixer/stage-2.md) and [stage 3](../../evidence/synthetic-mixer/stage-3.md) records hold the commands, native coverage and limits.
 
 The [runtime contract](runtime.md) still governs lifetime, threads, posting, failure and shutdown. This document covers only what UI content adds.
 
@@ -23,17 +23,84 @@ err := dfx2.Run(ctx, dfx2.Options{}, func(app *dfx2.App) error {
 
 `ui.Open(app, options, draw)` creates a window on the UI thread under `App.NewWindow`'s rules: creation failures are returned and latched as application failures. `ui.Window` forwards `Close`, `Context`, `Done`, `SetTitle`, `Post` and `Go` with their documented thread rules and adds `Invalidate`. It exposes no native handles.
 
-The application owns its domain values and composes the view with ordinary Go functions; there is no component base type or framework state container. A `*ui.Frame` is valid only during the draw call. `Label(text)` records wrapped, stateless text. `Meter(key, level)` records a display-only meter whose retained state lives under `key`; it reports no changes. Widgets are placed top to bottom with 16 logical units of padding and 10 between them. Each widget clips to its own rectangle, and text wraps to the column without breaking inside a word, so an unbreakable word is clipped.
+A view with controls nests containers and scopes around them:
 
-Programmer mistakes panic: a duplicate or empty key, a level outside [0, 1] or NaN, and use of a frame after its draw call returned. The panic becomes an application failure with its stack and the window/frame in the error, and the runtime's cancel-and-drain path follows. It never unwinds through a native callback.
+```go
+func (m *Mixer) Draw(f *ui.Frame) {
+	f.Row(ui.Layout{Gap: 12}, func(f *ui.Frame) {
+		for _, ch := range m.Snapshot() {
+			f.Scope(ch.ID, func(f *ui.Frame) {
+				f.Column(ui.Layout{Width: 120, Gap: 8}, func(f *ui.Frame) {
+					f.Label(ch.Name)
+					f.Meter("level", ch.Level)
+					if gain, changed := f.Fader("gain", ch.Gain); changed {
+						m.SubmitGain(ch.ID, gain)
+					}
+					if muted, changed := f.Checkbox("mute", "Mute", ch.Muted); changed {
+						m.SubmitMute(ch.ID, muted)
+					}
+				})
+			})
+		}
+	})
+}
+```
 
-The meter's displayed peak attacks immediately and falls linearly at 0.5 units per second of monotonic time; it requests animation only while the peak is above the latest level. Removing a meter's key from the view discards its state; reintroducing the key starts fresh.
+The application owns its domain values and composes the view with ordinary Go functions; there is no component base type or framework state container. A `*ui.Frame` is valid only during the draw call.
+
+- `Row(layout, body)` and `Column(layout, body)` place their body's widgets along one axis.
+- `Scope(key, body)` names its body's widgets and adds no layout. A widget's identity is the path of its enclosing scope keys and its own, so a key containing `/` cannot pass for a nested path. Sibling scopes and widgets share one key space, and rows and columns are transparent to it.
+- `Label(text)` records stateless text.
+- `Meter(key, level)` records a display-only meter; it reports no changes.
+- `Fader(key, value)` and `Checkbox(key, label, value)` return the value to use from now on and whether the user changed it.
+
+Programmer mistakes panic: a duplicate or empty key, a value outside [0, 1] or NaN, a negative or non-finite `Layout` value, a minimum above its maximum, a nil body, and use of a frame after its draw call returned. The panic becomes an application failure with its stack and the window/frame in the error, and the runtime's cancel-and-drain path follows. It never unwinds through a native callback.
+
+The meter's displayed peak attacks immediately and falls linearly at 0.5 units per second of monotonic time; it requests animation only while the peak is above the latest level. Removing a key from the view discards its state; reintroducing the key starts fresh.
 
 Linux and Windows both host content, and other targets fail earlier, in `Run`. The core still honors a backend that refuses content before native work: `ui.Open` returns an error matching `errors.Is(err, ui.ErrUnsupportedContent)`, nothing is latched and ordinary `dfx2` windows keep working. The refused window still counts for last-window shutdown: while its creation was pending it was a live starting window, so if every other window closed meanwhile, a window application shuts down once the refusal returns. A resident application stays alive. No shipping backend refuses today; the path is exercised with the fake backend.
 
+## Layout
+
+The view's root is a column filling the window, with 16 logical units of padding and 10 between its children. `Layout` holds logical units: `Width` and `Height` (zero is intrinsic), `Padding`, `Gap`, `MinWidth`, `MinHeight`, `MaxWidth`, `MaxHeight` (zero maximum is unbounded) and a `Flex` weight. Physical pixels are the units rounded at the surface's scale.
+
+- **Measuring.** Each node is solved exactly once per frame, bottom-up, with the room on offer passed down. Nothing replays the view.
+- **Sizes.** Nonflex children keep what they request or measure, along both axes; nothing stretches implicitly.
+- **Flex.** Flex children share the main-axis space left after their siblings and gaps, by weight and within their own bounds. A share outside a child's bounds freezes it at the bound and the rest is shared again. Only proportions matter, for any finite weights: each pass scales the weights still sharing by their largest, so `1e308` alone lays out like `1`, and two of them split evenly. Rounding loses no pixel. If the arithmetic still came out non-finite or stopped converging, the frame would fail with an error rather than loop or publish a bogus length. Validated layouts cannot reach that, and only a direct test exercises it. Flex takes precedence over a child's own main-axis `Width` or `Height`. A container with a flex child fills the room offered along its main axis; one offered no bound gives flex children their intrinsic size.
+- **Overflow.** If minimum sizes exceed the space available, the minima hold. Every container and widget clips to its own rectangle, and what a clip hides cannot be pressed.
+
+Leaf sizes are intrinsic:
+
+| Widget | Logical size |
+| --- | --- |
+| `Label` | Wraps to the width on offer and takes the wrapped text's size. An unbreakable word is clipped to that width. In a row, nothing bounds the width, so it takes its natural one. |
+| `Meter` | As wide as the room offered, or 120 inside a row, and 14 tall. Keeping the column's full width is what stage 1's placement did. |
+| `Fader` | 36 wide and 160 tall, with a 12-tall thumb. It has no flexible height. |
+| `Checkbox` | A 16 box with 3 of inset for the focus ring and 6 before its wrapped label. |
+
+## Controls and input
+
+The application's values stay the application's. Each window keeps only interaction state, under full scope paths: per-control base values and edits, the captured control, the focused control and the last completed layout's hit rectangles. A frame processes queued input against that last completed layout, calls the view once, solves layout and renders. A new control becomes interactive after its first completed layout. Each window has its own focus and capture, so neither crosses to another window over the same model.
+
+**Reporting edits.** `changed` is true only for user input: a value the application supplies never reports a change, including during a drag. The output is what the view should use, so an edited value renders even when the caller supplies an older snapshot. The next frame without an edit shows the supplied value again, unless a drag holds it. Applications that need a pending value across a delayed acknowledgment keep it themselves. Keyboard and activation edits start from the value last shown, never from a stale snapshot.
+
+**One edit per evaluation.** The value/changed API can report one edit per widget per view evaluation. A frame processes queued input up to, and not including, the event that would make a second edit to one control. That event and the rest wait for the next frame, which is scheduled at once. So two activations before a frame are two evaluations and two reported edits, in order. A consumed event is never replayed. An edit whose target left the view in that frame is never reported.
+
+**Fader.** A left press takes capture and focus, and the thumb's center follows the pointer: high at the top, clamped to [0, 1]. Pressing away from the thumb jumps to that position, which counts as an edit. During the drag the gesture owns the displayed value despite external updates. A release reports a change only if its value differs from the last one reported; after it, frames follow the supplied value. Arrow keys step by 0.01 (Up and Right raise), Page Up and Page Down by 0.1, and Home and End select 0 and 1. Keyboard steps stay on a decimal grid and are ignored during a drag.
+
+**Checkbox.** A left press shows it pressed; a release inside its visible rectangle toggles it, and a release outside does nothing. Pressing Space with it focused shows it pressed, and releasing Space toggles it. A press never reports an edit.
+
+**Focus.** A press on a control focuses it. Pressing empty space leaves focus alone. Tab and Shift+Tab move through the faders and checkboxes in recorded order, wrapping, starting from the first or last if nothing is focused. A focus ring shows the control, dimmer while the window lacks native focus. Native focus loss keeps the control focused for when the window returns.
+
+**Cancellation.** Native focus loss, capture loss, Tab, a queue overflow or the control's removal clears pressed state and any gesture, with no final edit. Edits already returned remain the application's. A removed control's native capture is released; reintroducing its key starts fresh, and removing the focused key clears focus. Only the left button operates controls.
+
+**The queue.** Native callbacks only copy normalized events: logical coordinates, button, key, modifiers and ordered edges. Each window queues up to 256 under the runtime's mutex. Adjacent pointer motion coalesces, never across an edge, and never into an event a frame in progress already holds. Overflow discards pending input, cancels any gesture at the next frame, requests that frame, and logs one diagnostic through `Logf` from the supervisor. A hidden window keeps its queue until it is visible again. Closing drops queued input and refuses more.
+
+Backends report motion only while the left button is held, and only the keys widgets use. Hovering and other typing therefore request no frames, and other keys keep their native meaning. A settled window stays idle under them.
+
 ## Frames and scheduling
 
-A frame is one evaluation of the view: the framework calls `draw` once, measures the record, renders it and presents the image. Layout, rewrapping and exposure never call `draw` again. Frames arise from `Invalidate`, a changed surface size or scale, and active animation. An exposed window whose image is still valid only repaints the retained image.
+A frame is one evaluation of the view: the framework calls `draw` once, measures the record, renders it and presents the image. Layout, rewrapping and exposure never call `draw` again. Frames arise from input, `Invalidate`, a changed surface size or scale, and active animation. An exposed window whose image is still valid only repaints the retained image.
 
 `Invalidate` is safe from any goroutine, never waits and never uses one of the window's 256 post slots. It advances a per-window generation under the runtime's producer mutex and shares the ordinary wake and wake-failure machinery; repeated calls coalesce and no goroutine is created. A frame clears only the generation it sampled at its start, so an invalidation racing a frame in progress causes a later frame. After the window starts closing, `Invalidate` returns `dfx2.ErrClosed`.
 
@@ -47,7 +114,7 @@ Closing seals content work at once: no further frame starts, a frame already ren
 
 Only one dispatch turn runs at a time, whichever native path delivered it, and setup counts as one. The core refuses a wake that arrives during a turn: no application callback, frame or view evaluation ever nests inside another. That wake is spent, so the running turn's closing check requests another if work remains. Backends need no knowledge of the refusal. On GTK it does not arise in practice; on Win32 it backs the size/move guards described below.
 
-A view panic, a rendering error (for example an image over the size limit), a text-system error or a presentation failure enters the runtime's fatal cancel-and-drain path with the window ID and frame number in the error. A panic in content release is a cleanup failure: `Run` returns it, with its stack, alongside any earlier failure.
+A view panic, a rendering error (for example an image over the size limit), a text-system error, a presentation failure or a failed capture release enters the runtime's fatal cancel-and-drain path with the window ID and frame number in the error. A panic in content release is a cleanup failure: `Run` returns it, with its stack, alongside any earlier failure.
 
 ## Rendering
 
@@ -75,6 +142,8 @@ Presentation copies the frame into a Cairo-owned ARGB32 image surface: flush, ro
 
 GTK 3 learns of minimization only when the window system reports it. Under X11 (including XWayland) iconified windows suspend rendering and deadlines. In the GNOME Wayland session tested, a minimized window stops painting but GTK reports no iconified state, so frames and animation deadlines continue while it is minimized. The scale is GTK's integer factor; fractional desktop scaling is applied by the compositor afterward.
 
+The drawing area is the one focusable widget, grabbing focus before the window is shown and again on each press. Input signals read their events through GDK's accessors rather than struct offsets, through permanent shared callbacks routed by token. Keys widgets use stop at the handler, which keeps Tab from GTK's own focus chain. A double-click's extra press events are ignored, since each press also arrives plainly. GTK's [implicit grab](https://docs.gtk.org/gtk3/input-handling.html) keeps a drag routed to the area outside the window. It has no revocation call, so `ReleaseCapture` does nothing here: a canceled gesture ignores the remaining pointer events, and the grab ends at the button-up edge. `grab-broken-event` and a shadowing `grab-notify` report capture loss; focus-out reports focus loss.
+
 ## Windows presentation
 
 A content window has no child surface: the framework draws its client area directly. Surface events come from `WM_SIZE` and `WM_SHOWWINDOW` and from `WM_DPICHANGED`, whose scale is the window's DPI over 96, carrying the full client rectangle in physical pixels, only when a value changes. `SIZE_MINIMIZED` clears visibility and keeps the last client size, because Windows reports 0×0 while minimized and restoring an unchanged window should not read as a resize. Closing seals these reports.
@@ -82,6 +151,8 @@ A content window has no child surface: the framework draws its client area direc
 Presentation copies the frame row by row into one `VirtualAlloc` allocation per window, then calls `InvalidateRect`, which only marks the window. Storage carries 25% headroom up to the 256 MiB limit, so growing by dragging rarely reallocates, and it is reused unless more than four times too large. A replacement is allocated and filled before the old allocation is freed, so a failed allocation keeps the last image and enters the fatal path. Native storage is a workaround the [text spike](../future/text.md) found for black frames: GDI set no lines for Go heap frames straddling a 4 MiB boundary. That allocation-boundary explanation remains an inference from one host.
 
 `WM_PAINT` runs `BeginPaint`, `SetDIBitsToDevice` with a top-down 32-bit `BI_RGB` header, and `EndPaint`. It never asks the core for a frame. `WM_ERASEBKGND` fills only what the retained image will not cover, in black, so a grown window shows black rather than the class's white until its next frame. A failed `BeginPaint`, a failed fill, or a blit that sets no lines fails the application: the step counts in `Counters.PaintFailures` and its error reaches `Run` through `Pump`, with `EndPaint` still balancing a successful `BeginPaint` and `DefWindowProc` validating after a failed one. There is no exception for lock screens or disconnected sessions. On the tested Windows 10 RDP host, paints continued through both transitions with zero failures; this does not establish behavior on every host or at a changed reconnect resolution. Retained storage is freed after `WM_NCDESTROY`'s stack has returned, immediately before the destruction acknowledgment. A failed free keeps the allocation owned by its window: the first failure fails the application, `Counters.Problem` carries it to the shutdown diagnostics, and a one-shot 10 ms timer on the dispatch window retries it. The window's `Destroyed` waits until every allocation is released, so a persistent failure keeps `Done` and `Run` pending, as other stuck native cleanup does. `Destroyed` also carries each allocation's first error, so `Run` returns it even if an earlier failure took first place and the retry later succeeded. Ordinary windows keep the default paint and erase handling.
+
+Windows has no implicit grab, so a left press on a content window takes `SetCapture` and the matching release gives it back. `WM_CAPTURECHANGED` reports a loss only when something else took it, such as a size/move loop or another window's press; the backend's own release clears its flag first. `WM_KILLFOCUS` releases capture at once, because no frame may run until the window is visible again. Client coordinates are signed, because a captured pointer can be left of or above the window, and divide by DPI over 96 into logical units. Taking and releasing capture count as native operations for the size/move guards below. `ReleaseCapture` cannot break a size/move loop's capture, because the loop's taking it already cleared the backend's flag. Keys and modifiers come from `WM_KEYDOWN`, `WM_KEYUP` and `GetKeyState`; unused keys reach `DefWindowProc` unchanged, and system keys are not intercepted. **All of this has run only against injected calls.** Ordinary windows deliver no input events.
 
 Desktop composition retains window contents, so occluding and uncovering a window normally sends no `WM_PAINT`. Exposure still repaints correctly when it does arrive; the audition forces one with `InvalidateRect`.
 
@@ -102,4 +173,4 @@ Cleanup retries have a failure-only fallback when `SetTimer` fails: `Pump` pause
 
 ## Internal surfaces
 
-`appcore.OpenContent`, `appcore.Invalidate` and the `Content` interface are the private bridge `ui` uses. `appcore.Inspect` reports frames, animating windows and deadline timers armed, and the backend counters add presents, exposure paints, paint failures and, on Win32, size/move loops, modal turns, timers and refusals. `appcore.ContentWindows`, `InspectContent` and the backend audition hooks (resize, iconify/restore, exposure, retained-image PNG snapshot) serve the [mixer example](../../examples/mixer/README.md)'s native scripts; none of them is public API. The root package imports none of the UI, renderer, text or font packages, which a transitive import test enforces.
+`appcore.OpenContent`, `appcore.Invalidate` and the `Content` interface are the private bridge `ui` uses. `appcore.Inspect` reports frames, animating windows and deadline timers armed, `InspectContent` adds queued input and overflows, and the backend counters add presents, exposure paints, paint failures and, on Win32, size/move loops, modal turns, timers and refusals. `appcore.ContentWindows`, `InspectContent` and the backend audition hooks (resize, iconify/restore, exposure, retained-image PNG snapshot) serve the [mixer example](../../examples/mixer/README.md)'s native scripts; none of them is public API. The root package imports none of the UI, renderer, text or font packages, which a transitive import test enforces.

@@ -1,6 +1,6 @@
 # Mixer example
 
-The synthetic mixer, at stage 2: one window with text and an animated level meter, drawn by `ui` from an application-owned synthetic source. No audio device or Sessionmixer code is involved. Later stages add channel strips, faders, mute checkboxes and two windows over one model.
+The synthetic mixer, at stage 3: by default one window with text and an animated level meter, and with `-controls` two windows of channel strips over one model, with faders and mute checkboxes. Everything is drawn by `ui` from an application-owned synthetic source. No audio device or Sessionmixer code is involved. Stage 4 adds the full channel set, the ordered command worker and the rest of the fixture controls.
 
 Linux/amd64 needs the system GTK 3 and Cairo runtime and a desktop display; no headers or cgo. Windows/amd64 needs only system DLLs; its presentation and size/move scripts passed the [native audition](../../evidence/synthetic-mixer/windows/results.md) on Windows 10 over Remote Desktop. Real Windows DPI transitions remain untested.
 
@@ -8,10 +8,13 @@ Linux/amd64 needs the system GTK 3 and Cairo runtime and a desktop display; no h
 CGO_ENABLED=0 go run ./examples/mixer
 CGO_ENABLED=0 go run ./examples/mixer -pause-after 5s
 CGO_ENABLED=0 go run ./examples/mixer -resident
+CGO_ENABLED=0 go run ./examples/mixer -controls
 CGO_ENABLED=0 go run ./examples/mixer -font "Ubuntu Sans,sans-serif"
 ```
 
 An application task samples a deterministic synthetic level at 30 Hz, publishes it under a mutex and calls `Invalidate` on each subscribed window. The view reads a snapshot: a title, a numeric readout that changes every sample, the meter, a line of fallback text (Greek, Cyrillic, Hebrew, Arabic, Japanese, color emoji, a mixed-direction phrase) and a paragraph that rewraps as the window resizes. Pausing the feed lets the meter's peak fall at 0.5 per second; once it reaches the level, the window does no further work until something changes.
+
+With `-controls`, drag a fader with the left button, or Tab to it and use the arrow keys (0.01), Page Up and Page Down (0.1), and Home and End (0 and 1). Click a checkbox, or press and release Space on it. Every user edit prints an `edit` record and updates the shared model, so the other window follows. The console also accepts `gain <a|b|c> <0..1>`, `mute <a|b|c> on|off`, `reorder`, `order a b c`, `remove <id>`, `insert <id>` and `snapshot <name>`. The model commands are external changes: they print `external` and never an `edit`. A strip's fader and checkbox come first so the [input auditions](../../evidence/synthetic-mixer/stage-3.md) can press them at computed positions.
 
 `-paused` starts with the feed paused and `-pause-after` pauses it after an interval, for idle checks. In resident mode the console accepts `open`, `close` (the newest window), `pause`, `resume`, `status` and `quit`. Ctrl+C or SIGTERM cancels and drains, then exits 0. The first run indexes system fonts into the user cache directory, which can delay the first frame.
 

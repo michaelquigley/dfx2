@@ -41,6 +41,17 @@ type native struct {
 	widgetWindow    func(uintptr) uintptr
 	windowState     func(uintptr) uint32
 
+	// Input. Event fields are read through GDK's accessors rather than struct
+	// offsets. The out pointers are only used during each synchronous call.
+	addEvents   func(uintptr, int32)
+	setCanFocus func(uintptr, int32)
+	grabFocus   func(uintptr)
+	eventType   func(uintptr) int32
+	eventCoords func(uintptr, *float64, *float64) int32
+	eventButton func(uintptr, *uint32) int32
+	eventKeyval func(uintptr, *uint32) int32
+	eventState  func(uintptr, *uint32) int32
+
 	imageSurfaceCreate func(int32, int32, int32) uintptr
 	imageSurfaceData   func(uintptr) unsafe.Pointer
 	imageSurfaceStride func(uintptr) int32
@@ -89,9 +100,15 @@ func load() error {
 				"gtk_widget_get_allocated_height": &n.allocatedHeight, "gtk_widget_get_mapped": &n.mapped,
 				"gtk_widget_get_window": &n.widgetWindow, "gtk_window_resize": &n.windowResize,
 				"gtk_window_iconify": &n.windowIconify, "gtk_window_deiconify": &n.windowDeiconify,
-				"gtk_window_present": &n.windowPresent,
+				"gtk_window_present":    &n.windowPresent,
+				"gtk_widget_add_events": &n.addEvents, "gtk_widget_set_can_focus": &n.setCanFocus,
+				"gtk_widget_grab_focus": &n.grabFocus,
 			}},
-			{"libgdk-3.so.0", map[string]any{"gdk_window_get_state": &n.windowState}},
+			{"libgdk-3.so.0", map[string]any{"gdk_window_get_state": &n.windowState,
+				"gdk_event_get_event_type": &n.eventType, "gdk_event_get_coords": &n.eventCoords,
+				"gdk_event_get_button": &n.eventButton, "gdk_event_get_keyval": &n.eventKeyval,
+				"gdk_event_get_state": &n.eventState,
+			}},
 			{"libcairo.so.2", map[string]any{
 				"cairo_image_surface_create": &n.imageSurfaceCreate, "cairo_image_surface_get_data": &n.imageSurfaceData,
 				"cairo_image_surface_get_stride": &n.imageSurfaceStride, "cairo_surface_status": &n.surfaceStatus,

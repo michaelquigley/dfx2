@@ -30,6 +30,7 @@ type window struct {
 	// Content windows only. The client size survives minimization, so restoring
 	// an unchanged window does not read as a resize.
 	content, shown, minimized bool
+	captured                  bool // this window holds native pointer capture for a left press
 	reported                  platform.Surface
 	image                     retained
 	unfreed                   [][]byte // allocations whose free failed; retirement waits for them
@@ -301,6 +302,11 @@ func windowMessage(api *native, hwnd, msg, wp, lp uintptr) uintptr {
 		}
 	case wmPaint:
 		if w.content && b.paint(w) {
+			return 0
+		}
+	case wmMouseMove, wmLButtonDown, wmLButtonUp, wmRButtonDown, wmRButtonUp, wmMButtonDown, wmMButtonUp,
+		wmKeyDown, wmKeyUp, wmSetFocus, wmKillFocus, wmCaptureChanged:
+		if w.content && !w.closing && !w.destroyed && b.input(w, msg, wp, lp) {
 			return 0
 		}
 	case wmEnterSizeMove:

@@ -64,6 +64,7 @@ func TestSyscallArgumentCounts(t *testing.T) {
 		"BeginPaint": 2, "EndPaint": 2, "InvalidateRect": 3, "FillRect": 3,
 		"SetTimer": 4, "KillTimer": 2, "VirtualAlloc": 4, "VirtualFree": 3,
 		"SetDIBitsToDevice": 12, "GetStockObject": 1,
+		"SetCapture": 1, "ReleaseCapture": 0, "GetKeyState": 1,
 	}
 	file, err := parser.ParseFile(token.NewFileSet(), "native_windows_amd64.go", nil, 0)
 	if err != nil {

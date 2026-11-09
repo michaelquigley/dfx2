@@ -66,6 +66,8 @@ type fakeContent struct {
 	frames    chan FrameRequest
 	onFrame   func(FrameRequest) error
 	onRelease func()
+	consume   func(FrameRequest) int // input events consumed; default all
+	capture   func(FrameRequest) bool
 	animate   atomic.Bool
 	released  atomic.Int32
 	count     atomic.Int32
@@ -84,8 +86,13 @@ func (c *fakeContent) Frame(req FrameRequest) (FrameResult, error) {
 	// At least 1×1, so a wrongly scheduled zero-size frame is observed as a
 	// frame rather than first failing presentation.
 	w, h := max(req.Surface.Width, 1), max(req.Surface.Height, 1)
+	consumed := len(req.Input)
+	if c.consume != nil {
+		consumed = c.consume(req)
+	}
 	return FrameResult{Image: platform.Image{Width: w, Height: h, Stride: w * 4, Scale: req.Surface.Scale,
-		Pix: make([]byte, w*h*4)}, Animate: c.animate.Load()}, nil
+		Pix: make([]byte, w*h*4)}, Animate: c.animate.Load(), Consumed: consumed,
+		ReleaseCapture: c.capture != nil && c.capture(req)}, nil
 }
 
 func (c *fakeContent) Release() {

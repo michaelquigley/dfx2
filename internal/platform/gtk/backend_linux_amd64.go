@@ -21,7 +21,10 @@ type route struct {
 var routes sync.Map // numeric token -> route; never a native-retained Go pointer
 var nextToken atomic.Uint64
 var callbackOnce sync.Once
-var callbacks struct{ idle, destroyed, close, scale, draw, surface, mapping, state uintptr }
+var callbacks struct {
+	idle, destroyed, close, scale, draw, surface, mapping, state uintptr
+	input, focusIn, focusOut, grabBroken, grabNotify             uintptr
+}
 
 // GLib G_PRIORITY_DEFAULT_IDLE. GTK resize/redraw run at 110/120; a higher
 // priority here can starve them when public callbacks keep rearming the source.
@@ -31,6 +34,20 @@ const (
 	cairoFormatARGB32       int32  = 0
 	gdkWindowStateWithdrawn uint32 = 1 << 0
 	gdkWindowStateIconified uint32 = 1 << 1
+
+	// Only left-button motion: no widget uses hover, so idle pointer movement
+	// must not request frames.
+	gdkInputMask = 1<<5 | 1<<8 | 1<<9 | 1<<10 | 1<<11 | 1<<14 // BUTTON1_MOTION, BUTTON_PRESS/RELEASE, KEY_PRESS/RELEASE, FOCUS_CHANGE
+
+	gdkMotionNotify  int32 = 3
+	gdkButtonPress   int32 = 4 // GDK sends this for every press; 2BUTTON/3BUTTON_PRESS are extras
+	gdkButtonRelease int32 = 7
+	gdkKeyPress      int32 = 8
+	gdkKeyRelease    int32 = 9
+
+	gdkShiftMask   uint32 = 1 << 0
+	gdkControlMask uint32 = 1 << 2
+	gdkMod1Mask    uint32 = 1 << 3
 )
 
 func installCallbacks() {
@@ -87,6 +104,42 @@ func installCallbacks() {
 				v.backend.surfaceChanged(v.window)
 			}
 			return 0 // propagate
+		})
+		// Input handlers copy primitive values into a core event and never run
+		// the view.
+		callbacks.input = purego.NewCallback(func(widget, event, token uintptr) int32 {
+			if r, ok := routes.Load(token); ok {
+				v := r.(route)
+				return v.backend.input(v.window, event)
+			}
+			return 0
+		})
+		callbacks.focusIn = purego.NewCallback(func(widget, event, token uintptr) int32 {
+			if r, ok := routes.Load(token); ok {
+				v := r.(route)
+				v.backend.inputEdge(v.window, platform.FocusGained)
+			}
+			return 0
+		})
+		callbacks.focusOut = purego.NewCallback(func(widget, event, token uintptr) int32 {
+			if r, ok := routes.Load(token); ok {
+				v := r.(route)
+				v.backend.inputEdge(v.window, platform.FocusLost)
+			}
+			return 0
+		})
+		callbacks.grabBroken = purego.NewCallback(func(widget, event, token uintptr) int32 {
+			if r, ok := routes.Load(token); ok {
+				v := r.(route)
+				v.backend.inputEdge(v.window, platform.CaptureLost)
+			}
+			return 0
+		})
+		callbacks.grabNotify = purego.NewCallback(func(widget uintptr, wasGrabbed int32, token uintptr) { // shadowed by another GTK grab
+			if r, ok := routes.Load(token); ok && wasGrabbed == 0 {
+				v := r.(route)
+				v.backend.inputEdge(v.window, platform.CaptureLost)
+			}
 		})
 	})
 }
@@ -220,6 +273,11 @@ func (b *Backend) attachContent(w *window) error {
 	w.area = area
 	b.mu.Unlock()
 	n.containerAdd(w.widget, area)
+	// One focusable area owns all of the window's keys and its implicit pointer
+	// grab, which keeps a drag routed here outside the window.
+	n.addEvents(area, gdkInputMask)
+	n.setCanFocus(area, 1)
+	n.grabFocus(area)
 	for _, c := range []struct {
 		object   uintptr
 		name     string
@@ -231,6 +289,15 @@ func (b *Backend) attachContent(w *window) error {
 		{area, "map", callbacks.mapping},
 		{area, "unmap", callbacks.mapping},
 		{w.widget, "window-state-event", callbacks.state},
+		{area, "button-press-event", callbacks.input},
+		{area, "button-release-event", callbacks.input},
+		{area, "motion-notify-event", callbacks.input},
+		{area, "key-press-event", callbacks.input},
+		{area, "key-release-event", callbacks.input},
+		{area, "focus-in-event", callbacks.focusIn},
+		{area, "focus-out-event", callbacks.focusOut},
+		{area, "grab-broken-event", callbacks.grabBroken},
+		{area, "grab-notify", callbacks.grabNotify},
 	} {
 		id := n.connect(c.object, c.name, c.callback, w.token, 0, 0)
 		if id == 0 {
@@ -335,6 +402,105 @@ func (b *Backend) surfaceChanged(id platform.ID) {
 	w.reported = s
 	b.sink(platform.Event{Kind: platform.SurfaceChanged, Window: id, Surface: s})
 }
+
+// gdkKeys maps the key values widgets use, including their keypad forms.
+// ISO_Left_Tab is what most layouts send for Shift+Tab.
+var gdkKeys = map[uint32]platform.Key{
+	0xff09: platform.KeyTab, 0xfe20: platform.KeyTab, 0x0020: platform.KeySpace, 0xff80: platform.KeySpace,
+	0xff52: platform.KeyArrowUp, 0xff97: platform.KeyArrowUp, 0xff54: platform.KeyArrowDown, 0xff99: platform.KeyArrowDown,
+	0xff51: platform.KeyArrowLeft, 0xff96: platform.KeyArrowLeft, 0xff53: platform.KeyArrowRight, 0xff98: platform.KeyArrowRight,
+	0xff55: platform.KeyPageUp, 0xff9a: platform.KeyPageUp, 0xff56: platform.KeyPageDown, 0xff9b: platform.KeyPageDown,
+	0xff50: platform.KeyHome, 0xff95: platform.KeyHome, 0xff57: platform.KeyEnd, 0xff9c: platform.KeyEnd,
+}
+
+// input copies a pointer or key event into the core and returns whether GTK
+// should stop handling it. Keys widgets use stop here, so Tab reaches the
+// framework instead of GTK's focus chain; every other key keeps its native
+// meaning and requests no frame.
+func (b *Backend) input(id platform.ID, event uintptr) int32 {
+	b.mu.Lock()
+	w := b.windows[id]
+	b.mu.Unlock()
+	if w == nil || w.closing || w.destroyed {
+		return 0
+	}
+	var state uint32
+	n.eventState(event, &state)
+	in := platform.Input{Modifiers: gdkModifiers(state)}
+	switch kind := n.eventType(event); kind {
+	case gdkMotionNotify:
+		in.Kind = platform.PointerMove
+		n.eventCoords(event, &in.X, &in.Y)
+	case gdkButtonPress, gdkButtonRelease:
+		var button uint32
+		n.eventButton(event, &button)
+		if in.Button = gdkButton(button); in.Button == 0 {
+			return 0
+		}
+		in.Kind = platform.PointerUp
+		if kind == gdkButtonPress {
+			in.Kind = platform.PointerDown
+			n.grabFocus(w.area)
+		}
+		n.eventCoords(event, &in.X, &in.Y)
+	case gdkKeyPress, gdkKeyRelease:
+		var keyval uint32
+		n.eventKeyval(event, &keyval)
+		key, ok := gdkKeys[keyval]
+		if !ok {
+			return 0
+		}
+		in.Key, in.Kind = key, platform.KeyUp
+		if kind == gdkKeyPress {
+			in.Kind = platform.KeyDown
+		}
+	default:
+		return 0 // a double-click's extra press; its plain press already came
+	}
+	b.sink(platform.Event{Kind: platform.InputReceived, Window: id, Input: in})
+	return 1
+}
+
+func gdkModifiers(state uint32) platform.Modifiers {
+	var m platform.Modifiers
+	if state&gdkShiftMask != 0 {
+		m |= platform.ModShift
+	}
+	if state&gdkControlMask != 0 {
+		m |= platform.ModControl
+	}
+	if state&gdkMod1Mask != 0 {
+		m |= platform.ModAlt
+	}
+	return m
+}
+
+func gdkButton(button uint32) platform.Button {
+	switch button {
+	case 1:
+		return platform.ButtonLeft
+	case 2:
+		return platform.ButtonMiddle
+	case 3:
+		return platform.ButtonRight
+	}
+	return 0
+}
+
+// inputEdge reports a focus change or a lost grab.
+func (b *Backend) inputEdge(id platform.ID, kind platform.InputKind) {
+	b.mu.Lock()
+	w := b.windows[id]
+	b.mu.Unlock()
+	if w == nil || w.closing || w.destroyed {
+		return
+	}
+	b.sink(platform.Event{Kind: platform.InputReceived, Window: id, Input: platform.Input{Kind: kind}})
+}
+
+// ReleaseCapture does nothing: GTK's implicit grab has no revocation call, and
+// it ends at the button-up edge. The core ignores pointer events without a gesture.
+func (b *Backend) ReleaseCapture(platform.ID) error { return nil }
 
 // paint is the draw handler: it paints the last complete image and never asks
 // the core for a frame. Without an image GTK draws the default background.

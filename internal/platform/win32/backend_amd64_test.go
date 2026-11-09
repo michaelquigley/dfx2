@@ -42,6 +42,12 @@ type systemModel struct {
 	blitLines                 int32
 	fills                     []rect
 	client                    func(uintptr, *rect) error
+
+	// Pointer capture and keyboard state. Taking capture sends the previous
+	// owner WM_CAPTURECHANGED, as releasing it sends the owner one.
+	capture      uintptr
+	captureError error
+	keysDown     map[int32]bool
 }
 
 type blit struct {
@@ -209,6 +215,30 @@ func unopenedModel(t *testing.T) *systemModel {
 	f.api.killTimer = func(hwnd, id uintptr) {
 		delete(f.timers, id)
 		f.trace = append(f.trace, "kill")
+	}
+	f.api.setCapture = func(hwnd uintptr) {
+		previous := f.capture
+		f.capture = hwnd
+		if previous != 0 && previous != hwnd {
+			windowMessage(&f.api, previous, wmCaptureChanged, 0, hwnd)
+		}
+	}
+	f.api.releaseCapture = func() error {
+		if f.captureError != nil {
+			return f.captureError
+		}
+		previous := f.capture
+		f.capture = 0
+		if previous != 0 {
+			windowMessage(&f.api, previous, wmCaptureChanged, 0, 0)
+		}
+		return nil
+	}
+	f.api.keyState = func(virtualKey int32) int16 {
+		if f.keysDown[virtualKey] {
+			return -32768
+		}
+		return 0
 	}
 	f.api.setTitle = func(hwnd uintptr, title *uint16) error {
 		if !f.live[hwnd] {

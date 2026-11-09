@@ -1,0 +1,44 @@
+ M AGENTS.md
+ M README.md
+ M docs/current/runtime.md
+ M docs/current/ui.md
+ M docs/future/direction.md
+ M docs/journal/2026-11-06.md
+ M examples/mixer/README.md
+ M examples/mixer/main.go
+ M internal/appcore/content.go
+ M internal/appcore/content_test.go
+ M internal/appcore/inspect.go
+ M internal/appcore/run.go
+ M internal/appcore/supervisor.go
+ M internal/appcore/types.go
+ M internal/platform/fake/fake.go
+ M internal/platform/gtk/abi_linux_amd64_test.go
+ M internal/platform/gtk/backend_linux_amd64.go
+ M internal/platform/gtk/content_linux_amd64_test.go
+ M internal/platform/gtk/native_linux_amd64.go
+ M internal/platform/platform.go
+ M internal/platform/win32/abi_amd64.go
+ M internal/platform/win32/abi_amd64_test.go
+ M internal/platform/win32/backend_amd64.go
+ M internal/platform/win32/backend_amd64_test.go
+ M internal/platform/win32/native_windows_amd64.go
+ M ui/content.go
+ M ui/frame.go
+ M ui/ui.go
+ M ui/ui_test.go
+?? docs/journal/2026-11-08.md
+?? evidence/synthetic-mixer/linux/controls_drive.py
+?? evidence/synthetic-mixer/linux/stage-3/
+?? evidence/synthetic-mixer/stage-3.md
+?? evidence/synthetic-mixer/windows/stage-3/
+?? examples/mixer/controls.go
+?? internal/appcore/input_test.go
+?? internal/platform/gtk/input_linux_amd64_test.go
+?? internal/platform/win32/input_amd64.go
+?? internal/platform/win32/input_amd64_test.go
+?? ui/core_test.go
+?? ui/input.go
+?? ui/input_test.go
+?? ui/layout.go
+?? ui/layout_test.go

@@ -37,6 +37,8 @@ type Backend struct {
 	// runs before a Present copy and may fail it.
 	ContentUnsupported bool
 	OnPresent          func(platform.ID, platform.Image) error
+	// ReleaseCaptureError fails ReleaseCapture.
+	ReleaseCaptureError error
 
 	mu           sync.Mutex
 	sink         func(platform.Event)
@@ -47,6 +49,7 @@ type Backend struct {
 	wakes, pumps int
 	released     bool
 	violations   []string
+	releases     map[platform.ID]int
 }
 
 func (b *Backend) Open(sink func(platform.Event)) error {
@@ -143,6 +146,24 @@ func (b *Backend) Present(id platform.ID, image platform.Image) error {
 	return nil
 }
 
+// ReleaseCapture records the request; the fake holds no native capture.
+func (b *Backend) ReleaseCapture(id platform.ID) error {
+	b.mu.Lock()
+	defer b.mu.Unlock()
+	if b.releases == nil {
+		b.releases = make(map[platform.ID]int)
+	}
+	b.releases[id]++
+	return b.ReleaseCaptureError
+}
+
+// CaptureReleases counts ReleaseCapture calls for one window.
+func (b *Backend) CaptureReleases(id platform.ID) int {
+	b.mu.Lock()
+	defer b.mu.Unlock()
+	return b.releases[id]
+}
+
 // Violations lists rejected presentation uses, for assertions.
 func (b *Backend) Violations() []string {
 	b.mu.Lock()
@@ -204,6 +225,13 @@ func (b *Backend) enqueueLocked(e platform.Event) {
 	case b.changed <- struct{}{}:
 	default:
 	}
+}
+
+// Queued reports events posted but not yet pumped, including wakes.
+func (b *Backend) Queued() int {
+	b.mu.Lock()
+	defer b.mu.Unlock()
+	return len(b.events)
 }
 
 func (b *Backend) Wake() error {

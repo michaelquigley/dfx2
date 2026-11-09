@@ -213,6 +213,9 @@ func TestContentCreationFailureLeavesNoNativeObject(t *testing.T) {
 	}
 	disconnected := 0
 	n.disconnect = func(uintptr, uint64) { disconnected++ }
+	n.addEvents = func(uintptr, int32) {}
+	n.setCanFocus = func(uintptr, int32) {}
+	n.grabFocus = func(uintptr) {}
 	n.destroy = func(uintptr) { order = append(order, "destroy") }
 	n.unref = func(o uintptr) { order = append(order, "unref") }
 	n.show = func(uintptr) { t.Error("failed window shown") }

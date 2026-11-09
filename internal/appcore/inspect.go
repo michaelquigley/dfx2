@@ -76,6 +76,10 @@ func ContentWindows(a *App) []*Window {
 	return out
 }
 
+// WindowID is a window's numeric identity, for internal fixtures that deliver
+// native events to it.
+func WindowID(w *Window) platform.ID { return w.id }
+
 type auditionBackend interface {
 	AuditionResize(platform.ID, int, int) error
 	AuditionIconify(platform.ID, bool) error
