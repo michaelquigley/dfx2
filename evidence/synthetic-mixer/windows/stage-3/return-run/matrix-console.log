@@ -1,0 +1,20 @@
+﻿{"name":"fonts","exit_code":0,"timed_out":false,"events":15,"failures":[]}
+{"name":"animate","exit_code":0,"timed_out":false,"events":14,"failures":[]}
+{"name":"resize","exit_code":0,"timed_out":false,"events":17,"failures":[]}
+{"name":"minimize","exit_code":0,"timed_out":false,"events":13,"failures":[]}
+{"name":"expose","exit_code":0,"timed_out":false,"events":12,"failures":[]}
+{"name":"large","exit_code":0,"timed_out":false,"events":29,"failures":[]}
+{"name":"close-sample","exit_code":0,"timed_out":false,"events":8,"failures":[]}
+{"name":"reopen","exit_code":0,"timed_out":false,"events":23,"failures":[]}
+{"name":"two","exit_code":0,"timed_out":false,"events":14,"failures":[]}
+{"name":"modal-move","exit_code":0,"timed_out":false,"events":29,"failures":[]}
+{"name":"modal-size","exit_code":0,"timed_out":false,"events":29,"failures":[]}
+{"name":"modal-idle","exit_code":0,"timed_out":false,"events":21,"failures":[]}
+{"name":"modal-close-self","exit_code":0,"timed_out":false,"events":17,"failures":[]}
+{"name":"modal-close-other","exit_code":0,"timed_out":false,"events":17,"failures":[]}
+{"name":"modal-quit","exit_code":0,"timed_out":false,"events":14,"failures":[]}
+{"name":"signal","exit_code":0,"timed_out":false,"events":15,"failures":[]}
+{"name":"inspection","exit_code":0,"timed_out":false,"events":5,"failures":[]}
+foundation matrix: exit 0; see foundation/ and foundation.log
+Automated Windows matrix passed. The manual audition in README.md is still required.
+

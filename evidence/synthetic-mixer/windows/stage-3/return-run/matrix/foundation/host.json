@@ -1,0 +1,28 @@
+{
+    "revision":  "c8f880a29f6902f72973ad189d8154184062a7b1",
+    "worktree":  "?? evidence/synthetic-mixer/windows/stage-3/return-run/",
+    "go":  "go version go1.27.3 windows/amd64",
+    "cgo_enabled":  "0",
+    "os":  {
+               "Caption":  "Microsoft Windows 10 Pro",
+               "Version":  "10.0.19045",
+               "OSArchitecture":  "64-bit"
+           },
+    "session":  "RDP-Tcp#0",
+    "powershell":  "5.1.19041.6456",
+    "process64":  true,
+    "display":  [
+                    {
+                        "Name":  "Microsoft Remote Display Adapter",
+                        "CurrentHorizontalResolution":  3440,
+                        "CurrentVerticalResolution":  1440
+                    },
+                    {
+                        "Name":  "Microsoft Basic Display Adapter",
+                        "CurrentHorizontalResolution":  1024,
+                        "CurrentVerticalResolution":  768
+                    }
+                ],
+    "observed_at":  "2026-11-09T15:14:18.9531402-05:00",
+    "dpi_variation":  "not tested by this script; record operator observation separately"
+}

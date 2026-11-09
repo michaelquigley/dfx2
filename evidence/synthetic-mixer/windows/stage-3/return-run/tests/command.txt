@@ -1,0 +1,6 @@
+﻿revision: c8f880a29f6902f72973ad189d8154184062a7b1
+worktree: 
+command: CGO_ENABLED=0 go test ./internal/appcore ./internal/platform/win32 -count=300 -timeout=300s
+started: 2026-11-09T15:05:58.2888687-05:00
+exit: 0
+finished: 2026-11-09T15:06:11.3257944-05:00

@@ -1,0 +1,5 @@
+﻿revision: c8f880a29f6902f72973ad189d8154184062a7b1
+command: powershell.exe -NoProfile -ExecutionPolicy Bypass -File evidence\synthetic-mixer\windows\audition.ps1 -OutDir evidence/synthetic-mixer/windows/stage-3/return-run/matrix
+started: 2026-11-09T15:11:16.5750735-05:00
+finished: 2026-11-09T15:14:26.4555926-05:00
+exit: 0
