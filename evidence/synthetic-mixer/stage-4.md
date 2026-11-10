@@ -1,6 +1,6 @@
 # Synthetic mixer stage 4: the synthetic mixer and complete audition
 
-Stage 4 of the [work order](../../docs/future/synthetic-mixer-work-order.md) is implemented in the working tree on `27e0c4e`, uncommitted. It passes its portable checks and the complete Linux automated native matrix below, rerun after the Terminus correction, and full review `0a9f08c62edc` is clean. **Nothing from this stage has executed on Windows**: the [Windows handoff](windows/stage-4/README.md) is prepared and cross-built only. Michael has passed the Linux manual audition; the Windows automated/manual audition and return, Linux return checks, canon alignment and Michael's acceptance remain. Built behavior is in [ui.md](../../docs/current/ui.md#the-synthetic-mixer) and the example's [README](../../examples/mixer/README.md).
+Stage 4 of the [work order](../../docs/future/synthetic-mixer-work-order.md) was committed at `34852d5`; its evidence-only Windows return landed at `91076e5`. Both hosts passed automated and operator-reported manual auditions. Return reviews found two portable input-deferral defects, now corrected with discriminating regressions; full review `9fbd7edb54c7` is clean with no findings. The native auditions predate those two corrections, whose portable tests and cross-builds are recorded below. Windows CPU timing remains a documented measurement limitation. Canon alignment, intent-document closeout and Michael's acceptance remain. Built behavior is in [ui.md](../../docs/current/ui.md#the-synthetic-mixer) and the example's [README](../../examples/mixer/README.md).
 
 Host: Linux 7.0.0-42-generic amd64, Go 1.27.1 (module language 1.26), GTK 3.24.52, Cairo 1.18.4, GNOME Shell 50.1 for the nested sessions. Every build, test and vet uses `CGO_ENABLED=0`.
 
@@ -111,9 +111,9 @@ About 60 frames per second per window while the feed runs: the 30 Hz samples inv
 
 ## Unavailable coverage
 
-- **Windows**: nothing from this stage has executed there; see the handoff.
+- **Windows**: native automated and manual results have returned; see [results](windows/stage-4/results.md). CPU timing is unavailable as useful evidence on that host, as discussed below.
 - **Real scale changes**: XWayland's `GDK_SCALE=2` is a forced integer scale at startup, not a monitor transition. Real Windows DPI transitions remain untested from earlier stages.
-- **Manual auditions**: required on both hosts. Michael has passed the Linux audition; Windows remains pending. The delayed, rejected and pending-edit behavior is new, so earlier stages' manual passes do not cover it. The Linux steps are [below](#linux-manual-audition); the Windows steps are in the handoff.
+- **Manual auditions**: required on both hosts. Michael has reported passes on both hosts. The delayed, rejected and pending-edit behavior is new, so earlier stages' manual passes do not cover it. The Linux steps are [below](#linux-manual-audition); the Windows steps are in the handoff.
 - **Display claims**: screen captures come from the nested compositor's own screenshot service, so they show what it composited; they are not a physical display.
 - **Fonts**: the Linux runs use the host's `sans-serif`, Noto Sans with DejaVu Sans fallback; the fixtures use Go Regular only, whose missing Greek and Cyrillic render as the visible fallback box.
 - The historical unexplained appcore `FAIL` (2026-11-05) and the earlier idle-desktop Linux failures (2026-11-06) remain unexplained.
@@ -171,3 +171,56 @@ Then follow the Windows handoff's [manual steps](windows/stage-4/README.md#manua
 
 
 After review `0a9f08c62edc`, Michael requested a root Makefile for hands-on use. `make` installed both examples with `CGO_ENABLED=0`, and `make test` passed the suite and vet. An isolated bin-directory check confirmed `make clean` removes only mixer/lifetime while retaining an unrelated file. This Makefile and its documentation postdate that review; no runtime or native-driver source changed, so the retained native runs remain applicable.
+
+
+## Windows return and Linux checks
+
+`91076e5` changes only evidence and the journal. No runtime, example, test or runner source changed from tested candidate `34852d5`. On Linux, `CGO_ENABLED=0 GOCACHE=/tmp/dfx2-pacing-go-cache go test ./... -count=1 -timeout=180s` and `go vet ./...` pass. The retained corrected Linux native matrix remains applicable; no additional native Linux runs were needed.
+
+Inspection of the Windows raw records confirms:
+
+- The original gates ran with exit 0. All 17 regression, 9 foundation, 17 controls/command and 2 text-cache cases pass. The foundation failure case has its expected exit 1.
+- All 29 application process logs drain once with no outstanding ownership or paint failures, and application stderr is empty. Every one of 114 accepted commands has exactly one terminal record: 107 applied, 2 device-rejected and 5 canceled.
+- All 18 text-cache samples respect their byte/entry budgets, and both evicted-window/fresh-window image pairs match pixel for pixel. All 35 retained PNGs decode and pass integrity checks; the five large snapshots also match observed surfaces and satisfy the growth requirement. The returned pending-state screen capture visibly shows all six strips and the pending/error status area.
+- Michael's Windows manual result is an overall operator-reported pass. It does not imply real DPI transitions or other native scenarios the host could not exercise.
+
+The driver reports `cpu_percent: 0` when its sampled `cpu_seconds` difference is zero, including active intervals with about 68 frames/s across two windows. Treat those CPU percentages as unavailable, not as measured zero cost. The raw logs establish an unchanged counter during those intervals, not the proposed tick-accounting mechanism; that causal explanation remains unverified. The approximately 34 frames/s per window and its difference from Linux remain observations, not a diagnosed regression. A change to the measurement/reporting path awaits Michael's decision. The original Windows evidence is preserved.
+
+Returned Markdown was processed with `unfurl` on Linux. Final review `b07039045251` is not clean, as described below. Canon alignment and intent-document retirement remain separate work; stage 4 is not yet accepted.
+
+
+## Return review finding
+
+Full review `b07039045251` is **not clean**, with one blocking finding and no advisories: a second queued checkbox release is deferred after its activation has been validated, then hit-tested again against the next frame's layout. If that frame moves the checkbox, the release can be discarded even though the control still exists. Coverage: 2,797 covered, 213 excluded, and the two known Hebrew font fixture/license paths uncovered.
+
+A temporary Go test overlay reproduced the reported sequence on the current tree: queue two clicks on checkbox A, reorder A and B in the first evaluation, then drain the remaining release. Only `a=true` was reported; the required second `a=false` was absent. The probe failed on that exact assertion and did not modify repository tests or product code. The proposed correction retains the stable target and validated activation across the deferred release, without reinterpreting it against a later layout, and still clears it on the applicable cancellation/removal paths. It needs permanent reorder/no-replay and cancellation regression coverage. Michael requested the narrow framework fix, implemented below. CPU timing remains a documented limitation; this fix does not change the measurement fixture.
+
+
+## Narrow checkbox-deferral correction
+
+Michael requested a narrow fix after distinguishing framework input behavior from exploratory fixture hardening. A checkbox retains one bit saying that its captured release was already validated inside the control. If the one-edit-per-evaluation limit defers that release, the next evaluation uses the retained validation instead of testing against a newer rectangle. Successful release and gesture cancellation clear the bit; removing or replacing the control discards its state. No queue, fader, platform or example policy changed.
+
+`TestDeferredCheckboxReleaseKeepsValidatedTarget` queues two clicks and reorders the checkboxes between evaluations. Before the fix, its ordinary case failed with only `a=true`, missing `a=false`. The fixed test requires both edits and no replay. Its overflow case discards the pending release and verifies that a new press/release outside cannot inherit the old activation. The focused regression plus existing activation/removal checks pass 100 repetitions. The full no-cgo suite, Linux and Windows vet, and Windows/Darwin cross-builds pass. `make` also refreshed the locally installed examples.
+
+This portable input-state correction postdates the native evidence above. No native matrices or manual auditions were rerun for this narrow fix; prior records remain evidence for `34852d5`. No further Terminus round has run. Canon alignment and acceptance remain pending. CPU timing and the existing platform limitations remain documented, with no new fixture hardening in this change.
+
+
+## Review after the checkbox correction
+
+Full review `335bc286250f` is **not clean**, with one blocking finding and no advisories. Coverage remains 2,797 covered, 213 excluded and the two known Hebrew font fixture/license paths uncovered. It raised no finding on the checkbox correction, but found the related fader-press path: a press whose edit is deferred is hit-tested again on the next layout, so reordering can transfer it to another control.
+
+A scratch test overlay reproduced two clicks aimed at A with a reorder between evaluations: the observed commands were `a=1`, `b=0`, instead of `a=1`, `a=0`. The failure was an assertion, and the probe changed no repository file. The proposed correction preserves the resolved target and intended value of that deferred press, discards it on removal/cancellation, and adds a focused regression. Michael accepted the fader correction described below. This is a framework input-identity defect, not fixture timing hardening.
+
+
+## Deferred fader-press correction
+
+A deferred fader press now retains its resolved control identity and value until the queued press is retried. Success restores focus/capture to that same control. Removal or replacement invalidates the saved target but retains a cancellation marker until the old press is consumed, so it cannot be reinterpreted as a new hit. Input overflow clears the saved press, and content release drops it. This changes only portable UI input state, not platform delivery, the queue format or the example's command policy.
+
+`TestDeferredFaderPressKeepsItsTarget` covers reorder, removal and overflow, including a fresh press after overflow and no replay. `TestDeferredFaderPressKeepsItsResolvedValue` moves the target vertically between evaluations. Before the fix the reorder case edited B, removal also edited B, and the vertical move changed the intended value from 0 to approximately 0.1824. All fail on assertions against the previous code and pass with the fix; overflow is a guard that passes on both. The fader and checkbox deferral regressions pass 100 repetitions, the complete no-cgo suite passes, Linux/Windows vet is clean, and Windows/Darwin builds pass. `make` refreshed the installed examples.
+
+No further Terminus review, native matrix or manual audition has run on these deferral corrections. Existing native evidence remains tied to its recorded revision. CPU timing remains a documented fixture limitation; no measurement work was added. Canon alignment and stage acceptance remain pending.
+
+
+## Review after both input-deferral corrections
+
+Full review `9fbd7edb54c7` is **clean**, with zero blocking and zero advisory findings. Both corrections and their regressions are in scope. Coverage remains 2,797 covered, 213 excluded and the two known Hebrew font fixture/license paths uncovered. This closes the findings from `b07039045251` and `335bc286250f`; it is not stage acceptance or new native execution. Only the verdict notes in this record and the journal changed after review. Canon alignment and final acceptance remain; CPU timing remains a documented fixture limitation.

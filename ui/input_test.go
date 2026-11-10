@@ -202,6 +202,120 @@ func TestTwoActivationsBeforeAFrameAreTwoEdits(t *testing.T) {
 	b.want("m=true", "m=false")
 }
 
+func TestDeferredFaderPressKeepsItsTarget(t *testing.T) {
+	for _, change := range []string{"reorder", "remove", "overflow"} {
+		t.Run(change, func(t *testing.T) {
+			order := []string{"a", "b"}
+			values := map[string]float64{"a": 0.5, "b": 0.5}
+			b := newBench(t, func(b *bench, f *Frame) {
+				f.Row(Layout{Gap: 8}, func(f *Frame) {
+					for _, id := range order {
+						value := values[id]
+						b.fader(f, id, &value)
+						values[id] = value
+					}
+				})
+			})
+			x, _ := b.center("a")
+			b.send(down(x, faderTop), up(x, faderTop), down(x, faderBottom), up(x, faderBottom))
+			order = []string{"b", "a"}
+			if change == "remove" {
+				order = []string{"b"}
+			}
+			b.frame()
+			if len(b.queue) != 2 {
+				t.Fatalf("remaining events %d, want deferred press and release", len(b.queue))
+			}
+			switch change {
+			case "reorder":
+				b.settle()
+				b.frame()
+				b.want("a=1", "a=0")
+			case "remove":
+				b.settle()
+				b.frame()
+				b.want() // A's edits disappear with it; B inherits neither.
+			case "overflow":
+				b.queue, b.lost = nil, true
+				b.frame()
+				x, _ = b.center("b")
+				b.send(down(x, faderTop), up(x, faderTop))
+				b.settle()
+				b.frame()
+				b.want("a=1", "b=1")
+			}
+		})
+	}
+}
+
+func TestDeferredFaderPressKeepsItsResolvedValue(t *testing.T) {
+	moved := false
+	gain := 0.5
+	b := newBench(t, func(b *bench, f *Frame) {
+		if moved {
+			f.Label("move the fader down")
+		}
+		b.fader(f, "a", &gain)
+	})
+	x, _ := b.center("a")
+	b.send(down(x, faderTop), up(x, faderTop), down(x, faderBottom))
+	moved = true
+	b.frame()
+	b.want("a=1")
+	b.settle()
+	b.want("a=1", "a=0")
+	// A later, newly delivered release uses the current geometry.
+	r := rectOf(t, b.c, "a")
+	b.send(up(x, float64(r.Max.Y)-float64(thumbHeight(b.scale))/2))
+	b.settle()
+	b.frame()
+	b.want("a=1", "a=0")
+}
+
+// A release validated against the layout the user clicked must survive the
+// one-edit-per-evaluation boundary, even if that evaluation moves its target.
+func TestDeferredCheckboxReleaseKeepsValidatedTarget(t *testing.T) {
+	for _, overflow := range []bool{false, true} {
+		t.Run(fmt.Sprintf("overflow=%t", overflow), func(t *testing.T) {
+			order := []string{"a", "b"}
+			values := map[string]bool{"a": false, "b": false}
+			b := newBench(t, func(b *bench, f *Frame) {
+				f.Row(Layout{Gap: 8}, func(f *Frame) {
+					for _, id := range order {
+						value := values[id]
+						b.checkbox(f, id, &value)
+						values[id] = value
+					}
+				})
+			})
+			x, y := b.center("a")
+			b.send(down(x, y), up(x, y), down(x, y), up(x, y))
+			order = []string{"b", "a"}
+			b.frame()
+			b.want("a=true")
+			if len(b.queue) != 1 {
+				t.Fatalf("remaining events %d, want one deferred release", len(b.queue))
+			}
+			if overflow {
+				// Overflow discards that release and cancels its gesture. A
+				// fresh press followed by a release outside must not activate.
+				b.queue, b.lost = nil, true
+				b.frame()
+				x, y = b.center("a")
+				b.send(down(x, y), up(-10, -10))
+				b.settle()
+				b.frame()
+				b.want("a=true")
+			} else {
+				b.settle()
+				b.want("a=true", "a=false")
+				b.frame()
+				b.want("a=true", "a=false") // no replay
+			}
+		})
+	}
+}
+
 func TestActivationsOnStaleSnapshotsStillToggleFromWhatWasShown(t *testing.T) {
 	// The application has not acknowledged anything: it keeps supplying false.
 	b := newBench(t, func(b *bench, f *Frame) {

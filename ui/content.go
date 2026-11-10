@@ -46,9 +46,10 @@ type content struct {
 	frames   int    // view evaluations
 
 	capture, focus, spaceHeld string // control paths
-	active                    bool   // the window has native focus
-	releaseCapture            bool   // this frame ended a gesture without a button-up edge
-	hits                      []hit  // the last completed layout's controls, in recorded order
+	deferredPress             *deferredFaderPress
+	active                    bool  // the window has native focus
+	releaseCapture            bool  // this frame ended a gesture without a button-up edge
+	hits                      []hit // the last completed layout's controls, in recorded order
 	hitScale                  float64
 }
 
@@ -176,6 +177,7 @@ func (c *content) Release() {
 	}
 	c.canvas.Release()
 	c.meters, c.controls, c.last, c.hits = nil, nil, nil, nil
+	c.deferredPress = nil
 }
 
 // layout solves the recorded tree against the surface and emits draw commands

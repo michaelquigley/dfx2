@@ -12,11 +12,20 @@ import (
 // edit never builds on a snapshot the user no longer sees. A checkbox holds 1
 // when checked.
 type control struct {
-	role    role
-	value   float64
-	pending float64
-	edited  bool // pending awaits the view, which can report one edit an evaluation
-	seen    bool
+	role          role
+	value         float64
+	pending       float64
+	edited        bool // pending awaits the view, which can report one edit an evaluation
+	seen          bool
+	releaseInside bool // a checkbox release already validated before edit deferral
+}
+
+// The queue still owns the press event. Keep its resolved meaning until that
+// event is retried; a nil control marks removal, so it cannot hit a new target.
+type deferredFaderPress struct {
+	path  string
+	ctl   *control
+	value float64
 }
 
 // resolve returns what the view should use. An edit wins. Otherwise a gesture
@@ -67,9 +76,13 @@ func (c *content) control(path string, r role, supplied float64) *control {
 	return ctl
 }
 
-// forget ends everything that refers to a control that no longer exists. Only
-// an active drag has a native capture to cancel.
+// forget ends everything that refers to a control that no longer exists.
+// A deferred press can already own native capture before UI capture is set.
 func (c *content) forget(path string) {
+	if p := c.deferredPress; p != nil && p.path == path {
+		p.ctl = nil
+		c.releaseCapture = true
+	}
 	if c.capture == path {
 		c.capture = ""
 		c.releaseCapture = true
@@ -85,6 +98,10 @@ func (c *content) forget(path string) {
 // cancelGesture clears pressed state without manufacturing an edit. Edits
 // already returned remain the application's. Control focus survives.
 func (c *content) cancelGesture() {
+	c.deferredPress = nil
+	if ctl := c.controls[c.capture]; ctl != nil {
+		ctl.releaseInside = false
+	}
 	if c.capture != "" {
 		c.capture = ""
 		c.releaseCapture = true
@@ -140,6 +157,20 @@ func (c *content) apply(in platform.Input) bool {
 }
 
 func (c *content) press(in platform.Input) bool {
+	if p := c.deferredPress; p != nil {
+		if p.ctl == nil || c.controls[p.path] != p.ctl {
+			c.cancelGesture()
+			c.releaseCapture = true
+			return true // consume the canceled press, without a new hit test
+		}
+		if !p.ctl.set(p.value) {
+			return false
+		}
+		c.cancelGesture()
+		c.releaseCapture = false
+		c.focus, c.capture = p.path, p.path
+		return true
+	}
 	h := c.hitAt(in.X, in.Y)
 	if h == nil {
 		c.cancelGesture()
@@ -147,7 +178,10 @@ func (c *content) press(in platform.Input) bool {
 		return true
 	}
 	if h.role == roleFader {
-		if ctl := c.controls[h.path]; !ctl.set(c.faderValue(h, ctl, in.Y)) {
+		ctl := c.controls[h.path]
+		value := c.faderValue(h, ctl, in.Y)
+		if !ctl.set(value) {
+			c.deferredPress = &deferredFaderPress{path: h.path, ctl: ctl, value: value}
 			return false
 		}
 	}
@@ -175,9 +209,13 @@ func (c *content) release(in platform.Input) bool {
 			return false
 		}
 	case roleCheckbox:
-		if c.pointIn(in.X, in.Y, h.visible) && !ctl.set(1-ctl.current()) {
+		// Retrying this release must not hit-test against a layout that the
+		// preceding evaluation may have moved. The capture keeps its identity.
+		if (ctl.releaseInside || c.pointIn(in.X, in.Y, h.visible)) && !ctl.set(1-ctl.current()) {
+			ctl.releaseInside = true
 			return false
 		}
+		ctl.releaseInside = false
 	}
 	c.capture = ""
 	return true
