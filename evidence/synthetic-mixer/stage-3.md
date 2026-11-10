@@ -1,6 +1,6 @@
 # Synthetic mixer stage 3: layout and interactive controls
 
-Stage 3 of the [work order](../../docs/future/synthetic-mixer-work-order.md) is built. The corrected candidate was committed at `c8f880a`, and its Windows return landed at `f2cb303`. Built behavior is in [ui.md](../../docs/current/ui.md). The [second Windows return](windows/stage-3/return-results.md) closes the test-gate gap: appcore and Win32 passed 300 repetitions on Windows, and the original audition passed all 17 mixer and 9 foundation native cases with every gate enabled. The earlier 10/10 controls run and Windows manual audition remain applicable to the unchanged Windows runtime. Michael has also confirmed that the Linux controls manual audition looked fine. Cairo and PNG-validation fixes passed full review `aeda6d4e169a`; final return review `ce97d67355f5` found a paragraph-cache key accounting gap. Michael accepted its correction, now implemented in shared text code; this new candidate passed Terminus `4b18b3c1df9f` with one documentation advisory and still needs Windows validation. The earlier Windows and manual results describe their tested revisions. Stage 3 awaits Michael's acceptance, and stage 4 has not started.
+Stage 3 of the [work order](../../docs/future/synthetic-mixer-work-order.md) is built. The corrected candidate was committed at `c8f880a`, and its Windows return landed at `f2cb303`. Built behavior is in [ui.md](../../docs/current/ui.md). The [second Windows return](windows/stage-3/return-results.md) closes the test-gate gap: appcore and Win32 passed 300 repetitions on Windows, and the original audition passed all 17 mixer and 9 foundation native cases with every gate enabled. The earlier 10/10 controls run and Windows manual audition remain applicable to the unchanged Windows runtime. Michael has also confirmed that the Linux controls manual audition looked fine. Cairo and PNG-validation fixes passed full review `aeda6d4e169a`; final return review `ce97d67355f5` found a paragraph-cache key accounting gap. Michael accepted its correction, now implemented in shared text code; this new candidate passed Terminus `4b18b3c1df9f` with one documentation advisory (since corrected), and its [Windows validation](windows/stage-3/paragraph-key-results.md) has returned at `a2a2109`. Final return review `7f15050aeece` and review `8d23bf53f115` against the aligned canon are clean, with no findings. The earlier Windows and manual results describe their tested revisions. Stage 3 awaits Michael's acceptance, and stage 4 has not started.
 
 Host: Linux 7.0.0-42-generic amd64, Go 1.27.1 (module language 1.26), GTK 3.24.52, Cairo 1.18.4. Every build, test and vet uses `CGO_ENABLED=0`.
 
@@ -200,7 +200,7 @@ Earlier open items remain open: the historical appcore `FAIL`, the earlier unexp
 
 ## Canon drift to flag
 
-Not edited, per the work order. Stage 3 makes these stale for deliberate canon work:
+The following drift was flagged during implementation and resolved by Michael’s approved canon alignment on 2026-11-10. The canon alignment is committed in `terminus-canon` at `be99161`; its rubric loads successfully in the coverage audit. Full source review `8d23bf53f115` against that canon is clean, with no findings. Original drift:
 
 - `terminus-canon/projects/dfx2/rubric.yaml`: "measured layout and interactive controls are later mixer stages".
 - `immediate-mode-state-and-frames.md`, boundary: "Labels and meters in a single root column ... do not require the later measured-layout or interactive-control APIs".
@@ -260,3 +260,22 @@ This shared text change needs Windows validation on Michael's next committed can
 
 
 Native Linux reruns on that binary pass **60 of 60**: controls 10/10 and regression 10/10 on Wayland, XWayland, and XWayland with forced `GDK_SCALE=2`, each in the isolated GNOME shell. The [manifest](linux/stage-3/paragraph-key-rerun/manifest.json) records commands and exit codes; the [audit](linux/stage-3/paragraph-key-rerun/audit.json) confirms all 33 process logs drain once with no outstanding ownership or paint failures and empty application stderr. Shell warnings are separate. The scale-2 controls image was visually checked. Forced scale is not a real monitor transition, and these runs do not replace the operator's desktop observation. Earlier native evidence remains untouched.
+
+
+## Paragraph-key Windows return
+
+Return `a2a2109` contains only evidence and a journal entry for candidate `c1ad2bb`; no runtime, test, runner or example source changed. Linux inspection confirms the retained commands and raw results:
+
+- Text packages pass 100 repetitions on Windows. The original regression runner passes with every gate enabled, including the full suite, repeated appcore/Win32 tests, vet, builds and the nested foundation runner.
+- All 17 mixer, 9 foundation and 10 controls cases pass. The foundation's intentional failure exits 1 as expected. All 27 native process logs drain exactly once with zero outstanding ownership and no paint failures; application stderr is empty.
+- The five large snapshots pass the corrected Linux validator: PNG chunks verified, pixels decoded, dimensions matched to the recorded surfaces and required growth observed. Original evidence is untouched.
+- Linux return checks pass: `CGO_ENABLED=0 go test ./... -count=1 -timeout=180s` and `go vet ./...`, using `GOCACHE=/tmp/dfx2-pacing-go-cache`. The initial sandbox attempt could not write the host's Go module cache; the rerun with cache access passed. This was setup failure, not a test assertion failure.
+
+The code matches the candidate that passed the retained 60/60 Linux native cases in `paragraph-key-rerun/`, so no additional native Linux matrix was run. The prior Linux and Windows operator observations remain recorded; no manual audition was repeated for this cache-only correction. DPI and the other stated platform limits remain untested. Returned Markdown was processed with `unfurl` on Linux. Final full review `7f15050aeece` is **clean**, with zero blocking and zero advisory findings. Coverage: 2,098 covered, 212 excluded, and the same two Hebrew font fixture/license paths uncovered. The returned Windows evidence and corrected current docs are in scope. Only this verdict note and the journal changed after review. Canon alignment and acceptance remain separate, and stage 4 is untouched.
+
+
+## Review against the aligned canon
+
+Canon commit `be99161` recognizes built layout and controls and makes bounded input, overflow cancellation, ordered edit deferral and idle-input behavior explicit in the existing immediate-mode quality. Full dfx2 review `8d23bf53f115` includes those revised rules and is **clean**, with zero blocking and zero advisory findings. Coverage remains 2,098 covered, 212 excluded, and the two previously recorded Hebrew font fixture/license paths uncovered.
+
+No runtime or validation code changed in this alignment or review; both hosts' candidate evidence remains applicable. Only the evidence and journal verdict notes changed after this review. Stage 3 is ready for Michael's acceptance. Existing platform limits and historical unresolved observations remain recorded; stage 4 has not started.
