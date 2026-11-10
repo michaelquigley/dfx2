@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"slices"
+	"strings"
 	"unsafe"
 )
 
@@ -73,7 +74,8 @@ type Paragraph struct {
 	width      Fixed
 	wrapped    bool
 	lines      []Line
-	bytes      int    // shaped payload plus the stored wrap, as accounted
+	bytes      int    // shaped payload, owned cache key and stored wrap, as accounted
+	keyBytes   int    // UTF-8 payload owned by the map key; zero for transient paragraphs
 	lastUsed   uint64 // frame of last use
 	admitted   bool
 	held       uint64 // frame whose transient scratch holds an unadmitted paragraph
@@ -228,7 +230,9 @@ func (s *System) Paragraph(text string, size Fixed) (*Paragraph, error) {
 	p := &Paragraph{text: runes, shaped: shaped, lastUsed: s.frame, held: s.frame}
 	p.bytes = paragraphBytes(p)
 	// Leave room for the first wrap, which usually doubles glyph payload.
-	need := 2 * p.bytes
+	// An admitted key needs its own UTF-8 copy, once; transient paragraphs
+	// retain only the rune copy and never store a key.
+	need := 2*p.bytes + len(text)
 	switch {
 	case need > s.budget.ParagraphBytes:
 		s.stats.TransientParas++
@@ -239,6 +243,9 @@ func (s *System) Paragraph(text string, size Fixed) (*Paragraph, error) {
 		s.stats.TransientParas++
 		return p, s.holdTransient(p, p.bytes)
 	}
+	key.text = strings.Clone(text) // a substring must not pin its caller's backing storage
+	p.keyBytes = len(key.text)
+	p.bytes += p.keyBytes
 	p.admitted = true
 	s.paragraphs[key] = p
 	s.stats.ParagraphBytes += p.bytes
@@ -326,9 +333,9 @@ func (s *System) evict(all bool) {
 }
 
 // paragraphBytes estimates a paragraph's owned payload: runes, shaped glyphs,
-// breaks and the current wrap.
+// breaks, the admitted key's UTF-8 copy and the current wrap.
 func paragraphBytes(p *Paragraph) int {
-	n := int(unsafe.Sizeof(Paragraph{})) + len(p.text)*4 + len(p.shaped.Breaks)
+	n := int(unsafe.Sizeof(Paragraph{})) + len(p.text)*4 + len(p.shaped.Breaks) + p.keyBytes
 	for _, r := range p.shaped.Runs {
 		n += int(unsafe.Sizeof(r)) + len(r.Glyphs)*int(unsafe.Sizeof(Glyph{}))
 	}

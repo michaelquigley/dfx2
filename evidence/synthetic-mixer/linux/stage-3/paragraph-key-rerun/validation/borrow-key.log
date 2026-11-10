@@ -1,0 +1,5 @@
+--- FAIL: TestParagraphKeyOwnsOnlyItsSubstringAndSurvivesCacheHits (0.00s)
+    key_test.go:50: cached key retains the caller's substring backing storage
+FAIL
+FAIL	github.com/michaelquigley/dfx2/internal/text	0.004s
+FAIL

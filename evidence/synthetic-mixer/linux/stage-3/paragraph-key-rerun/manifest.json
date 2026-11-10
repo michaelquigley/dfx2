@@ -1,0 +1,147 @@
+{
+  "revision": "f2cb30388447fc0578f0e194d25e6df9fc3cc8c0",
+  "working_tree": " M README.md\n M docs/current/ui.md\n M docs/journal/2026-11-09.md\n M evidence/synthetic-mixer/stage-3.md\n M evidence/synthetic-mixer/windows/stage-3/return-results.md\n M internal/text/system.go\n M internal/text/system_test.go\n?? evidence/synthetic-mixer/linux/stage-3/paragraph-key-rerun/\n?? internal/text/key_test.go\n",
+  "runs": [
+    {
+      "name": "controls-wayland",
+      "command": [
+        "python3",
+        "-B",
+        "evidence/synthetic-mixer/linux/controls_drive.py",
+        "/tmp/dfx2-key-mixer",
+        "--out",
+        "/home/michael/Repos/q/products/dfx2/evidence/synthetic-mixer/linux/stage-3/paragraph-key-rerun/controls-wayland",
+        "--base",
+        "/tmp",
+        "--gdk-backend",
+        "wayland"
+      ],
+      "started": "2026-11-09T16:19:55-0500",
+      "exit_code": 0,
+      "finished": "2026-11-09T16:20:26-0500"
+    },
+    {
+      "name": "regression-wayland",
+      "command": [
+        "python3",
+        "-B",
+        "evidence/synthetic-mixer/linux/controls_drive.py",
+        "/tmp/dfx2-key-mixer",
+        "--out",
+        "/home/michael/Repos/q/products/dfx2/evidence/synthetic-mixer/linux/stage-3/paragraph-key-rerun/nest-wayland",
+        "--base",
+        "/tmp",
+        "--gdk-backend",
+        "wayland",
+        "--exec",
+        "python3",
+        "-B",
+        "/home/michael/Repos/q/products/dfx2/evidence/synthetic-mixer/linux/drive.py",
+        "/tmp/dfx2-key-mixer",
+        "--out",
+        "/home/michael/Repos/q/products/dfx2/evidence/synthetic-mixer/linux/stage-3/paragraph-key-rerun/regression-wayland",
+        "--gdk-backend",
+        "wayland"
+      ],
+      "started": "2026-11-09T16:20:26-0500",
+      "exit_code": 0,
+      "finished": "2026-11-09T16:21:32-0500"
+    },
+    {
+      "name": "controls-x11",
+      "command": [
+        "python3",
+        "-B",
+        "evidence/synthetic-mixer/linux/controls_drive.py",
+        "/tmp/dfx2-key-mixer",
+        "--out",
+        "/home/michael/Repos/q/products/dfx2/evidence/synthetic-mixer/linux/stage-3/paragraph-key-rerun/controls-x11",
+        "--base",
+        "/tmp",
+        "--gdk-backend",
+        "x11"
+      ],
+      "started": "2026-11-09T16:21:32-0500",
+      "exit_code": 0,
+      "finished": "2026-11-09T16:22:03-0500"
+    },
+    {
+      "name": "regression-x11",
+      "command": [
+        "python3",
+        "-B",
+        "evidence/synthetic-mixer/linux/controls_drive.py",
+        "/tmp/dfx2-key-mixer",
+        "--out",
+        "/home/michael/Repos/q/products/dfx2/evidence/synthetic-mixer/linux/stage-3/paragraph-key-rerun/nest-x11",
+        "--base",
+        "/tmp",
+        "--gdk-backend",
+        "x11",
+        "--exec",
+        "python3",
+        "-B",
+        "/home/michael/Repos/q/products/dfx2/evidence/synthetic-mixer/linux/drive.py",
+        "/tmp/dfx2-key-mixer",
+        "--out",
+        "/home/michael/Repos/q/products/dfx2/evidence/synthetic-mixer/linux/stage-3/paragraph-key-rerun/regression-x11",
+        "--gdk-backend",
+        "x11"
+      ],
+      "started": "2026-11-09T16:22:03-0500",
+      "exit_code": 0,
+      "finished": "2026-11-09T16:23:08-0500"
+    },
+    {
+      "name": "controls-x11-scale2",
+      "command": [
+        "python3",
+        "-B",
+        "evidence/synthetic-mixer/linux/controls_drive.py",
+        "/tmp/dfx2-key-mixer",
+        "--out",
+        "/home/michael/Repos/q/products/dfx2/evidence/synthetic-mixer/linux/stage-3/paragraph-key-rerun/controls-x11-scale2",
+        "--base",
+        "/tmp",
+        "--gdk-backend",
+        "x11",
+        "--gdk-scale",
+        "2"
+      ],
+      "started": "2026-11-09T16:23:08-0500",
+      "exit_code": 0,
+      "finished": "2026-11-09T16:23:39-0500"
+    },
+    {
+      "name": "regression-x11-scale2",
+      "command": [
+        "python3",
+        "-B",
+        "evidence/synthetic-mixer/linux/controls_drive.py",
+        "/tmp/dfx2-key-mixer",
+        "--out",
+        "/home/michael/Repos/q/products/dfx2/evidence/synthetic-mixer/linux/stage-3/paragraph-key-rerun/nest-x11-scale2",
+        "--base",
+        "/tmp",
+        "--gdk-backend",
+        "x11",
+        "--gdk-scale",
+        "2",
+        "--exec",
+        "python3",
+        "-B",
+        "/home/michael/Repos/q/products/dfx2/evidence/synthetic-mixer/linux/drive.py",
+        "/tmp/dfx2-key-mixer",
+        "--out",
+        "/home/michael/Repos/q/products/dfx2/evidence/synthetic-mixer/linux/stage-3/paragraph-key-rerun/regression-x11-scale2",
+        "--gdk-backend",
+        "x11",
+        "--gdk-scale",
+        "2"
+      ],
+      "started": "2026-11-09T16:23:39-0500",
+      "exit_code": 0,
+      "finished": "2026-11-09T16:24:44-0500"
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+--- FAIL: TestParagraphKeyChargePersistsThroughRewrapAndEviction (0.00s)
+    key_test.go:91: paragraph payload=3377 cache=3377 want shaped/wrapped payload 3377 + key 72
+FAIL
+FAIL	github.com/michaelquigley/dfx2/internal/text	0.004s
+FAIL

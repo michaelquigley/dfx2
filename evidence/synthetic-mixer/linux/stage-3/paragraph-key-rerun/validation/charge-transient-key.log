@@ -1,0 +1,9 @@
+--- FAIL: TestParagraphKeyChargePersistsThroughRewrapAndEviction (0.00s)
+    key_test.go:69: transient payload=2113 scratch=2113 want owned shaped payload=2041
+--- FAIL: TestParagraphAdmissionReservesKeyBytesWithoutChargingTransientKey (0.00s)
+    key_test.go:106: transient payload=3217 scratch=3217 want owned shaped payload=3121
+--- FAIL: TestParagraphKeyShortfallEvictsAnUnusedEntryBetweenFrames (0.00s)
+    key_test.go:131: transient payload=3217 scratch=3217 want owned shaped payload=3121
+FAIL
+FAIL	github.com/michaelquigley/dfx2/internal/text	0.004s
+FAIL

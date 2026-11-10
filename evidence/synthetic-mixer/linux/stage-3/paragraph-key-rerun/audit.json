@@ -1,0 +1,22 @@
+{
+  "mixer_sha256": "5c7a4efc9611c938c551fec6327af529cab2d6cfc8e86b3d7da15f0faf978076",
+  "native_cases_passed": 60,
+  "process_logs": 33,
+  "one_drained_record_each": true,
+  "zero_final_fields": [
+    "windows",
+    "tasks",
+    "queued",
+    "native_completions",
+    "input_queued",
+    "native_windows",
+    "native_retired",
+    "dispatch_targets",
+    "paint_failures",
+    "release_pending",
+    "native_problem"
+  ],
+  "application_stderr_files": 33,
+  "application_stderr_empty": true,
+  "shell_stderr_not_asserted_empty": true
+}

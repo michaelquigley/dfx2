@@ -1,8 +1,10 @@
 # Synthetic mixer stage 3: Windows handoff
 
-Status: **prepared on Linux; executed on Windows on 2026-11-09, with the results in [results.md](results.md).** Cross-builds and injected tests are preparation, not acceptance. Stage 3 is accepted only after this audition runs on a Windows host, the results return for Linux checks and review, and Michael accepts them. The [stage 3 record](../../stage-3.md) has the Linux preparation and its limits.
+Status: **Windows passed the original controls audition and the corrected test gates; a shared text-cache fix now needs validation on the next candidate.** Prior results remain in [results.md](results.md) and [return-results.md](return-results.md). The [stage 3 record](../../stage-3.md) distinguishes those runs from current preparation. Stage 3 still awaits final review and Michael's acceptance.
 
-**Candidate.** The revision to run is Michael's commit of the stage 3 working tree as validated on Linux after the flex-weight fix of Terminus `5fc97cd2e8ac`. On Linux that tree builds `examples/mixer` with SHA-256 `aff24bf6b17bf5e26ed178b40ef301044561ee0a2b8c095a1803465ad92ce819`, and its native results are in [`linux/stage-3/flex-rerun/`](../../linux/stage-3/flex-rerun/). Windows binaries hash differently, so compare revisions, not binaries. The checkout must contain `TestHugeEqualFlexWeightsShareEquallyAndFinish` in `ui/layout_test.go`; if it does not, the transfer predates the candidate, so stop and report it. `controls.ps1` records the revision it ran in `run\controls\revision.txt`.
+**Candidate.** Run Michael's next commit containing the paragraph-key ownership and accounting fix accepted from Terminus `ce97d67355f5`. Its Linux mixer SHA-256 is `5c7a4efc9611c938c551fec6327af529cab2d6cfc8e86b3d7da15f0faf978076`; native evidence is in [`linux/stage-3/paragraph-key-rerun/`](../../linux/stage-3/paragraph-key-rerun/). Windows binaries hash differently: compare revisions. Confirm that `internal/text/key_test.go` contains `TestParagraphKeyOwnsOnlyItsSubstringAndSurvivesCacheHits`, and that admission in `internal/text/system.go` clones the key and charges its UTF-8 bytes. The flex fix must also remain present. Record the actual revision; do not reuse the earlier candidate's result.
+
+Run the original regression matrix with every gate enabled and the controls matrix, writing new evidence under `paragraph-key-run/` as below. The regression runner's full suite includes the new text tests. Also run `go test ./internal/text/... -count=100` with `CGO_ENABLED=0`, retaining the command, output and exit code. Keep prior runs untouched. Manual audition results remain recorded; this cache-only correction does not request a repeat of the full manual checklist. Report any new visual or native failure instead of weakening checks.
 
 You do not need the grimoire or Terminus on the Windows host. Everything you need is in this repository. Do not commit from an agent session; Michael commits and transfers the work.
 
@@ -10,7 +12,7 @@ You do not need the grimoire or Terminus on the Windows host. Everything you nee
 
 Stage 3 adds rows, columns, scopes, faders and checkboxes. Only the input path differs by platform: `internal/platform/win32/input_amd64.go` copies native messages into queued events, and never runs the view. It takes native capture on a left press, so a drag keeps tracking outside the window.
 
-These have only been modeled, and only this host can establish them:
+The original Windows audition tested these platform assumptions; its results and remaining limits are in [results.md](results.md):
 
 1. That `SetCapture`, `ReleaseCapture` and `WM_CAPTURECHANGED` behave as the model assumes, in that order. In particular, a real drag must continue outside the window, and the backend's own release must not read as a capture loss.
 2. That signed client coordinates arrive negative left of and above a window under capture.
@@ -30,13 +32,13 @@ The same as [stage 2](../README.md): Windows 10 or later, amd64, Go 1.26 or newe
 From the repository root in Windows PowerShell, run the regression matrix first and then the controls:
 
 ```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File evidence\synthetic-mixer\windows\audition.ps1 -OutDir evidence/synthetic-mixer/windows/stage-3/run/matrix
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File evidence\synthetic-mixer\windows\stage-3\controls.ps1
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File evidence\synthetic-mixer\windows\audition.ps1 -OutDir evidence/synthetic-mixer/windows/stage-3/paragraph-key-run/matrix
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File evidence\synthetic-mixer\windows\stage-3\controls.ps1 -OutDir evidence/synthetic-mixer/windows/stage-3/paragraph-key-run/controls
 ```
 
-The first is stage 2's matrix, unchanged: tests, vet and builds, every presentation and size/move case, and the foundation's lifecycle matrix, into `run\matrix\`. It takes several minutes. Its [case table](../README.md#automated-matrix) says what each must show. It needs repeating because stage 3 changed the core's frame path and the Win32 window procedure.
+The first is stage 2's matrix, unchanged: tests, vet and builds, every presentation and size/move case, and the foundation's lifecycle matrix, into `paragraph-key-run\matrix\`. It takes several minutes. Its [case table](../README.md#automated-matrix) says what each must show. It needs repeating on this candidate because shared text ownership and accounting changed.
 
-The second builds `examples/mixer` and `controlsdrive` and writes `run\controls\`: `summary.json`, `mixer.jsonl`, `mixer.stderr.log`, `revision.txt`, and the retained images `controls-before.png` and `controls-focused.png`. If a case dies mid-drag the runner releases the button; by hand, `& "$env:TEMP\dfx2-mixer-audition\controlsdrive.exe" -release`.
+The second builds `examples/mixer` and `controlsdrive` and writes `paragraph-key-run\controls\`: `summary.json`, `mixer.jsonl`, `mixer.stderr.log`, `revision.txt`, and the retained images `controls-before.png` and `controls-focused.png`. If a case dies mid-drag the runner releases the button; by hand, `& "$env:TEMP\dfx2-mixer-audition\controlsdrive.exe" -release`.
 
 The driver runs `mixer -controls -paused`, finds both windows, and for each case presses and types through `SendInput` and `SetCursorPos`, sends model changes through the fixture's console, and judges the fixture's `edit` log:
 
@@ -55,7 +57,7 @@ The driver runs `mixer -controls -paused`, finds both windows, and for each case
 
 Then `quit` must return `<nil>` with exit 0, a `drained` record of zero windows, tasks, queued callbacks, completions, queued input, native windows, retired records, dispatch targets and paint failures, and an empty stderr.
 
-`controlsdrive` has never run: PowerShell and Windows were not available on the Linux preparation host. If the runner itself is wrong, correct it and record exactly what changed and why. Do not change the Go runtime, backend or example to make a case pass without reporting it: that is a finding.
+`controlsdrive` passed on the earlier Windows candidate; the current candidate has not run there yet. If the runner itself is wrong, correct it and record exactly what changed and why. Do not change the Go runtime, backend or example to make a case pass without reporting it: that is a finding.
 
 ## Manual audition
 

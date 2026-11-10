@@ -1,0 +1,7 @@
+--- FAIL: TestParagraphKeyChargePersistsThroughRewrapAndEviction (0.00s)
+    key_test.go:100: evicted key still charged: {Shapes:1 Wraps:3 Rasterized:0 GlyphEntries:0 ParagraphEntries:0 GlyphBytes:0 ParagraphBytes:72 GlyphEvictions:0 ParaEvictions:1 TransientGlyphs:0 TransientParas:0 TransientBytes:0 TransientWraps:2 FallbackGlyphs:0}
+--- FAIL: TestParagraphKeyShortfallEvictsAnUnusedEntryBetweenFrames (0.00s)
+    key_test.go:152: unused key's charge survived eviction
+FAIL
+FAIL	github.com/michaelquigley/dfx2/internal/text	0.004s
+FAIL

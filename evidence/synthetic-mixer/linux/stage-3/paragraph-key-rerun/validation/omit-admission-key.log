@@ -1,0 +1,7 @@
+--- FAIL: TestParagraphAdmissionReservesKeyBytesWithoutChargingTransientKey (0.00s)
+    key_test.go:120: key did not fit but was admitted, or scratch charged an unowned key: {Shapes:1 Wraps:0 Rasterized:0 GlyphEntries:0 ParagraphEntries:1 GlyphBytes:0 ParagraphBytes:3217 GlyphEvictions:0 ParaEvictions:0 TransientGlyphs:0 TransientParas:0 TransientBytes:0 TransientWraps:0 FallbackGlyphs:0}
+--- FAIL: TestParagraphKeyShortfallEvictsAnUnusedEntryBetweenFrames (0.00s)
+    key_test.go:145: second entry ignored the one-byte key shortfall <nil>
+FAIL
+FAIL	github.com/michaelquigley/dfx2/internal/text	0.004s
+FAIL

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- FIX: Paragraph caches own their UTF-8 keys and charge them against the existing budget, including through rewraps and eviction; substring keys no longer retain larger caller allocations.
+
 - FIX: GTK painting checks Cairo context errors and propagates them through the application cancellation and drain path to `Run`, preserving a deferred dispatch wake so shutdown can finish.
 
 - FEATURE: Windows/amd64 implements UI content presentation through `VirtualAlloc`-backed GDI and delivers bounded dispatch turns during native size and move loops, so frames and posted callbacks keep advancing for every window, with no timer running while idle. A core guard refuses any nested dispatch turn. Native [Windows validation](evidence/synthetic-mixer/windows/results.md) passed presentation, modal progress, idle, lifecycle and lock/RDP transition checks; real DPI transitions remain untested.

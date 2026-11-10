@@ -235,7 +235,7 @@ func TestCacheHitsAndUseOutsideFrames(t *testing.T) {
 var wrapInput = strings.Repeat("a ", 100)
 
 // payloads measures the shaped-only, wide-wrap and narrow-wrap payloads of a
-// paragraph with an unconstrained system.
+// cached paragraph with an unconstrained system, including its owned key.
 func payloads(t *testing.T, txt string) (shapedBytes, wideBytes, narrowBytes int) {
 	t.Helper()
 	measure := func(width Fixed) int {
@@ -360,6 +360,8 @@ func TestAdmittedWrapGrowthStaysWithinBudget(t *testing.T) {
 
 func TestTransientWrapGrowthIsChargedAndRefused(t *testing.T) {
 	shaped, wideBytes, narrowBytes := payloads(t, wrapInput)
+	// These entries are never admitted, so they retain no UTF-8 map key.
+	shaped, wideBytes, narrowBytes = shaped-len(wrapInput), wideBytes-len(wrapInput), narrowBytes-len(wrapInput)
 	frame := func(limit int) (*System, *Paragraph) {
 		s := NewSystem(&gridEngine{}, Budget{GlyphBytes: 1 << 20, ParagraphBytes: 1, ParagraphEntries: 1, Transient: limit})
 		s.BeginFrame()
@@ -432,7 +434,7 @@ func TestRepeatedRewrapsAccountForEveryLiveResult(t *testing.T) {
 				Transient: 2*wideWrap + narrowWrap}
 			if !admitted {
 				budget.ParagraphBytes = 1
-				budget.Transient = shaped + 2*wideWrap + 2*narrowWrap
+				budget.Transient = shaped - len(wrapInput) + 2*wideWrap + 2*narrowWrap
 			}
 			engine := &gridEngine{}
 			s := NewSystem(engine, budget)
@@ -444,7 +446,7 @@ func TestRepeatedRewrapsAccountForEveryLiveResult(t *testing.T) {
 			var results, snapshots [][]Line
 			wantScratch := 0
 			if !admitted {
-				wantScratch = shaped
+				wantScratch = shaped - len(wrapInput)
 			}
 			for i, width := range []Fixed{wide, narrow, wide, narrow} {
 				lines, err := s.Lines(p, width)

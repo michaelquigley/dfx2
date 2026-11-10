@@ -2,7 +2,7 @@
 
 The root Go module, `github.com/michaelquigley/dfx2` (Go 1.26), implements portable application/window lifetime, a private backend contract and a controllable fake. Linux/amd64 uses GTK 3 through purego v0.11.1; Windows/amd64 uses Win32 through `syscall`. Both use the [lifetime example](../../examples/lifetime/README.md) and have passed native scripted and manual auditions. All builds use `CGO_ENABLED=0`; experiments remain independent modules. Other targets return `ErrUnsupportedPlatform`. The [final validation record](../../evidence/foundation/stage-4.md) links host evidence and review status.
 
-This runtime supplies native windows and shared ownership. Framework-drawn content (frames, animation, CPU rendering and text) attaches through a private bridge described in [ui.md](ui.md). It has passed native automated and manual auditions on Linux and Windows; actual Windows DPI transitions remain untested. Interactive widgets, browser hosting and public native handles remain outside this implementation; the broader [foundation proposal](../future/foundation.md) covers that subsequent work.
+This runtime supplies native windows and shared ownership. Framework-drawn content (frames, animation, CPU rendering, text and interactive faders and checkboxes) attaches through a private bridge described in [ui.md](ui.md). It has passed native automated and manual auditions on Linux and Windows; actual Windows DPI transitions remain untested. Browser hosting and public native handles remain outside this implementation; the broader [foundation proposal](../future/foundation.md) covers that subsequent work.
 
 ## Public contract
 
