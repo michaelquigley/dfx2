@@ -808,3 +808,111 @@ func TestUnsupportedRefusalParticipatesInLastWindowShutdown(t *testing.T) {
 		})
 	}
 }
+
+// AuditionContent hands a live window's content to an internal example on the
+// UI thread only, and refuses once the window is closing, before its content
+// can be released.
+func TestAuditionContentServesOnlyLiveWindowsOnTheUIThread(t *testing.T) {
+	var wrong atomic.Bool
+	b, clock := &fake.Backend{Owner: func() bool { return !wrong.Load() }}, newFrameClock(t)
+	first, second := newFakeContent(), newFakeContent()
+	h, ws, r := openContent(t, b, clock, first, second)
+	wrong.Store(true)
+	if _, err := AuditionContent(ws[0]); !errors.Is(err, ErrWrongThread) {
+		t.Fatalf("off the UI thread: %v", err)
+	}
+	wrong.Store(false)
+	r.dispatch(t, h.app, func() {
+		if c, err := AuditionContent(ws[0]); err != nil || c != Content(first) {
+			t.Errorf("live window: %v %v", c, err)
+		}
+		ws[0].Close()
+		if c, err := AuditionContent(ws[0]); !errors.Is(err, ErrClosed) || c != nil {
+			t.Errorf("closing window: %v %v", c, err)
+		}
+		if c, err := AuditionContent(ws[1]); err != nil || c != Content(second) {
+			t.Errorf("other window: %v %v", c, err)
+		}
+	})
+	closeAll(t, h, ws[1])
+}
+
+// A window selected for this turn's frames can become ineligible before its
+// frame starts, if an earlier window's frame causes a synchronous surface
+// change. Each content here makes the other ineligible from inside its own
+// frame, whichever the turn renders first, so the outcome does not depend on
+// window order. The second must not run its view or present, must keep its
+// queued input and invalidation, and must render exactly once, consuming
+// both, when it is eligible again.
+func TestASelectedWindowMadeIneligibleMidTurnDoesNotRender(t *testing.T) {
+	for name, ineligible := range map[string]platform.Surface{
+		"hidden":     {Width: 4, Height: 3, Scale: 1, Visible: false},
+		"zero-sized": {Width: 0, Height: 0, Scale: 1, Visible: true},
+	} {
+		t.Run(name, func(t *testing.T) {
+			b, clock := &fake.Backend{}, newFrameClock(t)
+			contents := []*fakeContent{newFakeContent(), newFakeContent()}
+			h, ws, r := openContent(t, b, clock, contents...)
+			r.show(t, true, ws...)
+			for _, c := range contents {
+				receive(t, c.frames)
+			}
+			r.turn(t, h.app)
+
+			var armed atomic.Bool
+			victim := make(chan int, 1)
+			for i, c := range contents {
+				other := 1 - i
+				c.onFrame = func(FrameRequest) error {
+					if armed.CompareAndSwap(true, false) {
+						victim <- other
+						b.Emit(surfaceOf(ws[other], ineligible))
+					}
+					return nil
+				}
+			}
+			presents := func(i int) int { w, _ := b.Window(ws[i].id); return w.Presents }
+			before := [2]int{presents(0), presents(1)}
+			// One callback makes both windows due in the same turn, with
+			// input queued for each, and arms the hooks before that turn's
+			// frames.
+			r.dispatch(t, h.app, func() {
+				for _, w := range ws {
+					if err := Invalidate(w); err != nil {
+						t.Error(err)
+					}
+					b.Emit(platform.Event{Kind: platform.InputReceived, Window: w.id, Input: platform.Input{Kind: platform.KeyDown, Key: platform.KeyTab}})
+				}
+				armed.Store(true)
+			})
+			v := receive(t, victim)
+			actor := 1 - v
+			receive(t, contents[actor].frames)
+			r.turn(t, h.app)
+			noFrame(t, contents[v])
+			if got := presents(v); got != before[v] {
+				t.Fatalf("an ineligible window presented %d frames", got-before[v])
+			}
+			s, _ := InspectContent(ws[v])
+			if s.Generation == s.Consumed || s.InputQueued != 1 {
+				t.Fatalf("ineligible window lost pending work: %+v", s)
+			}
+
+			r.show(t, true, ws[v])
+			req := receive(t, contents[v].frames)
+			if len(req.Input) != 1 {
+				t.Fatalf("restored frame saw %d queued events, want 1", len(req.Input))
+			}
+			r.turn(t, h.app)
+			r.turn(t, h.app)
+			noFrame(t, contents[v]) // exactly one frame for the pending work
+			if s, _ := InspectContent(ws[v]); s.Generation != s.Consumed || s.InputQueued != 0 {
+				t.Fatalf("restored frame left pending work: %+v", s)
+			}
+			if got := presents(v); got != before[v]+1 {
+				t.Fatalf("restoration presented %d frames, want 1", got-before[v])
+			}
+			closeAll(t, h, ws...)
+		})
+	}
+}

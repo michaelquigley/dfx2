@@ -256,12 +256,12 @@ func (m *mixer) runModal(ctx context.Context) error {
 		}
 		m.o.event("modal-post-after-idle", "latency_ms", time.Since(posted).Milliseconds(), "modal_active", m.modalActive())
 		first := m.framesOf(cores[0])
-		m.src.setRunning(true)
+		m.model.setRunning(true)
 		if err := sleep(ctx, time.Second); err != nil {
 			return err
 		}
 		m.o.event("modal-resume", "frames", m.framesOf(cores[0])-first, "modal_active", m.modalActive())
-		m.src.setRunning(false)
+		m.model.setRunning(false)
 		if err := m.waitModal(ctx, false, 30*time.Second); err != nil {
 			return err
 		}

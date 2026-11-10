@@ -1,170 +1,190 @@
 package main
 
 import (
+	"fmt"
 	"path/filepath"
-	"slices"
-	"strconv"
 	"strings"
-	"sync"
 
 	"github.com/michaelquigley/dfx2"
 	"github.com/michaelquigley/dfx2/internal/appcore"
 	"github.com/michaelquigley/dfx2/ui"
 )
 
-// desk is the application-owned model behind -controls: channels with stable
-// IDs, whose order and membership the console can change. It is a small
-// stand-in for stage 4's model and device worker: an edit applies at once and
-// is logged, and external changes are never reported as edits.
-type desk struct {
-	mu       sync.Mutex
-	channels []*channel
-	removed  []*channel
-	edits    uint64
+// Strip geometry. A strip's fader and checkbox come first, so their logical
+// positions do not depend on font metrics: the input auditions press them at
+// computed coordinates (STRIP_STEP and friends in the drivers).
+const (
+	stripWidth = 110
+	stripGap   = 12
+)
+
+// trace observes what a view rendered, for tests. Nil in the program.
+type trace struct {
+	begin func(window string)                                      // a view evaluation starts
+	shown func(window string, c Channel, gain float64, muted bool) // values the widgets returned
+	label func(window, text string)
 }
 
-type channel struct {
-	id, name string
-	gain     float64
-	muted    bool
-}
-
-func newDesk() *desk {
-	return &desk{channels: []*channel{
-		{id: "a", name: "Channel A", gain: 0.5},
-		{id: "b", name: "Channel B", gain: 0.5},
-		{id: "c", name: "Channel C", gain: 0.5},
-	}}
-}
-
-func (d *desk) snapshot() []channel {
-	d.mu.Lock()
-	defer d.mu.Unlock()
-	out := make([]channel, len(d.channels))
-	for i, c := range d.channels {
-		out[i] = *c
-	}
-	return out
-}
-
-func (d *desk) find(id string) *channel {
-	for _, c := range d.channels {
-		if c.id == id {
-			return c
-		}
-	}
-	return nil
-}
-
-// controlsView is one window's view of the shared model. A strip's fader and
-// checkbox come first, so their logical positions do not depend on font metrics:
-// the input auditions press them at computed coordinates.
+// controlsView is one window's view of the shared model: six strips, then the
+// command status. Its only side effect is submitting user edits.
 func (m *mixer) controlsView(window string) func(*ui.Frame) {
 	return func(f *ui.Frame) {
 		m.evaluations.Add(1)
-		level := m.src.snapshot().level
-		f.Row(ui.Layout{Gap: 12}, func(f *ui.Frame) {
-			for _, c := range m.desk.snapshot() {
-				f.Scope(c.id, func(f *ui.Frame) {
-					f.Column(ui.Layout{Width: 130, Gap: 8}, func(f *ui.Frame) {
-						if gain, changed := f.Fader("gain", c.gain); changed {
-							m.edit(window, c.id, "gain", gain, func(c *channel) { c.gain = gain })
+		if m.trace.begin != nil {
+			m.trace.begin(window)
+		}
+		s := m.model.Snapshot()
+		label := func(text string) {
+			f.Label(text)
+			if m.trace.label != nil {
+				m.trace.label(window, text)
+			}
+		}
+		f.Row(ui.Layout{Gap: stripGap}, func(f *ui.Frame) {
+			for _, c := range s.Channels {
+				f.Scope(c.ID, func(f *ui.Frame) {
+					f.Column(ui.Layout{Width: stripWidth, Gap: 8}, func(f *ui.Frame) {
+						gain, changed := f.Fader("gain", c.ShownGain())
+						if changed {
+							m.submit(Command{Window: window, Channel: c.ID, Control: "gain", Gain: gain})
 						}
-						if muted, changed := f.Checkbox("mute", "Mute", c.muted); changed {
-							m.edit(window, c.id, "mute", muted, func(c *channel) { c.muted = muted })
+						muted, changed := f.Checkbox("mute", "Mute", c.ShownMute())
+						if changed {
+							m.submit(Command{Window: window, Channel: c.ID, Control: "mute", Mute: muted})
 						}
-						f.Meter("level", level)
-						f.Label(c.name)
+						if m.trace.shown != nil {
+							m.trace.shown(window, c, gain, muted)
+						}
+						f.Meter("level", c.Level)
+						label(c.Name)
+						label(fmt.Sprintf("%5.1f dB", c.DB))
+						label(deviceText(c))
+						label(pendingText(c))
 					})
 				})
 			}
 		})
+		for _, line := range statusLines(s) {
+			label(line)
+		}
+		for _, line := range churnLines(s.Version, s.Churn) {
+			label(line)
+		}
 	}
 }
 
-// edit applies one user edit to the model and logs it. The other window learns
-// of it through invalidation, as of any other model change.
-func (m *mixer) edit(window, channel, control string, value any, apply func(*channel)) {
-	m.desk.mu.Lock()
-	m.desk.edits++
-	sequence := m.desk.edits
-	if c := m.desk.find(channel); c != nil {
-		apply(c)
+// deviceText is the device's own state, which a pending edit may differ from.
+func deviceText(c Channel) string {
+	state := "live"
+	if c.Muted {
+		state = "muted"
 	}
-	m.desk.mu.Unlock()
-	m.o.event("edit", "window", window, "channel", channel, "control", control, "value", value, "sequence", sequence)
-	m.src.invalidateAll()
+	return fmt.Sprintf("%.2f %s", c.Gain, state)
 }
 
-// snapshotFirst writes the first window's retained image into the -snapshots
-// directory, for the auditions' visual record.
-func (m *mixer) snapshotFirst(name string) {
+func pendingText(c Channel) string {
+	var parts []string
+	if c.GainPending {
+		parts = append(parts, fmt.Sprintf("%.2f #%d", c.PendingGain, c.GainSeq))
+	}
+	if c.MutePending {
+		mute := "unmute"
+		if c.PendingMute {
+			mute = "mute"
+		}
+		parts = append(parts, fmt.Sprintf("%s #%d", mute, c.MuteSeq))
+	}
+	if len(parts) == 0 {
+		return "in sync"
+	}
+	return "pending " + strings.Join(parts, ", ")
+}
+
+// statusLines are the visible command totals, fixture settings and the latest
+// command error.
+func statusLines(s *Snapshot) []string {
+	feed := "running"
+	if !s.Running {
+		feed = "paused"
+	}
+	k := s.Commands
+	totals := fmt.Sprintf("Commands: %d outstanding · %d accepted · %d applied · %d rejected by device · %d refused · %d canceled",
+		k.Outstanding, k.Accepted, k.Applied, k.Rejected, k.Refused, k.Canceled)
+	fixture := fmt.Sprintf("Device delay %v · reject next %d · feed %s · tick %d", k.Delay, k.RejectNext, feed, s.Tick)
+	last := "No command errors."
+	if s.Error != "" {
+		last = "Last error: " + s.Error
+	}
+	return []string{totals, fixture, last}
+}
+
+// churnAlphabet mixes Latin, Greek and Cyrillic letters, which the tested
+// hosts' default faces cover, so changing words keep rasterizing new glyphs.
+var churnAlphabet = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZαβγδεζηθικλμνξοπρστυφχψωΑΒΓΔΘΛΞΠΣΦΨΩабвгдежзийклмнопрстуфхцчшщыэюяБГДЖЗИЛПФЦЧШЭЮЯ")
+
+// churnLines are n deterministic words, twelve to a line, that differ for
+// every publication version. Each line is its own small paragraph, so the
+// caches admit them and later frames leave them unused, which is what makes
+// eviction possible: an entry the current frame uses is never evicted.
+func churnLines(version uint64, n int) []string {
+	var lines []string
+	var b strings.Builder
+	for i := range n {
+		x := version*0x9e3779b97f4a7c15 + uint64(i)*0xbf58476d1ce4e5b9
+		x ^= x >> 29
+		x *= 0x94d049bb133111eb
+		x ^= x >> 32
+		if b.Len() > 0 {
+			b.WriteByte(' ')
+		}
+		for range 3 + x%5 {
+			b.WriteRune(churnAlphabet[x%uint64(len(churnAlphabet))])
+			x /= uint64(len(churnAlphabet))
+			x += 0x5851f42d
+		}
+		if i%12 == 11 || i == n-1 {
+			lines = append(lines, b.String())
+			b.Reset()
+		}
+	}
+	return lines
+}
+
+// submit hands one user edit to the command queue and logs it. The other
+// window learns of it through the published pending value.
+func (m *mixer) submit(cmd Command) {
+	seq, err := m.cmds.Submit(cmd)
+	reason := ""
+	if err != nil {
+		reason = err.Error()
+	}
+	m.o.event("edit", "window", cmd.Window, "channel", cmd.Channel, "control", cmd.Control, "value", cmd.Value(), "sequence", seq, "refused", reason)
+}
+
+// snapshotWindow writes a window's retained image, the first open window's
+// when window is empty, into the -snapshots directory, for the auditions'
+// visual record and image comparisons.
+func (m *mixer) snapshotWindow(name, window string) {
 	m.post(func() {
-		ws := appcore.ContentWindows(m.a)
-		if len(ws) == 0 || m.c.snapshots == "" {
-			m.o.event("snapshot-error", "error", "no window or no -snapshots directory")
+		var core *appcore.Window
+		if window == "" {
+			if ws := appcore.ContentWindows(m.a); len(ws) > 0 {
+				core = ws[0]
+			}
+		} else if w, ok := m.windows[window]; ok {
+			core = w.core
+		}
+		if core == nil || m.c.snapshots == "" {
+			m.o.event("snapshot-error", "error", "no such window or no -snapshots directory")
 			return
 		}
 		path := filepath.Join(m.c.snapshots, filepath.Base(name)+".png")
-		if err := appcore.AuditionSnapshot(ws[0], path); err != nil {
+		if err := appcore.AuditionSnapshot(core, path); err != nil {
 			m.o.event("snapshot-error", "error", err.Error())
 			return
 		}
-		m.o.event("snapshot", "path", path)
+		m.o.event("snapshot", "path", path, "window", window)
 	})
-}
-
-// deskCommand handles the console's model commands. These are external changes:
-// they invalidate and never produce an edit.
-func (m *mixer) deskCommand(line string) bool {
-	fields := strings.Fields(line)
-	if len(fields) == 0 || !m.c.controls {
-		return false
-	}
-	if fields[0] == "snapshot" && len(fields) == 2 {
-		m.snapshotFirst(fields[1])
-		return true
-	}
-	d := m.desk
-	d.mu.Lock()
-	done := true
-	switch {
-	case fields[0] == "gain" && len(fields) == 3:
-		if c := d.find(fields[1]); c != nil {
-			if v, err := strconv.ParseFloat(fields[2], 64); err == nil && v >= 0 && v <= 1 {
-				c.gain = v
-			}
-		}
-	case fields[0] == "mute" && len(fields) == 3:
-		if c := d.find(fields[1]); c != nil {
-			c.muted = fields[2] == "on"
-		}
-	case fields[0] == "reorder" && len(fields) == 1:
-		slices.Reverse(d.channels)
-	case fields[0] == "order" && len(fields) == len(d.channels)+1:
-		slices.SortStableFunc(d.channels, func(x, y *channel) int {
-			return slices.Index(fields[1:], x.id) - slices.Index(fields[1:], y.id)
-		})
-	case fields[0] == "remove" && len(fields) == 2:
-		if c := d.find(fields[1]); c != nil {
-			d.channels = slices.DeleteFunc(d.channels, func(x *channel) bool { return x == c })
-			d.removed = append(d.removed, c)
-		}
-	case fields[0] == "insert" && len(fields) == 2:
-		at := slices.IndexFunc(d.removed, func(x *channel) bool { return x.id == fields[1] })
-		if at >= 0 {
-			d.channels = append(d.channels, d.removed[at])
-			d.removed = slices.Delete(d.removed, at, at+1)
-		}
-	default:
-		done = false
-	}
-	d.mu.Unlock()
-	if done {
-		m.o.event("external", "command", line)
-		m.src.invalidateAll()
-	}
-	return done
 }
 
 // inputQueued totals queued input across a's content windows.

@@ -1,6 +1,6 @@
 # UI content
 
-Stages 1 to 3 of the [synthetic mixer](../future/synthetic-mixer.md) are built: windows whose content is an immediate-mode view drawn by the framework, with measured rows and columns, labels, keyed animated meters, faders and checkboxes, CPU rendering and pure-Go text. Linux/amd64 presents it through GTK and has passed native auditions, including real pointer and keyboard input. Windows/amd64 presents it through GDI and passed [native automated and manual auditions](../../evidence/synthetic-mixer/windows/results.md) of stage 2's presentation on Windows 10 over Remote Desktop, including progress during size/move loops, large images, lock and disconnect/reconnect. Windows input and controls passed the [stage 3 native matrix](../../evidence/synthetic-mixer/windows/stage-3/results.md), 10/10, and Michael reported no problems in the testable manual steps. After correcting two test-barrier defects, the [return audition](../../evidence/synthetic-mixer/windows/stage-3/return-results.md) passed the original regression runners with all test gates enabled: 17 mixer and 9 foundation cases. Michael also confirmed the Linux controls manual audition looked fine. The [paragraph-key return](../../evidence/synthetic-mixer/windows/stage-3/paragraph-key-results.md) validates the shared text-cache correction with the original gates and controls matrix passing. Stage 3 remains under review. Actual Windows DPI transitions remain untested; native cleanup-failure handling is exercised with injected calls only. The [stage 1](../../evidence/synthetic-mixer/stage-1.md), [stage 2](../../evidence/synthetic-mixer/stage-2.md) and [stage 3](../../evidence/synthetic-mixer/stage-3.md) records hold the commands, native coverage and limits.
+Stages 1 to 3 of the [synthetic mixer](../future/synthetic-mixer.md) are built: windows whose content is an immediate-mode view drawn by the framework, with measured rows and columns, labels, keyed animated meters, faders and checkboxes, CPU rendering and pure-Go text. Linux/amd64 presents it through GTK and has passed native auditions, including real pointer and keyboard input. Windows/amd64 presents it through GDI and passed [native automated and manual auditions](../../evidence/synthetic-mixer/windows/results.md) of stage 2's presentation on Windows 10 over Remote Desktop, including progress during size/move loops, large images, lock and disconnect/reconnect. Windows input and controls passed the [stage 3 native matrix](../../evidence/synthetic-mixer/windows/stage-3/results.md), 10/10, and Michael reported no problems in the testable manual steps. After correcting two test-barrier defects, the [return audition](../../evidence/synthetic-mixer/windows/stage-3/return-results.md) passed the original regression runners with all test gates enabled: 17 mixer and 9 foundation cases. Michael also confirmed the Linux controls manual audition looked fine. The [paragraph-key return](../../evidence/synthetic-mixer/windows/stage-3/paragraph-key-results.md) validates the shared text-cache correction with the original gates and controls matrix passing. Stage 3 was accepted at `27e0c4e`. Stage 4 builds the [synthetic mixer](#the-synthetic-mixer) on this surface; it adds no public API. Its Linux automated audition has passed, and Michael reported that the Linux hands-on checklist worked well. Windows automated and manual validation remain pending. Actual Windows DPI transitions remain untested; native cleanup-failure handling is exercised with injected calls only. The [stage 1](../../evidence/synthetic-mixer/stage-1.md), [stage 2](../../evidence/synthetic-mixer/stage-2.md), [stage 3](../../evidence/synthetic-mixer/stage-3.md) and [stage 4](../../evidence/synthetic-mixer/stage-4.md) records hold the commands, native coverage and limits.
 
 The [runtime contract](runtime.md) still governs lifetime, threads, posting, failure and shutdown. This document covers only what UI content adds.
 
@@ -60,6 +60,62 @@ The meter's displayed peak attacks immediately and falls linearly at 0.5 units p
 
 Linux and Windows both host content, and other targets fail earlier, in `Run`. The core still honors a backend that refuses content before native work: `ui.Open` returns an error matching `errors.Is(err, ui.ErrUnsupportedContent)`, nothing is latched and ordinary `dfx2` windows keep working. The refused window still counts for last-window shutdown: while its creation was pending it was a live starting window, so if every other window closed meanwhile, a window application shuts down once the refusal returns. A resident application stays alive. No shipping backend refuses today; the path is exercised with the fake backend.
 
+## The synthetic mixer
+
+[`examples/mixer -controls`](../../examples/mixer/README.md) is the application this surface was built for: six channels in two windows over one model, a 30 Hz level producer and an ordered command worker standing in for a device. The framework supplies frames, layout, widgets and invalidation; everything about the model, devices and acknowledgments is the example's own code. Its shape, reduced:
+
+```go
+// Application state: a mutex and an owned snapshot, replaced on every change.
+func (m *model) publish(change func()) {
+	m.mu.Lock()
+	change()
+	m.current = m.copyLocked() // never mutated after this
+	windows := slices.Collect(maps.Keys(m.subscribers))
+	m.mu.Unlock()
+	for _, w := range windows {
+		_ = w.Invalidate() // dfx2.ErrClosed from a window closing meanwhile is expected
+	}
+}
+
+func (m *mixer) view(window string) func(*ui.Frame) {
+	return func(f *ui.Frame) {
+		s := m.model.Snapshot()
+		f.Row(ui.Layout{Gap: 12}, func(f *ui.Frame) {
+			for _, ch := range s.Channels {
+				f.Scope(ch.ID, func(f *ui.Frame) {
+					f.Column(ui.Layout{Width: 110, Gap: 8}, func(f *ui.Frame) {
+						// Show the pending edit while its command is outstanding.
+						if gain, changed := f.Fader("gain", ch.ShownGain()); changed {
+							m.commands.Submit(Command{Channel: ch.ID, Control: "gain", Gain: gain}) // never waits
+						}
+						if muted, changed := f.Checkbox("mute", "Mute", ch.ShownMute()); changed {
+							m.commands.Submit(Command{Channel: ch.ID, Control: "mute", Mute: muted})
+						}
+						f.Meter("level", ch.Level)
+						f.Label(ch.Name)
+					})
+				})
+			}
+		})
+		f.Label(s.LastError) // refusals and device rejections are visible
+	}
+}
+
+// In setup: the producer and the worker belong to the application, not a window.
+app.Go("sampler", m.model.run)
+app.Go("commands", m.commands.run)
+```
+
+What the example shows about using `ui`:
+
+- **Views only read.** A view takes one snapshot and submits only when a control reports `changed`. External changes, acknowledgments and samples arrive as new snapshots and never become commands.
+- **Producers invalidate; they never draw.** Publication copies state under the application's own lock and invalidates outside it, so a window closing concurrently costs one refused `Invalidate`. Invalidation never uses a post slot, so a 30 Hz producer cannot crowd out posted callbacks.
+- **Pending values belong to the application.** The widgets start keyboard and toggle edits from the value last shown, but across frames they show what the view supplies. Supplying the pending value until its command resolves is what keeps a delayed device from reverting a fader, or making the next Up start from a stale value. The example clears a pending value only on its own command's resolution, and returns to the device's value when the device rejects the latest edit, showing the error.
+- **Submission never blocks the UI thread.** The example's queue holds 64 commands and refuses the rest at once, visibly. Order is preserved and nothing is merged.
+- **Shutdown is the runtime's.** Application tasks are canceled when the last window closes or the app quits; the worker cancels its held and queued commands and reports them as never applied.
+
+The [stage 4 record](../../evidence/synthetic-mixer/stage-4.md) holds the deterministic fixtures and native auditions of these behaviors.
+
 ## Layout
 
 The view's root is a column filling the window, with 16 logical units of padding and 10 between its children. `Layout` holds logical units: `Width` and `Height` (zero is intrinsic), `Padding`, `Gap`, `MinWidth`, `MinHeight`, `MaxWidth`, `MaxHeight` (zero maximum is unbounded) and a `Flex` weight. Physical pixels are the units rounded at the surface's scale.
@@ -108,7 +164,7 @@ Each window has its own scheduling state: surface size, scale and visibility, a 
 
 One app-owned one-shot timer on the runtime's supervisor serves the earliest live deadline and delivers through the private wake path; rendering stays on the UI thread. No live deadline means no armed timer, so an unchanged, settled window does no periodic work. A deadline the supervisor first sees already due is delivered by an immediate wake; an armed timer keeps its deadline even when the supervisor evaluates late. Timers stop before the dispatch target is released.
 
-Windows reported hidden by the backend (unmapped or minimized), and zero-sized windows, render nothing and keep no armed deadline, while keeping their dirty mark. GTK/Wayland may not report minimization; its accepted limitation is described below. Becoming visible again renders once at the current monotonic time if the window is dirty or its animation deadline has passed. Compositor occlusion of a mapped window is not detected.
+Windows reported hidden by the backend (unmapped or minimized), and zero-sized windows, render nothing and keep no armed deadline, while keeping their dirty mark. Eligibility is checked again as each selected frame starts, so a window that becomes hidden or zero-sized after the turn selected it, for example through a synchronous surface change during an earlier window's frame, runs no view and presents nothing; its queued input and invalidation wait for restoration. No shipping backend is known to report such a change synchronously; the fake backend does. GTK/Wayland may not report minimization; its accepted limitation is described below. Becoming visible again renders once at the current monotonic time if the window is dirty or its animation deadline has passed. Compositor occlusion of a mapped window is not detected.
 
 Closing seals content work at once: no further frame starts, a frame already rendering is not presented, the window's deadline stops counting toward the timer, and `Invalidate` is refused. After native teardown and its final callback, the content's caches, retained state and Go frame are released on the UI thread, outside the runtime's mutex. Until that release returns the window stays registered as closing: `Inspect` counts it and shutdown diagnostics report `content-release-pending=true`. Only then is it removed and `Done` closed.
 
@@ -128,7 +184,7 @@ Text runs through a private engine seam. The single engine, go-text, finds faces
 
 Shaped data crossing the seam is engine-neutral and owned: font and glyph IDs, glyphs in visual order with cluster, advance and offsets, runs with bidi level and line metrics, and break classes. Wrapping and line assembly are shared code over that data. A paragraph is shaped once per text and size; a new width rewraps the same shaped runs without reshaping and without mutating them. Lines reorder runs by the UAX #9 L2 rule from their levels; trailing whitespace keeps its glyphs but no advance. Paragraph direction is always left to right; there is no ellipsis, justification, caret or selection.
 
-Each window owns bounded caches: at most 16 MiB of glyph pixels, and 1 MiB of paragraph payload in at most 256 entries, including shaped data, wraps and owned UTF-8 cache keys. A key is copied only when its paragraph is admitted, so a substring cannot retain its caller’s larger backing allocation. Admission reserves the key bytes once, and rewrapping preserves that charge; transient paragraphs retain no UTF-8 key. Glyph rasters are keyed by font, glyph, physical size (scale included) and quarter-pixel position; mask and color glyphs are stored separately and share the pixel budget. Entries are evicted only between frames, least recently used first, to restore the budgets and then to make room for entries the last frame could not admit. Every reference handed out during a frame stays valid until the frame ends, and evicted storage is dropped, never recycled. An entry that does not fit is used transiently for that frame only; transient scratch is bounded by the image limit and released when the frame ends. Wrapping is charged before it is kept, because a narrower width can more than double a paragraph's payload. A cached paragraph stores a new wrap only if the paragraph budget still holds; otherwise the new lines are lent as scratch for that frame, the entry keeps its previous wrap, and the shortfall is made up by evicting unused entries between frames, so a later frame stores the wrap without reshaping. Replacing a cached wrap already returned in this frame moves its old buffer into scratch accounting until frame end. An uncached paragraph charges every new wrap in full to scratch, retaining the charge for its earlier wraps. Reusing the stored wrap at the same width adds no charge. Exceeding the scratch limit is refused with an error, which fails the frame, and nothing is stored.
+Each window owns bounded caches: at most 16 MiB of glyph pixels, and 1 MiB of paragraph payload in at most 256 entries, including shaped data, wraps and owned UTF-8 cache keys. A key is copied only when its paragraph is admitted, so a substring cannot retain its caller’s larger backing allocation. Admission reserves the key bytes once, and rewrapping preserves that charge; transient paragraphs retain no UTF-8 key. Glyph rasters are keyed by font, glyph, physical size (scale included) and quarter-pixel position; mask and color glyphs are stored separately and share the pixel budget. Entries are evicted only between frames, least recently used first, to restore the budgets and then to make room for entries the last frame could not admit. Every reference handed out during a frame stays valid until the frame ends, and evicted storage is dropped, never recycled. An entry that does not fit is used transiently for that frame only. Because entries the last frame used are never evicted, a window whose steady working set exceeds a budget uses the excess transiently every frame, rasterizing or shaping it again each time; transient scratch is bounded by the image limit and released when the frame ends. Wrapping is charged before it is kept, because a narrower width can more than double a paragraph's payload. A cached paragraph stores a new wrap only if the paragraph budget still holds; otherwise the new lines are lent as scratch for that frame, the entry keeps its previous wrap, and the shortfall is made up by evicting unused entries between frames, so a later frame stores the wrap without reshaping. Replacing a cached wrap already returned in this frame moves its old buffer into scratch accounting until frame end. An uncached paragraph charges every new wrap in full to scratch, retaining the charge for its earlier wraps. Reusing the stored wrap at the same width adds no charge. Exceeding the scratch limit is refused with an error, which fails the frame, and nothing is stored.
 
 The frame's draw commands drop their borrowed text lines before scratch accounting resets, including on rendering errors and panics. The scene retained for internal inspection contains layout and command metadata, without text buffers.
 
@@ -173,4 +229,4 @@ Cleanup retries have a failure-only fallback when `SetTimer` fails: `Pump` pause
 
 ## Internal surfaces
 
-`appcore.OpenContent`, `appcore.Invalidate` and the `Content` interface are the private bridge `ui` uses. `appcore.Inspect` reports frames, animating windows and deadline timers armed, `InspectContent` adds queued input and overflows, and the backend counters add presents, exposure paints, paint failures and, on Win32, size/move loops, modal turns, timers and refusals. `appcore.ContentWindows`, `InspectContent` and the backend audition hooks (resize, iconify/restore, exposure, retained-image PNG snapshot) serve the [mixer example](../../examples/mixer/README.md)'s native scripts; none of them is public API. The root package imports none of the UI, renderer, text or font packages, which a transitive import test enforces.
+`appcore.OpenContent`, `appcore.Invalidate` and the `Content` interface are the private bridge `ui` uses. `appcore.Inspect` reports frames, animating windows and deadline timers armed, `InspectContent` adds queued input and overflows, and the backend counters add presents, exposure paints, paint failures and, on Win32, size/move loops, modal turns, timers and refusals. `appcore.ContentWindows`, `InspectContent` and the backend audition hooks (resize, iconify/restore, exposure, retained-image PNG snapshot) serve the [mixer example](../../examples/mixer/README.md)'s native scripts. `appcore.AuditionContent` returns a live window's content on the UI thread, refusing closing windows, so the example can read each window's text cache counters through the content's `TextStats` method. The example may also set `text.DefaultBudget`, which each window copies as it opens, and its fixtures install pinned fonts with `gotext.Preset` before the shared engine first loads. None of them is public API. The root package imports none of the UI, renderer, text or font packages, which a transitive import test enforces.

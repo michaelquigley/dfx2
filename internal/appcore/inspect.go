@@ -125,6 +125,22 @@ func AuditionSnapshot(w *Window, path string) error {
 	return b.AuditionSnapshot(w.id, path)
 }
 
+// AuditionContent returns a live window's attached content, on the UI thread,
+// so an internal example can read state its content type exposes there, such
+// as text cache counters. It refuses closing windows, whose content may
+// already be released, and adds nothing to the public API.
+func AuditionContent(w *Window) (Content, error) {
+	if !w.app.backend.IsOwner() {
+		return nil, ErrWrongThread
+	}
+	w.app.mu.Lock()
+	defer w.app.mu.Unlock()
+	if w.attachment == nil || w.state >= closing {
+		return nil, ErrClosed
+	}
+	return w.attachment.impl, nil
+}
+
 // AuditionExpose asks the native toolkit to repaint the window, as an exposure
 // would. It requests no frame: only the retained image is painted.
 func AuditionExpose(w *Window) error {

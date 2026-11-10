@@ -1,6 +1,9 @@
 package gotext
 
-import "sync"
+import (
+	"errors"
+	"sync"
+)
 
 // Families is the preferred font family list for the shared system-font
 // engine. Internal examples may set it before the first UI frame; later
@@ -32,4 +35,20 @@ func Shared() (*Engine, error) {
 		shared.err = err
 	}
 	return shared.engine, shared.err
+}
+
+// Preset installs e as the shared engine instead of indexing system fonts, for
+// internal fixtures that must not depend on host fonts. It must precede the
+// first Shared call, and reports an error otherwise.
+func Preset(e *Engine) error {
+	shared.Lock()
+	defer shared.Unlock()
+	if shared.done {
+		return errors.New("gotext: shared engine already initialized")
+	}
+	if e == nil {
+		return errors.New("gotext: nil engine")
+	}
+	shared.done, shared.engine = true, e
+	return nil
 }

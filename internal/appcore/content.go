@@ -243,8 +243,11 @@ func (a *App) frames() {
 func (a *App) frame(w *Window) {
 	at := w.attachment
 	a.mu.Lock()
-	if w.state != open {
-		// Closing sealed content work after this window was selected.
+	if !eligibleLocked(w) {
+		// Closing sealed content work, or the window became hidden or
+		// zero-sized, after it was selected: an earlier window's frame in this
+		// turn can cause a synchronous surface change. Its queued input and
+		// invalidation stay pending for the frame its restoration requests.
 		at.rendering = false
 		a.mu.Unlock()
 		return

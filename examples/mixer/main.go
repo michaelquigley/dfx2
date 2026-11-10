@@ -10,9 +10,9 @@ import (
 	"flag"
 	"fmt"
 	"io"
-	"math"
 	"os"
 	"os/signal"
+	"strconv"
 	"strings"
 	"sync"
 	"sync/atomic"
@@ -21,6 +21,7 @@ import (
 
 	"github.com/michaelquigley/dfx2"
 	"github.com/michaelquigley/dfx2/internal/appcore"
+	"github.com/michaelquigley/dfx2/internal/text"
 	"github.com/michaelquigley/dfx2/internal/text/gotext"
 	"github.com/michaelquigley/dfx2/ui"
 )
@@ -33,6 +34,9 @@ type config struct {
 	snapshots  string
 	modalWait  time.Duration
 	controls   bool
+	delay      time.Duration
+	textBudget string
+	churn      int
 }
 
 func main() {
@@ -43,10 +47,19 @@ func main() {
 	flag.StringVar(&c.script, "script", "", "bounded native audition: animate, resize, minimize, close-sample, reopen, two, expose, large, fonts, signal, session, modal-move, modal-size, modal-idle, modal-close-self, modal-close-other or modal-quit")
 	flag.DurationVar(&c.modalWait, "modal-wait", 20*time.Second, "how long modal scripts wait for a size/move loop to start, from the audition driver or a person dragging")
 	flag.StringVar(&c.snapshots, "snapshots", "", "directory for retained-image PNG snapshots written by scripts")
-	flag.BoolVar(&c.controls, "controls", false, "two windows of channel strips with faders and mute checkboxes over one model; console commands below")
+	flag.BoolVar(&c.controls, "controls", false, "the synthetic mixer: two windows of six channel strips over one model, with an ordered command worker; console commands in the README")
+	flag.DurationVar(&c.delay, "delay", 0, "initial synthetic device delay before each command reaches the device (-controls)")
+	flag.StringVar(&c.textBudget, "text-budget", "default", "per-window text cache budget for auditions: default, small, or GLYPH_BYTES:PARAGRAPH_BYTES:PARAGRAPH_ENTRIES")
+	flag.IntVar(&c.churn, "churn", 0, "words of changing text in a churn label, to exercise the text caches (-controls)")
 	fonts := flag.String("font", "sans-serif", "font families, comma-separated, in order of preference")
 	flag.Parse()
 	gotext.Families = strings.Split(*fonts, ",")
+	budget, err := parseBudget(c.textBudget)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(2)
+	}
+	text.DefaultBudget = budget // each window copies it as it opens
 
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
@@ -55,10 +68,12 @@ func main() {
 	if c.resident || c.script == "reopen" {
 		mode = dfx2.ResidentApplication
 	}
-	m := &mixer{c: c, o: o, src: newSource(!c.paused), desk: newDesk()}
-	err := dfx2.Run(ctx, dfx2.Options{Mode: mode}, m.setup)
+	m := newMixer(c, o, os.Stdin)
+	err = dfx2.Run(ctx, dfx2.Options{Mode: mode}, m.setup)
 	m.watchers.Wait()
-	o.event("return", "error", fmt.Sprint(err), "invalidations_refused_after_close", m.src.refused())
+	k := m.model.Snapshot().Commands
+	o.event("return", "error", fmt.Sprint(err), "invalidations_refused_after_close", m.model.refusedInvalidations(),
+		"commands", commandValues(k), "commands_conserved", k.Accepted == k.Applied+k.Rejected+k.Canceled && k.Outstanding == 0)
 	if m.a != nil { // Run can fail before setup, when the backend cannot open
 		o.event("drained", status(m.a)...)
 	}
@@ -95,153 +110,86 @@ func status(a *dfx2.App) []any {
 		"native_retired", s.Native.Retired, "dispatch_targets", s.Native.DispatchTargets, "native_problem", s.Native.Problem}
 }
 
-// source is the application-owned synthetic sampler state. The sampler task
-// publishes under the mutex; views read a snapshot. Windows subscribe to
-// invalidation and unsubscribe on close; a publication racing a close gets
-// dfx2.ErrClosed from Invalidate, which is expected.
-type source struct {
-	mu          sync.Mutex
-	level       float64
-	db          float64
-	tick        uint64
-	running     bool
-	subscribers map[*ui.Window]bool
-	control     chan bool
-	closed      uint64 // invalidations refused by closing windows
-}
+// smallTextBudget makes the text caches evict under the churn label and the
+// mixer's changing numbers at scale 1, for auditions; the default budget is
+// ui's own. Eviction needs headroom above the view's steady working set,
+// because an entry the last frame used is never evicted: below it, the excess
+// is served transiently every frame and nothing evicts. Glyph pixels grow with
+// the square of the scale, so auditions at other scales pass explicit sizes.
+var smallTextBudget = text.Budget{GlyphBytes: 48 << 10, ParagraphBytes: 64 << 10, ParagraphEntries: 48, Transient: text.DefaultBudget.Transient}
 
-func newSource(running bool) *source {
-	return &source{running: running, db: -60, subscribers: make(map[*ui.Window]bool), control: make(chan bool, 1)}
-}
-
-type snapshot struct {
-	level, db float64
-	tick      uint64
-	running   bool
-}
-
-func (s *source) snapshot() snapshot {
-	s.mu.Lock()
-	defer s.mu.Unlock()
-	return snapshot{s.level, s.db, s.tick, s.running}
-}
-
-func (s *source) subscribe(w *ui.Window) {
-	s.mu.Lock()
-	s.subscribers[w] = true
-	s.mu.Unlock()
-}
-
-func (s *source) unsubscribe(w *ui.Window) {
-	s.mu.Lock()
-	delete(s.subscribers, w)
-	s.mu.Unlock()
-}
-
-func (s *source) refused() uint64 {
-	s.mu.Lock()
-	defer s.mu.Unlock()
-	return s.closed
-}
-
-func (s *source) setRunning(on bool) {
-	select {
-	case s.control <- on:
-	default:
-		// A pending command is replaced by the newest one.
-		select {
-		case <-s.control:
-		default:
-		}
-		s.control <- on
+// parseBudget reads -text-budget.
+func parseBudget(v string) (text.Budget, error) {
+	switch v {
+	case "default":
+		return text.DefaultBudget, nil
+	case "small":
+		return smallTextBudget, nil
 	}
+	b := text.Budget{Transient: text.DefaultBudget.Transient}
+	if _, err := fmt.Sscanf(v, "%d:%d:%d", &b.GlyphBytes, &b.ParagraphBytes, &b.ParagraphEntries); err != nil ||
+		b.GlyphBytes <= 0 || b.ParagraphBytes <= 0 || b.ParagraphEntries <= 0 || fmt.Sprintf("%d:%d:%d", b.GlyphBytes, b.ParagraphBytes, b.ParagraphEntries) != v {
+		return text.Budget{}, fmt.Errorf("-text-budget %q: want default, small, or three positive integers GLYPH_BYTES:PARAGRAPH_BYTES:PARAGRAPH_ENTRIES", v)
+	}
+	return b, nil
 }
 
-func (s *source) invalidateAll() {
-	s.mu.Lock()
-	windows := make([]*ui.Window, 0, len(s.subscribers))
-	for w := range s.subscribers {
-		windows = append(windows, w)
-	}
-	s.mu.Unlock()
-	for _, w := range windows {
-		if err := w.Invalidate(); errors.Is(err, dfx2.ErrClosed) {
-			s.mu.Lock()
-			s.closed++
-			s.mu.Unlock()
-		}
-	}
-}
-
-// run is the 30 Hz sampler, owned by the application rather than a window.
-func (s *source) run(ctx context.Context, o *output) error {
-	ticker := time.NewTicker(time.Second / 30)
-	defer ticker.Stop()
-	var n uint64
-	for {
-		select {
-		case <-ctx.Done():
-			return nil
-		case on := <-s.control:
-			s.mu.Lock()
-			changed := s.running != on
-			s.running = on
-			s.mu.Unlock()
-			if changed {
-				o.event("feed", "running", on)
-				s.invalidateAll()
-			}
-		case <-ticker.C:
-			s.mu.Lock()
-			running := s.running
-			if running {
-				n++
-				s.tick = n
-				s.db = levelDB(n)
-				s.level = min(max((s.db+60)/60, 0), 1)
-			}
-			s.mu.Unlock()
-			if running {
-				s.invalidateAll()
-			}
-		}
-	}
-}
-
-// levelDB is a deterministic synthetic level: two slow sines and hashed jitter.
-func levelDB(n uint64) float64 {
-	t := float64(n) / 30
-	v := 0.5 + 0.3*math.Sin(2*math.Pi*0.23*t) + 0.12*math.Sin(2*math.Pi*1.7*t)
-	x := n + 0x9e3779b97f4a7c15
-	x = (x ^ x>>30) * 0xbf58476d1ce4e5b9
-	x = (x ^ x>>27) * 0x94d049bb133111eb
-	v += 0.15 * (float64((x^x>>31)>>11)/(1<<53) - 0.5)
-	return 20 * math.Log10(min(max(v, 0.001), 1))
+// named is an open window: its ui wrapper and, for internal inspection, the
+// core window behind it.
+type named struct {
+	ui   *ui.Window
+	core *appcore.Window
 }
 
 type mixer struct {
 	a        *dfx2.App
 	c        config
 	o        *output
-	src      *source
+	in       io.Reader
+	model    *model
+	cmds     *commands
 	watchers sync.WaitGroup
 	opened   int
+	windows  map[string]named // windows by name; UI thread
 	initial  []*ui.Window
 	titles   []*titleCounter
-	desk     *desk
+	trace    trace
 
 	evaluations atomic.Uint64 // -controls view evaluations
 }
 
+func newMixer(c config, o *output, in io.Reader) *mixer {
+	m := &mixer{c: c, o: o, in: in, model: newModel(!c.paused), windows: make(map[string]named)}
+	m.model.stats.Delay, m.model.churn = c.delay, c.churn
+	m.model.current = m.model.snapshotLocked()
+	m.cmds = newCommands(m.model, func(r Record) {
+		values := []any{"state", r.State, "sequence", r.Seq, "window", r.Command.Window, "channel", r.Command.Channel,
+			"control", r.Command.Control, "value", r.Command.Value()}
+		if r.Reason != "" {
+			values = append(values, "reason", r.Reason)
+		}
+		if r.Latency > 0 {
+			values = append(values, "latency_ms", float64(r.Latency.Microseconds())/1000)
+		}
+		o.event("command", values...)
+	})
+	return m
+}
+
+func commandValues(k CommandStats) map[string]any {
+	return map[string]any{"accepted": k.Accepted, "applied": k.Applied, "rejected": k.Rejected, "refused": k.Refused,
+		"canceled": k.Canceled, "outstanding": k.Outstanding, "delay_ms": k.Delay.Milliseconds(), "reject_next": k.RejectNext}
+}
+
 func (m *mixer) draw(f *ui.Frame) {
-	s := m.src.snapshot()
+	s := m.model.Snapshot()
 	state := "running"
-	if !s.running {
+	if !s.Running {
 		state = "paused"
 	}
 	f.Label("dfx2 synthetic mixer — text and an animated meter")
-	f.Label(fmt.Sprintf("Level %6.1f dB · tick %d · feed %s", s.db, s.tick, state))
-	f.Meter("level", s.level)
+	f.Label(fmt.Sprintf("Level %6.1f dB · tick %d · feed %s", s.DB, s.Tick, state))
+	f.Meter("level", s.Level)
 	f.Label("Fallback: Ελληνικά, Кириллица, עברית, العربية, 日本語, emoji 🎛️🎚️🎹 — mixed שלום world direction.")
 	f.Label("Resize the window: this paragraph rewraps from cached shaping without evaluating the view again, and exposure repaints the retained image.")
 }
@@ -251,18 +199,26 @@ func (m *mixer) open() (*ui.Window, error) {
 	name := fmt.Sprintf("%c", 'A'+(m.opened-1)%26)
 	options, view := dfx2.WindowOptions{Title: "dfx2 mixer " + name, Width: 560, Height: 260}, m.draw
 	if m.c.controls {
-		options.Width, options.Height, view = 460, 300, m.controlsView(name)
+		options.Width, options.Height, view = 760, 520, m.controlsView(name)
 	}
 	w, err := ui.Open(m.a, options, view)
 	if err != nil {
 		return nil, err
 	}
-	m.src.subscribe(w)
+	m.model.subscribe(w)
+	cores := appcore.ContentWindows(m.a) // creation order, so the newest is w's
+	m.windows[name] = named{w, cores[len(cores)-1]}
 	m.watchers.Add(1)
 	go func() {
 		defer m.watchers.Done()
 		<-w.Done()
-		m.src.unsubscribe(w)
+		m.model.unsubscribe(w)
+		// Forget the name on the UI thread, unless a later window reused it.
+		_ = m.a.Post(func() {
+			if m.windows[name].ui == w {
+				delete(m.windows, name)
+			}
+		})
 		m.o.event("closed", "window", name)
 		m.o.event("ownership", status(m.a)...)
 	}()
@@ -272,7 +228,12 @@ func (m *mixer) open() (*ui.Window, error) {
 
 func (m *mixer) setup(a *dfx2.App) error {
 	m.a = a
-	if err := a.Go("sampler", func(ctx context.Context) error { return m.src.run(ctx, m.o) }); err != nil {
+	// The producer and the command worker belong to the application, not to
+	// either window: closing one window leaves them and the other window alive.
+	if err := a.Go("sampler", func(ctx context.Context) error { return m.model.run(ctx, m.o) }); err != nil {
+		return err
+	}
+	if err := a.Go("commands", m.cmds.run); err != nil {
 		return err
 	}
 	if m.c.pauseAfter > 0 {
@@ -280,7 +241,7 @@ func (m *mixer) setup(a *dfx2.App) error {
 			select {
 			case <-ctx.Done():
 			case <-time.After(m.c.pauseAfter):
-				m.src.setRunning(false)
+				m.model.setRunning(false)
 			}
 			return nil
 		}); err != nil {
@@ -288,7 +249,7 @@ func (m *mixer) setup(a *dfx2.App) error {
 		}
 	}
 	if m.c.resident || m.c.controls {
-		if err := a.Go("console", func(ctx context.Context) error { return m.console(ctx, os.Stdin) }); err != nil {
+		if err := a.Go("console", func(ctx context.Context) error { return m.console(ctx, m.in) }); err != nil {
 			return err
 		}
 	}
@@ -354,37 +315,133 @@ func (m *mixer) console(ctx context.Context, in io.Reader) error {
 			if !ok {
 				return nil
 			}
-			if m.deskCommand(line) {
-				continue
-			}
-			switch line {
-			case "open":
-				m.post(func() {
-					if _, err := m.open(); err != nil {
-						m.o.event("open-error", "error", err.Error())
-					}
-				})
-			case "close":
-				m.post(func() {
-					if ws := appcore.ContentWindows(m.a); len(ws) > 0 {
-						ws[len(ws)-1].Close()
-					}
-				})
-			case "pause":
-				m.src.setRunning(false)
-			case "resume":
-				m.src.setRunning(true)
-			case "status":
-				m.record("status", "evaluations", m.evaluations.Load())
-			case "quit":
-				m.a.Quit()
-				return nil
-			case "":
-			default:
-				m.o.event("unknown-command", "command", line)
-			}
+			m.command(ctx, line)
 		}
 	}
+}
+
+// command runs one console line. Model commands are external changes: they
+// publish a snapshot and never submit a command.
+func (m *mixer) command(ctx context.Context, line string) {
+	fields := strings.Fields(line)
+	if len(fields) == 0 {
+		return
+	}
+	if m.c.controls {
+		known, err := m.model.external(line)
+		switch {
+		case known && err != nil:
+			m.o.event("external-error", "command", line, "error", err.Error())
+			return
+		case known:
+			m.o.event("external", "command", line)
+			return
+		}
+	}
+	bad := func(err error) { m.o.event("command-error", "command", line, "error", err.Error()) }
+	switch {
+	case fields[0] == "snapshot" && (len(fields) == 2 || len(fields) == 3) && m.c.controls:
+		window := ""
+		if len(fields) == 3 {
+			window = fields[2]
+		}
+		m.snapshotWindow(fields[1], window)
+	case fields[0] == "delay" && len(fields) == 2:
+		d, err := time.ParseDuration(fields[1])
+		if err != nil || d < 0 {
+			bad(fmt.Errorf("delay takes a non-negative duration such as 250ms"))
+			return
+		}
+		m.model.setDelay(d)
+		m.o.event("fixture", "delay_ms", d.Milliseconds())
+	case fields[0] == "reject" && len(fields) == 2:
+		n, err := strconv.Atoi(fields[1])
+		if err != nil || n < 0 {
+			bad(fmt.Errorf("reject takes a count of commands for the device to refuse"))
+			return
+		}
+		m.model.setRejectNext(n)
+		m.o.event("fixture", "reject_next", n)
+	case fields[0] == "churn" && len(fields) == 2:
+		n, err := strconv.Atoi(fields[1])
+		if fields[1] == "off" {
+			n, err = 0, nil
+		}
+		if err != nil || n < 0 || n > 48 {
+			bad(fmt.Errorf("churn takes off or a word count up to 48"))
+			return
+		}
+		m.model.setChurn(n)
+		m.o.event("fixture", "churn", n)
+	case line == "open":
+		m.post(func() {
+			if _, err := m.open(); err != nil {
+				m.o.event("open-error", "error", err.Error())
+			}
+		})
+	case fields[0] == "close" && len(fields) <= 2:
+		m.post(func() {
+			if len(fields) == 2 {
+				if w, ok := m.windows[fields[1]]; ok {
+					w.ui.Close()
+					return
+				}
+				m.o.event("command-error", "command", line, "error", "no such window")
+				return
+			}
+			if ws := appcore.ContentWindows(m.a); len(ws) > 0 {
+				ws[len(ws)-1].Close()
+			}
+		})
+	case line == "pause":
+		m.model.setRunning(false)
+	case line == "resume":
+		m.model.setRunning(true)
+	case line == "status":
+		m.record("status", m.statusExtra(ctx)...)
+	case line == "quit":
+		m.a.Quit()
+	default:
+		m.o.event("unknown-command", "command", line)
+	}
+}
+
+// statusExtra adds the mixer's own counters to a status record: view
+// evaluations, commands, process CPU time and, gathered on the UI thread,
+// each window's text cache counters.
+func (m *mixer) statusExtra(ctx context.Context) []any {
+	s := m.model.Snapshot()
+	k := s.Commands
+	channels := make([]map[string]any, len(s.Channels))
+	for i, c := range s.Channels {
+		channels[i] = map[string]any{"id": c.ID, "gain": c.Gain, "muted": c.Muted, "gain_pending": c.GainPending, "pending_gain": c.PendingGain,
+			"mute_pending": c.MutePending, "pending_mute": c.PendingMute}
+	}
+	values := []any{"evaluations", m.evaluations.Load(), "commands", commandValues(k), "commands_outstanding", k.Outstanding,
+		"cpu_seconds", cpuTime().Seconds(), "channels", channels, "tick", s.Tick, "last_error", s.Error}
+	caches := map[string]any{}
+	if err := m.call(ctx, func() error {
+		for name, w := range m.windows {
+			content, err := appcore.AuditionContent(w.core)
+			if err != nil {
+				continue // closing or closed
+			}
+			if t, ok := content.(interface{ TextStats() text.Stats }); ok {
+				caches[name] = textValues(t.TextStats())
+			}
+		}
+		return nil
+	}); err != nil {
+		values = append(values, "text_error", err.Error())
+	}
+	return append(values, "text", caches, "text_budget", textValues(text.Stats{
+		GlyphBytes: text.DefaultBudget.GlyphBytes, ParagraphBytes: text.DefaultBudget.ParagraphBytes, ParagraphEntries: text.DefaultBudget.ParagraphEntries}))
+}
+
+func textValues(s text.Stats) map[string]any {
+	return map[string]any{"glyph_entries": s.GlyphEntries, "glyph_bytes": s.GlyphBytes, "paragraph_entries": s.ParagraphEntries,
+		"paragraph_bytes": s.ParagraphBytes, "glyph_evictions": s.GlyphEvictions, "paragraph_evictions": s.ParaEvictions,
+		"shapes": s.Shapes, "rasterized": s.Rasterized, "transient_glyphs": s.TransientGlyphs, "transient_paragraphs": s.TransientParas}
 }
 
 func (m *mixer) post(f func()) {

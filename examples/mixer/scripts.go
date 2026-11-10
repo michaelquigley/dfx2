@@ -119,7 +119,7 @@ func (m *mixer) onFirst(ctx context.Context, f func(*appcore.Window) error) erro
 }
 
 func (m *mixer) pauseAndSettle(ctx context.Context) error {
-	m.src.setRunning(false)
+	m.model.setRunning(false)
 	if err := m.settle(ctx); err != nil {
 		return err
 	}

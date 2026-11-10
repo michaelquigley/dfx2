@@ -11,3 +11,15 @@ The root module contains the portable application/window lifecycle core, a contr
 The `ui` package has begun: the [synthetic mixer](docs/future/synthetic-mixer.md)'s first stages draw immediate-mode text, measured rows and columns, animated meters, faders and checkboxes on the CPU with pure-Go text. Linux presents it through GTK, validated natively. Windows presents it through GDI and keeps it moving during window drags; that path passed [native automated and manual auditions](evidence/synthetic-mixer/windows/results.md) on Windows 10 over Remote Desktop. Windows input and controls passed their [stage 3 native audition](evidence/synthetic-mixer/windows/stage-3/results.md); the [return audition](evidence/synthetic-mixer/windows/stage-3/return-results.md) also passed the original regression runners with all test gates enabled. Real Windows DPI transitions remain untested. The [paragraph-key return](evidence/synthetic-mixer/windows/stage-3/paragraph-key-results.md) validates the shared text-cache correction with the original gates and controls matrix passing. The [mixer example](examples/mixer/README.md) shows it, [ui.md](docs/current/ui.md) describes what is built and the [stage 1](evidence/synthetic-mixer/stage-1.md), [stage 2](evidence/synthetic-mixer/stage-2.md) and [stage 3](evidence/synthetic-mixer/stage-3.md) records hold its validation.
 
 The broader framework remains in planning. The design work lives in [`docs/future/`](docs/future): start with [direction.md](docs/future/direction.md). Experiments live in [`experiments/`](experiments), each its own Go module.
+
+
+## Build and run
+
+With Go and the platform runtime libraries installed:
+
+```sh
+make
+mixer -controls
+```
+
+`make` installs the root module's examples into `GOBIN` (or `GOPATH/bin` when unset) with `CGO_ENABLED=0`. Put that directory on `PATH`. `make test` runs tests and vet; `make clean` cleans the root packages and removes the installed `mixer` and `lifetime` examples. See the [mixer README](examples/mixer/README.md) for platform prerequisites and audition controls.

@@ -160,6 +160,15 @@ func (c *content) prune() {
 
 // Release drops per-window caches, retained state and pixels after native
 // teardown. The shared font engine is process-owned and is not released here.
+// TextStats reports this window's text cache counters, for internal auditions
+// through appcore.AuditionContent. UI thread only; zero before the first frame.
+func (c *content) TextStats() text.Stats {
+	if c.text == nil {
+		return text.Stats{}
+	}
+	return c.text.Stats()
+}
+
 func (c *content) Release() {
 	if c.text != nil {
 		c.text.Release()
