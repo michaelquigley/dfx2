@@ -1,0 +1,5 @@
+﻿revision: c1ad2bb82dd99cdd1a41ce96bcd84ba2921951e7
+command: powershell.exe -NoProfile -ExecutionPolicy Bypass -File evidence\synthetic-mixer\windows\stage-3\controls.ps1 -OutDir evidence/synthetic-mixer/windows/stage-3/paragraph-key-run/controls
+started: 2026-11-10T11:08:52.6737699-05:00
+finished: 2026-11-10T11:09:19.5603086-05:00
+exit: 0

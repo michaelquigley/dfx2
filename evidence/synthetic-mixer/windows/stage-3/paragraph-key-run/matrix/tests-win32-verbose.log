@@ -1,0 +1,148 @@
+=== RUN   TestWindowsX64Layouts
+--- PASS: TestWindowsX64Layouts (0.00s)
+=== RUN   TestSyscallArgumentCounts
+--- PASS: TestSyscallArgumentCounts (0.00s)
+=== RUN   TestCreationCloseReentrancyAndNativeHandleReuse
+--- PASS: TestCreationCloseReentrancyAndNativeHandleReuse (0.00s)
+=== RUN   TestFailedSizingRollsBackBeforeCreateReturns
+--- PASS: TestFailedSizingRollsBackBeforeCreateReturns (0.00s)
+=== RUN   TestRearmingWakeYieldsToInputAndPaint
+--- PASS: TestRearmingWakeYieldsToInputAndPaint (0.00s)
+=== RUN   TestWakeInsideNativeCreationWaitsForPump
+--- PASS: TestWakeInsideNativeCreationWaitsForPump (0.00s)
+=== RUN   TestUnexpectedQuitCannotReportCleanExit
+--- PASS: TestUnexpectedQuitCannotReportCleanExit (0.00s)
+=== RUN   TestNativeCloseLeavesOtherWindowsAndDispatchAlive
+--- PASS: TestNativeCloseLeavesOtherWindowsAndDispatchAlive (0.00s)
+=== RUN   TestFinalWakeFailureAndConcurrentCoalescing
+--- PASS: TestFinalWakeFailureAndConcurrentCoalescing (0.00s)
+=== RUN   TestGetMessageFailureKeepsOwnershipAndRecovers
+--- PASS: TestGetMessageFailureKeepsOwnershipAndRecovers (0.00s)
+=== RUN   TestDPIChangesKeepClientAndLogicalUnitsSeparate
+--- PASS: TestDPIChangesKeepClientAndLogicalUnitsSeparate (0.00s)
+=== RUN   TestDispatchReleaseFailureRetainsRoutingAndSealsPosts
+--- PASS: TestDispatchReleaseFailureRetainsRoutingAndSealsPosts (0.00s)
+=== RUN   TestPointerEventsCopyLogicalCoordinatesAndTakeCapture
+--- PASS: TestPointerEventsCopyLogicalCoordinatesAndTakeCapture (0.00s)
+=== RUN   TestOwnReleaseIsNotReportedAsACaptureLoss
+--- PASS: TestOwnReleaseIsNotReportedAsACaptureLoss (0.00s)
+=== RUN   TestNativeCodeTakingCaptureReportsALossOnce
+--- PASS: TestNativeCodeTakingCaptureReportsALossOnce (0.00s)
+=== RUN   TestSecondWindowsPressTakesCaptureFromTheFirst
+--- PASS: TestSecondWindowsPressTakesCaptureFromTheFirst (0.00s)
+=== RUN   TestFocusLossReleasesCaptureAtOnce
+--- PASS: TestFocusLossReleasesCaptureAtOnce (0.00s)
+=== RUN   TestReleaseCaptureEndsANativeCaptureAtGestureCancel
+--- PASS: TestReleaseCaptureEndsANativeCaptureAtGestureCancel (0.00s)
+=== RUN   TestFailedReleaseCaptureReachesPump
+--- PASS: TestFailedReleaseCaptureReachesPump (0.00s)
+=== RUN   TestKeysWidgetsUseAreDeliveredAndOthersAreLeftAlone
+--- PASS: TestKeysWidgetsUseAreDeliveredAndOthersAreLeftAlone (0.00s)
+=== RUN   TestMiddleAndRightButtonsAreDeliveredWithoutCapture
+--- PASS: TestMiddleAndRightButtonsAreDeliveredWithoutCapture (0.00s)
+=== RUN   TestOrdinaryAndClosingWindowsDeliverNoInput
+--- PASS: TestOrdinaryAndClosingWindowsDeliverNoInput (0.00s)
+=== RUN   TestReleaseCaptureCannotBreakASizeMoveLoopsCapture
+--- PASS: TestReleaseCaptureCannotBreakASizeMoveLoopsCapture (0.00s)
+=== RUN   TestSetAndReleaseCaptureCountAsNativeOperations
+--- PASS: TestSetAndReleaseCaptureCountAsNativeOperations (0.00s)
+=== RUN   TestIdleSizeMoveArmsNoTimer
+--- PASS: TestIdleSizeMoveArmsNoTimer (0.00s)
+=== RUN   TestWakeSchedulesAOneShotAndNeverRunsFromItsOwnHandler
+--- PASS: TestWakeSchedulesAOneShotAndNeverRunsFromItsOwnHandler (0.00s)
+=== RUN   TestWakeLatchedBeforeTheLoopArmsOnEntry
+--- PASS: TestWakeLatchedBeforeTheLoopArmsOnEntry (0.00s)
+=== RUN   TestLeavingTheLoopHandsTheLatchedWakeToPump
+--- PASS: TestLeavingTheLoopHandsTheLatchedWakeToPump (0.00s)
+=== RUN   TestPumpServicingThatEntersTheLoopDoesNotRepeatASpentWake
+--- PASS: TestPumpServicingThatEntersTheLoopDoesNotRepeatASpentWake (0.00s)
+=== RUN   TestLateTimerMessagesAreIgnored
+--- PASS: TestLateTimerMessagesAreIgnored (0.00s)
+=== RUN   TestTimerArrivingDuringANativeOperationIsRefusedAndRetained
+--- PASS: TestTimerArrivingDuringANativeOperationIsRefusedAndRetained (0.00s)
+=== RUN   TestWakeDuringATurnArmsOnlyWhenTheTurnEnds
+--- PASS: TestWakeDuringATurnArmsOnlyWhenTheTurnEnds (0.00s)
+=== RUN   TestCreationFromAModalTurnDefersWakesItsReentryLatches
+--- PASS: TestCreationFromAModalTurnDefersWakesItsReentryLatches (0.00s)
+=== RUN   TestLoopInsideNativeCreationDeliversNoTurn
+--- PASS: TestLoopInsideNativeCreationDeliversNoTurn (0.00s)
+=== RUN   TestDestroyingTheLoopOwnerFromAModalTurnWaitsForThePump
+--- PASS: TestDestroyingTheLoopOwnerFromAModalTurnWaitsForThePump (0.00s)
+=== RUN   TestDestroyingAnotherWindowFromAModalTurnAcknowledgesAfterTheTurn
+--- PASS: TestDestroyingAnotherWindowFromAModalTurnAcknowledgesAfterTheTurn (0.00s)
+=== RUN   TestCloseFromAFrameInAModalTurnPresentsNothingAfterTeardown
+--- PASS: TestCloseFromAFrameInAModalTurnPresentsNothingAfterTeardown (0.00s)
+=== RUN   TestFailedTimerKeepsTheWakeAndReportsThroughPump
+--- PASS: TestFailedTimerKeepsTheWakeAndReportsThroughPump (0.00s)
+=== RUN   TestLatchedFailureHoldsModalDeliveryUntilPumpReportsIt
+--- PASS: TestLatchedFailureHoldsModalDeliveryUntilPumpReportsIt (0.00s)
+=== RUN   TestReleaseStopsAnArmedTimerBeforeTheTargetGoes
+--- PASS: TestReleaseStopsAnArmedTimerBeforeTheTargetGoes (0.00s)
+=== RUN   TestConcurrentWakesDuringALoopCoalesceIntoOneTimer
+--- PASS: TestConcurrentWakesDuringALoopCoalesceIntoOneTimer (0.00s)
+=== RUN   TestPresentCopiesAndExposurePaintsOnlyTheRetainedImage
+--- PASS: TestPresentCopiesAndExposurePaintsOnlyTheRetainedImage (0.00s)
+=== RUN   TestAllocationFailureKeepsTheLastValidImage
+--- PASS: TestAllocationFailureKeepsTheLastValidImage (0.00s)
+=== RUN   TestStorageIsFilledBeforeReplacementAndReused
+--- PASS: TestStorageIsFilledBeforeReplacementAndReused (0.00s)
+=== RUN   TestInvalidImagesAreRefusedBeforeAllocation
+--- PASS: TestInvalidImagesAreRefusedBeforeAllocation (0.00s)
+=== RUN   TestRetainedPixelsLastUntilAcknowledgedRetirement
+--- PASS: TestRetainedPixelsLastUntilAcknowledgedRetirement (0.00s)
+=== RUN   TestPersistentFreeFailureRetainsOwnershipAtAPacedRetry
+--- PASS: TestPersistentFreeFailureRetainsOwnershipAtAPacedRetry (0.00s)
+=== RUN   TestFreeFailureRecoversOnItsFirstRetry
+--- PASS: TestFreeFailureRecoversOnItsFirstRetry (0.00s)
+=== RUN   TestSuccessfulFreesScheduleNoRetry
+--- PASS: TestSuccessfulFreesScheduleNoRetry (0.00s)
+=== RUN   TestFailedReplacementFreeStaysTrackedAndIsNeverFreedTwice
+--- PASS: TestFailedReplacementFreeStaysTrackedAndIsNeverFreedTwice (0.00s)
+=== RUN   TestAcknowledgmentWaitsForEveryAllocationAndRetriesOnlyWhatRemains
+--- PASS: TestAcknowledgmentWaitsForEveryAllocationAndRetriesOnlyWhatRemains (0.00s)
+=== RUN   TestLateRetryTimerMessagesAreIgnored
+--- PASS: TestLateRetryTimerMessagesAreIgnored (0.00s)
+=== RUN   TestRetryContinuesWithoutATimerAndWithoutBlocking
+--- PASS: TestRetryContinuesWithoutATimerAndWithoutBlocking (0.00s)
+=== RUN   TestRetrySucceedingWithoutATimerStillAcknowledges
+--- PASS: TestRetrySucceedingWithoutATimerStillAcknowledges (0.00s)
+=== RUN   TestRetriesAdvanceInsideASizeMoveLoop
+--- PASS: TestRetriesAdvanceInsideASizeMoveLoop (0.00s)
+=== RUN   TestReleaseStopsAnArmedRetryTimerBeforeTheTargetGoes
+--- PASS: TestReleaseStopsAnArmedRetryTimerBeforeTheTargetGoes (0.00s)
+=== RUN   TestPaintFailuresFailTheApplicationThroughPump
+=== RUN   TestPaintFailuresFailTheApplicationThroughPump/blit_reports_an_error
+=== RUN   TestPaintFailuresFailTheApplicationThroughPump/blit_returns_GDI_ERROR
+=== RUN   TestPaintFailuresFailTheApplicationThroughPump/BeginPaint_fails
+=== RUN   TestPaintFailuresFailTheApplicationThroughPump/FillRect_fails_during_erase
+=== RUN   TestPaintFailuresFailTheApplicationThroughPump/blit_sets_no_lines
+--- PASS: TestPaintFailuresFailTheApplicationThroughPump (0.00s)
+    --- PASS: TestPaintFailuresFailTheApplicationThroughPump/blit_reports_an_error (0.00s)
+    --- PASS: TestPaintFailuresFailTheApplicationThroughPump/blit_returns_GDI_ERROR (0.00s)
+    --- PASS: TestPaintFailuresFailTheApplicationThroughPump/BeginPaint_fails (0.00s)
+    --- PASS: TestPaintFailuresFailTheApplicationThroughPump/FillRect_fails_during_erase (0.00s)
+    --- PASS: TestPaintFailuresFailTheApplicationThroughPump/blit_sets_no_lines (0.00s)
+=== RUN   TestPaintFailureInsideALoopHoldsDeliveryUntilPump
+--- PASS: TestPaintFailureInsideALoopHoldsDeliveryUntilPump (0.00s)
+=== RUN   TestEraseFillsOnlyWhatTheImageWillNotCover
+--- PASS: TestEraseFillsOnlyWhatTheImageWillNotCover (0.00s)
+=== RUN   TestSurfaceEventsCarryCopiedStateOnlyOnChange
+--- PASS: TestSurfaceEventsCarryCopiedStateOnlyOnChange (0.00s)
+=== RUN   TestOrdinaryWindowsKeepTheirBehavior
+--- PASS: TestOrdinaryWindowsKeepTheirBehavior (0.00s)
+=== RUN   TestContentCreationFailureLeavesNothingBehind
+--- PASS: TestContentCreationFailureLeavesNothingBehind (0.00s)
+=== RUN   TestAuditionHooksUseOrdinaryNativePaths
+--- PASS: TestAuditionHooksUseOrdinaryNativePaths (0.01s)
+=== RUN   TestCleanupFailureAfterAnEarlierFailureReachesRun
+--- PASS: TestCleanupFailureAfterAnEarlierFailureReachesRun (0.00s)
+=== RUN   TestEveryFailedFreeInOneFlushReachesRun
+--- PASS: TestEveryFailedFreeInOneFlushReachesRun (0.00s)
+=== RUN   TestAnOnlyCleanupFailureAppearsOnce
+--- PASS: TestAnOnlyCleanupFailureAppearsOnce (0.00s)
+=== RUN   TestAcknowledgmentKeepsTheFailureNotYetReported
+--- PASS: TestAcknowledgmentKeepsTheFailureNotYetReported (0.00s)
+=== RUN   TestRetryBaselineWaitsForTeardownFreeToBeRecorded
+--- PASS: TestRetryBaselineWaitsForTeardownFreeToBeRecorded (0.00s)
+PASS
+ok  	github.com/michaelquigley/dfx2/internal/platform/win32	1.094s

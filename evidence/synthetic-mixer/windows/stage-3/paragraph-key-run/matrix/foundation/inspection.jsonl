@@ -1,0 +1,13 @@
+{"event":"start","pause_after":"500ms","resident":true,"script":"","time":"2026-11-10T11:08:52.4222861-05:00"}
+{"event":"opened","time":"2026-11-10T11:08:52.4606349-05:00","window":"A"}
+{"dispatch_targets":1,"dispatches":0,"event":"ownership","native_completions":0,"native_problem":"","native_retired":0,"native_windows":1,"queued":0,"release_pending":false,"tasks":1,"terminal":false,"time":"2026-11-10T11:08:52.4606349-05:00","wakes":1,"windows":1}
+{"event":"opened","time":"2026-11-10T11:08:52.4752384-05:00","window":"B"}
+{"dispatch_targets":1,"dispatches":0,"event":"ownership","native_completions":0,"native_problem":"","native_retired":0,"native_windows":2,"queued":0,"release_pending":false,"tasks":2,"terminal":false,"time":"2026-11-10T11:08:52.4752384-05:00","wakes":1,"windows":2}
+{"event":"task-ended","task":"counter-A","time":"2026-11-10T11:08:52.5378379-05:00"}
+{"event":"task-ended","task":"counter-B","time":"2026-11-10T11:08:52.5378379-05:00"}
+{"applied":0,"event":"closed","time":"2026-11-10T11:08:52.5516946-05:00","window":"A"}
+{"dispatch_targets":1,"dispatches":3,"event":"ownership","native_completions":0,"native_problem":"","native_retired":0,"native_windows":0,"queued":0,"release_pending":true,"tasks":0,"terminal":true,"time":"2026-11-10T11:08:52.5516946-05:00","wakes":3,"windows":0}
+{"applied":0,"event":"closed","time":"2026-11-10T11:08:52.5516946-05:00","window":"B"}
+{"dispatch_targets":1,"dispatches":3,"event":"ownership","native_completions":0,"native_problem":"","native_retired":0,"native_windows":0,"queued":0,"release_pending":true,"tasks":0,"terminal":true,"time":"2026-11-10T11:08:52.5516946-05:00","wakes":3,"windows":0}
+{"dispatch_targets":0,"dispatches":3,"event":"drained","native_completions":0,"native_problem":"","native_retired":0,"native_windows":0,"queued":0,"release_pending":false,"tasks":0,"terminal":true,"time":"2026-11-10T11:08:52.5516946-05:00","wakes":3,"windows":0}
+{"error":"","event":"return","time":"2026-11-10T11:08:52.5516946-05:00"}

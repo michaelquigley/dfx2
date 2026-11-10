@@ -1,0 +1,63 @@
+﻿{
+  "cases": [
+    {
+      "case": "drag_outside_window",
+      "ok": true,
+      "seconds": 2.3182648
+    },
+    {
+      "case": "checkbox",
+      "ok": true,
+      "seconds": 1.2812965
+    },
+    {
+      "case": "keyboard",
+      "ok": true,
+      "seconds": 4.3593312
+    },
+    {
+      "case": "independent_focus",
+      "ok": true,
+      "seconds": 1.7500203
+    },
+    {
+      "case": "external_during_drag",
+      "ok": true,
+      "seconds": 1.5156361999999999
+    },
+    {
+      "case": "reorder_during_drag",
+      "ok": true,
+      "seconds": 1.7809922999999999
+    },
+    {
+      "case": "remove_during_drag",
+      "ok": true,
+      "seconds": 1.9709797999999998
+    },
+    {
+      "case": "focus_loss_during_drag",
+      "ok": true,
+      "seconds": 1.9389775
+    },
+    {
+      "case": "hover_is_idle",
+      "ok": true,
+      "seconds": 4.4392227
+    },
+    {
+      "case": "close_during_drag",
+      "ok": true,
+      "seconds": 1.1848045
+    }
+  ],
+  "clean": true,
+  "edits": 33,
+  "exit": 0,
+  "first_surface": "460x300@1 visible=true",
+  "ownership_problems": [],
+  "passed": true,
+  "returned": "\u003cnil\u003e"
+}
+Controls audition passed. The manual audition in README.md is still required.
+

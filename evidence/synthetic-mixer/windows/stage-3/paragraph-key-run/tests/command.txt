@@ -1,0 +1,6 @@
+﻿revision: c1ad2bb82dd99cdd1a41ce96bcd84ba2921951e7
+worktree: 
+command: CGO_ENABLED=0 go test ./internal/text/... -count=100
+started: 2026-11-10T11:04:27.4151970-05:00
+exit: 0
+finished: 2026-11-10T11:04:39.8420437-05:00
