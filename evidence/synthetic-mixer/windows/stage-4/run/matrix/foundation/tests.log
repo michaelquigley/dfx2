@@ -1,0 +1,11 @@
+ok  	github.com/michaelquigley/dfx2	2.404s
+?   	github.com/michaelquigley/dfx2/examples/lifetime	[no test files]
+ok  	github.com/michaelquigley/dfx2/examples/mixer	2.230s
+ok  	github.com/michaelquigley/dfx2/internal/appcore	0.846s
+ok  	github.com/michaelquigley/dfx2/internal/platform	0.838s
+?   	github.com/michaelquigley/dfx2/internal/platform/fake	[no test files]
+ok  	github.com/michaelquigley/dfx2/internal/platform/win32	0.862s
+ok  	github.com/michaelquigley/dfx2/internal/render	0.813s
+ok  	github.com/michaelquigley/dfx2/internal/text	0.824s
+ok  	github.com/michaelquigley/dfx2/internal/text/gotext	1.258s
+ok  	github.com/michaelquigley/dfx2/ui	1.614s

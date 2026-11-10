@@ -1,0 +1,5 @@
+﻿revision: 34852d529672bf882c4fa2c070f7556d2e13202c
+command: powershell.exe -NoProfile -ExecutionPolicy Bypass -File evidence\synthetic-mixer\windows\stage-4\stage4.ps1 -OutDir evidence/synthetic-mixer/windows/stage-4/run
+started: 2026-11-10T16:12:46.2314207-05:00
+finished: 2026-11-10T16:18:31.7634992-05:00
+exit: 0

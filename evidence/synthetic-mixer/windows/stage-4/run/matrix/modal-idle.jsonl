@@ -1,0 +1,21 @@
+{"event":"driver-host","show_contents_while_dragging":true,"time":"2026-11-10T16:16:09.5901251-05:00"}
+{"event":"opened","time":"2026-11-10T16:16:09.6287306-05:00","window":"A"}
+{"event":"opened","time":"2026-11-10T16:16:09.639811-05:00","window":"B"}
+{"animating":0,"dispatch_targets":1,"dispatches":39,"event":"modal-before","first_frames":29,"first_surface":"560x260@1 visible=true","frame_timers":3,"frames":57,"input_queued":0,"modal_active":false,"modal_loops":0,"modal_refusals":0,"modal_timers":0,"modal_turns":0,"native_completions":0,"native_problem":"","native_retired":0,"native_windows":2,"paint_failures":0,"paints":56,"presents":57,"queued":1,"release_pending":false,"tasks":5,"terminal":false,"time":"2026-11-10T16:16:10.6405181-05:00","wakes":40,"windows":2}
+{"event":"drag-request","mode":"hold","seconds":18,"time":"2026-11-10T16:16:10.6405181-05:00","window":"A"}
+{"event":"driver-drag-start","hit_test":2,"mode":"hold","time":"2026-11-10T16:16:10.9042883-05:00","window":"A","x":600,"y":321}
+{"event":"feed","running":false,"time":"2026-11-10T16:16:10.9398378-05:00"}
+{"animating":0,"dispatch_targets":1,"dispatches":53,"event":"settled","first_frames":39,"first_surface":"560x260@1 visible=true","frame_timers":4,"frames":77,"input_queued":0,"modal_active":true,"modal_loops":1,"modal_refusals":0,"modal_timers":1,"modal_turns":1,"native_completions":0,"native_problem":"","native_retired":0,"native_windows":2,"paint_failures":0,"paints":76,"presents":77,"queued":0,"release_pending":false,"tasks":5,"terminal":false,"time":"2026-11-10T16:16:11.1908995-05:00","wakes":53,"windows":2}
+{"animating":0,"dispatches":0,"event":"quiet","frame_timers":0,"frames":0,"paints":0,"presents":0,"seconds":5,"time":"2026-11-10T16:16:16.1981374-05:00","wakes":0}
+{"dispatches":0,"event":"modal-quiet","frames":0,"modal_active":true,"modal_timers":0,"modal_turns":0,"seconds":3,"time":"2026-11-10T16:16:19.2137635-05:00","wakes":0}
+{"event":"modal-post-after-idle","latency_ms":15,"modal_active":true,"time":"2026-11-10T16:16:19.2293676-05:00"}
+{"event":"feed","running":true,"time":"2026-11-10T16:16:19.2293676-05:00"}
+{"event":"modal-resume","frames":29,"modal_active":true,"time":"2026-11-10T16:16:20.2293845-05:00"}
+{"event":"feed","running":false,"time":"2026-11-10T16:16:20.2293845-05:00"}
+{"elapsed_ms":18028,"event":"driver-drag-done","mode":"hold","moves":1,"time":"2026-11-10T16:16:28.9325213-05:00","window":"A","window_alive":true}
+{"event":"closed","time":"2026-11-10T16:16:28.9637027-05:00","window":"A"}
+{"animating":0,"dispatch_targets":1,"dispatches":87,"event":"ownership","frame_timers":11,"frames":0,"input_queued":0,"modal_active":false,"modal_loops":1,"modal_refusals":0,"modal_timers":33,"modal_turns":33,"native_completions":0,"native_problem":"","native_retired":0,"native_windows":0,"paint_failures":0,"paints":137,"presents":138,"queued":0,"release_pending":true,"tasks":0,"terminal":true,"time":"2026-11-10T16:16:28.9637027-05:00","wakes":87,"windows":0}
+{"event":"closed","time":"2026-11-10T16:16:28.9637027-05:00","window":"B"}
+{"animating":0,"dispatch_targets":1,"dispatches":87,"event":"ownership","frame_timers":11,"frames":0,"input_queued":0,"modal_active":false,"modal_loops":1,"modal_refusals":0,"modal_timers":33,"modal_turns":33,"native_completions":0,"native_problem":"","native_retired":0,"native_windows":0,"paint_failures":0,"paints":137,"presents":138,"queued":0,"release_pending":true,"tasks":0,"terminal":true,"time":"2026-11-10T16:16:28.9637027-05:00","wakes":87,"windows":0}
+{"commands":{"accepted":0,"applied":0,"canceled":0,"delay_ms":0,"outstanding":0,"refused":0,"reject_next":0,"rejected":0},"commands_conserved":true,"error":"\u003cnil\u003e","event":"return","invalidations_refused_after_close":0,"time":"2026-11-10T16:16:28.9637027-05:00"}
+{"animating":0,"dispatch_targets":0,"dispatches":87,"event":"drained","frame_timers":11,"frames":0,"input_queued":0,"modal_active":false,"modal_loops":1,"modal_refusals":0,"modal_timers":33,"modal_turns":33,"native_completions":0,"native_problem":"","native_retired":0,"native_windows":0,"paint_failures":0,"paints":137,"presents":138,"queued":0,"release_pending":false,"tasks":0,"terminal":true,"time":"2026-11-10T16:16:28.9637027-05:00","wakes":87,"windows":0}

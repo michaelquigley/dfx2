@@ -1,0 +1,15 @@
+{"event":"driver-host","show_contents_while_dragging":true,"time":"2026-11-10T16:14:28.5617009-05:00"}
+{"event":"opened","time":"2026-11-10T16:14:28.6319347-05:00","window":"A"}
+{"event":"font-coverage","faces":["verdana: outline"],"sample":"latin","text":"Level","time":"2026-11-10T16:14:29.1340111-05:00"}
+{"event":"font-coverage","faces":["verdana: outline"],"sample":"greek","text":"Ελληνικά","time":"2026-11-10T16:14:29.1340111-05:00"}
+{"event":"font-coverage","faces":["verdana: outline"],"sample":"cyrillic","text":"Кириллица","time":"2026-11-10T16:14:29.1345729-05:00"}
+{"event":"font-coverage","faces":["arial: outline"],"sample":"hebrew","text":"עברית","time":"2026-11-10T16:14:29.1351404-05:00"}
+{"event":"font-coverage","faces":["arial: outline"],"sample":"arabic","text":"العربية","time":"2026-11-10T16:14:29.1351827-05:00"}
+{"event":"font-coverage","faces":["msgothic: outline"],"sample":"japanese","text":"日本語","time":"2026-11-10T16:14:29.1351827-05:00"}
+{"event":"font-coverage","faces":["segoeuiemoji: colr paint (placeholder)","segoeuiemoji: empty outline"],"sample":"emoji","text":"🎛️🎚️🎹","time":"2026-11-10T16:14:29.1357502-05:00"}
+{"event":"capture-request","name":"fonts","time":"2026-11-10T16:14:29.1357502-05:00","window":"A"}
+{"background_fraction":0.8744780219780219,"black_fraction":0,"event":"driver-capture","height":260,"name":"fonts","path":"C:\\Repos\\q\\products\\dfx2\\evidence\\synthetic-mixer\\windows\\stage-4\\run\\matrix\\captures\\fonts.png","time":"2026-11-10T16:14:29.3202783-05:00","width":560,"window":"A"}
+{"event":"closed","time":"2026-11-10T16:14:29.8500428-05:00","window":"A"}
+{"animating":0,"dispatch_targets":1,"dispatches":36,"event":"ownership","frame_timers":3,"frames":0,"input_queued":0,"modal_active":false,"modal_loops":0,"modal_refusals":0,"modal_timers":0,"modal_turns":0,"native_completions":0,"native_problem":"","native_retired":0,"native_windows":0,"paint_failures":0,"paints":33,"presents":33,"queued":0,"release_pending":true,"tasks":0,"terminal":true,"time":"2026-11-10T16:14:29.8500428-05:00","wakes":36,"windows":0}
+{"commands":{"accepted":0,"applied":0,"canceled":0,"delay_ms":0,"outstanding":0,"refused":0,"reject_next":0,"rejected":0},"commands_conserved":true,"error":"\u003cnil\u003e","event":"return","invalidations_refused_after_close":0,"time":"2026-11-10T16:14:29.8500428-05:00"}
+{"animating":0,"dispatch_targets":0,"dispatches":36,"event":"drained","frame_timers":3,"frames":0,"input_queued":0,"modal_active":false,"modal_loops":0,"modal_refusals":0,"modal_timers":0,"modal_turns":0,"native_completions":0,"native_problem":"","native_retired":0,"native_windows":0,"paint_failures":0,"paints":33,"presents":33,"queued":0,"release_pending":false,"tasks":0,"terminal":true,"time":"2026-11-10T16:14:29.8500428-05:00","wakes":36,"windows":0}

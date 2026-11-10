@@ -1,0 +1,2 @@
+go vet -C evidence/synthetic-mixer/windows/stage-4/controlsdrive .
+exit 0

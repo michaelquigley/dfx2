@@ -1,0 +1,4 @@
+go test ./internal/text/... -count=50 -timeout=600s
+exit 0
+ok  	github.com/michaelquigley/dfx2/internal/text	0.961s
+ok  	github.com/michaelquigley/dfx2/internal/text/gotext	1.821s
