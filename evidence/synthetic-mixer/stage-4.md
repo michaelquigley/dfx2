@@ -120,7 +120,7 @@ About 60 frames per second per window while the feed runs: the 30 Hz samples inv
 
 ## Canon drift to flag
 
-Not edited; for Michael's deliberate alignment at acceptance.
+Michael approved and installed the stage 4 canon alignment on 2026-11-10. The revised rubric loads successfully; selection and dispositions are unchanged. It recognizes the built example, clarifies application-owned pending-value policy and permits protected cache entries with bounded scratch. No new quality was added for fixture-specific queue sizes or simulated-device rules. The canon changes remain uncommitted; full source review `dfe40a5ab76f` against them is clean with no findings. Original drift and decisions:
 
 - `rubric.yaml` characteristics say "stages 1 through 3 provide …" and "asynchronous model/worker reconciliation is the next mixer stage". Both expire with this stage. The characteristic that "asynchronous model policy … [is] not [a demand] to expand the current stage" should now say that such policy belongs to applications, as the example's does.
 - `immediate-mode-state-and-frames` boundary: "asynchronous model/worker reconciliation … remain separate work" expires. The quality could state the built division: widgets start edits from the value last shown but follow what the view supplies, and pending-value or acknowledgment policy is the application's, so framework widgets must not impose one.
@@ -224,3 +224,10 @@ No further Terminus review, native matrix or manual audition has run on these de
 ## Review after both input-deferral corrections
 
 Full review `9fbd7edb54c7` is **clean**, with zero blocking and zero advisory findings. Both corrections and their regressions are in scope. Coverage remains 2,797 covered, 213 excluded and the two known Hebrew font fixture/license paths uncovered. This closes the findings from `b07039045251` and `335bc286250f`; it is not stage acceptance or new native execution. Only the verdict notes in this record and the journal changed after review. Canon alignment and final acceptance remain; CPU timing remains a documented fixture limitation.
+
+
+## Review against the aligned stage 4 canon
+
+Full review `dfe40a5ab76f` is **clean**, with zero blocking and zero advisory findings. Its prompt includes the approved application-owned reconciliation rule and bounded cache-pressure boundary. Coverage remains 2,797 covered, 213 excluded and the two known Hebrew font fixture/license paths uncovered. This is source review, not new native execution; the two post-return input fixes retain their disclosed portable test/cross-build coverage.
+
+Only review-status notes changed after the verdict. The canon alignment remains uncommitted. Stage 4 is ready for Michael's acceptance with the recorded fixture and platform limitations; retiring fulfilled intent documents follows that acceptance.
