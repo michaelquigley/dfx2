@@ -1,6 +1,6 @@
 # Synthetic mixer stage 1: Linux text and animated meter
 
-Stage 1 of the [work order](../../docs/future/synthetic-mixer-work-order.md) is implemented in the working tree on top of `02b51a5`; nothing is committed. Built behavior is in [ui.md](../../docs/current/ui.md). Terminus review status and Michael's acceptance are recorded at the end. Stage 2 (Win32 presentation and modal scheduling) has not started.
+Stage 1 of the [work order](https://github.com/michaelquigley/dfx2/blob/d6b94f933c9b549c759ee3ae30e4644bb24945e8/docs/future/synthetic-mixer-work-order.md) is implemented in the working tree on top of `02b51a5`; nothing is committed. Built behavior is in [ui.md](../../docs/current/ui.md). Terminus review status and Michael's acceptance are recorded at the end. Stage 2 (Win32 presentation and modal scheduling) has not started.
 
 Host: Linux 7.0.0-42-generic amd64, Go 1.27.1 (module language 1.26), GTK 3.24.52, Cairo 1.18.4, GNOME on Wayland with XWayland. Every build, test and vet uses `CGO_ENABLED=0`. Dependencies are the spike's measured pins: purego v0.11.1, go-text/typesetting v0.3.5, x/image v0.23.0.
 

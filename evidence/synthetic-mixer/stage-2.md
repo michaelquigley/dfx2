@@ -1,6 +1,6 @@
 # Synthetic mixer stage 2: Windows presentation and modal scheduling
 
-Stage 2 of the [work order](../../docs/future/synthetic-mixer-work-order.md) was transferred at `c9f2357`; the Windows results and screenshot-driver correction returned in `5dd6ce2`. The [native Windows results](windows/results.md) and Linux return checks below establish execution on both platforms. Final review and Michael's acceptance remain pending; stage 3 has not started. Built behavior, including the now-observed size/move dispatch, is in [runtime.md](../../docs/current/runtime.md) and [ui.md](../../docs/current/ui.md).
+Stage 2 of the [work order](https://github.com/michaelquigley/dfx2/blob/d6b94f933c9b549c759ee3ae30e4644bb24945e8/docs/future/synthetic-mixer-work-order.md) was transferred at `c9f2357`; the Windows results and screenshot-driver correction returned in `5dd6ce2`. The [native Windows results](windows/results.md) and Linux return checks below establish execution on both platforms. Final review and Michael's acceptance remain pending; stage 3 has not started. Built behavior, including the now-observed size/move dispatch, is in [runtime.md](../../docs/current/runtime.md) and [ui.md](../../docs/current/ui.md).
 
 Host: Linux 7.0.0-42-generic amd64, Go 1.27.1 (module language 1.26), GNOME on Wayland with XWayland. Every build, test and vet uses `CGO_ENABLED=0`. No dependency changed. PowerShell is unavailable on the Linux host; Windows PowerShell 5.1 subsequently executed `audition.ps1`, as recorded in the returned native results.
 
