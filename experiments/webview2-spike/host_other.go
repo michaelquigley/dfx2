@@ -15,3 +15,5 @@ func runHost(c config, h http.Handler) error {
 	return errors.New("the WebView2 host runs only on windows/amd64; this is " + runtime.GOOS + "/" + runtime.GOARCH +
 		" (go test ./... still covers the handler and the adapter)")
 }
+
+func runFeasibility(c config) error { return runHost(c, nil) }

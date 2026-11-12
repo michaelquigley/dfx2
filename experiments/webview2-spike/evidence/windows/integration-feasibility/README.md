@@ -1,6 +1,8 @@
 # Windows integration feasibility: handoff
 
-Status: **not run on Windows.** Candidate: **awaiting Michael's commit.** There is no commit hash for it yet; never write one down before it exists. Record the commit you check out (`git rev-parse HEAD`) and any dirty tree (`git status --short`, plus `git diff` saved beside your results). Nothing in this directory has executed on Windows, and cross-builds from Linux are not execution.
+Status: **executed on Windows on 2026-11-12** at `f71c306` plus the uncommitted Windows tree; the results are in [results.md](results.md), the raw run in `run/`. Passes B–D are implemented in `feasibility_windows.go` and driven by `drive/`. 19 of 22 scenarios pass; the three that fail are findings for Michael's decision (WebSocket not interceptable, navigation cancellation not a network boundary, the browser's transport re-sending a failed POST), recorded without weakening the checks. The paragraphs below are the handoff as it was prepared; the "Native work remaining" section is done, and the commands section has the real ones.
+
+Record the commit you check out (`git rev-parse HEAD`) and any dirty tree (`git status --short`, plus `git diff` saved beside your results).
 
 Handoff direction (2026-11-12): Linux is completing the affected browser reruns and Michael's error-page check under the [closeout task](../../../../../docs/future/webview-feasibility-spike.md#approved-next-task-linux-closeout-and-windows-handoff). Its signal findings are now a monitored compatibility risk, not a request for further Windows work. Do not port Linux signal accommodations or the cgo comparison. This handoff remains `CGO_ENABLED=0` and covers passes B–D. Record the eventual transferred commit and any dirty diff. The Linux closeout results are in the [Linux record's status and closeout sections](../../../../webkitgtk-spike/evidence/linux/integration-feasibility/README.md#status-2026-11-12-linux-closeout).
 
@@ -69,7 +71,18 @@ $env:CGO_ENABLED = "0"
 go test dfx2webview2spike/adapt dfx2webview2spike/fixture dfx2webview2spike/feasibility
 ```
 
-Add your new probe commands here once they exist. Rerun the existing single-window audition (`evidence\windows\drive`) if you change shared host paths.
+The probe host and its driver, as run on 2026-11-12 (all scenarios, then the manual check; the single-window audition was rerun because `com_windows.go` and `host_windows.go` changed):
+
+```powershell
+go build -o dfx2-webview2-spike.exe .
+go build -o feas-drive.exe .\evidence\windows\integration-feasibility\drive
+.\feas-drive.exe -exe .\dfx2-webview2-spike.exe -out evidence\windows\integration-feasibility\run
+.\feas-drive.exe -exe .\dfx2-webview2-spike.exe -out evidence\windows\integration-feasibility\run\manual-check -manual
+go build -o drive.exe .\evidence\windows\drive
+.\drive.exe -exe .\dfx2-webview2-spike.exe -out evidence\windows\integration-feasibility\run\single-window-regression
+```
+
+`feas-drive.exe` takes `-only name,name` for a subset, `-root DIR` for the profiles' root (default `%TEMP%\dfx2-feasibility`) and `-step-timeout`. The host alone is `.\dfx2-webview2-spike.exe -feasibility [-feas-root DIR] [-feas-filter=false] [-feas-csp=false] [-feas-cookie=false] [-feas-cookie-fail] [-feas-remove-fail] [-feas-close-during env|controller|cookie]`, console-driven: `open LABEL loopback|inprocess|attach [URL]`, `load`, `reload`, `click LABEL X Y`, `snapshot LABEL PATH`, `inspect`, `selftest`, `close`, `status`, `quit`; JSON events on stdout. Use a new `-out` for every run; never overwrite `run/`.
 
 ## Expected outcomes
 

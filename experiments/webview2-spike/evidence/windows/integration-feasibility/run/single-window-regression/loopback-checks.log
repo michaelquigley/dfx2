@@ -1,0 +1,124 @@
+# dfx2-webview2-spike.exe -mode loopback -autorun checks
+14:01:37.929269 loader: C:\Repos\q\products\dfx2\experiments\webview2-spike\WebView2Loader.dll sha256 a9a09232c25805323d4cfb3fc8f545a190a9c8a99c93262ea99d0b88df99ec90 (matches the pinned SDK 1.0.4129.50 x64 loader)
+14:01:37.930948 runtime: installed Evergreen Runtime 151.0.4129.93
+14:01:37.931470 user data: C:\Repos\q\products\dfx2\experiments\webview2-spike\webview2-userdata\loopback
+14:01:37.934325 window: hwnd 0x1a042e on UI thread 4888, 96 dpi (scale 1), client 1000x760 DIPs
+14:01:37.957236 transport: loopback HTTP server listening on http://127.0.0.1:58991 (pid 11064)
+14:01:37.961631 webview: environment ready in 39ms; browser version 151.0.4129.93
+14:01:37.967664 webview: environment creation started (returned in 9.895ms)
+14:01:38.284429 webview: controller ready in 362ms; browser process 5264
+14:01:38.297813 webview: navigating to http://127.0.0.1:58991/?autorun=checks
+14:01:38.309796 webview: navigation 2 starting: http://127.0.0.1:58991/?autorun=checks
+14:01:38.315545 req 1 start GET /?autorun=checks from 127.0.0.1:58993 (0 B body, outstanding 1)
+14:01:38.315545 req 1 handler done 200 in 0s (outstanding 0)
+14:01:38.376075 req 2 start GET /app.css from 127.0.0.1:58993 (0 B body, outstanding 1)
+14:01:38.376075 req 2 handler done 200 in 0s (outstanding 0)
+14:01:38.377186 req 3 start GET /app.js from 127.0.0.1:58993 (0 B body, outstanding 1)
+14:01:38.377186 req 3 handler done 200 in 0s (outstanding 0)
+14:01:38.398805 req 4 start POST /api/report from 127.0.0.1:58993 (66 B body, outstanding 1)
+14:01:38.398805 report: [loopback] loaded /?autorun=checks (assets app.css ✓ app.js ✓)
+14:01:38.398805 req 4 handler done 204 in 0s (outstanding 0)
+14:01:38.440423 req 5 start GET /api/query?text=h%C3%A9llo+%E2%80%94+%E6%97%A5%E6%9C%AC%E8%AA%9E+%E2%9C%93+%F0%9F%99%82&n=1&n=2&empty= from 127.0.0.1:58993 (0 B body, outstanding 1)
+14:01:38.440423 req 5 handler done 200 in 0s (outstanding 0)
+14:01:38.441192 webview: navigation 2 completed: success true, web error status 0 (519ms after launch)
+14:01:38.464547 req 6 start POST /api/echo from 127.0.0.1:58993 (40 B body, outstanding 1)
+14:01:38.465085 req 6 handler done 200 in 1ms (outstanding 0)
+14:01:38.467263 req 7 start GET /favicon.ico from 127.0.0.1:58993 (0 B body, outstanding 1)
+14:01:38.467263 req 7 handler done 404 in 0s (outstanding 0)
+14:01:38.470076 req 8 start POST /api/echo from 127.0.0.1:58995 (65536 B body, outstanding 1)
+14:01:38.470629 req 8 handler done 200 in 1ms (outstanding 0)
+14:01:38.472805 req 9 start GET /api/binary from 127.0.0.1:58995 (0 B body, outstanding 1)
+14:01:38.472805 req 9 handler done 200 in 0s (outstanding 0)
+14:01:38.474972 req 10 start GET /api/headers from 127.0.0.1:58995 (0 B body, outstanding 1)
+14:01:38.474972 req 10 handler done 200 in 0s (outstanding 0)
+14:01:38.477159 req 11 start GET /api/headers from 127.0.0.1:58995 (0 B body, outstanding 1)
+14:01:38.477159 req 11 handler done 200 in 0s (outstanding 0)
+14:01:38.481836 req 12 start GET /api/status/404 from 127.0.0.1:58995 (0 B body, outstanding 1)
+14:01:38.481836 req 12 handler done 404 in 0s (outstanding 0)
+14:01:38.484592 req 13 start GET /api/status/500 from 127.0.0.1:58995 (0 B body, outstanding 1)
+14:01:38.484592 req 13 handler done 500 in 0s (outstanding 0)
+14:01:38.487193 req 14 start GET /no/such/route from 127.0.0.1:58995 (0 B body, outstanding 1)
+14:01:38.487193 req 14 handler done 404 in 0s (outstanding 0)
+14:01:38.489193 req 15 start GET /api/slow?tag=race from 127.0.0.1:58995 (0 B body, outstanding 1)
+14:01:38.591314 req 16 start GET /api/query?fast=1 from 127.0.0.1:58996 (0 B body, outstanding 2)
+14:01:38.591314 req 16 handler done 200 in 0s (outstanding 1)
+14:01:41.489376 req 15 handler done 200 in 3s (outstanding 0)
+14:01:41.493221 req 17 start GET /api/slow?tag=abort from 127.0.0.1:58998 (0 B body, outstanding 1)
+14:01:41.810322 req 18 start POST /api/echo from 127.0.0.1:58999 (1572864 B body, outstanding 2)
+14:01:41.811974 fixture: /api/slow tag="abort" saw cancellation: context canceled
+14:01:41.811974 req 17 handler canceled (context canceled), returned 503 in 319ms (outstanding 1)
+14:01:41.817480 req 18 handler done 200 in 7ms (outstanding 0)
+14:01:41.820258 req 19 start GET /api/query?text=h%C3%A9llo+%E2%80%94+%E6%97%A5%E6%9C%AC%E8%AA%9E+%E2%9C%93+%F0%9F%99%82&n=1&n=2&empty= from 127.0.0.1:58999 (0 B body, outstanding 1)
+14:01:41.820258 req 19 handler done 200 in 0s (outstanding 0)
+14:01:41.822450 req 20 start GET /api/big from 127.0.0.1:58999 (0 B body, outstanding 1)
+14:01:41.824108 req 20 handler done 200 in 2ms (outstanding 0)
+14:01:41.829492 req 21 start GET /api/query?text=h%C3%A9llo+%E2%80%94+%E6%97%A5%E6%9C%AC%E8%AA%9E+%E2%9C%93+%F0%9F%99%82&n=1&n=2&empty= from 127.0.0.1:58999 (0 B body, outstanding 1)
+14:01:41.829492 req 21 handler done 200 in 0s (outstanding 0)
+14:01:41.831209 origin: new window for https://example.com/ refused
+14:01:41.832297 origin: new window for http://127.0.0.1:58991/ refused
+14:01:41.833386 req 22 start POST /api/report from 127.0.0.1:58999 (67 B body, outstanding 1)
+14:01:41.833386 report: [loopback] PASS assets: app.css applied: true; app.js running: true
+14:01:41.833386 req 22 handler done 204 in 0s (outstanding 0)
+14:01:41.835026 req 23 start POST /api/report from 127.0.0.1:58999 (127 B body, outstanding 1)
+14:01:41.835026 report: [loopback] PASS query: status 200, text "héllo — 日本語 ✓ 🙂", n=1,2, host 127.0.0.1:58991, custom header query-check
+14:01:41.835026 req 23 handler done 204 in 0s (outstanding 0)
+14:01:41.836144 req 24 start POST /api/report from 127.0.0.1:58999 (76 B body, outstanding 1)
+14:01:41.836144 report: [loopback] PASS post: status 200, 40 B, Content-Length 40, sha256 match true
+14:01:41.836144 req 24 handler done 204 in 0s (outstanding 0)
+14:01:41.837250 req 25 start POST /api/report from 127.0.0.1:58999 (93 B body, outstanding 1)
+14:01:41.837250 report: [loopback] PASS post-binary: status 200, sent 65536 B, handler got 65536 B, sha256 match true
+14:01:41.837250 req 25 handler done 204 in 0s (outstanding 0)
+14:01:41.838369 req 26 start POST /api/report from 127.0.0.1:58999 (98 B body, outstanding 1)
+14:01:41.838369 report: [loopback] PASS binary: status 200, 267/267 B, bytes identical true, type application/octet-stream
+14:01:41.838369 req 26 handler done 204 in 0s (outstanding 0)
+14:01:41.839512 req 27 start POST /api/report from 127.0.0.1:58999 (98 B body, outstanding 1)
+14:01:41.840058 report: [loopback] PASS headers: x-spike-repeat "one, two" (fetch joins repeats), cache-control "no-store"
+14:01:41.840074 req 27 handler done 204 in 0s (outstanding 0)
+14:01:41.841190 req 28 start POST /api/report from 127.0.0.1:58999 (85 B body, outstanding 1)
+14:01:41.841190 report: [loopback] INFO header-utf8: handler sent "café" as UTF-8 bytes; page sees "cafÃ©"
+14:01:41.841190 req 28 handler done 204 in 0s (outstanding 0)
+14:01:41.842284 req 29 start POST /api/report from 127.0.0.1:58999 (80 B body, outstanding 1)
+14:01:41.842284 report: [loopback] PASS s404: status 404 Not Found, body {"from":"handler","status":404}
+14:01:41.842284 req 29 handler done 204 in 0s (outstanding 0)
+14:01:41.843379 req 30 start POST /api/report from 127.0.0.1:58999 (92 B body, outstanding 1)
+14:01:41.843379 report: [loopback] PASS s500: status 500 Internal Server Error, body {"from":"handler","status":500}
+14:01:41.843379 req 30 handler done 204 in 0s (outstanding 0)
+14:01:41.844481 req 31 start POST /api/report from 127.0.0.1:58999 (96 B body, outstanding 1)
+14:01:41.844481 report: [loopback] PASS unknown: status 404, body "404 page not found\n", type text/plain; charset=utf-8
+14:01:41.844481 req 31 handler done 204 in 0s (outstanding 0)
+14:01:41.845619 req 32 start POST /api/report from 127.0.0.1:58999 (59 B body, outstanding 1)
+14:01:41.845619 report: [loopback] PASS race: fast@104ms then slow(finished)@3002ms
+14:01:41.845619 req 32 handler done 204 in 0s (outstanding 0)
+14:01:41.847296 req 33 start POST /api/report from 127.0.0.1:58999 (96 B body, outstanding 1)
+14:01:41.847296 report: [loopback] INFO abort: browser side: AbortError after 310ms; Go side: see host log for tag=abort
+14:01:41.847296 req 33 handler done 204 in 0s (outstanding 0)
+14:01:41.848386 req 34 start POST /api/report from 127.0.0.1:58999 (176 B body, outstanding 1)
+14:01:41.848386 report: [loopback] PASS big-post: status 200, adapter error null, body "{\"contentLength\":1572864,\"contentType\":\"application/octet-stream\",\"custom\":null,"; next request ok: true
+14:01:41.848386 req 34 handler done 204 in 0s (outstanding 0)
+14:01:41.849484 req 35 start POST /api/report from 127.0.0.1:58999 (89 B body, outstanding 1)
+14:01:41.849484 report: [loopback] PASS big-get: status 200, adapter error null, 2097152 B; next request ok: true
+14:01:41.849484 req 35 handler done 204 in 0s (outstanding 0)
+14:01:41.850602 req 36 start POST /api/report from 127.0.0.1:58999 (83 B body, outstanding 1)
+14:01:41.850602 report: [loopback] PASS open-outside: window.open returned null; host log shows the refusal
+14:01:41.850602 req 36 handler done 204 in 0s (outstanding 0)
+14:01:41.852298 req 37 start POST /api/report from 127.0.0.1:58999 (88 B body, outstanding 1)
+14:01:41.852298 report: [loopback] PASS open-same: window.open("./") returned null (all new windows are refused)
+14:01:41.852298 req 37 handler done 204 in 0s (outstanding 0)
+14:01:41.853471 req 38 start POST /api/report from 127.0.0.1:58999 (28 B body, outstanding 1)
+14:01:41.853471 report: [loopback] checks PASS 14/14
+14:01:41.853471 req 38 handler done 204 in 0s (outstanding 0)
+14:01:41.861564 origin: navigation 3 to https://example.com/ refused (outside http://127.0.0.1:58991)
+14:01:41.992523 webview: navigation 3 completed: success false, web error status 14 (4.07s after launch)
+14:01:43.369664 req 39 start POST /api/report from 127.0.0.1:58999 (88 B body, outstanding 1)
+14:01:43.369664 report: [loopback] origin: still on the fixture 1.5 s after location.href = https://example.com/
+14:01:43.369664 req 39 handler done 204 in 0s (outstanding 0)
+14:01:45.507484 req 40 start GET /api/query?client=go-net-http&text=caf%C3%A9 from 127.0.0.1:59003 (0 B body, outstanding 1)
+14:01:45.507484 req 40 handler done 200 in 0s (outstanding 0)
+14:01:45.532932 req 41 start GET /api/headers from 127.0.0.1:59004 (0 B body, outstanding 1)
+14:01:45.532932 req 41 handler done 200 in 0s (outstanding 0)
+14:01:45.998853 close: WM_CLOSE in state running, 8.076s after launch (handlers running 0, deferrals pending 0, env pending false, controller pending false)
+14:01:46.025302 close: controller closed (S_OK) in 25.097ms
+14:01:46.040565 close: message loop ended 42ms after close began
+14:01:46.041120 transport: server shutdown in 1ms (ok)
+14:01:46.041120 exit: 8 WebView2 callbacks, 0 off the UI thread
+14:01:46.041120 exit: late creation callbacks 0; callback objects still referenced 0 []; 42ms after close began, 8.118s after launch

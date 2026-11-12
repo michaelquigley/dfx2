@@ -1,0 +1,46 @@
+# dfx2-webview2-spike.exe -mode inprocess -autorun slow
+14:02:18.725556 loader: C:\Repos\q\products\dfx2\experiments\webview2-spike\WebView2Loader.dll sha256 a9a09232c25805323d4cfb3fc8f545a190a9c8a99c93262ea99d0b88df99ec90 (matches the pinned SDK 1.0.4129.50 x64 loader)
+14:02:18.727213 runtime: installed Evergreen Runtime 151.0.4129.93
+14:02:18.727213 user data: C:\Repos\q\products\dfx2\experiments\webview2-spike\webview2-userdata\inprocess
+14:02:18.730455 window: hwnd 0x73004e on UI thread 7712, 96 dpi (scale 1), client 1000x760 DIPs
+14:02:18.740595 transport: in-process dispatch for https://dfx2-spike.invalid; no application listener (pid 9488)
+14:02:18.742208 webview: environment ready in 24ms; browser version 151.0.4129.93
+14:02:18.749662 webview: environment creation started (returned in 8.528ms)
+14:02:19.094671 webview: controller ready in 377ms; browser process 10092
+14:02:19.094671 webview: intercepting https://dfx2-spike.invalid/* (all resource contexts)
+14:02:19.101388 webview: navigating to https://dfx2-spike.invalid/?autorun=slow
+14:02:19.114032 webview: navigation 2 starting: https://dfx2-spike.invalid/?autorun=slow
+14:02:19.114032 req 1 start GET /?autorun=slow (0 B body, outstanding 1)
+14:02:19.114032 req 1 handler done 200 in 0s (outstanding 0)
+14:02:19.114569 intercept: SHCreateMemStream stream: IAgileObject S_OK, IMarshal S_OK
+14:02:19.114569 req 1 response installed: 200, 2731 B, 1ms after start (put_Response S_OK, Complete S_OK; pending 0)
+14:02:19.184937 req 2 start GET /app.css (0 B body, outstanding 1)
+14:02:19.184937 req 3 start GET /app.js (0 B body, outstanding 2)
+14:02:19.184937 req 2 handler done 200 in 0s (outstanding 1)
+14:02:19.184937 req 3 handler done 200 in 0s (outstanding 0)
+14:02:19.184937 req 2 response installed: 200, 1998 B, 0s after start (put_Response S_OK, Complete S_OK; pending 1)
+14:02:19.185494 req 3 response installed: 200, 12574 B, 1ms after start (put_Response S_OK, Complete S_OK; pending 0)
+14:02:19.216133 req 4 start POST /api/report (65 B body, outstanding 1)
+14:02:19.216133 report: [inprocess] loaded /?autorun=slow (assets app.css ✓ app.js ✓)
+14:02:19.216133 req 4 handler done 204 in 0s (outstanding 0)
+14:02:19.216133 req 4 response installed: 204, 0 B, 0s after start (put_Response S_OK, Complete S_OK; pending 0)
+14:02:19.257581 req 5 start GET /api/slow?tag=busy (0 B body, outstanding 1)
+14:02:19.257581 webview: navigation 2 completed: success true, web error status 0 (540ms after launch)
+14:02:19.261134 req 6 start POST /api/report (34 B body, outstanding 2)
+14:02:19.261134 report: [inprocess] slow: started tag=busy
+14:02:19.261134 req 6 handler done 204 in 0s (outstanding 1)
+14:02:19.261134 req 6 response installed: 204, 0 B, 0s after start (put_Response S_OK, Complete S_OK; pending 1)
+14:02:19.263891 req 7 start GET /favicon.ico (0 B body, outstanding 2)
+14:02:19.263891 req 7 handler done 404 in 0s (outstanding 1)
+14:02:19.263891 req 7 response installed: 404, 19 B, 0s after start (put_Response S_OK, Complete S_OK; pending 1)
+14:02:19.558888 close: WM_CLOSE in state running, 841ms after launch (handlers running 1, deferrals pending 1, env pending false, controller pending false)
+14:02:19.558907 close: canceled handlers for [5]; their results will be dropped
+14:02:19.558907 req 5 response settled on close: 503, 15 B, 301ms after start (put_Response S_OK, Complete S_OK; pending 0)
+14:02:19.558907 fixture: /api/slow tag="busy" saw cancellation: context canceled
+14:02:19.559423 req 5 handler canceled (context done), returned 503 in 302ms after close: result dropped (outstanding 0)
+14:02:19.581048 close: controller closed (S_OK) in 22.14ms
+14:02:19.585463 close: message loop ended 27ms after close began
+14:02:19.585463 close: workers drained true in 0s; started 7, finished 6, canceled 1, dropped after close 1, refused 0
+14:02:19.585463 close: intercepted 7, responses installed 7 (settled on close 1), origin refusals 0
+14:02:19.585463 exit: 11 WebView2 callbacks, 0 off the UI thread
+14:02:19.585463 exit: late creation callbacks 0; callback objects still referenced 0 []; 27ms after close began, 868ms after launch

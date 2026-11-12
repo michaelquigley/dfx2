@@ -1,0 +1,295 @@
+{
+ "scenario": "confinement-control",
+ "flags": [
+  "-feas-filter=false",
+  "-feas-csp=false"
+ ],
+ "checks": [
+  {
+   "check": "control: collector receives requests",
+   "ok": true,
+   "detail": {
+    "received": [
+     "GET /img credential=true",
+     "GET /script credential=true",
+     "GET /css credential=true",
+     "GET /fetch credential=true",
+     "GET /font credential=false",
+     "GET /xhr credential=true",
+     "POST /beacon credential=true",
+     "GET /ws credential=true",
+     "GET /sse credential=false",
+     "GET /prefetch credential=true",
+     "GET /iframe credential=true",
+     "GET /redirect-img credential=true",
+     "GET /redirect-fetch credential=false",
+     "POST /ping credential=true",
+     "GET /nav credential=true",
+     "GET /redirect-nav credential=true"
+    ]
+   }
+  },
+  {
+   "check": "control: credential leaks without enforcement",
+   "ok": true,
+   "detail": {
+    "leaked": 13
+   }
+  },
+  {
+   "check": "A's page never invoked B's handler",
+   "ok": true,
+   "detail": {
+    "b_after": {
+     "GET /": 1,
+     "GET /favicon.ico": 1,
+     "GET /logo.svg": 1,
+     "GET /probe.css": 1,
+     "GET /probe.js": 1
+    },
+    "b_before": {
+     "GET /": 1,
+     "GET /logo.svg": 1,
+     "GET /probe.css": 1,
+     "GET /probe.js": 1
+    }
+   }
+  },
+  {
+   "check": "top-level navigation, redirect, popup and form to another port never left the origin",
+   "ok": true,
+   "detail": {
+    "final_uris": {
+     "form": "http://127.0.0.1:58668/?run=armed\u0026id=nav-form\u0026then=navigate\u0026how=form\u0026collector=http%3A%2F%2F127.0.0.1%3A58667",
+     "location": "http://127.0.0.1:58668/?run=armed\u0026id=nav-location\u0026then=navigate\u0026how=location\u0026collector=http%3A%2F%2F127.0.0.1%3A58667",
+     "redirect": "http://127.0.0.1:58668/?run=armed\u0026id=nav-redirect\u0026then=navigate\u0026how=redirect\u0026collector=http%3A%2F%2F127.0.0.1%3A58667"
+    },
+    "mechanism": {
+     "form": "navigation policy",
+     "location": "navigation policy",
+     "popup": "NewWindowRequested handled",
+     "redirect": "navigation policy"
+    }
+   }
+  }
+ ],
+ "ok": true,
+ "detail": {
+  "blocked_by_context": {},
+  "classes": {
+   "/beacon": "REACHED",
+   "/css": "REACHED",
+   "/fetch": "REACHED",
+   "/font": "REACHED",
+   "/iframe": "REACHED",
+   "/img": "REACHED",
+   "/ping": "REACHED",
+   "/prefetch": "REACHED",
+   "/redirect-fetch": "REACHED",
+   "/redirect-img": "REACHED",
+   "/script": "REACHED",
+   "/sse": "REACHED",
+   "/ws": "REACHED",
+   "/xhr": "REACHED"
+  },
+  "collector": [
+   {
+    "method": "GET",
+    "path": "/img",
+    "credential": true,
+    "app_cookies": null,
+    "remote": "127.0.0.1:58678",
+    "t": "14:00:27.558"
+   },
+   {
+    "method": "GET",
+    "path": "/script",
+    "credential": true,
+    "app_cookies": null,
+    "remote": "127.0.0.1:58679",
+    "t": "14:00:27.558"
+   },
+   {
+    "method": "GET",
+    "path": "/css",
+    "credential": true,
+    "app_cookies": null,
+    "remote": "127.0.0.1:58680",
+    "t": "14:00:27.559"
+   },
+   {
+    "method": "GET",
+    "path": "/fetch",
+    "credential": true,
+    "app_cookies": null,
+    "remote": "127.0.0.1:58681",
+    "t": "14:00:27.563"
+   },
+   {
+    "method": "GET",
+    "path": "/font",
+    "credential": false,
+    "app_cookies": null,
+    "origin": "http://127.0.0.1:58668",
+    "remote": "127.0.0.1:58682",
+    "t": "14:00:27.571"
+   },
+   {
+    "method": "GET",
+    "path": "/xhr",
+    "credential": true,
+    "app_cookies": null,
+    "origin": "http://127.0.0.1:58668",
+    "remote": "127.0.0.1:58683",
+    "t": "14:00:27.571"
+   },
+   {
+    "method": "POST",
+    "path": "/beacon",
+    "credential": true,
+    "app_cookies": null,
+    "origin": "http://127.0.0.1:58668",
+    "remote": "127.0.0.1:58684",
+    "t": "14:00:27.578"
+   },
+   {
+    "method": "GET",
+    "path": "/ws",
+    "credential": true,
+    "app_cookies": null,
+    "origin": "http://127.0.0.1:58668",
+    "upgrade": "websocket",
+    "remote": "127.0.0.1:58685",
+    "t": "14:00:27.580"
+   },
+   {
+    "method": "GET",
+    "path": "/sse",
+    "credential": false,
+    "app_cookies": null,
+    "origin": "http://127.0.0.1:58668",
+    "remote": "127.0.0.1:58686",
+    "t": "14:00:27.582"
+   },
+   {
+    "method": "GET",
+    "path": "/prefetch",
+    "credential": true,
+    "app_cookies": null,
+    "remote": "127.0.0.1:58687",
+    "t": "14:00:27.584"
+   },
+   {
+    "method": "GET",
+    "path": "/iframe",
+    "credential": true,
+    "app_cookies": null,
+    "remote": "127.0.0.1:58688",
+    "t": "14:00:27.593"
+   },
+   {
+    "method": "GET",
+    "path": "/redirect-img",
+    "credential": true,
+    "app_cookies": null,
+    "remote": "127.0.0.1:58693",
+    "t": "14:00:29.093"
+   },
+   {
+    "method": "GET",
+    "path": "/redirect-fetch",
+    "credential": false,
+    "app_cookies": null,
+    "origin": "http://127.0.0.1:58668",
+    "remote": "127.0.0.1:58694",
+    "t": "14:00:29.093"
+   },
+   {
+    "method": "POST",
+    "path": "/ping",
+    "credential": true,
+    "app_cookies": null,
+    "origin": "http://127.0.0.1:58668",
+    "remote": "127.0.0.1:58695",
+    "t": "14:00:29.097"
+   },
+   {
+    "method": "GET",
+    "path": "/nav",
+    "credential": true,
+    "app_cookies": null,
+    "remote": "127.0.0.1:58698",
+    "t": "14:00:31.154"
+   },
+   {
+    "method": "GET",
+    "path": "/redirect-nav",
+    "credential": true,
+    "app_cookies": null,
+    "remote": "127.0.0.1:58699",
+    "t": "14:00:32.683"
+   }
+  ],
+  "mechanism": {
+   "form": "navigation policy",
+   "location": "navigation policy",
+   "popup": "NewWindowRequested handled",
+   "redirect": "navigation policy"
+  },
+  "page_view": {
+   "beacon": "true",
+   "css": "added",
+   "eventsource": "error",
+   "fetch": "opaque",
+   "font": "added",
+   "iframe-cross": "added",
+   "iframe-same": "no load",
+   "img": "added",
+   "other-endpoint": "threw TypeError",
+   "ping": "clicked",
+   "prefetch": "added",
+   "redirect-fetch": "threw TypeError",
+   "redirect-img": "added",
+   "script": "added",
+   "websocket": "error",
+   "xhr": "0"
+  },
+  "refused": {
+   "navigation": 3,
+   "popup": 1,
+   "subframe": 2
+  }
+ },
+ "exit": {
+  "host_exit": 0,
+  "timed_out": false,
+  "killed": false,
+  "browser_pids": [
+   5016,
+   6688
+  ],
+  "browser_processes_remaining": null,
+  "stderr_suspicious": null,
+  "callback_objects_live": 0,
+  "off_ui_thread": 0,
+  "late_creation_callbacks": 0,
+  "profiles_remaining": null
+ },
+ "seconds": 10.5,
+ "ready": {
+  "close_during": "",
+  "cookie": true,
+  "cookie_fail_injected": false,
+  "csp": false,
+  "event": "ready",
+  "filter": false,
+  "loader_pinned": true,
+  "loader_sha256": "a9a09232c25805323d4cfb3fc8f545a190a9c8a99c93262ea99d0b88df99ec90",
+  "pid": 3332,
+  "remove_fail_injected": false,
+  "root": "C:\\Cygwin64\\tmp\\dfx2-feasibility",
+  "runtime": "151.0.4129.93",
+  "t": "14:00:26.606",
+  "ui_thread": 6464
+ }
+}

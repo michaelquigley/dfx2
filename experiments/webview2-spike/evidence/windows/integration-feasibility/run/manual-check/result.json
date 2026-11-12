@@ -1,0 +1,44 @@
+{
+ "exit": {
+  "host_exit": 0,
+  "timed_out": false,
+  "killed": false,
+  "browser_pids": [
+   2376
+  ],
+  "browser_processes_remaining": null,
+  "stderr_suspicious": null,
+  "callback_objects_live": 0,
+  "off_ui_thread": 0,
+  "late_creation_callbacks": 0,
+  "profiles_remaining": null
+ },
+ "steps": [
+  {
+   "action": {
+    "action": "retry",
+    "event": "error-action",
+    "t": "14:16:45.849",
+    "uri": "http://127.0.0.1:59064/api/query?x=later",
+    "window": "M"
+   },
+   "gets_added": 1,
+   "loaded": "http://127.0.0.1:59064/api/query?x=later",
+   "offered_retry": true,
+   "posts_added": 0
+  },
+  {
+   "action": {
+    "action": "start",
+    "event": "error-action",
+    "t": "14:16:50.552",
+    "uri": "http://127.0.0.1:59064/",
+    "window": "M"
+   },
+   "form_posts_added": 0,
+   "form_posts_total_reaching_server": 0,
+   "loaded": "http://127.0.0.1:59064/",
+   "offered_retry": false
+  }
+ ]
+}

@@ -1,0 +1,78 @@
+{
+ "scenario": "forced-crash",
+ "flags": null,
+ "checks": [
+  {
+   "check": "a killed host leaves its own profile folder, named by its pid",
+   "ok": true,
+   "detail": {
+    "profile": "C:\\Cygwin64\\tmp\\dfx2-feasibility\\profile-11652-1"
+   }
+  },
+  {
+   "check": "the next host starts with its own fresh folder",
+   "ok": true,
+   "detail": {
+    "fresh": "C:\\Cygwin64\\tmp\\dfx2-feasibility\\profile-6384-1"
+   }
+  },
+  {
+   "check": "the next host removed only its own folder; the residue remains",
+   "ok": true,
+   "detail": {
+    "second_exit": {
+     "host_exit": 0,
+     "timed_out": false,
+     "killed": false,
+     "browser_pids": [
+      6044
+     ],
+     "browser_processes_remaining": null,
+     "stderr_suspicious": null,
+     "callback_objects_live": 0,
+     "off_ui_thread": 0,
+     "late_creation_callbacks": 0,
+     "profiles_remaining": null
+    }
+   }
+  }
+ ],
+ "ok": true,
+ "detail": {
+  "browser_after_kill_alive": false,
+  "driver_cleanup": "\u003cnil\u003e",
+  "fresh": "C:\\Cygwin64\\tmp\\dfx2-feasibility\\profile-6384-1",
+  "residue": "C:\\Cygwin64\\tmp\\dfx2-feasibility\\profile-11652-1"
+ },
+ "exit": {
+  "host_exit": 1,
+  "timed_out": false,
+  "killed": true,
+  "browser_pids": [
+   8512
+  ],
+  "browser_processes_remaining": null,
+  "stderr_suspicious": null,
+  "callback_objects_live": 0,
+  "off_ui_thread": 0,
+  "late_creation_callbacks": 0,
+  "profiles_remaining": null
+ },
+ "seconds": 3.4,
+ "ready": {
+  "close_during": "",
+  "cookie": true,
+  "cookie_fail_injected": false,
+  "csp": true,
+  "event": "ready",
+  "filter": true,
+  "loader_pinned": true,
+  "loader_sha256": "a9a09232c25805323d4cfb3fc8f545a190a9c8a99c93262ea99d0b88df99ec90",
+  "pid": 11652,
+  "remove_fail_injected": false,
+  "root": "C:\\Cygwin64\\tmp\\dfx2-feasibility",
+  "runtime": "151.0.4129.93",
+  "t": "14:01:33.936",
+  "ui_thread": 9640
+ }
+}

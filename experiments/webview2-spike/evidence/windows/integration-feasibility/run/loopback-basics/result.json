@@ -1,0 +1,201 @@
+{
+ "scenario": "loopback-basics",
+ "flags": null,
+ "checks": [
+  {
+   "check": "first document load admitted by the credential installed before navigation",
+   "ok": true,
+   "detail": {
+    "endpoint": {
+     "admitted": 4,
+     "handled": 4,
+     "refused": {}
+    },
+    "handler": {
+     "GET /": 1,
+     "GET /logo.svg": 1,
+     "GET /probe.css": 1,
+     "GET /probe.js": 1
+    }
+   }
+  },
+  {
+   "check": "assets, query and POST through the credential",
+   "ok": true,
+   "detail": {
+    "checks": {
+     "cookieVisible": false,
+     "css": true,
+     "echoLength": 1005,
+     "echoSha": "a5903776f0c8d72f5b1e8689519fc8d9d6317785a20e31659786c8d8703a6b8c",
+     "img": true,
+     "origin": "http://127.0.0.1:58600",
+     "query": "é\u0026ü",
+     "script": true
+    }
+   }
+  },
+  {
+   "check": "credential invisible to JavaScript",
+   "ok": true
+  },
+  {
+   "check": "native reload keeps authentication without reprovisioning",
+   "ok": true,
+   "detail": {
+    "installs": 1
+   }
+  },
+  {
+   "check": "same-origin redirect authenticated, no credential in the URL",
+   "ok": true,
+   "detail": {
+    "source": "http://127.0.0.1:58600/api/query?x=redirected"
+   }
+  },
+  {
+   "check": "loopback stream: chunk 1 visible before the handler finished",
+   "ok": true,
+   "detail": {
+    "chunks": [
+     {
+      "at": 27.700000047683716,
+      "text": "chunk-1\n"
+     },
+     {
+      "at": 31.800000071525574,
+      "text": "chunk-2 after ack\ndone\n"
+     }
+    ]
+   }
+  },
+  {
+   "check": "external clients without the right credential refused",
+   "ok": true,
+   "detail": {
+    "statuses": {
+     "none": 403,
+     "wrong credential": 403,
+     "wrong credential and Origin": 403
+    }
+   }
+  },
+  {
+   "check": "right credential: wrong Host or Origin refused; exact or absent Origin admitted",
+   "ok": true,
+   "detail": {
+    "selftest": {
+     "right credential": 200,
+     "right credential, exact Origin": 200,
+     "right credential, wrong Host": 403,
+     "right credential, wrong Origin": 403
+    }
+   }
+  },
+  {
+   "check": "refusals never reached the handler",
+   "ok": true,
+   "detail": {
+    "endpoint": {
+     "admitted": 31,
+     "handled": 31,
+     "refused": {
+      "host": 1,
+      "no-credential": 1,
+      "origin": 1,
+      "wrong-credential": 2
+     }
+    }
+   }
+  }
+ ],
+ "ok": true,
+ "detail": {
+  "cookie": [
+   {
+    "event": "cookie-installed",
+    "http_only": true,
+    "same_site_kind": 2,
+    "since_open": "404ms",
+    "t": "13:59:57.288",
+    "visible_to_manager": true,
+    "window": "A"
+   }
+  ],
+  "status": {
+   "blocked": {},
+   "browser_exited": false,
+   "browser_pid": 2416,
+   "closing": false,
+   "destroyed": false,
+   "document_requests": 6,
+   "endpoint": {
+    "admitted": 31,
+    "handled": 31,
+    "refused": {
+     "host": 1,
+     "no-credential": 1,
+     "origin": 1,
+     "wrong-credential": 2
+    }
+   },
+   "handler": {
+    "GET /": 4,
+    "GET /api/query": 5,
+    "GET /api/redirect": 1,
+    "GET /api/stream": 1,
+    "GET /favicon.ico": 2,
+    "GET /logo.svg": 4,
+    "GET /probe.css": 4,
+    "GET /probe.js": 4,
+    "POST /api/echo": 2,
+    "POST /api/report": 3,
+    "POST /api/stream-ack": 1
+   },
+   "mode": "loopback",
+   "native_async": 0,
+   "navigations": 6,
+   "pending_requests": 0,
+   "port": 58600,
+   "profile": "C:\\Cygwin64\\tmp\\dfx2-feasibility\\profile-8920-1",
+   "refused": {
+    "navigation": 0,
+    "popup": 0,
+    "subframe": 0
+   },
+   "title": "dfx2 feasibility probe",
+   "uri": "http://127.0.0.1:58600/?run=stream\u0026id=s"
+  }
+ },
+ "exit": {
+  "host_exit": 0,
+  "timed_out": false,
+  "killed": false,
+  "browser_pids": [
+   2416
+  ],
+  "browser_processes_remaining": null,
+  "stderr_suspicious": null,
+  "callback_objects_live": 0,
+  "off_ui_thread": 0,
+  "late_creation_callbacks": 0,
+  "profiles_remaining": null
+ },
+ "seconds": 1.2,
+ "ready": {
+  "close_during": "",
+  "cookie": true,
+  "cookie_fail_injected": false,
+  "csp": true,
+  "event": "ready",
+  "filter": true,
+  "loader_pinned": true,
+  "loader_sha256": "a9a09232c25805323d4cfb3fc8f545a190a9c8a99c93262ea99d0b88df99ec90",
+  "pid": 8920,
+  "remove_fail_injected": false,
+  "root": "C:\\Cygwin64\\tmp\\dfx2-feasibility",
+  "runtime": "151.0.4129.93",
+  "t": "13:59:56.882",
+  "ui_thread": 9092
+ }
+}

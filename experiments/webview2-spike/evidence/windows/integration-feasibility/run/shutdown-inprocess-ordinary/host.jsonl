@@ -1,0 +1,19 @@
+# dfx2-webview2-spike.exe -feasibility -feas-root C:\Cygwin64\tmp\dfx2-feasibility
+{"close_during":"","cookie":true,"cookie_fail_injected":false,"csp":true,"event":"ready","filter":true,"loader_pinned":true,"loader_sha256":"a9a09232c25805323d4cfb3fc8f545a190a9c8a99c93262ea99d0b88df99ec90","pid":7740,"remove_fail_injected":false,"root":"C:\\Cygwin64\\tmp\\dfx2-feasibility","runtime":"151.0.4129.93","t":"14:01:17.669","ui_thread":5164}
+{"credential":false,"event":"opened","hwnd":"0x5b0050","mode":"inprocess","origin":"https://dfx2-spike.invalid","profile":"C:\\Cygwin64\\tmp\\dfx2-feasibility\\profile-7740-1","t":"14:01:17.681","window":"S"}
+{"contexts":"all","enforces":true,"event":"filter-installed","filter":"*","t":"14:01:18.017","window":"S"}
+{"browser_pid":8940,"event":"controller","profile_path":"C:\\Cygwin64\\tmp\\dfx2-feasibility\\profile-7740-1\\EBWebView\\Default","since_open":"349ms","t":"14:01:18.019","window":"S"}
+{"event":"navigate","t":"14:01:18.019","uri":"https://dfx2-spike.invalid/","window":"S"}
+{"event":"navigation-allowed","id":2,"method":"","redirect":false,"t":"14:01:18.024","uri":"https://dfx2-spike.invalid/","window":"S"}
+{"event":"document-request","method":"GET","t":"14:01:18.056","uri":"https://dfx2-spike.invalid/","window":"S"}
+{"event":"document-response","http_status":200,"t":"14:01:18.062","uri":"https://dfx2-spike.invalid/","window":"S"}
+{"document_http_status":200,"document_responded":true,"event":"load","from_post":false,"http_status":200,"id":2,"method":"GET","source":"https://dfx2-spike.invalid/","status":0,"success":true,"t":"14:01:18.132","uri":"https://dfx2-spike.invalid/","window":"S"}
+{"browser_pid":8940,"event":"closing","native_async":0,"navigated":true,"pending_requests":0,"stage":"running","t":"14:01:18.132","why":"command","window":"S"}
+{"event":"controller-closed","hresult":"S_OK","t":"14:01:18.147","took":"14.309ms","window":"S"}
+{"browser_pid":8940,"controller_pending":false,"env_pending":false,"event":"release-pending","native_async":0,"t":"14:01:20.172","waited":"2.041s","window":"S"}
+{"browser_pid":8940,"controller_pending":false,"env_pending":false,"event":"release-pending","native_async":0,"t":"14:01:22.191","waited":"4.059s","window":"S"}
+{"browser_pid":8940,"controller_pending":false,"env_pending":false,"event":"release-pending","native_async":0,"t":"14:01:24.194","waited":"6.062s","window":"S"}
+{"after_controller_close":"6.56s","closing":true,"event":"browser-process-exited","kind":0,"pid":8940,"t":"14:01:24.707","window":"S"}
+{"browser_exit_observed":true,"error":"","event":"profile-removal","released":true,"removal":{"path":"C:\\Cygwin64\\tmp\\dfx2-feasibility\\profile-7740-1","attempts":1,"elapsed_ns":38115100,"removed":true},"since_close":"6.613s","t":"14:01:24.745","took":"38ms","window":"S"}
+{"browser_exit_observed":true,"browser_pid":8940,"browser_started":true,"completions_dropped":null,"endpoint":{"admitted":0,"refused":{},"handled":4},"event":"closed","exit_kind":0,"handler":{"GET /":1,"GET /logo.svg":1,"GET /probe.css":1,"GET /probe.js":1},"handlers_drained":true,"native_async":0,"pending_requests":0,"profile_removed":true,"removal_attempts":1,"removal_error":"","since_close":"6.615s","stage":"running","t":"14:01:24.747","window":"S"}
+{"callback_objects_live":0,"callbacks":13,"event":"exit","late_creation_callbacks":0,"live":null,"off_ui_thread":0,"t":"14:01:24.747"}

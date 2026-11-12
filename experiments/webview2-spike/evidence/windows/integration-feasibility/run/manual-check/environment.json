@@ -1,0 +1,22 @@
+{
+ "dirty": [
+  "M bindings.go",
+  " M com_windows.go",
+  " M host_other.go",
+  " M host_windows.go",
+  " M main.go",
+  "?? evidence/windows/integration-feasibility/drive/",
+  "?? evidence/windows/integration-feasibility/run/",
+  "?? feasibility_windows.go"
+ ],
+ "exe": "C:\\Repos\\q\\products\\dfx2\\experiments\\webview2-spike\\dfx2-webview2-spike.exe",
+ "exe_sha256": "8bb9133502cebf83ca1fe050b94809446ce0736d046d327a740485f4b1981941",
+ "go": "go version go1.27.3 windows/amd64",
+ "os": "Microsoft Windows [Version 10.0.19045.6466]",
+ "revision": "f71c306a493f8172407fb53dbb9ba44d65e8686b",
+ "root": "C:\\Cygwin64\\tmp\\dfx2-feasibility",
+ "screen": "3440x1440",
+ "session": "RDP-Tcp#0",
+ "system_dpi": 96,
+ "time": "2026-11-12T14:03:16-05:00"
+}

@@ -1,0 +1,7 @@
+A window titled 'dfx2 feasibility M — attach' is open. Hands off until a STEP line appears.
+STEP 1 of 2: the page failed to load (GET http://127.0.0.1:59064/api/query?x=later). The error page should offer Retry and Return to start. The server is back. Click Retry.
+  recorded: Retry loaded http://127.0.0.1:59064/api/query?x=later; GETs added 1, POSTs added 0
+STEP 2 of 2: the form POST failed (http://127.0.0.1:59064/api/form). The error page should offer only Return to start. The server is back. Click Return to start.
+  recorded: Return to start loaded http://127.0.0.1:59064/; form POSTs that reached the server: 0 (added 0)
+Done. Report what you saw: the buttons offered on each page and where each click took you.
+recorded evidence\windows\integration-feasibility\run\manual-check\result.json

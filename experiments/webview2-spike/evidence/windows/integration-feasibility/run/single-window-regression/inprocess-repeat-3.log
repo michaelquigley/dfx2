@@ -1,0 +1,34 @@
+# dfx2-webview2-spike.exe -mode inprocess
+14:02:27.466241 loader: C:\Repos\q\products\dfx2\experiments\webview2-spike\WebView2Loader.dll sha256 a9a09232c25805323d4cfb3fc8f545a190a9c8a99c93262ea99d0b88df99ec90 (matches the pinned SDK 1.0.4129.50 x64 loader)
+14:02:27.467895 runtime: installed Evergreen Runtime 151.0.4129.93
+14:02:27.467895 user data: C:\Repos\q\products\dfx2\experiments\webview2-spike\webview2-userdata\inprocess
+14:02:27.470618 window: hwnd 0x5a0420 on UI thread 7296, 96 dpi (scale 1), client 1000x760 DIPs
+14:02:27.481117 transport: in-process dispatch for https://dfx2-spike.invalid; no application listener (pid 6304)
+14:02:27.485159 webview: environment ready in 25ms; browser version 151.0.4129.93
+14:02:27.491182 webview: environment creation started (returned in 10.066ms)
+14:02:27.816815 webview: controller ready in 357ms; browser process 10464
+14:02:27.817527 webview: intercepting https://dfx2-spike.invalid/* (all resource contexts)
+14:02:27.828595 webview: navigating to https://dfx2-spike.invalid/
+14:02:27.835955 webview: navigation 2 starting: https://dfx2-spike.invalid/
+14:02:27.837854 req 1 start GET / (0 B body, outstanding 1)
+14:02:27.838115 req 1 handler done 200 in 0s (outstanding 0)
+14:02:27.838666 intercept: SHCreateMemStream stream: IAgileObject S_OK, IMarshal S_OK
+14:02:27.839209 req 1 response installed: 200, 2731 B, 1ms after start (put_Response S_OK, Complete S_OK; pending 0)
+14:02:27.900081 req 2 start GET /app.css (0 B body, outstanding 1)
+14:02:27.900081 req 3 start GET /app.js (0 B body, outstanding 2)
+14:02:27.900081 req 2 handler done 200 in 0s (outstanding 1)
+14:02:27.900081 req 3 handler done 200 in 0s (outstanding 0)
+14:02:27.900590 req 2 response installed: 200, 1998 B, 1ms after start (put_Response S_OK, Complete S_OK; pending 1)
+14:02:27.900630 req 3 response installed: 200, 12574 B, 1ms after start (put_Response S_OK, Complete S_OK; pending 0)
+14:02:27.933768 req 4 start POST /api/report (52 B body, outstanding 1)
+14:02:27.933768 report: [inprocess] loaded / (assets app.css ✓ app.js ✓)
+14:02:27.933768 req 4 handler done 204 in 0s (outstanding 0)
+14:02:27.933768 req 4 response installed: 204, 0 B, 0s after start (put_Response S_OK, Complete S_OK; pending 0)
+14:02:27.969652 webview: navigation 2 completed: success true, web error status 0 (510ms after launch)
+14:02:27.970077 close: WM_CLOSE in state running, 510ms after launch (handlers running 0, deferrals pending 0, env pending false, controller pending false)
+14:02:27.993861 close: controller closed (S_OK) in 23.784ms
+14:02:27.999001 close: message loop ended 29ms after close began
+14:02:27.999001 close: workers drained true in 0s; started 4, finished 4, canceled 0, dropped after close 0, refused 0
+14:02:27.999001 close: intercepted 4, responses installed 4 (settled on close 0), origin refusals 0
+14:02:27.999001 exit: 8 WebView2 callbacks, 0 off the UI thread
+14:02:27.999001 exit: late creation callbacks 0; callback objects still referenced 0 []; 29ms after close began, 539ms after launch

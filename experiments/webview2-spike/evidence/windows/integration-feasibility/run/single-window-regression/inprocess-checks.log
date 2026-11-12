@@ -1,0 +1,162 @@
+# dfx2-webview2-spike.exe -mode inprocess -autorun checks
+14:02:05.743017 loader: C:\Repos\q\products\dfx2\experiments\webview2-spike\WebView2Loader.dll sha256 a9a09232c25805323d4cfb3fc8f545a190a9c8a99c93262ea99d0b88df99ec90 (matches the pinned SDK 1.0.4129.50 x64 loader)
+14:02:05.744647 runtime: installed Evergreen Runtime 151.0.4129.93
+14:02:05.745196 user data: C:\Repos\q\products\dfx2\experiments\webview2-spike\webview2-userdata\inprocess
+14:02:05.747938 window: hwnd 0x770170 on UI thread 6656, 96 dpi (scale 1), client 1000x760 DIPs
+14:02:05.757991 transport: in-process dispatch for https://dfx2-spike.invalid; no application listener (pid 6440)
+14:02:05.761959 webview: environment ready in 28ms; browser version 151.0.4129.93
+14:02:05.767602 webview: environment creation started (returned in 9.612ms)
+14:02:06.077857 webview: controller ready in 344ms; browser process 8604
+14:02:06.077857 webview: intercepting https://dfx2-spike.invalid/* (all resource contexts)
+14:02:06.088112 webview: navigating to https://dfx2-spike.invalid/?autorun=checks
+14:02:06.096120 webview: navigation 2 starting: https://dfx2-spike.invalid/?autorun=checks
+14:02:06.099519 req 1 start GET /?autorun=checks (0 B body, outstanding 1)
+14:02:06.099628 req 1 handler done 200 in 0s (outstanding 0)
+14:02:06.099628 intercept: SHCreateMemStream stream: IAgileObject S_OK, IMarshal S_OK
+14:02:06.100178 req 1 response installed: 200, 2731 B, 1ms after start (put_Response S_OK, Complete S_OK; pending 0)
+14:02:06.165775 req 2 start GET /app.css (0 B body, outstanding 1)
+14:02:06.165854 req 3 start GET /app.js (0 B body, outstanding 2)
+14:02:06.165854 req 2 handler done 200 in 0s (outstanding 1)
+14:02:06.165854 req 3 handler done 200 in 0s (outstanding 0)
+14:02:06.165854 req 2 response installed: 200, 1998 B, 0s after start (put_Response S_OK, Complete S_OK; pending 1)
+14:02:06.165854 req 3 response installed: 200, 12574 B, 0s after start (put_Response S_OK, Complete S_OK; pending 0)
+14:02:06.196256 req 4 start POST /api/report (67 B body, outstanding 1)
+14:02:06.196256 report: [inprocess] loaded /?autorun=checks (assets app.css ✓ app.js ✓)
+14:02:06.196256 req 4 handler done 204 in 0s (outstanding 0)
+14:02:06.197389 req 4 response installed: 204, 0 B, 1ms after start (put_Response S_OK, Complete S_OK; pending 0)
+14:02:06.240047 req 5 start GET /api/query?text=h%C3%A9llo+%E2%80%94+%E6%97%A5%E6%9C%AC%E8%AA%9E+%E2%9C%93+%F0%9F%99%82&n=1&n=2&empty= (0 B body, outstanding 1)
+14:02:06.240594 req 5 handler done 200 in 1ms (outstanding 0)
+14:02:06.240594 req 5 response installed: 200, 302 B, 1ms after start (put_Response S_OK, Complete S_OK; pending 0)
+14:02:06.241689 webview: navigation 2 completed: success true, web error status 0 (507ms after launch)
+14:02:06.267833 req 6 start POST /api/echo (40 B body, outstanding 1)
+14:02:06.267833 req 7 start GET /favicon.ico (0 B body, outstanding 2)
+14:02:06.267833 req 6 handler done 200 in 0s (outstanding 1)
+14:02:06.267833 req 7 handler done 404 in 0s (outstanding 0)
+14:02:06.267833 req 6 response installed: 200, 243 B, 0s after start (put_Response S_OK, Complete S_OK; pending 1)
+14:02:06.267833 req 7 response installed: 404, 19 B, 0s after start (put_Response S_OK, Complete S_OK; pending 0)
+14:02:06.274699 req 8 start POST /api/echo (65536 B body, outstanding 1)
+14:02:06.275248 req 8 handler done 200 in 1ms (outstanding 0)
+14:02:06.275248 req 8 response installed: 200, 185 B, 1ms after start (put_Response S_OK, Complete S_OK; pending 0)
+14:02:06.278018 req 9 start GET /api/binary (0 B body, outstanding 1)
+14:02:06.278018 req 9 handler done 200 in 0s (outstanding 0)
+14:02:06.278574 req 9 response installed: 200, 267 B, 1ms after start (put_Response S_OK, Complete S_OK; pending 0)
+14:02:06.280228 req 10 start GET /api/headers (0 B body, outstanding 1)
+14:02:06.280783 req 10 handler done 200 in 0s (outstanding 0)
+14:02:06.280783 req 10 response installed: 200, 69 B, 0s after start (put_Response S_OK, Complete S_OK; pending 0)
+14:02:06.283083 req 11 start GET /api/headers (0 B body, outstanding 1)
+14:02:06.283083 req 11 handler done 200 in 0s (outstanding 0)
+14:02:06.283083 req 11 response installed: 200, 69 B, 0s after start (put_Response S_OK, Complete S_OK; pending 0)
+14:02:06.286457 req 12 start GET /api/status/404 (0 B body, outstanding 1)
+14:02:06.286457 req 12 handler done 404 in 0s (outstanding 0)
+14:02:06.286457 req 12 response installed: 404, 31 B, 0s after start (put_Response S_OK, Complete S_OK; pending 0)
+14:02:06.288715 req 13 start GET /api/status/500 (0 B body, outstanding 1)
+14:02:06.288715 req 13 handler done 500 in 0s (outstanding 0)
+14:02:06.288715 req 13 response installed: 500, 31 B, 0s after start (put_Response S_OK, Complete S_OK; pending 0)
+14:02:06.290362 req 14 start GET /no/such/route (0 B body, outstanding 1)
+14:02:06.290930 req 14 handler done 404 in 0s (outstanding 0)
+14:02:06.290930 req 14 response installed: 404, 19 B, 0s after start (put_Response S_OK, Complete S_OK; pending 0)
+14:02:06.295070 req 15 start GET /api/slow?tag=race (0 B body, outstanding 1)
+14:02:06.396157 req 16 start GET /api/query?fast=1 (0 B body, outstanding 2)
+14:02:06.396157 req 16 handler done 200 in 0s (outstanding 1)
+14:02:06.396157 req 16 response installed: 200, 136 B, 0s after start (put_Response S_OK, Complete S_OK; pending 1)
+14:02:09.295478 req 15 handler done 200 in 3s (outstanding 0)
+14:02:09.295710 req 15 response installed: 200, 42 B, 3.001s after start (put_Response S_OK, Complete S_OK; pending 0)
+14:02:09.299815 req 17 start GET /api/slow?tag=abort (0 B body, outstanding 1)
+14:02:09.645779 req 18 start POST /api/echo (1048577 B body, outstanding 2)
+14:02:09.645816 req 18 handler done 413 [request-too-large] (handler not run) (outstanding 1)
+14:02:09.646372 req 18 response installed: 413, 54 B, 1ms after start (put_Response S_OK, Complete S_OK; pending 1)
+14:02:09.649161 req 19 start GET /api/query?text=h%C3%A9llo+%E2%80%94+%E6%97%A5%E6%9C%AC%E8%AA%9E+%E2%9C%93+%F0%9F%99%82&n=1&n=2&empty= (0 B body, outstanding 2)
+14:02:09.649789 req 19 handler done 200 in 0s (outstanding 1)
+14:02:09.649789 req 19 response installed: 200, 302 B, 0s after start (put_Response S_OK, Complete S_OK; pending 1)
+14:02:09.652030 req 20 start GET /api/big (0 B body, outstanding 2)
+14:02:09.653850 fixture: /api/big stopped after 1048576 bytes: adapt: response body exceeds the adapter's 1 MiB limit
+14:02:09.653850 req 20 handler done 502 [response-too-large] in 2ms (outstanding 1)
+14:02:09.653850 req 20 response installed: 502, 99 B, 2ms after start (put_Response S_OK, Complete S_OK; pending 1)
+14:02:09.656071 req 21 start GET /api/query?text=h%C3%A9llo+%E2%80%94+%E6%97%A5%E6%9C%AC%E8%AA%9E+%E2%9C%93+%F0%9F%99%82&n=1&n=2&empty= (0 B body, outstanding 2)
+14:02:09.656071 req 21 handler done 200 in 0s (outstanding 1)
+14:02:09.656071 req 21 response installed: 200, 302 B, 0s after start (put_Response S_OK, Complete S_OK; pending 1)
+14:02:09.658483 origin: new window for https://example.com/ refused
+14:02:09.659585 origin: new window for https://dfx2-spike.invalid/ refused
+14:02:09.661329 req 22 start POST /api/report (68 B body, outstanding 2)
+14:02:09.661329 report: [inprocess] PASS assets: app.css applied: true; app.js running: true
+14:02:09.661329 req 22 handler done 204 in 0s (outstanding 1)
+14:02:09.661329 req 22 response installed: 204, 0 B, 0s after start (put_Response S_OK, Complete S_OK; pending 1)
+14:02:09.663002 req 23 start POST /api/report (131 B body, outstanding 2)
+14:02:09.663518 report: [inprocess] PASS query: status 200, text "héllo — 日本語 ✓ 🙂", n=1,2, host dfx2-spike.invalid, custom header query-check
+14:02:09.663518 req 23 handler done 204 in 1ms (outstanding 1)
+14:02:09.663565 req 23 response installed: 204, 0 B, 1ms after start (put_Response S_OK, Complete S_OK; pending 1)
+14:02:09.665190 req 24 start POST /api/report (77 B body, outstanding 2)
+14:02:09.665190 report: [inprocess] PASS post: status 200, 40 B, Content-Length 40, sha256 match true
+14:02:09.665190 req 24 handler done 204 in 0s (outstanding 1)
+14:02:09.665190 req 24 response installed: 204, 0 B, 0s after start (put_Response S_OK, Complete S_OK; pending 1)
+14:02:09.667567 req 25 start POST /api/report (94 B body, outstanding 2)
+14:02:09.667567 report: [inprocess] PASS post-binary: status 200, sent 65536 B, handler got 65536 B, sha256 match true
+14:02:09.667567 req 25 handler done 204 in 0s (outstanding 1)
+14:02:09.667567 req 25 response installed: 204, 0 B, 0s after start (put_Response S_OK, Complete S_OK; pending 1)
+14:02:09.669055 req 26 start POST /api/report (99 B body, outstanding 2)
+14:02:09.669055 report: [inprocess] PASS binary: status 200, 267/267 B, bytes identical true, type application/octet-stream
+14:02:09.669055 req 26 handler done 204 in 0s (outstanding 1)
+14:02:09.669592 req 26 response installed: 204, 0 B, 1ms after start (put_Response S_OK, Complete S_OK; pending 1)
+14:02:09.670670 req 27 start POST /api/report (99 B body, outstanding 2)
+14:02:09.670670 report: [inprocess] PASS headers: x-spike-repeat "one, two" (fetch joins repeats), cache-control "no-store"
+14:02:09.670670 req 27 handler done 204 in 0s (outstanding 1)
+14:02:09.670670 req 27 response installed: 204, 0 B, 0s after start (put_Response S_OK, Complete S_OK; pending 1)
+14:02:09.672295 req 28 start POST /api/report (86 B body, outstanding 2)
+14:02:09.672295 report: [inprocess] INFO header-utf8: handler sent "café" as UTF-8 bytes; page sees "cafÃ©"
+14:02:09.672295 req 28 handler done 204 in 0s (outstanding 1)
+14:02:09.672295 req 28 response installed: 204, 0 B, 0s after start (put_Response S_OK, Complete S_OK; pending 1)
+14:02:09.674006 req 29 start POST /api/report (81 B body, outstanding 2)
+14:02:09.674006 report: [inprocess] PASS s404: status 404 Not Found, body {"from":"handler","status":404}
+14:02:09.674006 req 29 handler done 204 in 0s (outstanding 1)
+14:02:09.674006 req 29 response installed: 204, 0 B, 0s after start (put_Response S_OK, Complete S_OK; pending 1)
+14:02:09.675072 req 30 start POST /api/report (93 B body, outstanding 2)
+14:02:09.675583 report: [inprocess] PASS s500: status 500 Internal Server Error, body {"from":"handler","status":500}
+14:02:09.675583 req 30 handler done 204 in 0s (outstanding 1)
+14:02:09.675674 req 30 response installed: 204, 0 B, 1ms after start (put_Response S_OK, Complete S_OK; pending 1)
+14:02:09.676791 req 31 start POST /api/report (97 B body, outstanding 2)
+14:02:09.676791 report: [inprocess] PASS unknown: status 404, body "404 page not found\n", type text/plain; charset=utf-8
+14:02:09.676791 req 31 handler done 204 in 0s (outstanding 1)
+14:02:09.676791 req 31 response installed: 204, 0 B, 0s after start (put_Response S_OK, Complete S_OK; pending 1)
+14:02:09.678444 req 32 start POST /api/report (60 B body, outstanding 2)
+14:02:09.678444 report: [inprocess] PASS race: fast@104ms then slow(finished)@3004ms
+14:02:09.678974 req 32 handler done 204 in 1ms (outstanding 1)
+14:02:09.679001 req 32 response installed: 204, 0 B, 1ms after start (put_Response S_OK, Complete S_OK; pending 1)
+14:02:09.679537 req 33 start POST /api/report (97 B body, outstanding 2)
+14:02:09.680534 report: [inprocess] INFO abort: browser side: AbortError after 309ms; Go side: see host log for tag=abort
+14:02:09.680534 req 33 handler done 204 in 0s (outstanding 1)
+14:02:09.680534 req 33 response installed: 204, 0 B, 0s after start (put_Response S_OK, Complete S_OK; pending 1)
+14:02:09.682064 req 34 start POST /api/report (157 B body, outstanding 2)
+14:02:09.682064 report: [inprocess] PASS big-post: status 413, adapter error request-too-large, body "request body exceeds the adapter's 1048576-byte limit\n"; next request ok: true
+14:02:09.682064 req 34 handler done 204 in 0s (outstanding 1)
+14:02:09.682064 req 34 response installed: 204, 0 B, 0s after start (put_Response S_OK, Complete S_OK; pending 1)
+14:02:09.683063 req 35 start POST /api/report (99 B body, outstanding 2)
+14:02:09.683063 report: [inprocess] PASS big-get: status 502, adapter error response-too-large, 99 B; next request ok: true
+14:02:09.683063 req 35 handler done 204 in 0s (outstanding 1)
+14:02:09.683063 req 35 response installed: 204, 0 B, 0s after start (put_Response S_OK, Complete S_OK; pending 1)
+14:02:09.685083 req 36 start POST /api/report (84 B body, outstanding 2)
+14:02:09.685083 report: [inprocess] PASS open-outside: window.open returned null; host log shows the refusal
+14:02:09.685083 req 36 handler done 204 in 0s (outstanding 1)
+14:02:09.685083 req 36 response installed: 204, 0 B, 0s after start (put_Response S_OK, Complete S_OK; pending 1)
+14:02:09.686062 req 37 start POST /api/report (89 B body, outstanding 2)
+14:02:09.686062 report: [inprocess] PASS open-same: window.open("./") returned null (all new windows are refused)
+14:02:09.686062 req 37 handler done 204 in 0s (outstanding 1)
+14:02:09.686062 req 37 response installed: 204, 0 B, 0s after start (put_Response S_OK, Complete S_OK; pending 1)
+14:02:09.688065 req 38 start POST /api/report (29 B body, outstanding 2)
+14:02:09.688065 report: [inprocess] checks PASS 14/14
+14:02:09.688065 req 38 handler done 204 in 0s (outstanding 1)
+14:02:09.688065 req 38 response installed: 204, 0 B, 0s after start (put_Response S_OK, Complete S_OK; pending 1)
+14:02:09.696752 origin: navigation 3 to https://example.com/ refused (outside https://dfx2-spike.invalid)
+14:02:09.765031 webview: navigation 3 completed: success false, web error status 14 (4.031s after launch)
+14:02:11.204507 req 39 start POST /api/report (89 B body, outstanding 2)
+14:02:11.204507 report: [inprocess] origin: still on the fixture 1.5 s after location.href = https://example.com/
+14:02:11.204507 req 39 handler done 204 in 0s (outstanding 1)
+14:02:11.204507 req 39 response installed: 204, 0 B, 0s after start (put_Response S_OK, Complete S_OK; pending 1)
+14:02:12.299941 req 17 handler done 200 in 3s (outstanding 0)
+14:02:12.300088 req 17 response installed: 200, 43 B, 3s after start (put_Response S_OK, Complete S_OK; pending 0)
+14:02:13.463085 close: WM_CLOSE in state running, 7.729s after launch (handlers running 0, deferrals pending 0, env pending false, controller pending false)
+14:02:13.487246 close: controller closed (S_OK) in 23.295ms
+14:02:13.491131 close: message loop ended 28ms after close began
+14:02:13.491131 close: workers drained true in 0s; started 39, finished 39, canceled 0, dropped after close 0, refused 0
+14:02:13.491131 close: intercepted 39, responses installed 39 (settled on close 0), origin refusals 0
+14:02:13.491131 exit: 47 WebView2 callbacks, 0 off the UI thread
+14:02:13.491131 exit: late creation callbacks 0; callback objects still referenced 0 []; 28ms after close began, 7.757s after launch

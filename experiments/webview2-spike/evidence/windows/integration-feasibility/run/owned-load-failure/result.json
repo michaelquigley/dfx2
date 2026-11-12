@@ -1,0 +1,99 @@
+{
+ "scenario": "owned-load-failure",
+ "flags": null,
+ "checks": [
+  {
+   "check": "loopback: native load failure shows the error page",
+   "ok": true,
+   "detail": {
+    "failed": {
+     "document_http_status": 0,
+     "document_responded": false,
+     "error_page": true,
+     "event": "load-failed",
+     "from_post": false,
+     "http_status": 0,
+     "id": 3,
+     "method": "GET",
+     "retry_offered": true,
+     "source": "http://127.0.0.1:58906/api/abort",
+     "status": 8,
+     "success": false,
+     "t": "14:01:10.042",
+     "uri": "http://127.0.0.1:58906/api/abort",
+     "window": "L"
+    }
+   }
+  },
+  {
+   "check": "loopback: clicked Return to start reloads the start page",
+   "ok": true,
+   "detail": {
+    "source": "http://127.0.0.1:58906/"
+   }
+  },
+  {
+   "check": "inprocess: native load failure shows the error page",
+   "ok": true,
+   "detail": {
+    "failed": {
+     "document_http_status": 0,
+     "document_responded": false,
+     "error_page": true,
+     "event": "load-failed",
+     "from_post": false,
+     "http_status": 0,
+     "id": 3,
+     "method": "GET",
+     "retry_offered": true,
+     "source": "https://dfx2-spike.invalid/api/abort",
+     "status": 13,
+     "success": false,
+     "t": "14:01:11.562",
+     "uri": "https://dfx2-spike.invalid/api/abort",
+     "window": "P"
+    }
+   }
+  },
+  {
+   "check": "inprocess: clicked Return to start reloads the start page",
+   "ok": true,
+   "detail": {
+    "source": "https://dfx2-spike.invalid/"
+   }
+  }
+ ],
+ "ok": true,
+ "exit": {
+  "host_exit": 0,
+  "timed_out": false,
+  "killed": false,
+  "browser_pids": [
+   3752,
+   9680
+  ],
+  "browser_processes_remaining": null,
+  "stderr_suspicious": null,
+  "callback_objects_live": 0,
+  "off_ui_thread": 0,
+  "late_creation_callbacks": 0,
+  "profiles_remaining": null
+ },
+ "seconds": 3.5,
+ "ready": {
+  "close_during": "",
+  "cookie": true,
+  "cookie_fail_injected": false,
+  "csp": true,
+  "event": "ready",
+  "filter": true,
+  "loader_pinned": true,
+  "loader_sha256": "a9a09232c25805323d4cfb3fc8f545a190a9c8a99c93262ea99d0b88df99ec90",
+  "pid": 1424,
+  "remove_fail_injected": false,
+  "root": "C:\\Cygwin64\\tmp\\dfx2-feasibility",
+  "runtime": "151.0.4129.93",
+  "t": "14:01:09.489",
+  "ui_thread": 9600
+ }
+}

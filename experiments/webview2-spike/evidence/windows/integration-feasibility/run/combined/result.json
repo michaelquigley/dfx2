@@ -1,0 +1,205 @@
+{
+ "scenario": "combined",
+ "flags": null,
+ "checks": [
+  {
+   "check": "A: page, assets, query and POST",
+   "ok": true
+  },
+  {
+   "check": "I: page, assets, query and POST",
+   "ok": true
+  },
+  {
+   "check": "A closed with its request pending and drained, while I kept working",
+   "ok": true,
+   "detail": {
+    "closed": {
+     "browser_exit_observed": true,
+     "browser_pid": 10576,
+     "browser_started": true,
+     "completions_dropped": null,
+     "endpoint": {
+      "admitted": 23,
+      "handled": 23,
+      "refused": {}
+     },
+     "event": "closed",
+     "exit_kind": 0,
+     "handler": {
+      "GET /": 4,
+      "GET /api/query": 1,
+      "GET /api/slow": 1,
+      "GET /favicon.ico": 1,
+      "GET /logo.svg": 4,
+      "GET /probe.css": 4,
+      "GET /probe.js": 4,
+      "POST /api/echo": 1,
+      "POST /api/report": 3
+     },
+     "handlers_drained": true,
+     "native_async": 0,
+     "pending_requests": 0,
+     "profile_removed": true,
+     "removal_attempts": 1,
+     "removal_error": "",
+     "since_close": "335ms",
+     "stage": "running",
+     "t": "14:01:30.406",
+     "window": "A"
+    },
+    "during": [
+     "during0",
+     "during1",
+     "during2"
+    ]
+   }
+  },
+  {
+   "check": "reopened A: fresh session at a new endpoint",
+   "ok": true,
+   "detail": {
+    "fresh": {
+     "cookie": "",
+     "local": null,
+     "session": null
+    }
+   }
+  },
+  {
+   "check": "A2: clicked Retry repeats the failed GET once, nothing automatic",
+   "ok": true,
+   "detail": {
+    "handler_calls": {
+     "first navigation": 3,
+     "retry": 3
+    },
+    "retry_navigations": 1
+   }
+  },
+  {
+   "check": "I: clicked Retry repeats the failed GET once, nothing automatic",
+   "ok": true,
+   "detail": {
+    "handler_calls": {
+     "first navigation": 0,
+     "retry": 0
+    },
+    "retry_navigations": 1
+   }
+  },
+  {
+   "check": "I: final close with a request pending drains and releases",
+   "ok": true,
+   "detail": {
+    "closed": {
+     "browser_exit_observed": true,
+     "browser_pid": 2744,
+     "browser_started": true,
+     "completions_dropped": null,
+     "endpoint": {
+      "admitted": 0,
+      "handled": 46,
+      "refused": {}
+     },
+     "event": "closed",
+     "exit_kind": 0,
+     "handler": {
+      "GET /": 8,
+      "GET /api/query": 4,
+      "GET /api/slow": 2,
+      "GET /favicon.ico": 1,
+      "GET /logo.svg": 8,
+      "GET /probe.css": 8,
+      "GET /probe.js": 8,
+      "POST /api/echo": 1,
+      "POST /api/report": 6
+     },
+     "handlers_drained": true,
+     "native_async": 0,
+     "pending_requests": 0,
+     "profile_removed": true,
+     "removal_attempts": 1,
+     "removal_error": "",
+     "since_close": "331ms",
+     "stage": "running",
+     "t": "14:01:33.560",
+     "window": "I"
+    }
+   }
+  },
+  {
+   "check": "A2: final close with a request pending drains and releases",
+   "ok": true,
+   "detail": {
+    "closed": {
+     "browser_exit_observed": true,
+     "browser_pid": 9948,
+     "browser_started": true,
+     "completions_dropped": null,
+     "endpoint": {
+      "admitted": 27,
+      "handled": 27,
+      "refused": {}
+     },
+     "event": "closed",
+     "exit_kind": 0,
+     "handler": {
+      "GET /": 4,
+      "GET /api/abort": 6,
+      "GET /api/slow": 1,
+      "GET /favicon.ico": 2,
+      "GET /logo.svg": 4,
+      "GET /probe.css": 4,
+      "GET /probe.js": 4,
+      "POST /api/report": 2
+     },
+     "handlers_drained": true,
+     "native_async": 0,
+     "pending_requests": 0,
+     "profile_removed": true,
+     "removal_attempts": 1,
+     "removal_error": "",
+     "since_close": "339ms",
+     "stage": "running",
+     "t": "14:01:33.900",
+     "window": "A2"
+    }
+   }
+  }
+ ],
+ "ok": true,
+ "exit": {
+  "host_exit": 0,
+  "timed_out": false,
+  "killed": false,
+  "browser_pids": [
+   2744,
+   9948,
+   10576
+  ],
+  "browser_processes_remaining": null,
+  "stderr_suspicious": null,
+  "callback_objects_live": 0,
+  "off_ui_thread": 0,
+  "late_creation_callbacks": 0,
+  "profiles_remaining": null
+ },
+ "seconds": 5.3,
+ "ready": {
+  "close_during": "",
+  "cookie": true,
+  "cookie_fail_injected": false,
+  "csp": true,
+  "event": "ready",
+  "filter": true,
+  "loader_pinned": true,
+  "loader_sha256": "a9a09232c25805323d4cfb3fc8f545a190a9c8a99c93262ea99d0b88df99ec90",
+  "pid": 6984,
+  "remove_fail_injected": false,
+  "root": "C:\\Cygwin64\\tmp\\dfx2-feasibility",
+  "runtime": "151.0.4129.93",
+  "t": "14:01:28.683",
+  "ui_thread": 8272
+ }
+}

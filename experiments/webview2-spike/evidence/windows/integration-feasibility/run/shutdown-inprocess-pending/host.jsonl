@@ -1,0 +1,21 @@
+# dfx2-webview2-spike.exe -feasibility -feas-root C:\Cygwin64\tmp\dfx2-feasibility
+{"close_during":"","cookie":true,"cookie_fail_injected":false,"csp":true,"event":"ready","filter":true,"loader_pinned":true,"loader_sha256":"a9a09232c25805323d4cfb3fc8f545a190a9c8a99c93262ea99d0b88df99ec90","pid":8356,"remove_fail_injected":false,"root":"C:\\Cygwin64\\tmp\\dfx2-feasibility","runtime":"151.0.4129.93","t":"14:01:24.783","ui_thread":2640}
+{"credential":false,"event":"opened","hwnd":"0x5c0050","mode":"inprocess","origin":"https://dfx2-spike.invalid","profile":"C:\\Cygwin64\\tmp\\dfx2-feasibility\\profile-8356-1","t":"14:01:24.795","window":"S"}
+{"contexts":"all","enforces":true,"event":"filter-installed","filter":"*","t":"14:01:25.125","window":"S"}
+{"browser_pid":9752,"event":"controller","profile_path":"C:\\Cygwin64\\tmp\\dfx2-feasibility\\profile-8356-1\\EBWebView\\Default","since_open":"341ms","t":"14:01:25.125","window":"S"}
+{"event":"navigate","t":"14:01:25.125","uri":"https://dfx2-spike.invalid/","window":"S"}
+{"event":"navigation-allowed","id":2,"method":"","redirect":false,"t":"14:01:25.131","uri":"https://dfx2-spike.invalid/","window":"S"}
+{"event":"document-request","method":"GET","t":"14:01:25.184","uri":"https://dfx2-spike.invalid/","window":"S"}
+{"event":"document-response","http_status":200,"t":"14:01:25.189","uri":"https://dfx2-spike.invalid/","window":"S"}
+{"document_http_status":200,"document_responded":true,"event":"load","from_post":false,"http_status":200,"id":2,"method":"GET","source":"https://dfx2-spike.invalid/","status":0,"success":true,"t":"14:01:25.251","uri":"https://dfx2-spike.invalid/","window":"S"}
+{"event":"navigation-allowed","id":3,"method":"","redirect":false,"t":"14:01:25.256","uri":"https://dfx2-spike.invalid/?run=slow\u0026id=slow","window":"S"}
+{"event":"document-request","method":"GET","t":"14:01:25.258","uri":"https://dfx2-spike.invalid/?run=slow\u0026id=slow","window":"S"}
+{"event":"document-response","http_status":200,"t":"14:01:25.261","uri":"https://dfx2-spike.invalid/?run=slow\u0026id=slow","window":"S"}
+{"document_http_status":200,"document_responded":true,"event":"load","from_post":false,"http_status":200,"id":3,"method":"GET","source":"https://dfx2-spike.invalid/?run=slow\u0026id=slow","status":0,"success":true,"t":"14:01:25.277","uri":"https://dfx2-spike.invalid/?run=slow\u0026id=slow","window":"S"}
+{"event":"report","report":{"id":"slow","run":"slow","href":"https://dfx2-spike.invalid/?run=slow\u0026id=slow","result":"started"},"t":"14:01:25.280","window":"S"}
+{"browser_pid":9752,"event":"closing","native_async":0,"navigated":true,"pending_requests":1,"stage":"running","t":"14:01:25.582","why":"command","window":"S"}
+{"event":"controller-closed","hresult":"S_OK","t":"14:01:25.593","took":"11.243ms","window":"S"}
+{"after_controller_close":"288ms","closing":true,"event":"browser-process-exited","kind":0,"pid":9752,"t":"14:01:25.881","window":"S"}
+{"browser_exit_observed":true,"error":"","event":"profile-removal","released":true,"removal":{"path":"C:\\Cygwin64\\tmp\\dfx2-feasibility\\profile-8356-1","attempts":1,"elapsed_ns":38692800,"removed":true},"since_close":"338ms","t":"14:01:25.920","took":"39ms","window":"S"}
+{"browser_exit_observed":true,"browser_pid":9752,"browser_started":true,"completions_dropped":null,"endpoint":{"admitted":0,"refused":{},"handled":11},"event":"closed","exit_kind":0,"handler":{"GET /":2,"GET /api/slow":1,"GET /favicon.ico":1,"GET /logo.svg":2,"GET /probe.css":2,"GET /probe.js":2,"POST /api/report":1},"handlers_drained":true,"native_async":0,"pending_requests":0,"profile_removed":true,"removal_attempts":1,"removal_error":"","since_close":"341ms","stage":"running","t":"14:01:25.922","window":"S"}
+{"callback_objects_live":0,"callbacks":28,"event":"exit","late_creation_callbacks":0,"live":null,"off_ui_thread":0,"t":"14:01:25.923"}

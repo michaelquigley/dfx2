@@ -1,0 +1,27 @@
+# dfx2-webview2-spike.exe -mode loopback
+14:02:00.032070 loader: C:\Repos\q\products\dfx2\experiments\webview2-spike\WebView2Loader.dll sha256 a9a09232c25805323d4cfb3fc8f545a190a9c8a99c93262ea99d0b88df99ec90 (matches the pinned SDK 1.0.4129.50 x64 loader)
+14:02:00.033694 runtime: installed Evergreen Runtime 151.0.4129.93
+14:02:00.033694 user data: C:\Repos\q\products\dfx2\experiments\webview2-spike\webview2-userdata\loopback
+14:02:00.036386 window: hwnd 0x720170 on UI thread 11460, 96 dpi (scale 1), client 1000x760 DIPs
+14:02:00.052305 transport: loopback HTTP server listening on http://127.0.0.1:59036 (pid 10868)
+14:02:00.055713 webview: environment ready in 31ms; browser version 151.0.4129.93
+14:02:00.061344 webview: environment creation started (returned in 9.038ms)
+14:02:00.386714 webview: controller ready in 361ms; browser process 9768
+14:02:00.395017 webview: navigating to http://127.0.0.1:59036/
+14:02:00.402876 webview: navigation 2 starting: http://127.0.0.1:59036/
+14:02:00.406094 req 1 start GET / from 127.0.0.1:59037 (0 B body, outstanding 1)
+14:02:00.406094 req 1 handler done 200 in 0s (outstanding 0)
+14:02:00.483468 req 2 start GET /app.css from 127.0.0.1:59037 (0 B body, outstanding 1)
+14:02:00.483468 req 2 handler done 200 in 0s (outstanding 0)
+14:02:00.483468 req 3 start GET /app.js from 127.0.0.1:59038 (0 B body, outstanding 1)
+14:02:00.483468 req 3 handler done 200 in 0s (outstanding 0)
+14:02:00.508013 req 4 start POST /api/report from 127.0.0.1:59038 (51 B body, outstanding 1)
+14:02:00.508013 report: [loopback] loaded / (assets app.css ✓ app.js ✓)
+14:02:00.508013 req 4 handler done 204 in 0s (outstanding 0)
+14:02:00.545012 webview: navigation 2 completed: success true, web error status 0 (520ms after launch)
+14:02:00.546013 close: WM_CLOSE in state running, 521ms after launch (handlers running 0, deferrals pending 0, env pending false, controller pending false)
+14:02:00.572240 close: controller closed (S_OK) in 26.227ms
+14:02:00.577495 close: message loop ended 31ms after close began
+14:02:00.578039 transport: server shutdown in 1ms (ok)
+14:02:00.578039 exit: 4 WebView2 callbacks, 0 off the UI thread
+14:02:00.578039 exit: late creation callbacks 0; callback objects still referenced 0 []; 31ms after close began, 553ms after launch

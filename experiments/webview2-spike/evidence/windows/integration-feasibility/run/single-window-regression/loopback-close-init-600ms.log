@@ -1,0 +1,29 @@
+# dfx2-webview2-spike.exe -mode loopback
+14:01:58.114329 loader: C:\Repos\q\products\dfx2\experiments\webview2-spike\WebView2Loader.dll sha256 a9a09232c25805323d4cfb3fc8f545a190a9c8a99c93262ea99d0b88df99ec90 (matches the pinned SDK 1.0.4129.50 x64 loader)
+14:01:58.115943 runtime: installed Evergreen Runtime 151.0.4129.93
+14:01:58.115943 user data: C:\Repos\q\products\dfx2\experiments\webview2-spike\webview2-userdata\loopback
+14:01:58.119275 window: hwnd 0xec0392 on UI thread 11344, 96 dpi (scale 1), client 1000x760 DIPs
+14:01:58.130250 transport: loopback HTTP server listening on http://127.0.0.1:59025 (pid 5420)
+14:01:58.132869 webview: environment ready in 30ms; browser version 151.0.4129.93
+14:01:58.135110 webview: environment creation started (returned in 4.86ms)
+14:01:58.489888 webview: controller ready in 387ms; browser process 1644
+14:01:58.497904 webview: navigating to http://127.0.0.1:59025/
+14:01:58.511414 req 1 start GET / from 127.0.0.1:59026 (0 B body, outstanding 1)
+14:01:58.511414 req 1 handler done 200 in 0s (outstanding 0)
+14:01:58.512514 webview: navigation 2 starting: http://127.0.0.1:59025/
+14:01:58.589625 req 2 start GET /app.js from 127.0.0.1:59027 (0 B body, outstanding 1)
+14:01:58.589625 req 3 start GET /app.css from 127.0.0.1:59026 (0 B body, outstanding 2)
+14:01:58.589625 req 3 handler done 200 in 0s (outstanding 1)
+14:01:58.589625 req 2 handler done 200 in 0s (outstanding 0)
+14:01:58.634750 req 4 start POST /api/report from 127.0.0.1:59027 (51 B body, outstanding 1)
+14:01:58.634750 report: [loopback] loaded / (assets app.css ✓ app.js ✓)
+14:01:58.634750 req 4 handler done 204 in 0s (outstanding 0)
+14:01:58.649264 webview: navigation 2 completed: success true, web error status 0 (547ms after launch)
+14:01:58.654654 req 5 start GET /favicon.ico from 127.0.0.1:59027 (0 B body, outstanding 1)
+14:01:58.654654 req 5 handler done 404 in 0s (outstanding 0)
+14:01:58.720251 close: WM_CLOSE in state running, 618ms after launch (handlers running 0, deferrals pending 0, env pending false, controller pending false)
+14:01:58.742554 close: controller closed (S_OK) in 22.303ms
+14:01:58.746398 close: message loop ended 26ms after close began
+14:01:58.747194 transport: server shutdown in 1ms (ok)
+14:01:58.747194 exit: 4 WebView2 callbacks, 0 off the UI thread
+14:01:58.747715 exit: late creation callbacks 0; callback objects still referenced 0 []; 26ms after close began, 645ms after launch

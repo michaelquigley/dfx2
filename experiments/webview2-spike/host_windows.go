@@ -119,7 +119,9 @@ type host struct {
 	destroyed    bool
 	navigations  int
 	devtoolsOpen bool
-	counts       struct{ intercepted, installed, settledOnClose, refusedOrigin, late, invoked, offUI int }
+
+	loaderHash, runtimeVersion string // what the prerequisite checks found, for the feasibility host's record
+	counts                     struct{ intercepted, installed, settledOnClose, refusedOrigin, late, invoked, offUI int }
 }
 
 // eventToken is a registration to remove at teardown.
@@ -236,6 +238,7 @@ func (h *host) loadLoader() error {
 		return fmt.Errorf("loading %s: %w", abs, err)
 	}
 	h.loader = dll
+	h.loaderHash = sum
 	match := "matches the pinned SDK 1.0.4129.50 x64 loader"
 	if sum != loaderSHA256 {
 		match = "WARNING: does not match the pinned loader " + loaderSHA256
@@ -281,6 +284,7 @@ func (h *host) checkRuntime() error {
 			"  Install the Evergreen WebView2 Runtime from https://developer.microsoft.com/microsoft-edge/webview2/\n"+
 			"  (Windows 11 includes it), or pass -runtime-dir with a fixed-version Runtime folder.", where, hr)
 	}
+	h.runtimeVersion = ver
 	log.Printf("runtime: %s %s", where, ver)
 	return nil
 }

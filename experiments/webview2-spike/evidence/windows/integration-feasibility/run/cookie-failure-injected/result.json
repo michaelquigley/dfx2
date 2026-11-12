@@ -1,0 +1,76 @@
+{
+ "scenario": "cookie-failure-injected",
+ "flags": [
+  "-feas-cookie-fail"
+ ],
+ "checks": [
+  {
+   "check": "injected installation failure: visible, no navigation, drained",
+   "ok": true,
+   "detail": {
+    "closed": {
+     "browser_exit_observed": true,
+     "browser_pid": 6748,
+     "browser_started": true,
+     "completions_dropped": null,
+     "endpoint": {
+      "admitted": 0,
+      "handled": 0,
+      "refused": {}
+     },
+     "event": "closed",
+     "exit_kind": 0,
+     "handler": {},
+     "handlers_drained": true,
+     "native_async": 0,
+     "pending_requests": 0,
+     "profile_removed": true,
+     "removal_attempts": 1,
+     "removal_error": "",
+     "since_close": "261ms",
+     "stage": "cookie installation",
+     "t": "14:00:44.227",
+     "window": "A"
+    },
+    "failed": {
+     "error": "injected: cookie installation failure (AddOrUpdateCookie result replaced)",
+     "event": "cookie-failed",
+     "t": "14:00:43.966",
+     "window": "A"
+    }
+   }
+  }
+ ],
+ "ok": true,
+ "exit": {
+  "host_exit": 0,
+  "timed_out": false,
+  "killed": false,
+  "browser_pids": [
+   6748
+  ],
+  "browser_processes_remaining": null,
+  "stderr_suspicious": null,
+  "callback_objects_live": 0,
+  "off_ui_thread": 0,
+  "late_creation_callbacks": 0,
+  "profiles_remaining": null
+ },
+ "seconds": 0.7,
+ "ready": {
+  "close_during": "",
+  "cookie": true,
+  "cookie_fail_injected": true,
+  "csp": true,
+  "event": "ready",
+  "filter": true,
+  "loader_pinned": true,
+  "loader_sha256": "a9a09232c25805323d4cfb3fc8f545a190a9c8a99c93262ea99d0b88df99ec90",
+  "pid": 5848,
+  "remove_fail_injected": false,
+  "root": "C:\\Cygwin64\\tmp\\dfx2-feasibility",
+  "runtime": "151.0.4129.93",
+  "t": "14:00:43.603",
+  "ui_thread": 10064
+ }
+}

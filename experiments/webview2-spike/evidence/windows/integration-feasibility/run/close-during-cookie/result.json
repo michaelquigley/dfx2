@@ -1,0 +1,85 @@
+{
+ "scenario": "close-during-cookie",
+ "flags": [
+  "-feas-close-during",
+  "cookie"
+ ],
+ "checks": [
+  {
+   "check": "close during cookie installation: no navigation, ownership drained, profile deleted",
+   "ok": true,
+   "detail": {
+    "closed": {
+     "browser_exit_observed": true,
+     "browser_pid": 9188,
+     "browser_started": true,
+     "completions_dropped": [
+      "GetCookiesCompleted"
+     ],
+     "endpoint": {
+      "admitted": 0,
+      "handled": 0,
+      "refused": {}
+     },
+     "event": "closed",
+     "exit_kind": 0,
+     "handler": {},
+     "handlers_drained": true,
+     "native_async": 0,
+     "pending_requests": 0,
+     "profile_removed": true,
+     "removal_attempts": 1,
+     "removal_error": "",
+     "since_close": "261ms",
+     "stage": "cookie installation",
+     "t": "14:00:43.562",
+     "window": "A"
+    },
+    "hook": [
+     {
+      "event": "test",
+      "hook": "close posted after AddOrUpdateCookie, before GetCookies completes",
+      "t": "14:00:43.301",
+      "window": "A"
+     }
+    ],
+    "late": null
+   }
+  }
+ ],
+ "ok": true,
+ "detail": {
+  "stage": "cookie installation"
+ },
+ "exit": {
+  "host_exit": 0,
+  "timed_out": false,
+  "killed": false,
+  "browser_pids": [
+   9188
+  ],
+  "browser_processes_remaining": null,
+  "stderr_suspicious": null,
+  "callback_objects_live": 0,
+  "off_ui_thread": 0,
+  "late_creation_callbacks": 0,
+  "profiles_remaining": null
+ },
+ "seconds": 0.7,
+ "ready": {
+  "close_during": "cookie",
+  "cookie": true,
+  "cookie_fail_injected": false,
+  "csp": true,
+  "event": "ready",
+  "filter": true,
+  "loader_pinned": true,
+  "loader_sha256": "a9a09232c25805323d4cfb3fc8f545a190a9c8a99c93262ea99d0b88df99ec90",
+  "pid": 7968,
+  "remove_fail_injected": false,
+  "root": "C:\\Cygwin64\\tmp\\dfx2-feasibility",
+  "runtime": "151.0.4129.93",
+  "t": "14:00:42.931",
+  "ui_thread": 5840
+ }
+}

@@ -1,0 +1,229 @@
+{
+ "scenario": "storage",
+ "flags": null,
+ "checks": [
+  {
+   "check": "B cannot read A's cookie, local or session storage",
+   "ok": true,
+   "detail": {
+    "a": {
+     "cookie": "vis=A",
+     "local": "A",
+     "session": "A"
+    },
+    "b": {
+     "cookie": "",
+     "local": null,
+     "session": null
+    }
+   }
+  },
+  {
+   "check": "B's request for A's cached resource reaches the server",
+   "ok": true,
+   "detail": {
+    "server_requests": {
+     "A fetch x2": 1,
+     "A image x2": 1,
+     "B image x2": 1
+    }
+   }
+  },
+  {
+   "check": "native reload keeps A's session",
+   "ok": true,
+   "detail": {
+    "a": {
+     "cookie": "vis=A",
+     "local": "A",
+     "session": "A"
+    }
+   }
+  },
+  {
+   "check": "B kept working while A closed",
+   "ok": true,
+   "detail": {
+    "closed_a": {
+     "browser_exit_observed": true,
+     "browser_pid": 7592,
+     "browser_started": true,
+     "completions_dropped": null,
+     "endpoint": {
+      "admitted": 0,
+      "handled": 0,
+      "refused": {}
+     },
+     "event": "closed",
+     "exit_kind": 0,
+     "handler": {},
+     "handlers_drained": true,
+     "native_async": 0,
+     "pending_requests": 0,
+     "profile_removed": true,
+     "removal_attempts": 1,
+     "removal_error": "",
+     "since_close": "297ms",
+     "stage": "running",
+     "t": "14:00:48.718",
+     "window": "A"
+    },
+    "during": [
+     "during0",
+     "during1",
+     "during2"
+    ]
+   }
+  },
+  {
+   "check": "reopened A has a fresh session",
+   "ok": true,
+   "detail": {
+    "a2": {
+     "cookie": "",
+     "local": null,
+     "session": null
+    }
+   }
+  },
+  {
+   "check": "B is unchanged",
+   "ok": true,
+   "detail": {
+    "b": {
+     "cookie": "vis=B",
+     "local": "B",
+     "session": "B"
+    }
+   }
+  },
+  {
+   "check": "the attachment server outlives its browsers",
+   "ok": true,
+   "detail": {
+    "status": 200
+   }
+  }
+ ],
+ "ok": true,
+ "detail": {
+  "app_cookie_names_per_cached_request": [
+   [
+    "vis"
+   ],
+   [
+    "vis"
+   ],
+   [
+    "vis"
+   ]
+  ],
+  "release": {
+   "A": {
+    "browser_exit_observed": true,
+    "browser_pid": 7592,
+    "browser_started": true,
+    "completions_dropped": null,
+    "endpoint": {
+     "admitted": 0,
+     "handled": 0,
+     "refused": {}
+    },
+    "event": "closed",
+    "exit_kind": 0,
+    "handler": {},
+    "handlers_drained": true,
+    "native_async": 0,
+    "pending_requests": 0,
+    "profile_removed": true,
+    "removal_attempts": 1,
+    "removal_error": "",
+    "since_close": "297ms",
+    "stage": "running",
+    "t": "14:00:48.718",
+    "window": "A"
+   },
+   "A2": {
+    "browser_exit_observed": true,
+    "browser_pid": 9920,
+    "browser_started": true,
+    "completions_dropped": null,
+    "endpoint": {
+     "admitted": 0,
+     "handled": 0,
+     "refused": {}
+    },
+    "event": "closed",
+    "exit_kind": 0,
+    "handler": {},
+    "handlers_drained": true,
+    "native_async": 0,
+    "pending_requests": 0,
+    "profile_removed": true,
+    "removal_attempts": 1,
+    "removal_error": "",
+    "since_close": "339ms",
+    "stage": "running",
+    "t": "14:00:49.959",
+    "window": "A2"
+   },
+   "B": {
+    "browser_exit_observed": true,
+    "browser_pid": 11460,
+    "browser_started": true,
+    "completions_dropped": null,
+    "endpoint": {
+     "admitted": 0,
+     "handled": 0,
+     "refused": {}
+    },
+    "event": "closed",
+    "exit_kind": 0,
+    "handler": {},
+    "handlers_drained": true,
+    "native_async": 0,
+    "pending_requests": 0,
+    "profile_removed": true,
+    "removal_attempts": 1,
+    "removal_error": "",
+    "since_close": "339ms",
+    "stage": "running",
+    "t": "14:00:49.619",
+    "window": "B"
+   }
+  }
+ },
+ "exit": {
+  "host_exit": 0,
+  "timed_out": false,
+  "killed": false,
+  "browser_pids": [
+   7592,
+   9920,
+   11460
+  ],
+  "browser_processes_remaining": null,
+  "stderr_suspicious": null,
+  "callback_objects_live": 0,
+  "off_ui_thread": 0,
+  "late_creation_callbacks": 0,
+  "profiles_remaining": null
+ },
+ "seconds": 3,
+ "ready": {
+  "close_during": "",
+  "cookie": true,
+  "cookie_fail_injected": false,
+  "csp": true,
+  "event": "ready",
+  "filter": true,
+  "loader_pinned": true,
+  "loader_sha256": "a9a09232c25805323d4cfb3fc8f545a190a9c8a99c93262ea99d0b88df99ec90",
+  "pid": 11100,
+  "remove_fail_injected": false,
+  "root": "C:\\Cygwin64\\tmp\\dfx2-feasibility",
+  "runtime": "151.0.4129.93",
+  "t": "14:00:47.033",
+  "ui_thread": 10464
+ }
+}

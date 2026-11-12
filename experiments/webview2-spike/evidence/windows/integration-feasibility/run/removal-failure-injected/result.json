@@ -1,0 +1,97 @@
+{
+ "scenario": "removal-failure-injected",
+ "flags": [
+  "-feas-remove-fail"
+ ],
+ "checks": [
+  {
+   "check": "injected post-release deletion failure: labeled, retried, named as residue, never reported as deleted",
+   "ok": true,
+   "detail": {
+    "closed": {
+     "browser_exit_observed": true,
+     "browser_pid": 4632,
+     "browser_started": true,
+     "completions_dropped": null,
+     "endpoint": {
+      "admitted": 4,
+      "handled": 4,
+      "refused": {}
+     },
+     "event": "closed",
+     "exit_kind": 0,
+     "handler": {
+      "GET /": 1,
+      "GET /logo.svg": 1,
+      "GET /probe.css": 1,
+      "GET /probe.js": 1
+     },
+     "handlers_drained": true,
+     "native_async": 0,
+     "pending_requests": 0,
+     "profile_removed": false,
+     "removal_attempts": 20,
+     "removal_error": "profile residue C:\\Cygwin64\\tmp\\dfx2-feasibility\\profile-12036-1 not deleted after 20 attempts: injected: deletion failure after release",
+     "since_close": "2.205s",
+     "stage": "running",
+     "t": "14:00:46.948",
+     "window": "A"
+    },
+    "removal": {
+     "browser_exit_observed": true,
+     "error": "profile residue C:\\Cygwin64\\tmp\\dfx2-feasibility\\profile-12036-1 not deleted after 20 attempts: injected: deletion failure after release",
+     "event": "profile-removal",
+     "released": true,
+     "removal": {
+      "attempts": 20,
+      "elapsed_ns": 1909667100,
+      "error": "profile residue C:\\Cygwin64\\tmp\\dfx2-feasibility\\profile-12036-1 not deleted after 20 attempts: injected: deletion failure after release",
+      "injected": true,
+      "path": "C:\\Cygwin64\\tmp\\dfx2-feasibility\\profile-12036-1",
+      "removed": false
+     },
+     "since_close": "2.201s",
+     "t": "14:00:46.944",
+     "took": "1.91s",
+     "window": "A"
+    }
+   }
+  }
+ ],
+ "ok": true,
+ "detail": {
+  "driver_cleanup": "\u003cnil\u003e",
+  "residue": "C:\\Cygwin64\\tmp\\dfx2-feasibility\\profile-12036-1"
+ },
+ "exit": {
+  "host_exit": 0,
+  "timed_out": false,
+  "killed": false,
+  "browser_pids": [
+   4632
+  ],
+  "browser_processes_remaining": null,
+  "stderr_suspicious": null,
+  "callback_objects_live": 0,
+  "off_ui_thread": 0,
+  "late_creation_callbacks": 0,
+  "profiles_remaining": null
+ },
+ "seconds": 2.8,
+ "ready": {
+  "close_during": "",
+  "cookie": true,
+  "cookie_fail_injected": false,
+  "csp": true,
+  "event": "ready",
+  "filter": true,
+  "loader_pinned": true,
+  "loader_sha256": "a9a09232c25805323d4cfb3fc8f545a190a9c8a99c93262ea99d0b88df99ec90",
+  "pid": 12036,
+  "remove_fail_injected": true,
+  "root": "C:\\Cygwin64\\tmp\\dfx2-feasibility",
+  "runtime": "151.0.4129.93",
+  "t": "14:00:44.272",
+  "ui_thread": 6128
+ }
+}

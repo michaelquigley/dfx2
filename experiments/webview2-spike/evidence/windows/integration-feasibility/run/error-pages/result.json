@@ -1,0 +1,430 @@
+{
+ "scenario": "error-pages",
+ "flags": null,
+ "checks": [
+  {
+   "check": "failed GET: Retry and Return to start, no script",
+   "ok": true,
+   "detail": {
+    "failed": {
+     "document_http_status": 0,
+     "document_responded": false,
+     "error_page": true,
+     "event": "load-failed",
+     "from_post": false,
+     "http_status": 0,
+     "id": 4,
+     "method": "GET",
+     "retry_offered": true,
+     "source": "http://127.0.0.1:58822/api/query?x=later",
+     "status": 0,
+     "success": false,
+     "t": "14:00:54.122",
+     "uri": "http://127.0.0.1:58822/api/query?x=later",
+     "window": "E"
+    },
+    "page": {
+     "event": "error-page",
+     "hresult": "S_OK",
+     "method": "GET",
+     "retry": true,
+     "retry_at": [
+      130,
+      262
+     ],
+     "script": false,
+     "start_at": [
+      350,
+      262
+     ],
+     "t": "14:00:54.122",
+     "uri": "http://127.0.0.1:58822/api/query?x=later",
+     "window": "E"
+    }
+   }
+  },
+  {
+   "check": "clicked Retry repeats the failed GET once the service returns",
+   "ok": true,
+   "detail": {
+    "gets_after": 1,
+    "gets_before": 0
+   }
+  },
+  {
+   "check": "a page-supplied action is refused",
+   "ok": true
+  },
+  {
+   "check": "failed POST shows only Return to start",
+   "ok": true,
+   "detail": {
+    "failed": {
+     "document_http_status": 0,
+     "document_responded": false,
+     "error_page": true,
+     "event": "load-failed",
+     "from_post": true,
+     "http_status": 0,
+     "id": 11,
+     "method": "POST",
+     "retry_offered": false,
+     "source": "http://127.0.0.1:58822/api/form",
+     "status": 0,
+     "success": false,
+     "t": "14:00:58.769",
+     "uri": "http://127.0.0.1:58822/api/form",
+     "window": "E"
+    },
+    "page": {
+     "event": "error-page",
+     "hresult": "S_OK",
+     "method": "POST",
+     "retry": false,
+     "retry_at": [
+      130,
+      262
+     ],
+     "script": false,
+     "start_at": [
+      350,
+      262
+     ],
+     "t": "14:00:58.769",
+     "uri": "http://127.0.0.1:58822/api/form",
+     "window": "E"
+    }
+   }
+  },
+  {
+   "check": "a click where Retry would be does nothing on the POST page",
+   "ok": true
+  },
+  {
+   "check": "clicked Return to start is a GET and replays nothing",
+   "ok": true,
+   "detail": {
+    "edits": null
+   }
+  },
+  {
+   "check": "a GET reached by 303 after a POST offers Retry of the GET",
+   "ok": true,
+   "detail": {
+    "failed": {
+     "document_http_status": 0,
+     "document_responded": false,
+     "error_page": true,
+     "event": "load-failed",
+     "from_post": true,
+     "http_status": 303,
+     "id": 16,
+     "method": "GET",
+     "retry_offered": true,
+     "source": "http://127.0.0.1:58822/broken",
+     "status": 8,
+     "success": false,
+     "t": "14:01:02.110",
+     "uri": "http://127.0.0.1:58822/broken",
+     "window": "E"
+    }
+   }
+  },
+  {
+   "check": "Retry after the 303 is one GET navigation and replays no POST",
+   "ok": true,
+   "detail": {
+    "broken_server_requests": {
+     "first navigation": 2,
+     "retry": 3
+    },
+    "post_303_server_count": 1,
+    "retry_navigations": 1
+   }
+  },
+  {
+   "check": "a POST preserved by 307 offers no Retry",
+   "ok": true,
+   "detail": {
+    "broken_post_navigations": 1,
+    "failed": {
+     "document_http_status": 0,
+     "document_responded": false,
+     "error_page": true,
+     "event": "load-failed",
+     "from_post": true,
+     "http_status": 307,
+     "id": 24,
+     "method": "POST",
+     "retry_offered": false,
+     "source": "http://127.0.0.1:58822/broken-post",
+     "status": 8,
+     "success": false,
+     "t": "14:01:03.100",
+     "uri": "http://127.0.0.1:58822/broken-post",
+     "window": "E"
+    },
+    "post_307_server_count": 1
+   }
+  },
+  {
+   "check": "the browser's transport sent the redirected POST once",
+   "ok": false,
+   "detail": {
+    "broken_post_server_count": 2,
+    "navigations": 1
+   }
+  },
+  {
+   "check": "404 and 500 display; a failed fetch or asset leaves the page",
+   "ok": true,
+   "detail": {
+    "broken": {
+     "fetched": "rejected: TypeError",
+     "form": true,
+     "path": "/"
+    },
+    "e500": "500 from the server",
+    "missing": "404 from the server"
+   }
+  },
+  {
+   "check": "initial-load failure, then clicked Retry",
+   "ok": true,
+   "detail": {
+    "initial": {
+     "document_http_status": 0,
+     "document_responded": false,
+     "error_page": true,
+     "event": "load-failed",
+     "from_post": false,
+     "http_status": 0,
+     "id": 2,
+     "method": "GET",
+     "retry_offered": true,
+     "source": "http://127.0.0.1:58822/",
+     "status": 0,
+     "success": false,
+     "t": "14:01:08.180",
+     "uri": "http://127.0.0.1:58822/",
+     "window": "F"
+    }
+   }
+  }
+ ],
+ "ok": false,
+ "detail": {
+  "document_requests": [
+   {
+    "event": "document-request",
+    "method": "GET",
+    "t": "14:00:50.409",
+    "uri": "http://127.0.0.1:58822/",
+    "window": "E"
+   },
+   {
+    "event": "document-request",
+    "method": "GET",
+    "t": "14:00:50.497",
+    "uri": "http://127.0.0.1:58822/?run=armed\u0026id=g1\u0026delay=1500\u0026then=go\u0026to=api%2Fquery%3Fx%3Dlater",
+    "window": "E"
+   },
+   {
+    "event": "document-request",
+    "method": "GET",
+    "t": "14:00:52.031",
+    "uri": "http://127.0.0.1:58822/api/query?x=later",
+    "window": "E"
+   },
+   {
+    "event": "document-request",
+    "method": "GET",
+    "t": "14:00:55.010",
+    "uri": "http://127.0.0.1:58822/api/query?x=later",
+    "window": "E"
+   },
+   {
+    "event": "document-request",
+    "method": "GET",
+    "t": "14:00:55.082",
+    "uri": "http://127.0.0.1:58822/?run=armed\u0026id=forge\u0026then=go\u0026to=https%3A%2F%2Fdfx2-error.invalid%2Fretry%2Fforged",
+    "window": "E"
+   },
+   {
+    "event": "document-request",
+    "method": "GET",
+    "t": "14:00:55.140",
+    "uri": "http://127.0.0.1:58822/?run=armed\u0026id=p1\u0026delay=1500\u0026then=submit",
+    "window": "E"
+   },
+   {
+    "event": "document-request",
+    "method": "POST",
+    "t": "14:00:56.677",
+    "uri": "http://127.0.0.1:58822/api/form",
+    "window": "E"
+   },
+   {
+    "event": "document-request",
+    "method": "GET",
+    "t": "14:01:01.912",
+    "uri": "http://127.0.0.1:58822/",
+    "window": "E"
+   },
+   {
+    "event": "document-request",
+    "method": "GET",
+    "t": "14:01:02.007",
+    "uri": "http://127.0.0.1:58822/?run=armed\u0026id=p303\u0026then=submit\u0026action=%2Fpost-303",
+    "window": "E"
+   },
+   {
+    "event": "document-request",
+    "method": "POST",
+    "t": "14:01:02.041",
+    "uri": "http://127.0.0.1:58822/post-303",
+    "window": "E"
+   },
+   {
+    "event": "document-request",
+    "method": "GET",
+    "t": "14:01:02.045",
+    "uri": "http://127.0.0.1:58822/broken",
+    "window": "E"
+   },
+   {
+    "event": "document-request",
+    "method": "GET",
+    "t": "14:01:02.470",
+    "uri": "http://127.0.0.1:58822/broken",
+    "window": "E"
+   },
+   {
+    "event": "document-request",
+    "method": "GET",
+    "t": "14:01:02.904",
+    "uri": "http://127.0.0.1:58822/",
+    "window": "E"
+   },
+   {
+    "event": "document-request",
+    "method": "GET",
+    "t": "14:01:02.996",
+    "uri": "http://127.0.0.1:58822/?run=armed\u0026id=p307\u0026then=submit\u0026action=%2Fpost-307",
+    "window": "E"
+   },
+   {
+    "event": "document-request",
+    "method": "POST",
+    "t": "14:01:03.030",
+    "uri": "http://127.0.0.1:58822/post-307",
+    "window": "E"
+   },
+   {
+    "event": "document-request",
+    "method": "POST",
+    "t": "14:01:03.033",
+    "uri": "http://127.0.0.1:58822/broken-post",
+    "window": "E"
+   },
+   {
+    "event": "document-request",
+    "method": "GET",
+    "t": "14:01:03.465",
+    "uri": "http://127.0.0.1:58822/",
+    "window": "E"
+   },
+   {
+    "event": "document-request",
+    "method": "GET",
+    "t": "14:01:03.555",
+    "uri": "http://127.0.0.1:58822/missing",
+    "window": "E"
+   },
+   {
+    "event": "document-request",
+    "method": "GET",
+    "t": "14:01:03.874",
+    "uri": "http://127.0.0.1:58822/e500",
+    "window": "E"
+   },
+   {
+    "event": "document-request",
+    "method": "GET",
+    "t": "14:01:04.192",
+    "uri": "http://127.0.0.1:58822/?run=broken\u0026id=broken",
+    "window": "E"
+   }
+  ],
+  "edits": [
+   {
+    "method": "POST",
+    "path": "/post-303",
+    "credential": false,
+    "app_cookies": null,
+    "origin": "http://127.0.0.1:58822",
+    "remote": "127.0.0.1:58862",
+    "t": "14:01:02.042"
+   },
+   {
+    "method": "POST",
+    "path": "/post-307",
+    "credential": false,
+    "app_cookies": null,
+    "origin": "http://127.0.0.1:58822",
+    "remote": "127.0.0.1:58877",
+    "t": "14:01:03.030"
+   },
+   {
+    "method": "POST",
+    "path": "/broken-post",
+    "credential": false,
+    "app_cookies": null,
+    "origin": "http://127.0.0.1:58822",
+    "remote": "127.0.0.1:58878",
+    "t": "14:01:03.034"
+   },
+   {
+    "method": "POST",
+    "path": "/broken-post",
+    "credential": false,
+    "app_cookies": null,
+    "origin": "http://127.0.0.1:58822",
+    "remote": "127.0.0.1:58879",
+    "t": "14:01:03.034"
+   }
+  ]
+ },
+ "exit": {
+  "host_exit": 0,
+  "timed_out": false,
+  "killed": false,
+  "browser_pids": [
+   6576,
+   7020
+  ],
+  "browser_processes_remaining": null,
+  "stderr_suspicious": null,
+  "callback_objects_live": 0,
+  "off_ui_thread": 0,
+  "late_creation_callbacks": 0,
+  "profiles_remaining": null
+ },
+ "seconds": 19.5,
+ "ready": {
+  "close_during": "",
+  "cookie": true,
+  "cookie_fail_injected": false,
+  "csp": true,
+  "event": "ready",
+  "filter": true,
+  "loader_pinned": true,
+  "loader_sha256": "a9a09232c25805323d4cfb3fc8f545a190a9c8a99c93262ea99d0b88df99ec90",
+  "pid": 1444,
+  "remove_fail_injected": false,
+  "root": "C:\\Cygwin64\\tmp\\dfx2-feasibility",
+  "runtime": "151.0.4129.93",
+  "t": "14:00:49.996",
+  "ui_thread": 8900
+ }
+}

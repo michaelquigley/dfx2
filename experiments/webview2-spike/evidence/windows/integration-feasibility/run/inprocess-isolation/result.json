@@ -1,0 +1,112 @@
+{
+ "scenario": "inprocess-isolation",
+ "flags": null,
+ "checks": [
+  {
+   "check": "in-process page, assets, query and POST",
+   "ok": true,
+   "detail": {
+    "checks": {
+     "cookieVisible": false,
+     "css": true,
+     "echoLength": 1005,
+     "echoSha": "a5903776f0c8d72f5b1e8689519fc8d9d6317785a20e31659786c8d8703a6b8c",
+     "img": true,
+     "origin": "https://dfx2-spike.invalid",
+     "query": "é\u0026ü",
+     "script": true
+    }
+   }
+  },
+  {
+   "check": "naming the shared origin reaches only the window's own handler",
+   "ok": true,
+   "detail": {
+    "i1": {
+     "GET /": 3,
+     "GET /api/count": 1,
+     "GET /api/query": 1,
+     "GET /favicon.ico": 1,
+     "GET /logo.svg": 3,
+     "GET /probe.css": 3,
+     "GET /probe.js": 3,
+     "POST /api/echo": 1,
+     "POST /api/report": 2
+    },
+    "i2": {
+     "GET /": 1,
+     "GET /favicon.ico": 1,
+     "GET /logo.svg": 1,
+     "GET /probe.css": 1,
+     "GET /probe.js": 1
+    }
+   }
+  },
+  {
+   "check": "an in-process page cannot reach the collector",
+   "ok": true,
+   "detail": {
+    "received": null
+   }
+  },
+  {
+   "check": "same in-process origin, separate sessions: I2 cannot read I1's storage",
+   "ok": true,
+   "detail": {
+    "i1": {
+     "cookie": "vis=I1",
+     "local": "I1",
+     "session": "I1"
+    },
+    "i2": {
+     "cookie": "",
+     "local": null,
+     "session": null
+    }
+   }
+  }
+ ],
+ "ok": true,
+ "detail": {
+  "profiles": {
+   "I1": "C:\\Cygwin64\\tmp\\dfx2-feasibility\\profile-2828-1",
+   "I2": "C:\\Cygwin64\\tmp\\dfx2-feasibility\\profile-2828-2",
+   "pids": [
+    10288,
+    9752
+   ]
+  }
+ },
+ "exit": {
+  "host_exit": 0,
+  "timed_out": false,
+  "killed": false,
+  "browser_pids": [
+   9752,
+   10288
+  ],
+  "browser_processes_remaining": null,
+  "stderr_suspicious": null,
+  "callback_objects_live": 0,
+  "off_ui_thread": 0,
+  "late_creation_callbacks": 0,
+  "profiles_remaining": null
+ },
+ "seconds": 4.5,
+ "ready": {
+  "close_during": "",
+  "cookie": true,
+  "cookie_fail_injected": false,
+  "csp": true,
+  "event": "ready",
+  "filter": true,
+  "loader_pinned": true,
+  "loader_sha256": "a9a09232c25805323d4cfb3fc8f545a190a9c8a99c93262ea99d0b88df99ec90",
+  "pid": 2828,
+  "remove_fail_injected": false,
+  "root": "C:\\Cygwin64\\tmp\\dfx2-feasibility",
+  "runtime": "151.0.4129.93",
+  "t": "14:00:37.110",
+  "ui_thread": 4144
+ }
+}

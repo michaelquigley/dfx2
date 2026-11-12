@@ -1,0 +1,13 @@
+# dfx2-webview2-spike.exe -feasibility -feas-root C:\Cygwin64\tmp\dfx2-feasibility
+{"close_during":"","cookie":true,"cookie_fail_injected":false,"csp":true,"event":"ready","filter":true,"loader_pinned":true,"loader_sha256":"a9a09232c25805323d4cfb3fc8f545a190a9c8a99c93262ea99d0b88df99ec90","pid":11652,"remove_fail_injected":false,"root":"C:\\Cygwin64\\tmp\\dfx2-feasibility","runtime":"151.0.4129.93","t":"14:01:33.936","ui_thread":9640}
+{"credential":true,"event":"opened","hwnd":"0x4d040a","mode":"loopback","origin":"http://127.0.0.1:58983","profile":"C:\\Cygwin64\\tmp\\dfx2-feasibility\\profile-11652-1","t":"14:01:33.951","window":"A"}
+{"contexts":"all","enforces":true,"event":"filter-installed","filter":"*","t":"14:01:34.286","window":"A"}
+{"browser_pid":8512,"event":"controller","profile_path":"C:\\Cygwin64\\tmp\\dfx2-feasibility\\profile-11652-1\\EBWebView\\Default","since_open":"351ms","t":"14:01:34.287","window":"A"}
+{"event":"cookie-added","http_only":true,"same_site":"strict","session":true,"synchronous":true,"t":"14:01:34.287","window":"A"}
+{"event":"cookie-installed","http_only":true,"same_site_kind":2,"since_open":"391ms","t":"14:01:34.327","visible_to_manager":true,"window":"A"}
+{"event":"navigate","t":"14:01:34.327","uri":"http://127.0.0.1:58983/","window":"A"}
+{"event":"navigation-allowed","id":2,"method":"","redirect":false,"t":"14:01:34.330","uri":"http://127.0.0.1:58983/","window":"A"}
+{"event":"document-request","method":"GET","t":"14:01:34.333","uri":"http://127.0.0.1:58983/","window":"A"}
+{"event":"document-response","http_status":200,"t":"14:01:34.342","uri":"http://127.0.0.1:58983/","window":"A"}
+{"document_http_status":200,"document_responded":true,"event":"load","from_post":false,"http_status":200,"id":2,"method":"GET","source":"http://127.0.0.1:58983/","status":0,"success":true,"t":"14:01:34.409","uri":"http://127.0.0.1:58983/","window":"A"}
+{"callbacks_live":8,"event":"status","t":"14:01:34.409","windows":{"A":{"blocked":{},"browser_exited":false,"browser_pid":8512,"closing":false,"destroyed":false,"document_requests":1,"endpoint":{"admitted":4,"refused":{},"handled":4},"handler":{"GET /":1,"GET /logo.svg":1,"GET /probe.css":1,"GET /probe.js":1},"mode":"loopback","native_async":0,"navigations":1,"pending_requests":0,"port":58983,"profile":"C:\\Cygwin64\\tmp\\dfx2-feasibility\\profile-11652-1","refused":{"navigation":0,"popup":0,"subframe":0},"title":"dfx2 feasibility probe","uri":"http://127.0.0.1:58983/"}}}

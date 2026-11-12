@@ -1,0 +1,9 @@
+# dfx2-webview2-spike.exe -feasibility -feas-root C:\Cygwin64\tmp\dfx2-feasibility
+{"close_during":"","cookie":true,"cookie_fail_injected":false,"csp":true,"event":"ready","filter":true,"loader_pinned":true,"loader_sha256":"a9a09232c25805323d4cfb3fc8f545a190a9c8a99c93262ea99d0b88df99ec90","pid":8764,"remove_fail_injected":false,"root":"C:\\Cygwin64\\tmp\\dfx2-feasibility","runtime":"151.0.4129.93","t":"14:00:41.658","ui_thread":4400}
+{"credential":true,"event":"opened","hwnd":"0x4503dc","mode":"loopback","origin":"http://127.0.0.1:58712","profile":"C:\\Cygwin64\\tmp\\dfx2-feasibility\\profile-8764-1","t":"14:00:41.681","window":"A"}
+{"browser_pid":0,"event":"closing","native_async":0,"navigated":false,"pending_requests":0,"stage":"controller creation","t":"14:00:41.690","why":"command","window":"A"}
+{"attached":false,"callback":"controller","controller":true,"event":"late-callback","hresult":"S_OK","t":"14:00:42.035","window":"A"}
+{"after_controller_close":"","closing":true,"event":"browser-process-exited","kind":0,"pid":9552,"t":"14:00:42.242","window":"A"}
+{"browser_exit_observed":true,"error":"","event":"profile-removal","released":true,"removal":{"path":"C:\\Cygwin64\\tmp\\dfx2-feasibility\\profile-8764-1","attempts":1,"elapsed_ns":34995200,"removed":true},"since_close":"587ms","t":"14:00:42.277","took":"35ms","window":"A"}
+{"browser_exit_observed":true,"browser_pid":0,"browser_started":true,"completions_dropped":null,"endpoint":{"admitted":0,"refused":{},"handled":0},"event":"closed","exit_kind":0,"handler":{},"handlers_drained":true,"native_async":0,"pending_requests":0,"profile_removed":true,"removal_attempts":1,"removal_error":"","since_close":"590ms","stage":"controller creation","t":"14:00:42.279","window":"A"}
+{"callback_objects_live":0,"callbacks":3,"event":"exit","late_creation_callbacks":1,"live":null,"off_ui_thread":0,"t":"14:00:42.280"}

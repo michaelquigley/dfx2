@@ -1,0 +1,23 @@
+# dfx2-webview2-spike.exe -feasibility -feas-root C:\Cygwin64\tmp\dfx2-feasibility
+{"close_during":"","cookie":true,"cookie_fail_injected":false,"csp":true,"event":"ready","filter":true,"loader_pinned":true,"loader_sha256":"a9a09232c25805323d4cfb3fc8f545a190a9c8a99c93262ea99d0b88df99ec90","pid":9988,"remove_fail_injected":false,"root":"C:\\Cygwin64\\tmp\\dfx2-feasibility","runtime":"151.0.4129.93","t":"14:01:13.793","ui_thread":1100}
+{"credential":true,"event":"opened","hwnd":"0x5d0170","mode":"loopback","origin":"http://127.0.0.1:58923","profile":"C:\\Cygwin64\\tmp\\dfx2-feasibility\\profile-9988-1","t":"14:01:13.807","window":"S"}
+{"contexts":"all","enforces":true,"event":"filter-installed","filter":"*","t":"14:01:14.137","window":"S"}
+{"browser_pid":9224,"event":"controller","profile_path":"C:\\Cygwin64\\tmp\\dfx2-feasibility\\profile-9988-1\\EBWebView\\Default","since_open":"344ms","t":"14:01:14.137","window":"S"}
+{"event":"cookie-added","http_only":true,"same_site":"strict","session":true,"synchronous":true,"t":"14:01:14.137","window":"S"}
+{"event":"cookie-installed","http_only":true,"same_site_kind":2,"since_open":"379ms","t":"14:01:14.172","visible_to_manager":true,"window":"S"}
+{"event":"navigate","t":"14:01:14.172","uri":"http://127.0.0.1:58923/","window":"S"}
+{"event":"navigation-allowed","id":2,"method":"","redirect":false,"t":"14:01:14.175","uri":"http://127.0.0.1:58923/","window":"S"}
+{"event":"document-request","method":"GET","t":"14:01:14.178","uri":"http://127.0.0.1:58923/","window":"S"}
+{"event":"document-response","http_status":200,"t":"14:01:14.188","uri":"http://127.0.0.1:58923/","window":"S"}
+{"document_http_status":200,"document_responded":true,"event":"load","from_post":false,"http_status":200,"id":2,"method":"GET","source":"http://127.0.0.1:58923/","status":0,"success":true,"t":"14:01:14.262","uri":"http://127.0.0.1:58923/","window":"S"}
+{"event":"navigation-allowed","id":3,"method":"","redirect":false,"t":"14:01:14.267","uri":"http://127.0.0.1:58923/?run=slow\u0026id=slow","window":"S"}
+{"event":"document-request","method":"GET","t":"14:01:14.270","uri":"http://127.0.0.1:58923/?run=slow\u0026id=slow","window":"S"}
+{"event":"document-response","http_status":200,"t":"14:01:14.273","uri":"http://127.0.0.1:58923/?run=slow\u0026id=slow","window":"S"}
+{"document_http_status":200,"document_responded":true,"event":"load","from_post":false,"http_status":200,"id":3,"method":"GET","source":"http://127.0.0.1:58923/?run=slow\u0026id=slow","status":0,"success":true,"t":"14:01:14.290","uri":"http://127.0.0.1:58923/?run=slow\u0026id=slow","window":"S"}
+{"event":"report","report":{"id":"slow","run":"slow","href":"http://127.0.0.1:58923/?run=slow\u0026id=slow","result":"started"},"t":"14:01:14.297","window":"S"}
+{"browser_pid":9224,"event":"closing","native_async":0,"navigated":true,"pending_requests":0,"stage":"running","t":"14:01:14.598","why":"command","window":"S"}
+{"event":"controller-closed","hresult":"S_OK","t":"14:01:14.618","took":"19.786ms","window":"S"}
+{"after_controller_close":"275ms","closing":true,"event":"browser-process-exited","kind":0,"pid":9224,"t":"14:01:14.893","window":"S"}
+{"browser_exit_observed":true,"error":"","event":"profile-removal","released":true,"removal":{"path":"C:\\Cygwin64\\tmp\\dfx2-feasibility\\profile-9988-1","attempts":1,"elapsed_ns":38980400,"removed":true},"since_close":"334ms","t":"14:01:14.932","took":"39ms","window":"S"}
+{"browser_exit_observed":true,"browser_pid":9224,"browser_started":true,"completions_dropped":null,"endpoint":{"admitted":12,"refused":{},"handled":12},"event":"closed","exit_kind":0,"handler":{"GET /":2,"GET /api/slow":1,"GET /favicon.ico":2,"GET /logo.svg":2,"GET /probe.css":2,"GET /probe.js":2,"POST /api/report":1},"handlers_drained":true,"native_async":0,"pending_requests":0,"profile_removed":true,"removal_attempts":1,"removal_error":"","since_close":"336ms","stage":"running","t":"14:01:14.934","window":"S"}
+{"callback_objects_live":0,"callbacks":30,"event":"exit","late_creation_callbacks":0,"live":null,"off_ui_thread":0,"t":"14:01:14.934"}

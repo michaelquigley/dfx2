@@ -1,0 +1,32 @@
+# dfx2-webview2-spike.exe -mode loopback -break-listener 3s
+14:02:02.664956 loader: C:\Repos\q\products\dfx2\experiments\webview2-spike\WebView2Loader.dll sha256 a9a09232c25805323d4cfb3fc8f545a190a9c8a99c93262ea99d0b88df99ec90 (matches the pinned SDK 1.0.4129.50 x64 loader)
+14:02:02.666540 runtime: installed Evergreen Runtime 151.0.4129.93
+14:02:02.666540 user data: C:\Repos\q\products\dfx2\experiments\webview2-spike\webview2-userdata\loopback
+14:02:02.669823 window: hwnd 0x760170 on UI thread 11860, 96 dpi (scale 1), client 1000x760 DIPs
+14:02:02.682527 transport: loopback HTTP server listening on http://127.0.0.1:59048 (pid 11824)
+14:02:02.685957 webview: environment ready in 29ms; browser version 151.0.4129.93
+14:02:02.691487 webview: environment creation started (returned in 8.96ms)
+14:02:03.017787 webview: controller ready in 360ms; browser process 1236
+14:02:03.021907 webview: navigating to http://127.0.0.1:59048/
+14:02:03.029725 webview: navigation 2 starting: http://127.0.0.1:59048/
+14:02:03.031765 req 1 start GET / from 127.0.0.1:59049 (0 B body, outstanding 1)
+14:02:03.032292 req 1 handler done 200 in 1ms (outstanding 0)
+14:02:03.112300 req 2 start GET /app.css from 127.0.0.1:59049 (0 B body, outstanding 1)
+14:02:03.112300 req 3 start GET /app.js from 127.0.0.1:59050 (0 B body, outstanding 2)
+14:02:03.112300 req 2 handler done 200 in 0s (outstanding 1)
+14:02:03.112300 req 3 handler done 200 in 0s (outstanding 0)
+14:02:03.136978 req 4 start POST /api/report from 127.0.0.1:59050 (51 B body, outstanding 1)
+14:02:03.136978 report: [loopback] loaded / (assets app.css ✓ app.js ✓)
+14:02:03.136978 req 4 handler done 204 in 0s (outstanding 0)
+14:02:03.173894 webview: navigation 2 completed: success true, web error status 0 (517ms after launch)
+14:02:03.180332 req 5 start GET /favicon.ico from 127.0.0.1:59050 (0 B body, outstanding 1)
+14:02:03.180332 req 5 handler done 404 in 0s (outstanding 0)
+14:02:05.682812 transport: -break-listener: closing the listener under the server
+14:02:05.682812 error: loopback server stopped: accept tcp 127.0.0.1:59048: use of closed network connection
+14:02:05.682812 close: failure in state running, 3.026s after launch (handlers running 0, deferrals pending 0, env pending false, controller pending false)
+14:02:05.706237 close: controller closed (S_OK) in 23.405ms
+14:02:05.710095 close: message loop ended 27ms after close began
+14:02:05.710180 transport: server shutdown in 0s (ok)
+14:02:05.710180 exit: 4 WebView2 callbacks, 0 off the UI thread
+14:02:05.710180 exit: late creation callbacks 0; callback objects still referenced 0 []; 27ms after close began, 3.053s after launch
+14:02:05.711718 error: loopback server stopped: accept tcp 127.0.0.1:59048: use of closed network connection

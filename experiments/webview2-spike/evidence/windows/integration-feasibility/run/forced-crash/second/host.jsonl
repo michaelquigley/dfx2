@@ -1,0 +1,19 @@
+# dfx2-webview2-spike.exe -feasibility -feas-root C:\Cygwin64\tmp\dfx2-feasibility
+{"close_during":"","cookie":true,"cookie_fail_injected":false,"csp":true,"event":"ready","filter":true,"loader_pinned":true,"loader_sha256":"a9a09232c25805323d4cfb3fc8f545a190a9c8a99c93262ea99d0b88df99ec90","pid":6384,"remove_fail_injected":false,"root":"C:\\Cygwin64\\tmp\\dfx2-feasibility","runtime":"151.0.4129.93","t":"14:01:36.439","ui_thread":8596}
+{"credential":true,"event":"opened","hwnd":"0xfa03da","mode":"loopback","origin":"http://127.0.0.1:58987","profile":"C:\\Cygwin64\\tmp\\dfx2-feasibility\\profile-6384-1","t":"14:01:36.457","window":"B"}
+{"contexts":"all","enforces":true,"event":"filter-installed","filter":"*","t":"14:01:36.814","window":"B"}
+{"browser_pid":6044,"event":"controller","profile_path":"C:\\Cygwin64\\tmp\\dfx2-feasibility\\profile-6384-1\\EBWebView\\Default","since_open":"376ms","t":"14:01:36.815","window":"B"}
+{"event":"cookie-added","http_only":true,"same_site":"strict","session":true,"synchronous":true,"t":"14:01:36.816","window":"B"}
+{"event":"cookie-installed","http_only":true,"same_site_kind":2,"since_open":"410ms","t":"14:01:36.849","visible_to_manager":true,"window":"B"}
+{"event":"navigate","t":"14:01:36.849","uri":"http://127.0.0.1:58987/","window":"B"}
+{"event":"navigation-allowed","id":2,"method":"","redirect":false,"t":"14:01:36.852","uri":"http://127.0.0.1:58987/","window":"B"}
+{"event":"document-request","method":"GET","t":"14:01:36.857","uri":"http://127.0.0.1:58987/","window":"B"}
+{"event":"document-response","http_status":200,"t":"14:01:36.870","uri":"http://127.0.0.1:58987/","window":"B"}
+{"document_http_status":200,"document_responded":true,"event":"load","from_post":false,"http_status":200,"id":2,"method":"GET","source":"http://127.0.0.1:58987/","status":0,"success":true,"t":"14:01:36.922","uri":"http://127.0.0.1:58987/","window":"B"}
+{"callbacks_live":8,"event":"status","t":"14:01:36.922","windows":{"B":{"blocked":{},"browser_exited":false,"browser_pid":6044,"closing":false,"destroyed":false,"document_requests":1,"endpoint":{"admitted":4,"refused":{},"handled":4},"handler":{"GET /":1,"GET /logo.svg":1,"GET /probe.css":1,"GET /probe.js":1},"mode":"loopback","native_async":0,"navigations":1,"pending_requests":0,"port":58987,"profile":"C:\\Cygwin64\\tmp\\dfx2-feasibility\\profile-6384-1","refused":{"navigation":0,"popup":0,"subframe":0},"title":"dfx2 feasibility probe","uri":"http://127.0.0.1:58987/"}}}
+{"browser_pid":6044,"event":"closing","native_async":0,"navigated":true,"pending_requests":0,"stage":"running","t":"14:01:36.923","why":"quit","window":"B"}
+{"event":"controller-closed","hresult":"S_OK","t":"14:01:36.944","took":"21.038ms","window":"B"}
+{"after_controller_close":"286ms","closing":true,"event":"browser-process-exited","kind":0,"pid":6044,"t":"14:01:37.230","window":"B"}
+{"browser_exit_observed":true,"error":"","event":"profile-removal","released":true,"removal":{"path":"C:\\Cygwin64\\tmp\\dfx2-feasibility\\profile-6384-1","attempts":1,"elapsed_ns":35540100,"removed":true},"since_close":"342ms","t":"14:01:37.265","took":"36ms","window":"B"}
+{"browser_exit_observed":true,"browser_pid":6044,"browser_started":true,"completions_dropped":null,"endpoint":{"admitted":4,"refused":{},"handled":4},"event":"closed","exit_kind":0,"handler":{"GET /":1,"GET /logo.svg":1,"GET /probe.css":1,"GET /probe.js":1},"handlers_drained":true,"native_async":0,"pending_requests":0,"profile_removed":true,"removal_attempts":1,"removal_error":"","since_close":"344ms","stage":"running","t":"14:01:37.268","window":"B"}
+{"callback_objects_live":0,"callbacks":14,"event":"exit","late_creation_callbacks":0,"live":null,"off_ui_thread":0,"t":"14:01:37.268"}

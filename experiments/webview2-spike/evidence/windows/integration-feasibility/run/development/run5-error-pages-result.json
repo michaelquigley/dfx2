@@ -1,0 +1,169 @@
+{
+ "scenario": "error-pages",
+ "flags": null,
+ "checks": [
+  {
+   "check": "failed GET: Retry and Return to start, no script",
+   "ok": true,
+   "detail": {
+    "failed": {
+     "error_page": true,
+     "event": "load-failed",
+     "from_post": false,
+     "http_status": 0,
+     "id": 4,
+     "method": "GET",
+     "retry_offered": true,
+     "source": "http://127.0.0.1:57920/api/query?x=later",
+     "status": 0,
+     "success": false,
+     "t": "13:51:50.815",
+     "uri": "http://127.0.0.1:57920/api/query?x=later",
+     "window": "E"
+    },
+    "page": {
+     "event": "error-page",
+     "hresult": "S_OK",
+     "method": "GET",
+     "retry": true,
+     "retry_at": [
+      130,
+      262
+     ],
+     "script": false,
+     "start_at": [
+      350,
+      262
+     ],
+     "t": "13:51:50.815",
+     "uri": "http://127.0.0.1:57920/api/query?x=later",
+     "window": "E"
+    }
+   }
+  },
+  {
+   "check": "clicked Retry repeats the failed GET once the service returns",
+   "ok": true,
+   "detail": {
+    "gets_after": 1,
+    "gets_before": 0
+   }
+  },
+  {
+   "check": "a page-supplied action is refused",
+   "ok": true
+  },
+  {
+   "check": "failed POST shows only Return to start",
+   "ok": true,
+   "detail": {
+    "failed": {
+     "error_page": true,
+     "event": "load-failed",
+     "from_post": true,
+     "http_status": 0,
+     "id": 11,
+     "method": "POST",
+     "retry_offered": false,
+     "source": "http://127.0.0.1:57920/api/form",
+     "status": 0,
+     "success": false,
+     "t": "13:51:55.479",
+     "uri": "http://127.0.0.1:57920/api/form",
+     "window": "E"
+    },
+    "page": {
+     "event": "error-page",
+     "hresult": "S_OK",
+     "method": "POST",
+     "retry": false,
+     "retry_at": [
+      130,
+      262
+     ],
+     "script": false,
+     "start_at": [
+      350,
+      262
+     ],
+     "t": "13:51:55.479",
+     "uri": "http://127.0.0.1:57920/api/form",
+     "window": "E"
+    }
+   }
+  },
+  {
+   "check": "a click where Retry would be does nothing on the POST page",
+   "ok": true
+  },
+  {
+   "check": "clicked Return to start is a GET and replays nothing",
+   "ok": true,
+   "detail": {
+    "edits": null
+   }
+  },
+  {
+   "check": "a GET reached by 303 after a POST offers Retry of the GET",
+   "ok": false,
+   "detail": {
+    "failed": {
+     "error_page": true,
+     "event": "load-failed",
+     "from_post": false,
+     "http_status": 0,
+     "id": 17,
+     "method": "GET",
+     "retry_offered": true,
+     "source": "http://127.0.0.1:57920/broken",
+     "status": 9,
+     "success": false,
+     "t": "13:51:59.840",
+     "uri": "http://127.0.0.1:57920/broken",
+     "window": "E"
+    }
+   }
+  },
+  {
+   "check": "Retry after the 303 replays no POST",
+   "ok": false,
+   "detail": {
+    "broken": 8,
+    "post_303": 1
+   }
+  }
+ ],
+ "ok": false,
+ "failure": "timed out waiting for load-failed [window E error_page true]",
+ "exit": {
+  "host_exit": 0,
+  "timed_out": false,
+  "killed": false,
+  "browser_pids": [
+   6740
+  ],
+  "browser_processes_remaining": null,
+  "stderr_suspicious": null,
+  "callback_objects_live": 0,
+  "off_ui_thread": 0,
+  "late_creation_callbacks": 0,
+  "profiles_remaining": null
+ },
+ "seconds": 44.6,
+ "ready": {
+  "close_during": "",
+  "cookie": true,
+  "cookie_fail_injected": false,
+  "csp": true,
+  "event": "ready",
+  "filter": true,
+  "loader_pinned": true,
+  "loader_sha256": "a9a09232c25805323d4cfb3fc8f545a190a9c8a99c93262ea99d0b88df99ec90",
+  "pid": 4256,
+  "remove_fail_injected": false,
+  "root": "C:\\Cygwin64\\tmp\\claude\\C--Repos-q-products-dfx2\\17b8b8d1-3519-4587-be90-b09c093d3896\\scratchpad\\feas-dev\\root",
+  "runtime": "151.0.4129.93",
+  "t": "13:51:46.661",
+  "ui_thread": 11644
+ }
+}

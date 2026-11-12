@@ -59,6 +59,7 @@ On other platforms, `go test ./...` and `go vet ./...` cover the handler, the ad
 | `-width`, `-height` | Client size in DIPs (1000×760). |
 | `-break-listener D` | Loopback only: close the listener under the server after `D`, to show that a server failure ends the app (exit 1). |
 | `-close-during env\|controller` | Test hook: post `WM_CLOSE` just before that creation call. |
+| `-feasibility` | Run the integration feasibility probe host instead: multi-window, console-driven, one temporary profile per window. Its own flags are `-feas-root`, `-feas-filter`, `-feas-csp`, `-feas-cookie`, `-feas-cookie-fail`, `-feas-remove-fail` and `-feas-close-during`; see the [Windows handoff](evidence/windows/integration-feasibility/README.md). |
 
 ## The page
 
@@ -106,5 +107,5 @@ Scenarios: `checks`, `resize`, `close-idle`, `close-busy`, `reload`, `close-init
 
 ## Integration feasibility
 
-The shared package [`feasibility`](feasibility/) holds the portable pieces of the [webview feasibility spike](../../docs/future/webview-feasibility-spike.md): the owned endpoint's access guard, the probe page and handler, and bounded deletion after native release. The Linux host uses it now. The Windows probes have not been written or run; the [Windows handoff](evidence/windows/integration-feasibility/README.md) lists what landed, what remains and how to run it.
+The shared package [`feasibility`](feasibility/) holds the portable pieces of the [webview feasibility spike](../../docs/future/webview-feasibility-spike.md): the owned endpoint's access guard, the probe page and handler, and bounded deletion after native release. Both hosts use it. The Windows probes are `feasibility_windows.go` (`-feasibility`) and the driver in `evidence/windows/integration-feasibility/drive`; they ran on 2026-11-12, with the results and the open findings in the [Windows results](evidence/windows/integration-feasibility/results.md).
 

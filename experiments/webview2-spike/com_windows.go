@@ -16,7 +16,7 @@ import (
 // native memory owned by the object's implementation; its first word is the
 // vtable. The array bound only sizes the type: slots are checked against
 // the IDL (bindings.go), never against it.
-type com struct{ vtbl *[64]uintptr }
+type com struct{ vtbl *[192]uintptr } // ICoreWebView2_13 reaches slot 105
 
 // call invokes slot i with this first. Arguments that are pointers converted
 // to uintptr at the call site stay valid: uintptrescapes moves their targets
@@ -184,6 +184,15 @@ func cbInvoke(this *cbObject, a, b uintptr) (r uintptr) {
 		}
 	}()
 	return uintptr(c.invoke(a, b))
+}
+
+// callbackLive reports whether WebView2 still holds the handler object: a
+// completion still owed, or one released without being invoked.
+func callbackLive(id uintptr) bool {
+	cbMu.Lock()
+	defer cbMu.Unlock()
+	_, ok := cbByID[id]
+	return ok
 }
 
 // liveCallbacks lists the callback objects still referenced, for the exit

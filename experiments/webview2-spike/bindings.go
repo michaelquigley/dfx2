@@ -65,6 +65,26 @@ var (
 	iidNewWindowRequested   = mustGUID("d4c185fe-c81c-4989-97af-2d3fa7ab5651")
 	iidProcessFailed        = mustGUID("79e0aea4-990b-42d9-aa1d-0fcc2e5bc7f1")
 	handlerInvoke           = 3
+
+	// Feasibility probes (-feasibility): more handlers the host implements.
+	iidFrameNavigationStarting = mustGUID("e79908bf-2d5d-4968-83db-263fea2c1da3")
+	iidGetCookiesCompleted     = mustGUID("5a4f5069-5c15-47c3-8646-f4de1c116670")
+	iidCapturePreviewCompleted = mustGUID("697e05e9-3d8f-45fa-96f4-8ffe1ededaf5")
+	iidBrowserProcessExited    = mustGUID("fa504257-a216-4911-a860-fe8825712861")
+
+	// Interfaces the feasibility host asks for with QueryInterface.
+	iidICoreWebView2_2   = mustGUID("9e8f0cf8-e670-4b5e-b2bc-73e061e3184c")
+	iidICoreWebView2_13  = mustGUID("f75f09a8-667e-4983-88d6-c8773f315e84")
+	iidIEnvironment5     = mustGUID("319e423d-e0d7-4b8d-9254-ae9475de9b17")
+	iidICookieManager    = mustGUID("177cd9e7-b6f5-451a-94a0-5d7a3a4c4141")
+	iidICookie           = mustGUID("ad26d6be-1486-43e6-bf87-a2034006ca21")
+	iidICookieList       = mustGUID("f7f6f714-5d2a-43c6-9503-346ece02d186")
+	iidIBrowserExitedArg = mustGUID("1f00663f-af8c-4782-9cdd-dd01c52e34cb")
+	iidIProfile          = mustGUID("79110ad3-cd5d-4373-8bc3-c60658f17a5f")
+	iidINavDoneArgs2     = mustGUID("fdf8b738-ee1e-4db2-a329-8d7d7b74d792")
+	iidResponseReceived  = mustGUID("7de9898a-24f5-40c3-a2de-d4f458e69828") // handler the host implements
+	iidIResponseRecvArgs = mustGUID("d1db483d-6796-4b8b-80fc-13712bb716f4")
+	iidIResponseView     = mustGUID("79701053-7759-4162-8f7d-f1b3f084928d")
 )
 
 // Slots of the interfaces the host calls.
@@ -128,6 +148,60 @@ const (
 	newWinPutHandled = 6
 
 	pfGetProcessFailedKind = 3
+
+	// Feasibility probes.
+	wvGetSource                     = 4
+	wvNavigateToString              = 6
+	wvAddFrameNavigationStarting    = 17
+	wvRemoveFrameNavigationStarting = 18
+	wvCapturePreview                = 30
+	wvReload                        = 31
+	wvStop                          = 43
+	wvGetDocumentTitle              = 48
+
+	wv2AddWebResourceResponseReceived    = 61 // ICoreWebView2_2
+	wv2RemoveWebResourceResponseReceived = 62
+	wv2GetCookieManager                  = 66
+
+	rrGetRequest  = 3 // ICoreWebView2WebResourceResponseReceivedEventArgs
+	rrGetResponse = 4
+
+	rvGetStatusCode = 4 // ICoreWebView2WebResourceResponseView
+
+	wv13GetProfile = 105 // ICoreWebView2_13
+
+	profileGetProfilePath = 5
+
+	setPutIsScriptEnabled           = 4
+	setPutIsWebMessageEnabled       = 6
+	setPutAreHostObjectsAllowed     = 16
+	setPutIsBuiltInErrorPageEnabled = 20
+
+	navStartGetIsRedirected = 5
+
+	navDone2GetHTTPStatusCode = 6 // ICoreWebView2NavigationCompletedEventArgs2
+
+	wrrGetResourceContext = 7
+
+	env5AddBrowserProcessExited    = 12
+	env5RemoveBrowserProcessExited = 13
+
+	bpeGetExitKind  = 3
+	bpeGetProcessID = 4
+
+	cmCreateCookie      = 3
+	cmGetCookies        = 5
+	cmAddOrUpdateCookie = 6
+
+	cookieGetName       = 3
+	cookieGetIsHttpOnly = 10
+	cookiePutIsHttpOnly = 11
+	cookieGetSameSite   = 12
+	cookiePutSameSite   = 13
+	cookieGetIsSession  = 16
+
+	cookieListGetCount        = 3
+	cookieListGetValueAtIndex = 4
 )
 
 type binding struct {
@@ -196,4 +270,43 @@ var bindings = []binding{
 	{"ICoreWebView2NavigationCompletedEventHandler", iidNavigationCompleted, map[string]int{"Invoke": handlerInvoke}},
 	{"ICoreWebView2NewWindowRequestedEventHandler", iidNewWindowRequested, map[string]int{"Invoke": handlerInvoke}},
 	{"ICoreWebView2ProcessFailedEventHandler", iidProcessFailed, map[string]int{"Invoke": handlerInvoke}},
+
+	// Feasibility probes.
+	{"ICoreWebView2", guid{}, map[string]int{
+		"get_Source": wvGetSource, "NavigateToString": wvNavigateToString,
+		"add_FrameNavigationStarting": wvAddFrameNavigationStarting, "remove_FrameNavigationStarting": wvRemoveFrameNavigationStarting,
+		"CapturePreview": wvCapturePreview, "Reload": wvReload, "Stop": wvStop, "get_DocumentTitle": wvGetDocumentTitle,
+	}},
+	{"ICoreWebView2_2", iidICoreWebView2_2, map[string]int{"get_CookieManager": wv2GetCookieManager,
+		"add_WebResourceResponseReceived": wv2AddWebResourceResponseReceived, "remove_WebResourceResponseReceived": wv2RemoveWebResourceResponseReceived}},
+	{"ICoreWebView2WebResourceResponseReceivedEventArgs", iidIResponseRecvArgs, map[string]int{"get_Request": rrGetRequest, "get_Response": rrGetResponse}},
+	{"ICoreWebView2WebResourceResponseView", iidIResponseView, map[string]int{"get_StatusCode": rvGetStatusCode}},
+	{"ICoreWebView2WebResourceResponseReceivedEventHandler", iidResponseReceived, map[string]int{"Invoke": handlerInvoke}},
+	{"ICoreWebView2_13", iidICoreWebView2_13, map[string]int{"get_Profile": wv13GetProfile}},
+	{"ICoreWebView2Profile", iidIProfile, map[string]int{"get_ProfilePath": profileGetProfilePath}},
+	{"ICoreWebView2Settings", guid{}, map[string]int{
+		"put_IsScriptEnabled": setPutIsScriptEnabled, "put_IsWebMessageEnabled": setPutIsWebMessageEnabled,
+		"put_AreHostObjectsAllowed": setPutAreHostObjectsAllowed, "put_IsBuiltInErrorPageEnabled": setPutIsBuiltInErrorPageEnabled,
+	}},
+	{"ICoreWebView2NavigationStartingEventArgs", guid{}, map[string]int{"get_IsRedirected": navStartGetIsRedirected}},
+	{"ICoreWebView2NavigationCompletedEventArgs2", iidINavDoneArgs2, map[string]int{"get_HttpStatusCode": navDone2GetHTTPStatusCode}},
+	{"ICoreWebView2WebResourceRequestedEventArgs", guid{}, map[string]int{"get_ResourceContext": wrrGetResourceContext}},
+	{"ICoreWebView2Environment5", iidIEnvironment5, map[string]int{
+		"add_BrowserProcessExited": env5AddBrowserProcessExited, "remove_BrowserProcessExited": env5RemoveBrowserProcessExited,
+	}},
+	{"ICoreWebView2BrowserProcessExitedEventArgs", iidIBrowserExitedArg, map[string]int{
+		"get_BrowserProcessExitKind": bpeGetExitKind, "get_BrowserProcessId": bpeGetProcessID,
+	}},
+	{"ICoreWebView2CookieManager", iidICookieManager, map[string]int{
+		"CreateCookie": cmCreateCookie, "GetCookies": cmGetCookies, "AddOrUpdateCookie": cmAddOrUpdateCookie,
+	}},
+	{"ICoreWebView2Cookie", iidICookie, map[string]int{
+		"get_Name": cookieGetName, "get_IsHttpOnly": cookieGetIsHttpOnly, "put_IsHttpOnly": cookiePutIsHttpOnly, "get_SameSite": cookieGetSameSite,
+		"put_SameSite": cookiePutSameSite, "get_IsSession": cookieGetIsSession,
+	}},
+	{"ICoreWebView2CookieList", iidICookieList, map[string]int{"get_Count": cookieListGetCount, "GetValueAtIndex": cookieListGetValueAtIndex}},
+	{"ICoreWebView2FrameNavigationStartingEventHandler", iidFrameNavigationStarting, map[string]int{"Invoke": handlerInvoke}},
+	{"ICoreWebView2GetCookiesCompletedHandler", iidGetCookiesCompleted, map[string]int{"Invoke": handlerInvoke}},
+	{"ICoreWebView2CapturePreviewCompletedHandler", iidCapturePreviewCompleted, map[string]int{"Invoke": handlerInvoke}},
+	{"ICoreWebView2BrowserProcessExitedEventHandler", iidBrowserProcessExited, map[string]int{"Invoke": handlerInvoke}},
 }

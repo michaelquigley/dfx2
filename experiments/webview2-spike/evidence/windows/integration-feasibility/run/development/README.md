@@ -1,0 +1,7 @@
+# Development runs kept as evidence
+
+Logs from the driver's development iterations on 2026-11-12, before the final `run/`. Each shows a host behavior that changed the implementation; the final host has the correction.
+
+- `run4-owned-load-failure-host.jsonl`: `NavigateToString` navigates to a `data:text/html;base64,…` URI, not `about:blank`. The host's navigation policy refused it, so the window stayed blank and the click found nothing (`navigation-refused` for the data: URI at 13:50:10.855). The host now allows that navigation only while its own error page is pending.
+- `run5-error-pages-host.jsonl`, `run5-error-pages-result.json`: a POST followed by 303 to a GET that fails completes with `HttpStatusCode` 303 and `IsSuccess` false (navigation 16 at 13:51:58.820). Treating a non-zero HTTP status as "the server answered" left the failure unhandled, and about one second later WebView2 issued a fresh GET to the failed URI by itself (navigation 17 at 13:51:59.833, `navigation-allowed`, not a redirect, with no host or page action). The host now judges "the server answered" by `WebResourceResponseReceived` for the document request, and always replaces a failure with its own page.
+- `run2-close-during-cookie-host.jsonl`: closing during cookie installation left `native_async` 1 at `closed`: `Close` released the pending `GetCookies` completion handler without invoking it. The host now records such a handler as `completion-dropped` once WebView2 has released it, instead of counting it as owed forever.

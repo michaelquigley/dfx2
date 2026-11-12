@@ -1,0 +1,5 @@
+# alone.exe -mode loopback
+14:02:30.334306 error: WebView2Loader.dll not found at C:\Cygwin64\tmp\dfx2-wv2-prereq613346207\WebView2Loader.dll
+  It comes from the WebView2 SDK, not from Windows. Run .\setup-loader.ps1 in experiments\webview2-spike
+  (it downloads Microsoft.Web.WebView2 1.0.4129.50 and copies the x64 loader beside the executable),
+  or pass -loader <path>.

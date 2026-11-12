@@ -1,0 +1,24 @@
+# dfx2-webview2-spike.exe -feasibility -feas-root C:\Cygwin64\tmp\dfx2-feasibility
+{"close_during":"","cookie":true,"cookie_fail_injected":false,"csp":true,"event":"ready","filter":true,"loader_pinned":true,"loader_sha256":"a9a09232c25805323d4cfb3fc8f545a190a9c8a99c93262ea99d0b88df99ec90","pid":10840,"remove_fail_injected":false,"root":"C:\\Cygwin64\\tmp\\dfx2-feasibility","runtime":"151.0.4129.93","t":"14:01:14.970","ui_thread":1140}
+{"credential":true,"event":"opened","hwnd":"0x5e0170","mode":"loopback","origin":"http://127.0.0.1:58927","profile":"C:\\Cygwin64\\tmp\\dfx2-feasibility\\profile-10840-1","t":"14:01:14.986","window":"S"}
+{"contexts":"all","enforces":true,"event":"filter-installed","filter":"*","t":"14:01:15.332","window":"S"}
+{"browser_pid":3448,"event":"controller","profile_path":"C:\\Cygwin64\\tmp\\dfx2-feasibility\\profile-10840-1\\EBWebView\\Default","since_open":"362ms","t":"14:01:15.332","window":"S"}
+{"event":"cookie-added","http_only":true,"same_site":"strict","session":true,"synchronous":true,"t":"14:01:15.332","window":"S"}
+{"event":"cookie-installed","http_only":true,"same_site_kind":2,"since_open":"390ms","t":"14:01:15.361","visible_to_manager":true,"window":"S"}
+{"event":"navigate","t":"14:01:15.361","uri":"http://127.0.0.1:58927/","window":"S"}
+{"event":"navigation-allowed","id":2,"method":"","redirect":false,"t":"14:01:15.364","uri":"http://127.0.0.1:58927/","window":"S"}
+{"event":"document-request","method":"GET","t":"14:01:15.367","uri":"http://127.0.0.1:58927/","window":"S"}
+{"event":"document-response","http_status":200,"t":"14:01:15.376","uri":"http://127.0.0.1:58927/","window":"S"}
+{"document_http_status":200,"document_responded":true,"event":"load","from_post":false,"http_status":200,"id":2,"method":"GET","source":"http://127.0.0.1:58927/","status":0,"success":true,"t":"14:01:15.444","uri":"http://127.0.0.1:58927/","window":"S"}
+{"event":"inspector","hresult":"S_OK","opened":true,"t":"14:01:15.445","window":"S"}
+{"event":"navigation-allowed","id":4,"method":"","redirect":false,"t":"14:01:16.948","uri":"http://127.0.0.1:58927/?run=slow\u0026id=slow","window":"S"}
+{"event":"document-request","method":"GET","t":"14:01:16.951","uri":"http://127.0.0.1:58927/?run=slow\u0026id=slow","window":"S"}
+{"event":"document-response","http_status":200,"t":"14:01:16.954","uri":"http://127.0.0.1:58927/?run=slow\u0026id=slow","window":"S"}
+{"document_http_status":200,"document_responded":true,"event":"load","from_post":false,"http_status":200,"id":4,"method":"GET","source":"http://127.0.0.1:58927/?run=slow\u0026id=slow","status":0,"success":true,"t":"14:01:16.978","uri":"http://127.0.0.1:58927/?run=slow\u0026id=slow","window":"S"}
+{"event":"report","report":{"id":"slow","run":"slow","href":"http://127.0.0.1:58927/?run=slow\u0026id=slow","result":"started"},"t":"14:01:16.984","window":"S"}
+{"browser_pid":3448,"event":"closing","native_async":0,"navigated":true,"pending_requests":0,"stage":"running","t":"14:01:17.285","why":"command","window":"S"}
+{"event":"controller-closed","hresult":"S_OK","t":"14:01:17.310","took":"25.118ms","window":"S"}
+{"after_controller_close":"285ms","closing":true,"event":"browser-process-exited","kind":0,"pid":3448,"t":"14:01:17.596","window":"S"}
+{"browser_exit_observed":true,"error":"","event":"profile-removal","released":true,"removal":{"path":"C:\\Cygwin64\\tmp\\dfx2-feasibility\\profile-10840-1","attempts":1,"elapsed_ns":37073900,"removed":true},"since_close":"347ms","t":"14:01:17.633","took":"37ms","window":"S"}
+{"browser_exit_observed":true,"browser_pid":3448,"browser_started":true,"completions_dropped":null,"endpoint":{"admitted":14,"refused":{},"handled":14},"event":"closed","exit_kind":0,"handler":{"GET /":2,"GET /.well-known/appspecific/com.chrome.devtools.json":2,"GET /api/slow":1,"GET /favicon.ico":1,"GET /logo.svg":2,"GET /probe.css":3,"GET /probe.js":2,"POST /api/report":1},"handlers_drained":true,"native_async":0,"pending_requests":0,"profile_removed":true,"removal_attempts":1,"removal_error":"","since_close":"350ms","stage":"running","t":"14:01:17.635","window":"S"}
+{"callback_objects_live":0,"callbacks":31,"event":"exit","late_creation_callbacks":0,"live":null,"off_ui_thread":0,"t":"14:01:17.636"}
