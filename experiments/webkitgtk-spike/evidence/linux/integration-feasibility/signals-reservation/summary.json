@@ -1,0 +1,5699 @@
+{
+ "binary": "/tmp/dfx2-wk-res",
+ "set": "reservation",
+ "cases": [
+  {
+   "case": "hidden-subscriber",
+   "flags": [
+    "hidden-subscriber"
+   ],
+   "env": {},
+   "repeat": 1,
+   "ok": true,
+   "detail": "flaw reproduced: the inferred selector took a subscribed signal; release silently cancelled the subscription",
+   "runs": [
+    {
+     "name": "hidden-subscriber",
+     "command": [
+      "/tmp/dfx2-wk-res",
+      "-signal-probe",
+      "hidden-subscriber"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": true,
+     "reason": "release only: stopped before the default disposition and JSC",
+     "selected": 64,
+     "fault": null,
+     "delivery": null,
+     "onstack_added": null,
+     "onstack_added_after_webkit": null,
+     "unprotected": [],
+     "non_go": [
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       64,
+       "ignore",
+       null
+      ]
+     ],
+     "workload": null,
+     "second_thread": null,
+     "configure_result": null,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present",
+     "reservation": {
+      "inferred_selection": 64,
+      "hidden_subscriber": {
+       "declared_to_host": false,
+       "signal": 64
+      },
+      "hidden_received_before_selection": true,
+      "go_reports_ignored_after_release": true,
+      "hidden_received_after_release": false,
+      "kernel_view_indistinguishable": true
+     }
+    }
+   ]
+  },
+  {
+   "case": "hidden-subscriber-jsc",
+   "flags": [
+    "hidden-subscriber-jsc"
+   ],
+   "env": {},
+   "repeat": 10,
+   "ok": true,
+   "detail": {
+    "exits": {
+     "2": 8,
+     "0": 2
+    },
+    "raising the taken signal": {
+     "process died (exit 2)": 8,
+     "not received; survived": 2
+    }
+   },
+   "runs": [
+    {
+     "name": "hidden-subscriber-jsc-1",
+     "command": [
+      "/tmp/dfx2-wk-res",
+      "-signal-probe",
+      "hidden-subscriber-jsc"
+     ],
+     "env": {},
+     "exit": 2,
+     "events": [
+      "signal-probe",
+      "raising-reserved-signal"
+     ],
+     "stderr_lines": [
+      "signal 11 received but handler not on signal stack",
+      "mp.gsignal stack [0x191def29e000 0x191def2a6000], mp.g0 stack [0x7ffc870e3d78 0x7ffc878e2dd0], sp=0x191def2da530",
+      "fatal error: non-Go code set up signal handler without SA_ONSTACK flag",
+      "",
+      "runtime stack:",
+      "runtime.throw({0x785d04?, 0x0?})"
+     ],
+     "ready": true,
+     "reason": "",
+     "selected": 64,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": null,
+     "onstack_added_after_webkit": null,
+     "unprotected": [],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 3956736000,
+      "go_collections": 3864,
+      "go_numgc": 3864,
+      "js_collections_requested": 12,
+      "js_result": 600000,
+      "js_rounds": 54,
+      "tight_loop_rounds": 5582
+     },
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present",
+     "reservation": {
+      "inferred_selection": 64,
+      "hidden_subscriber": {
+       "declared_to_host": false,
+       "signal": 64
+      },
+      "hidden_received_before_selection": true,
+      "go_reports_ignored_after_release": true,
+      "hidden_received_after_release": false,
+      "audit_after_init": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 64
+      },
+      "audit_after_workload": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 64
+      },
+      "kernel_view_indistinguishable": true
+     },
+     "raise": "process died (exit 2)"
+    },
+    {
+     "name": "hidden-subscriber-jsc-2",
+     "command": [
+      "/tmp/dfx2-wk-res",
+      "-signal-probe",
+      "hidden-subscriber-jsc"
+     ],
+     "env": {},
+     "exit": 2,
+     "events": [
+      "signal-probe",
+      "raising-reserved-signal"
+     ],
+     "stderr_lines": [
+      "signal 11 received but handler not on signal stack",
+      "mp.gsignal stack [0x318daf98e000 0x318daf996000], mp.g0 stack [0x7fff21123778 0x7fff219227d0], sp=0x318daf9ca530",
+      "fatal error: non-Go code set up signal handler without SA_ONSTACK flag",
+      "",
+      "runtime stack:",
+      "runtime.throw({0x785d04?, 0x0?})"
+     ],
+     "ready": true,
+     "reason": "",
+     "selected": 64,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": null,
+     "onstack_added_after_webkit": null,
+     "unprotected": [],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 4032512000,
+      "go_collections": 3938,
+      "go_numgc": 3938,
+      "js_collections_requested": 12,
+      "js_result": 600000,
+      "js_rounds": 54,
+      "tight_loop_rounds": 5576
+     },
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present",
+     "reservation": {
+      "inferred_selection": 64,
+      "hidden_subscriber": {
+       "declared_to_host": false,
+       "signal": 64
+      },
+      "hidden_received_before_selection": true,
+      "go_reports_ignored_after_release": true,
+      "hidden_received_after_release": false,
+      "audit_after_init": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 64
+      },
+      "audit_after_workload": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 64
+      },
+      "kernel_view_indistinguishable": true
+     },
+     "raise": "process died (exit 2)"
+    },
+    {
+     "name": "hidden-subscriber-jsc-3",
+     "command": [
+      "/tmp/dfx2-wk-res",
+      "-signal-probe",
+      "hidden-subscriber-jsc"
+     ],
+     "env": {},
+     "exit": 2,
+     "events": [
+      "signal-probe",
+      "raising-reserved-signal"
+     ],
+     "stderr_lines": [
+      "signal 11 received but handler not on signal stack",
+      "mp.gsignal stack [0x171f60b4e000 0x171f60b56000], mp.g0 stack [0x7fff421d1aa8 0x7fff429d0b00], sp=0x171f60b8a530",
+      "fatal error: non-Go code set up signal handler without SA_ONSTACK flag",
+      "",
+      "runtime stack:",
+      "runtime.throw({0x785d04?, 0x0?})"
+     ],
+     "ready": true,
+     "reason": "",
+     "selected": 64,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": null,
+     "onstack_added_after_webkit": null,
+     "unprotected": [],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 4100096000,
+      "go_collections": 4004,
+      "go_numgc": 4004,
+      "js_collections_requested": 13,
+      "js_result": 600000,
+      "js_rounds": 56,
+      "tight_loop_rounds": 5576
+     },
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present",
+     "reservation": {
+      "inferred_selection": 64,
+      "hidden_subscriber": {
+       "declared_to_host": false,
+       "signal": 64
+      },
+      "hidden_received_before_selection": true,
+      "go_reports_ignored_after_release": true,
+      "hidden_received_after_release": false,
+      "audit_after_init": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 64
+      },
+      "audit_after_workload": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 64
+      },
+      "kernel_view_indistinguishable": true
+     },
+     "raise": "process died (exit 2)"
+    },
+    {
+     "name": "hidden-subscriber-jsc-4",
+     "command": [
+      "/tmp/dfx2-wk-res",
+      "-signal-probe",
+      "hidden-subscriber-jsc"
+     ],
+     "env": {},
+     "exit": 2,
+     "events": [
+      "signal-probe",
+      "raising-reserved-signal"
+     ],
+     "stderr_lines": [
+      "signal 11 received but handler not on signal stack",
+      "mp.gsignal stack [0x1a4e54f4a000 0x1a4e54f52000], mp.g0 stack [0x7ffd551e2168 0x7ffd559e11c0], sp=0x1a4e54f86530",
+      "fatal error: non-Go code set up signal handler without SA_ONSTACK flag",
+      "",
+      "runtime stack:",
+      "runtime.throw({0x785d04?, 0x0?})"
+     ],
+     "ready": true,
+     "reason": "",
+     "selected": 64,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": null,
+     "onstack_added_after_webkit": null,
+     "unprotected": [],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 3835904000,
+      "go_collections": 3746,
+      "go_numgc": 3746,
+      "js_collections_requested": 12,
+      "js_result": 600000,
+      "js_rounds": 54,
+      "tight_loop_rounds": 5663
+     },
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present",
+     "reservation": {
+      "inferred_selection": 64,
+      "hidden_subscriber": {
+       "declared_to_host": false,
+       "signal": 64
+      },
+      "hidden_received_before_selection": true,
+      "go_reports_ignored_after_release": true,
+      "hidden_received_after_release": false,
+      "audit_after_init": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 64
+      },
+      "audit_after_workload": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 64
+      },
+      "kernel_view_indistinguishable": true
+     },
+     "raise": "process died (exit 2)"
+    },
+    {
+     "name": "hidden-subscriber-jsc-5",
+     "command": [
+      "/tmp/dfx2-wk-res",
+      "-signal-probe",
+      "hidden-subscriber-jsc"
+     ],
+     "env": {},
+     "exit": 2,
+     "events": [
+      "signal-probe",
+      "raising-reserved-signal"
+     ],
+     "stderr_lines": [
+      "signal 11 received but handler not on signal stack",
+      "mp.gsignal stack [0xe31fda46000 0xe31fda4e000], mp.g0 stack [0x7ffd406a26f8 0x7ffd40ea1750], sp=0xe31fda82530",
+      "fatal error: non-Go code set up signal handler without SA_ONSTACK flag",
+      "",
+      "runtime stack:",
+      "runtime.throw({0x785d04?, 0x0?})"
+     ],
+     "ready": true,
+     "reason": "",
+     "selected": 64,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": null,
+     "onstack_added_after_webkit": null,
+     "unprotected": [],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 3961856000,
+      "go_collections": 3869,
+      "go_numgc": 3869,
+      "js_collections_requested": 12,
+      "js_result": 600000,
+      "js_rounds": 54,
+      "tight_loop_rounds": 5572
+     },
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present",
+     "reservation": {
+      "inferred_selection": 64,
+      "hidden_subscriber": {
+       "declared_to_host": false,
+       "signal": 64
+      },
+      "hidden_received_before_selection": true,
+      "go_reports_ignored_after_release": true,
+      "hidden_received_after_release": false,
+      "audit_after_init": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 64
+      },
+      "audit_after_workload": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 64
+      },
+      "kernel_view_indistinguishable": true
+     },
+     "raise": "process died (exit 2)"
+    },
+    {
+     "name": "hidden-subscriber-jsc-6",
+     "command": [
+      "/tmp/dfx2-wk-res",
+      "-signal-probe",
+      "hidden-subscriber-jsc"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "signal-probe",
+      "raising-reserved-signal",
+      "raised-reserved-signal"
+     ],
+     "stderr_lines": [],
+     "ready": true,
+     "reason": "",
+     "selected": 64,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": null,
+     "onstack_added_after_webkit": null,
+     "unprotected": [],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 3968000000,
+      "go_collections": 3875,
+      "go_numgc": 3875,
+      "js_collections_requested": 12,
+      "js_result": 600000,
+      "js_rounds": 54,
+      "tight_loop_rounds": 5554
+     },
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present",
+     "reservation": {
+      "inferred_selection": 64,
+      "hidden_subscriber": {
+       "declared_to_host": false,
+       "signal": 64
+      },
+      "hidden_received_before_selection": true,
+      "go_reports_ignored_after_release": true,
+      "hidden_received_after_release": false,
+      "audit_after_init": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 64
+      },
+      "audit_after_workload": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 64
+      },
+      "kernel_view_indistinguishable": true
+     },
+     "raise": "not received; survived"
+    },
+    {
+     "name": "hidden-subscriber-jsc-7",
+     "command": [
+      "/tmp/dfx2-wk-res",
+      "-signal-probe",
+      "hidden-subscriber-jsc"
+     ],
+     "env": {},
+     "exit": 2,
+     "events": [
+      "signal-probe",
+      "raising-reserved-signal"
+     ],
+     "stderr_lines": [
+      "signal 11 received but handler not on signal stack",
+      "mp.gsignal stack [0x33aba2bfe000 0x33aba2c06000], mp.g0 stack [0x7ffd26be52f8 0x7ffd273e4350], sp=0x33aba2c3a530",
+      "fatal error: non-Go code set up signal handler without SA_ONSTACK flag",
+      "",
+      "runtime stack:",
+      "runtime.throw({0x785d04?, 0x0?})"
+     ],
+     "ready": true,
+     "reason": "",
+     "selected": 64,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": null,
+     "onstack_added_after_webkit": null,
+     "unprotected": [],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 4028416000,
+      "go_collections": 3934,
+      "go_numgc": 3934,
+      "js_collections_requested": 12,
+      "js_result": 600000,
+      "js_rounds": 54,
+      "tight_loop_rounds": 5597
+     },
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present",
+     "reservation": {
+      "inferred_selection": 64,
+      "hidden_subscriber": {
+       "declared_to_host": false,
+       "signal": 64
+      },
+      "hidden_received_before_selection": true,
+      "go_reports_ignored_after_release": true,
+      "hidden_received_after_release": false,
+      "audit_after_init": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 64
+      },
+      "audit_after_workload": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 64
+      },
+      "kernel_view_indistinguishable": true
+     },
+     "raise": "process died (exit 2)"
+    },
+    {
+     "name": "hidden-subscriber-jsc-8",
+     "command": [
+      "/tmp/dfx2-wk-res",
+      "-signal-probe",
+      "hidden-subscriber-jsc"
+     ],
+     "env": {},
+     "exit": 2,
+     "events": [
+      "signal-probe",
+      "raising-reserved-signal"
+     ],
+     "stderr_lines": [
+      "signal 11 received but handler not on signal stack",
+      "mp.gsignal stack [0x37e093886000 0x37e09388e000], mp.g0 stack [0x7ffc851516a8 0x7ffc85950700], sp=0x37e0938c2530",
+      "fatal error: non-Go code set up signal handler without SA_ONSTACK flag",
+      "",
+      "runtime stack:",
+      "runtime.throw({0x785d04?, 0x0?})"
+     ],
+     "ready": true,
+     "reason": "",
+     "selected": 64,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": null,
+     "onstack_added_after_webkit": null,
+     "unprotected": [],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 3914752000,
+      "go_collections": 3823,
+      "go_numgc": 3823,
+      "js_collections_requested": 12,
+      "js_result": 600000,
+      "js_rounds": 54,
+      "tight_loop_rounds": 5559
+     },
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present",
+     "reservation": {
+      "inferred_selection": 64,
+      "hidden_subscriber": {
+       "declared_to_host": false,
+       "signal": 64
+      },
+      "hidden_received_before_selection": true,
+      "go_reports_ignored_after_release": true,
+      "hidden_received_after_release": false,
+      "audit_after_init": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 64
+      },
+      "audit_after_workload": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 64
+      },
+      "kernel_view_indistinguishable": true
+     },
+     "raise": "process died (exit 2)"
+    },
+    {
+     "name": "hidden-subscriber-jsc-9",
+     "command": [
+      "/tmp/dfx2-wk-res",
+      "-signal-probe",
+      "hidden-subscriber-jsc"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "signal-probe",
+      "raising-reserved-signal",
+      "raised-reserved-signal"
+     ],
+     "stderr_lines": [],
+     "ready": true,
+     "reason": "",
+     "selected": 64,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": null,
+     "onstack_added_after_webkit": null,
+     "unprotected": [],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 4139008000,
+      "go_collections": 4042,
+      "go_numgc": 4042,
+      "js_collections_requested": 13,
+      "js_result": 600000,
+      "js_rounds": 56,
+      "tight_loop_rounds": 5396
+     },
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present",
+     "reservation": {
+      "inferred_selection": 64,
+      "hidden_subscriber": {
+       "declared_to_host": false,
+       "signal": 64
+      },
+      "hidden_received_before_selection": true,
+      "go_reports_ignored_after_release": true,
+      "hidden_received_after_release": false,
+      "audit_after_init": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 64
+      },
+      "audit_after_workload": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 64
+      },
+      "kernel_view_indistinguishable": true
+     },
+     "raise": "not received; survived"
+    },
+    {
+     "name": "hidden-subscriber-jsc-10",
+     "command": [
+      "/tmp/dfx2-wk-res",
+      "-signal-probe",
+      "hidden-subscriber-jsc"
+     ],
+     "env": {},
+     "exit": 2,
+     "events": [
+      "signal-probe",
+      "raising-reserved-signal"
+     ],
+     "stderr_lines": [
+      "signal 11 received but handler not on signal stack",
+      "mp.gsignal stack [0x271e14dea000 0x271e14df2000], mp.g0 stack [0x7fff31b40928 0x7fff3233f980], sp=0x271e14e26530",
+      "fatal error: non-Go code set up signal handler without SA_ONSTACK flag",
+      "",
+      "runtime stack:",
+      "runtime.throw({0x785d04?, 0x0?})"
+     ],
+     "ready": true,
+     "reason": "",
+     "selected": 64,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": null,
+     "onstack_added_after_webkit": null,
+     "unprotected": [],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 3915776000,
+      "go_collections": 3824,
+      "go_numgc": 3824,
+      "js_collections_requested": 12,
+      "js_result": 600000,
+      "js_rounds": 53,
+      "tight_loop_rounds": 5489
+     },
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present",
+     "reservation": {
+      "inferred_selection": 64,
+      "hidden_subscriber": {
+       "declared_to_host": false,
+       "signal": 64
+      },
+      "hidden_received_before_selection": true,
+      "go_reports_ignored_after_release": true,
+      "hidden_received_after_release": false,
+      "audit_after_init": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 64
+      },
+      "audit_after_workload": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 64
+      },
+      "kernel_view_indistinguishable": true
+     },
+     "raise": "process died (exit 2)"
+    }
+   ]
+  },
+  {
+   "case": "reserved",
+   "flags": [
+    "reserved",
+    "-signal-reserve",
+    "60"
+   ],
+   "env": {},
+   "repeat": 10,
+   "ok": true,
+   "detail": {
+    "exits": {
+     "0": 10
+    }
+   },
+   "runs": [
+    {
+     "name": "reserved-1",
+     "command": [
+      "/tmp/dfx2-wk-res",
+      "-signal-probe",
+      "reserved",
+      "-signal-reserve",
+      "60"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": true,
+     "reason": "",
+     "selected": 60,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": null,
+     "onstack_added_after_webkit": null,
+     "unprotected": [],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       60,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 4368384000,
+      "go_collections": 4266,
+      "go_numgc": 4266,
+      "js_collections_requested": 13,
+      "js_result": 600000,
+      "js_rounds": 57,
+      "tight_loop_rounds": 5567
+     },
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present",
+     "reservation": {
+      "go_reports_ignored_after_release": true,
+      "reservation_checks": [
+       {
+        "check": "supplied",
+        "passed": true,
+        "detail": "an explicit reservation; the host infers nothing"
+       },
+       {
+        "check": "within libc's real-time range",
+        "passed": true,
+        "detail": "60 in [34, 64]",
+        "cannot_establish": "that no other library uses it"
+       },
+       {
+        "check": "kernel disposition is Go's handler",
+        "passed": true,
+        "detail": "owner go",
+        "cannot_establish": "that no Go subscriber exists: subscribed and unsubscribed signals look identical"
+       },
+       {
+        "check": "not blocked on the initializing thread",
+        "passed": true,
+        "cannot_establish": "the masks of threads created later"
+       },
+       {
+        "check": "not among the application's declared subscriptions",
+        "passed": true,
+        "cannot_establish": "subscriptions the application did not declare"
+       },
+       {
+        "check": "not ignored through os/signal",
+        "passed": true
+       },
+       {
+        "check": "JSC_SIGNAL_FOR_GC unset or equal",
+        "passed": true,
+        "detail": "JSC_SIGNAL_FOR_GC="
+       }
+      ],
+      "audit_after_init": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 60
+      },
+      "audit_after_workload": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 60
+      }
+     }
+    },
+    {
+     "name": "reserved-2",
+     "command": [
+      "/tmp/dfx2-wk-res",
+      "-signal-probe",
+      "reserved",
+      "-signal-reserve",
+      "60"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": true,
+     "reason": "",
+     "selected": 60,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": null,
+     "onstack_added_after_webkit": null,
+     "unprotected": [],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       60,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 4158464000,
+      "go_collections": 4061,
+      "go_numgc": 4061,
+      "js_collections_requested": 13,
+      "js_result": 600000,
+      "js_rounds": 55,
+      "tight_loop_rounds": 5603
+     },
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present",
+     "reservation": {
+      "go_reports_ignored_after_release": true,
+      "reservation_checks": [
+       {
+        "check": "supplied",
+        "passed": true,
+        "detail": "an explicit reservation; the host infers nothing"
+       },
+       {
+        "check": "within libc's real-time range",
+        "passed": true,
+        "detail": "60 in [34, 64]",
+        "cannot_establish": "that no other library uses it"
+       },
+       {
+        "check": "kernel disposition is Go's handler",
+        "passed": true,
+        "detail": "owner go",
+        "cannot_establish": "that no Go subscriber exists: subscribed and unsubscribed signals look identical"
+       },
+       {
+        "check": "not blocked on the initializing thread",
+        "passed": true,
+        "cannot_establish": "the masks of threads created later"
+       },
+       {
+        "check": "not among the application's declared subscriptions",
+        "passed": true,
+        "cannot_establish": "subscriptions the application did not declare"
+       },
+       {
+        "check": "not ignored through os/signal",
+        "passed": true
+       },
+       {
+        "check": "JSC_SIGNAL_FOR_GC unset or equal",
+        "passed": true,
+        "detail": "JSC_SIGNAL_FOR_GC="
+       }
+      ],
+      "audit_after_init": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 60
+      },
+      "audit_after_workload": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 60
+      }
+     }
+    },
+    {
+     "name": "reserved-3",
+     "command": [
+      "/tmp/dfx2-wk-res",
+      "-signal-probe",
+      "reserved",
+      "-signal-reserve",
+      "60"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": true,
+     "reason": "",
+     "selected": 60,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": null,
+     "onstack_added_after_webkit": null,
+     "unprotected": [],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       60,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 4301824000,
+      "go_collections": 4201,
+      "go_numgc": 4201,
+      "js_collections_requested": 13,
+      "js_result": 600000,
+      "js_rounds": 57,
+      "tight_loop_rounds": 5625
+     },
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present",
+     "reservation": {
+      "go_reports_ignored_after_release": true,
+      "reservation_checks": [
+       {
+        "check": "supplied",
+        "passed": true,
+        "detail": "an explicit reservation; the host infers nothing"
+       },
+       {
+        "check": "within libc's real-time range",
+        "passed": true,
+        "detail": "60 in [34, 64]",
+        "cannot_establish": "that no other library uses it"
+       },
+       {
+        "check": "kernel disposition is Go's handler",
+        "passed": true,
+        "detail": "owner go",
+        "cannot_establish": "that no Go subscriber exists: subscribed and unsubscribed signals look identical"
+       },
+       {
+        "check": "not blocked on the initializing thread",
+        "passed": true,
+        "cannot_establish": "the masks of threads created later"
+       },
+       {
+        "check": "not among the application's declared subscriptions",
+        "passed": true,
+        "cannot_establish": "subscriptions the application did not declare"
+       },
+       {
+        "check": "not ignored through os/signal",
+        "passed": true
+       },
+       {
+        "check": "JSC_SIGNAL_FOR_GC unset or equal",
+        "passed": true,
+        "detail": "JSC_SIGNAL_FOR_GC="
+       }
+      ],
+      "audit_after_init": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 60
+      },
+      "audit_after_workload": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 60
+      }
+     }
+    },
+    {
+     "name": "reserved-4",
+     "command": [
+      "/tmp/dfx2-wk-res",
+      "-signal-probe",
+      "reserved",
+      "-signal-reserve",
+      "60"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": true,
+     "reason": "",
+     "selected": 60,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": null,
+     "onstack_added_after_webkit": null,
+     "unprotected": [],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       60,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 4206592000,
+      "go_collections": 4108,
+      "go_numgc": 4108,
+      "js_collections_requested": 13,
+      "js_result": 600000,
+      "js_rounds": 57,
+      "tight_loop_rounds": 5588
+     },
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present",
+     "reservation": {
+      "go_reports_ignored_after_release": true,
+      "reservation_checks": [
+       {
+        "check": "supplied",
+        "passed": true,
+        "detail": "an explicit reservation; the host infers nothing"
+       },
+       {
+        "check": "within libc's real-time range",
+        "passed": true,
+        "detail": "60 in [34, 64]",
+        "cannot_establish": "that no other library uses it"
+       },
+       {
+        "check": "kernel disposition is Go's handler",
+        "passed": true,
+        "detail": "owner go",
+        "cannot_establish": "that no Go subscriber exists: subscribed and unsubscribed signals look identical"
+       },
+       {
+        "check": "not blocked on the initializing thread",
+        "passed": true,
+        "cannot_establish": "the masks of threads created later"
+       },
+       {
+        "check": "not among the application's declared subscriptions",
+        "passed": true,
+        "cannot_establish": "subscriptions the application did not declare"
+       },
+       {
+        "check": "not ignored through os/signal",
+        "passed": true
+       },
+       {
+        "check": "JSC_SIGNAL_FOR_GC unset or equal",
+        "passed": true,
+        "detail": "JSC_SIGNAL_FOR_GC="
+       }
+      ],
+      "audit_after_init": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 60
+      },
+      "audit_after_workload": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 60
+      }
+     }
+    },
+    {
+     "name": "reserved-5",
+     "command": [
+      "/tmp/dfx2-wk-res",
+      "-signal-probe",
+      "reserved",
+      "-signal-reserve",
+      "60"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": true,
+     "reason": "",
+     "selected": 60,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": null,
+     "onstack_added_after_webkit": null,
+     "unprotected": [],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       60,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 4025344000,
+      "go_collections": 3931,
+      "go_numgc": 3931,
+      "js_collections_requested": 13,
+      "js_result": 600000,
+      "js_rounds": 55,
+      "tight_loop_rounds": 5774
+     },
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present",
+     "reservation": {
+      "go_reports_ignored_after_release": true,
+      "reservation_checks": [
+       {
+        "check": "supplied",
+        "passed": true,
+        "detail": "an explicit reservation; the host infers nothing"
+       },
+       {
+        "check": "within libc's real-time range",
+        "passed": true,
+        "detail": "60 in [34, 64]",
+        "cannot_establish": "that no other library uses it"
+       },
+       {
+        "check": "kernel disposition is Go's handler",
+        "passed": true,
+        "detail": "owner go",
+        "cannot_establish": "that no Go subscriber exists: subscribed and unsubscribed signals look identical"
+       },
+       {
+        "check": "not blocked on the initializing thread",
+        "passed": true,
+        "cannot_establish": "the masks of threads created later"
+       },
+       {
+        "check": "not among the application's declared subscriptions",
+        "passed": true,
+        "cannot_establish": "subscriptions the application did not declare"
+       },
+       {
+        "check": "not ignored through os/signal",
+        "passed": true
+       },
+       {
+        "check": "JSC_SIGNAL_FOR_GC unset or equal",
+        "passed": true,
+        "detail": "JSC_SIGNAL_FOR_GC="
+       }
+      ],
+      "audit_after_init": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 60
+      },
+      "audit_after_workload": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 60
+      }
+     }
+    },
+    {
+     "name": "reserved-6",
+     "command": [
+      "/tmp/dfx2-wk-res",
+      "-signal-probe",
+      "reserved",
+      "-signal-reserve",
+      "60"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": true,
+     "reason": "",
+     "selected": 60,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": null,
+     "onstack_added_after_webkit": null,
+     "unprotected": [],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       60,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 4281344000,
+      "go_collections": 4181,
+      "go_numgc": 4181,
+      "js_collections_requested": 13,
+      "js_result": 600000,
+      "js_rounds": 55,
+      "tight_loop_rounds": 5678
+     },
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present",
+     "reservation": {
+      "go_reports_ignored_after_release": true,
+      "reservation_checks": [
+       {
+        "check": "supplied",
+        "passed": true,
+        "detail": "an explicit reservation; the host infers nothing"
+       },
+       {
+        "check": "within libc's real-time range",
+        "passed": true,
+        "detail": "60 in [34, 64]",
+        "cannot_establish": "that no other library uses it"
+       },
+       {
+        "check": "kernel disposition is Go's handler",
+        "passed": true,
+        "detail": "owner go",
+        "cannot_establish": "that no Go subscriber exists: subscribed and unsubscribed signals look identical"
+       },
+       {
+        "check": "not blocked on the initializing thread",
+        "passed": true,
+        "cannot_establish": "the masks of threads created later"
+       },
+       {
+        "check": "not among the application's declared subscriptions",
+        "passed": true,
+        "cannot_establish": "subscriptions the application did not declare"
+       },
+       {
+        "check": "not ignored through os/signal",
+        "passed": true
+       },
+       {
+        "check": "JSC_SIGNAL_FOR_GC unset or equal",
+        "passed": true,
+        "detail": "JSC_SIGNAL_FOR_GC="
+       }
+      ],
+      "audit_after_init": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 60
+      },
+      "audit_after_workload": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 60
+      }
+     }
+    },
+    {
+     "name": "reserved-7",
+     "command": [
+      "/tmp/dfx2-wk-res",
+      "-signal-probe",
+      "reserved",
+      "-signal-reserve",
+      "60"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": true,
+     "reason": "",
+     "selected": 60,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": null,
+     "onstack_added_after_webkit": null,
+     "unprotected": [],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       60,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 4287488000,
+      "go_collections": 4187,
+      "go_numgc": 4187,
+      "js_collections_requested": 13,
+      "js_result": 600000,
+      "js_rounds": 58,
+      "tight_loop_rounds": 5575
+     },
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present",
+     "reservation": {
+      "go_reports_ignored_after_release": true,
+      "reservation_checks": [
+       {
+        "check": "supplied",
+        "passed": true,
+        "detail": "an explicit reservation; the host infers nothing"
+       },
+       {
+        "check": "within libc's real-time range",
+        "passed": true,
+        "detail": "60 in [34, 64]",
+        "cannot_establish": "that no other library uses it"
+       },
+       {
+        "check": "kernel disposition is Go's handler",
+        "passed": true,
+        "detail": "owner go",
+        "cannot_establish": "that no Go subscriber exists: subscribed and unsubscribed signals look identical"
+       },
+       {
+        "check": "not blocked on the initializing thread",
+        "passed": true,
+        "cannot_establish": "the masks of threads created later"
+       },
+       {
+        "check": "not among the application's declared subscriptions",
+        "passed": true,
+        "cannot_establish": "subscriptions the application did not declare"
+       },
+       {
+        "check": "not ignored through os/signal",
+        "passed": true
+       },
+       {
+        "check": "JSC_SIGNAL_FOR_GC unset or equal",
+        "passed": true,
+        "detail": "JSC_SIGNAL_FOR_GC="
+       }
+      ],
+      "audit_after_init": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 60
+      },
+      "audit_after_workload": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 60
+      }
+     }
+    },
+    {
+     "name": "reserved-8",
+     "command": [
+      "/tmp/dfx2-wk-res",
+      "-signal-probe",
+      "reserved",
+      "-signal-reserve",
+      "60"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": true,
+     "reason": "",
+     "selected": 60,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": null,
+     "onstack_added_after_webkit": null,
+     "unprotected": [],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       60,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 4275200000,
+      "go_collections": 4175,
+      "go_numgc": 4175,
+      "js_collections_requested": 13,
+      "js_result": 600000,
+      "js_rounds": 56,
+      "tight_loop_rounds": 5677
+     },
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present",
+     "reservation": {
+      "go_reports_ignored_after_release": true,
+      "reservation_checks": [
+       {
+        "check": "supplied",
+        "passed": true,
+        "detail": "an explicit reservation; the host infers nothing"
+       },
+       {
+        "check": "within libc's real-time range",
+        "passed": true,
+        "detail": "60 in [34, 64]",
+        "cannot_establish": "that no other library uses it"
+       },
+       {
+        "check": "kernel disposition is Go's handler",
+        "passed": true,
+        "detail": "owner go",
+        "cannot_establish": "that no Go subscriber exists: subscribed and unsubscribed signals look identical"
+       },
+       {
+        "check": "not blocked on the initializing thread",
+        "passed": true,
+        "cannot_establish": "the masks of threads created later"
+       },
+       {
+        "check": "not among the application's declared subscriptions",
+        "passed": true,
+        "cannot_establish": "subscriptions the application did not declare"
+       },
+       {
+        "check": "not ignored through os/signal",
+        "passed": true
+       },
+       {
+        "check": "JSC_SIGNAL_FOR_GC unset or equal",
+        "passed": true,
+        "detail": "JSC_SIGNAL_FOR_GC="
+       }
+      ],
+      "audit_after_init": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 60
+      },
+      "audit_after_workload": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 60
+      }
+     }
+    },
+    {
+     "name": "reserved-9",
+     "command": [
+      "/tmp/dfx2-wk-res",
+      "-signal-probe",
+      "reserved",
+      "-signal-reserve",
+      "60"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": true,
+     "reason": "",
+     "selected": 60,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": null,
+     "onstack_added_after_webkit": null,
+     "unprotected": [],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       60,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 4182016000,
+      "go_collections": 4084,
+      "go_numgc": 4084,
+      "js_collections_requested": 13,
+      "js_result": 600000,
+      "js_rounds": 56,
+      "tight_loop_rounds": 5560
+     },
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present",
+     "reservation": {
+      "go_reports_ignored_after_release": true,
+      "reservation_checks": [
+       {
+        "check": "supplied",
+        "passed": true,
+        "detail": "an explicit reservation; the host infers nothing"
+       },
+       {
+        "check": "within libc's real-time range",
+        "passed": true,
+        "detail": "60 in [34, 64]",
+        "cannot_establish": "that no other library uses it"
+       },
+       {
+        "check": "kernel disposition is Go's handler",
+        "passed": true,
+        "detail": "owner go",
+        "cannot_establish": "that no Go subscriber exists: subscribed and unsubscribed signals look identical"
+       },
+       {
+        "check": "not blocked on the initializing thread",
+        "passed": true,
+        "cannot_establish": "the masks of threads created later"
+       },
+       {
+        "check": "not among the application's declared subscriptions",
+        "passed": true,
+        "cannot_establish": "subscriptions the application did not declare"
+       },
+       {
+        "check": "not ignored through os/signal",
+        "passed": true
+       },
+       {
+        "check": "JSC_SIGNAL_FOR_GC unset or equal",
+        "passed": true,
+        "detail": "JSC_SIGNAL_FOR_GC="
+       }
+      ],
+      "audit_after_init": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 60
+      },
+      "audit_after_workload": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 60
+      }
+     }
+    },
+    {
+     "name": "reserved-10",
+     "command": [
+      "/tmp/dfx2-wk-res",
+      "-signal-probe",
+      "reserved",
+      "-signal-reserve",
+      "60"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": true,
+     "reason": "",
+     "selected": 60,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": null,
+     "onstack_added_after_webkit": null,
+     "unprotected": [],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       60,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 4368384000,
+      "go_collections": 4266,
+      "go_numgc": 4266,
+      "js_collections_requested": 13,
+      "js_result": 600000,
+      "js_rounds": 57,
+      "tight_loop_rounds": 5576
+     },
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present",
+     "reservation": {
+      "go_reports_ignored_after_release": true,
+      "reservation_checks": [
+       {
+        "check": "supplied",
+        "passed": true,
+        "detail": "an explicit reservation; the host infers nothing"
+       },
+       {
+        "check": "within libc's real-time range",
+        "passed": true,
+        "detail": "60 in [34, 64]",
+        "cannot_establish": "that no other library uses it"
+       },
+       {
+        "check": "kernel disposition is Go's handler",
+        "passed": true,
+        "detail": "owner go",
+        "cannot_establish": "that no Go subscriber exists: subscribed and unsubscribed signals look identical"
+       },
+       {
+        "check": "not blocked on the initializing thread",
+        "passed": true,
+        "cannot_establish": "the masks of threads created later"
+       },
+       {
+        "check": "not among the application's declared subscriptions",
+        "passed": true,
+        "cannot_establish": "subscriptions the application did not declare"
+       },
+       {
+        "check": "not ignored through os/signal",
+        "passed": true
+       },
+       {
+        "check": "JSC_SIGNAL_FOR_GC unset or equal",
+        "passed": true,
+        "detail": "JSC_SIGNAL_FOR_GC="
+       }
+      ],
+      "audit_after_init": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 60
+      },
+      "audit_after_workload": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 60
+      }
+     }
+    }
+   ]
+  },
+  {
+   "case": "reserved-34",
+   "flags": [
+    "reserved",
+    "-signal-reserve",
+    "34"
+   ],
+   "env": {},
+   "repeat": 1,
+   "ok": true,
+   "detail": "refused: Go leaves 34 to libc; its default disposition is not availability",
+   "runs": [
+    {
+     "name": "reserved-34",
+     "command": [
+      "/tmp/dfx2-wk-res",
+      "-signal-probe",
+      "reserved",
+      "-signal-reserve",
+      "34"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": false,
+     "reason": "reservation refused: kernel disposition is Go's handler",
+     "selected": 34,
+     "fault": null,
+     "delivery": null,
+     "onstack_added": null,
+     "onstack_added_after_webkit": null,
+     "unprotected": [],
+     "non_go": [
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": null,
+     "second_thread": null,
+     "configure_result": null,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present",
+     "reservation": {
+      "reservation_checks": [
+       {
+        "check": "supplied",
+        "passed": true,
+        "detail": "an explicit reservation; the host infers nothing"
+       },
+       {
+        "check": "within libc's real-time range",
+        "passed": true,
+        "detail": "34 in [34, 64]",
+        "cannot_establish": "that no other library uses it"
+       },
+       {
+        "check": "kernel disposition is Go's handler",
+        "passed": false,
+        "detail": "owner default",
+        "cannot_establish": "that no Go subscriber exists: subscribed and unsubscribed signals look identical"
+       },
+       {
+        "check": "not blocked on the initializing thread",
+        "passed": true,
+        "cannot_establish": "the masks of threads created later"
+       },
+       {
+        "check": "not among the application's declared subscriptions",
+        "passed": true,
+        "cannot_establish": "subscriptions the application did not declare"
+       },
+       {
+        "check": "not ignored through os/signal",
+        "passed": true
+       },
+       {
+        "check": "JSC_SIGNAL_FOR_GC unset or equal",
+        "passed": true,
+        "detail": "JSC_SIGNAL_FOR_GC="
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "case": "reserved-35",
+   "flags": [
+    "reserved",
+    "-signal-reserve",
+    "35"
+   ],
+   "env": {},
+   "repeat": 1,
+   "ok": true,
+   "detail": "the lowest Go-owned real-time signal",
+   "runs": [
+    {
+     "name": "reserved-35",
+     "command": [
+      "/tmp/dfx2-wk-res",
+      "-signal-probe",
+      "reserved",
+      "-signal-reserve",
+      "35"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": true,
+     "reason": "",
+     "selected": 35,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": null,
+     "onstack_added_after_webkit": null,
+     "unprotected": [],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       35,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 4072448000,
+      "go_collections": 3977,
+      "go_numgc": 3977,
+      "js_collections_requested": 13,
+      "js_result": 600000,
+      "js_rounds": 55,
+      "tight_loop_rounds": 5693
+     },
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present",
+     "reservation": {
+      "go_reports_ignored_after_release": true,
+      "reservation_checks": [
+       {
+        "check": "supplied",
+        "passed": true,
+        "detail": "an explicit reservation; the host infers nothing"
+       },
+       {
+        "check": "within libc's real-time range",
+        "passed": true,
+        "detail": "35 in [34, 64]",
+        "cannot_establish": "that no other library uses it"
+       },
+       {
+        "check": "kernel disposition is Go's handler",
+        "passed": true,
+        "detail": "owner go",
+        "cannot_establish": "that no Go subscriber exists: subscribed and unsubscribed signals look identical"
+       },
+       {
+        "check": "not blocked on the initializing thread",
+        "passed": true,
+        "cannot_establish": "the masks of threads created later"
+       },
+       {
+        "check": "not among the application's declared subscriptions",
+        "passed": true,
+        "cannot_establish": "subscriptions the application did not declare"
+       },
+       {
+        "check": "not ignored through os/signal",
+        "passed": true
+       },
+       {
+        "check": "JSC_SIGNAL_FOR_GC unset or equal",
+        "passed": true,
+        "detail": "JSC_SIGNAL_FOR_GC="
+       }
+      ],
+      "audit_after_init": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 35
+      },
+      "audit_after_workload": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 35
+      }
+     }
+    }
+   ]
+  },
+  {
+   "case": "reserved-missing",
+   "flags": [
+    "reserved"
+   ],
+   "env": {},
+   "repeat": 1,
+   "ok": true,
+   "detail": "refused; nothing inferred, JSC never initialized",
+   "runs": [
+    {
+     "name": "reserved-missing",
+     "command": [
+      "/tmp/dfx2-wk-res",
+      "-signal-probe",
+      "reserved"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": false,
+     "reason": "reservation refused: supplied",
+     "selected": 0,
+     "fault": null,
+     "delivery": null,
+     "onstack_added": null,
+     "onstack_added_after_webkit": null,
+     "unprotected": [],
+     "non_go": [
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": null,
+     "second_thread": null,
+     "configure_result": null,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present",
+     "reservation": {
+      "reservation_checks": [
+       {
+        "check": "supplied",
+        "passed": false,
+        "detail": "an explicit reservation; the host infers nothing"
+       },
+       {
+        "check": "within libc's real-time range",
+        "passed": false,
+        "detail": "0 in [34, 64]",
+        "cannot_establish": "that no other library uses it"
+       },
+       {
+        "check": "kernel disposition is Go's handler",
+        "passed": false,
+        "detail": "owner unread",
+        "cannot_establish": "that no Go subscriber exists: subscribed and unsubscribed signals look identical"
+       },
+       {
+        "check": "not blocked on the initializing thread",
+        "passed": true,
+        "cannot_establish": "the masks of threads created later"
+       },
+       {
+        "check": "not among the application's declared subscriptions",
+        "passed": true,
+        "cannot_establish": "subscriptions the application did not declare"
+       },
+       {
+        "check": "not ignored through os/signal",
+        "passed": true
+       },
+       {
+        "check": "JSC_SIGNAL_FOR_GC unset or equal",
+        "passed": true,
+        "detail": "JSC_SIGNAL_FOR_GC="
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "case": "reserved-invalid-10",
+   "flags": [
+    "reserved",
+    "-signal-reserve",
+    "10"
+   ],
+   "env": {},
+   "repeat": 1,
+   "ok": true,
+   "detail": "refused: SIGUSR1, declared",
+   "runs": [
+    {
+     "name": "reserved-invalid-10",
+     "command": [
+      "/tmp/dfx2-wk-res",
+      "-signal-probe",
+      "reserved",
+      "-signal-reserve",
+      "10"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": false,
+     "reason": "reservation refused: within libc's real-time range",
+     "selected": 10,
+     "fault": null,
+     "delivery": null,
+     "onstack_added": null,
+     "onstack_added_after_webkit": null,
+     "unprotected": [],
+     "non_go": [
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": null,
+     "second_thread": null,
+     "configure_result": null,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present",
+     "reservation": {
+      "reservation_checks": [
+       {
+        "check": "supplied",
+        "passed": true,
+        "detail": "an explicit reservation; the host infers nothing"
+       },
+       {
+        "check": "within libc's real-time range",
+        "passed": false,
+        "detail": "10 in [34, 64]",
+        "cannot_establish": "that no other library uses it"
+       },
+       {
+        "check": "kernel disposition is Go's handler",
+        "passed": true,
+        "detail": "owner go",
+        "cannot_establish": "that no Go subscriber exists: subscribed and unsubscribed signals look identical"
+       },
+       {
+        "check": "not blocked on the initializing thread",
+        "passed": true,
+        "cannot_establish": "the masks of threads created later"
+       },
+       {
+        "check": "not among the application's declared subscriptions",
+        "passed": false,
+        "cannot_establish": "subscriptions the application did not declare"
+       },
+       {
+        "check": "not ignored through os/signal",
+        "passed": true
+       },
+       {
+        "check": "JSC_SIGNAL_FOR_GC unset or equal",
+        "passed": true,
+        "detail": "JSC_SIGNAL_FOR_GC="
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "case": "reserved-invalid-33",
+   "flags": [
+    "reserved",
+    "-signal-reserve",
+    "33"
+   ],
+   "env": {},
+   "repeat": 1,
+   "ok": true,
+   "detail": "refused: libc-internal",
+   "runs": [
+    {
+     "name": "reserved-invalid-33",
+     "command": [
+      "/tmp/dfx2-wk-res",
+      "-signal-probe",
+      "reserved",
+      "-signal-reserve",
+      "33"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": false,
+     "reason": "reservation refused: within libc's real-time range",
+     "selected": 33,
+     "fault": null,
+     "delivery": null,
+     "onstack_added": null,
+     "onstack_added_after_webkit": null,
+     "unprotected": [],
+     "non_go": [
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": null,
+     "second_thread": null,
+     "configure_result": null,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present",
+     "reservation": {
+      "reservation_checks": [
+       {
+        "check": "supplied",
+        "passed": true,
+        "detail": "an explicit reservation; the host infers nothing"
+       },
+       {
+        "check": "within libc's real-time range",
+        "passed": false,
+        "detail": "33 in [34, 64]",
+        "cannot_establish": "that no other library uses it"
+       },
+       {
+        "check": "kernel disposition is Go's handler",
+        "passed": false,
+        "detail": "owner native:libc.so.6",
+        "cannot_establish": "that no Go subscriber exists: subscribed and unsubscribed signals look identical"
+       },
+       {
+        "check": "not blocked on the initializing thread",
+        "passed": true,
+        "cannot_establish": "the masks of threads created later"
+       },
+       {
+        "check": "not among the application's declared subscriptions",
+        "passed": true,
+        "cannot_establish": "subscriptions the application did not declare"
+       },
+       {
+        "check": "not ignored through os/signal",
+        "passed": true
+       },
+       {
+        "check": "JSC_SIGNAL_FOR_GC unset or equal",
+        "passed": true,
+        "detail": "JSC_SIGNAL_FOR_GC="
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "case": "reserved-invalid-65",
+   "flags": [
+    "reserved",
+    "-signal-reserve",
+    "65"
+   ],
+   "env": {},
+   "repeat": 1,
+   "ok": true,
+   "detail": "refused: beyond SIGRTMAX",
+   "runs": [
+    {
+     "name": "reserved-invalid-65",
+     "command": [
+      "/tmp/dfx2-wk-res",
+      "-signal-probe",
+      "reserved",
+      "-signal-reserve",
+      "65"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": false,
+     "reason": "reservation refused: within libc's real-time range",
+     "selected": 65,
+     "fault": null,
+     "delivery": null,
+     "onstack_added": null,
+     "onstack_added_after_webkit": null,
+     "unprotected": [],
+     "non_go": [
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": null,
+     "second_thread": null,
+     "configure_result": null,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present",
+     "reservation": {
+      "reservation_checks": [
+       {
+        "check": "supplied",
+        "passed": true,
+        "detail": "an explicit reservation; the host infers nothing"
+       },
+       {
+        "check": "within libc's real-time range",
+        "passed": false,
+        "detail": "65 in [34, 64]",
+        "cannot_establish": "that no other library uses it"
+       },
+       {
+        "check": "kernel disposition is Go's handler",
+        "passed": false,
+        "detail": "owner unread",
+        "cannot_establish": "that no Go subscriber exists: subscribed and unsubscribed signals look identical"
+       },
+       {
+        "check": "not blocked on the initializing thread",
+        "passed": true,
+        "cannot_establish": "the masks of threads created later"
+       },
+       {
+        "check": "not among the application's declared subscriptions",
+        "passed": true,
+        "cannot_establish": "subscriptions the application did not declare"
+       },
+       {
+        "check": "not ignored through os/signal",
+        "passed": true
+       },
+       {
+        "check": "JSC_SIGNAL_FOR_GC unset or equal",
+        "passed": true,
+        "detail": "JSC_SIGNAL_FOR_GC="
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "case": "reserved-foreign",
+   "flags": [
+    "reserved-foreign",
+    "-signal-reserve",
+    "60"
+   ],
+   "env": {},
+   "repeat": 1,
+   "ok": true,
+   "detail": "injected native owner: refused",
+   "runs": [
+    {
+     "name": "reserved-foreign",
+     "command": [
+      "/tmp/dfx2-wk-res",
+      "-signal-probe",
+      "reserved-foreign",
+      "-signal-reserve",
+      "60"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": false,
+     "reason": "reservation refused: kernel disposition is Go's handler",
+     "selected": 60,
+     "fault": null,
+     "delivery": null,
+     "onstack_added": null,
+     "onstack_added_after_webkit": null,
+     "unprotected": [],
+     "non_go": [
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       60,
+       "ignore",
+       null
+      ]
+     ],
+     "workload": null,
+     "second_thread": null,
+     "configure_result": null,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present",
+     "reservation": {
+      "reservation_checks": [
+       {
+        "check": "supplied",
+        "passed": true,
+        "detail": "an explicit reservation; the host infers nothing"
+       },
+       {
+        "check": "within libc's real-time range",
+        "passed": true,
+        "detail": "60 in [34, 64]",
+        "cannot_establish": "that no other library uses it"
+       },
+       {
+        "check": "kernel disposition is Go's handler",
+        "passed": false,
+        "detail": "owner ignore",
+        "cannot_establish": "that no Go subscriber exists: subscribed and unsubscribed signals look identical"
+       },
+       {
+        "check": "not blocked on the initializing thread",
+        "passed": true,
+        "cannot_establish": "the masks of threads created later"
+       },
+       {
+        "check": "not among the application's declared subscriptions",
+        "passed": true,
+        "cannot_establish": "subscriptions the application did not declare"
+       },
+       {
+        "check": "not ignored through os/signal",
+        "passed": true
+       },
+       {
+        "check": "JSC_SIGNAL_FOR_GC unset or equal",
+        "passed": true,
+        "detail": "JSC_SIGNAL_FOR_GC="
+       }
+      ],
+      "injected": "native SIG_IGN on the reserved signal before validation"
+     }
+    }
+   ]
+  },
+  {
+   "case": "reserved-env-mismatch",
+   "flags": [
+    "reserved",
+    "-signal-reserve",
+    "60"
+   ],
+   "env": {
+    "JSC_SIGNAL_FOR_GC": "63"
+   },
+   "repeat": 1,
+   "ok": true,
+   "detail": "refused",
+   "runs": [
+    {
+     "name": "reserved-env-mismatch",
+     "command": [
+      "/tmp/dfx2-wk-res",
+      "-signal-probe",
+      "reserved",
+      "-signal-reserve",
+      "60"
+     ],
+     "env": {
+      "JSC_SIGNAL_FOR_GC": "63"
+     },
+     "exit": 0,
+     "events": [
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": false,
+     "reason": "reservation refused: JSC_SIGNAL_FOR_GC unset or equal",
+     "selected": 60,
+     "fault": null,
+     "delivery": null,
+     "onstack_added": null,
+     "onstack_added_after_webkit": null,
+     "unprotected": [],
+     "non_go": [
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": null,
+     "second_thread": null,
+     "configure_result": null,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present",
+     "reservation": {
+      "reservation_checks": [
+       {
+        "check": "supplied",
+        "passed": true,
+        "detail": "an explicit reservation; the host infers nothing"
+       },
+       {
+        "check": "within libc's real-time range",
+        "passed": true,
+        "detail": "60 in [34, 64]",
+        "cannot_establish": "that no other library uses it"
+       },
+       {
+        "check": "kernel disposition is Go's handler",
+        "passed": true,
+        "detail": "owner go",
+        "cannot_establish": "that no Go subscriber exists: subscribed and unsubscribed signals look identical"
+       },
+       {
+        "check": "not blocked on the initializing thread",
+        "passed": true,
+        "cannot_establish": "the masks of threads created later"
+       },
+       {
+        "check": "not among the application's declared subscriptions",
+        "passed": true,
+        "cannot_establish": "subscriptions the application did not declare"
+       },
+       {
+        "check": "not ignored through os/signal",
+        "passed": true
+       },
+       {
+        "check": "JSC_SIGNAL_FOR_GC unset or equal",
+        "passed": false,
+        "detail": "JSC_SIGNAL_FOR_GC=63"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "case": "reserved-env-equal",
+   "flags": [
+    "reserved",
+    "-signal-reserve",
+    "60"
+   ],
+   "env": {
+    "JSC_SIGNAL_FOR_GC": "60"
+   },
+   "repeat": 1,
+   "ok": true,
+   "detail": "accepted",
+   "runs": [
+    {
+     "name": "reserved-env-equal",
+     "command": [
+      "/tmp/dfx2-wk-res",
+      "-signal-probe",
+      "reserved",
+      "-signal-reserve",
+      "60"
+     ],
+     "env": {
+      "JSC_SIGNAL_FOR_GC": "60"
+     },
+     "exit": 0,
+     "events": [
+      "signal-probe"
+     ],
+     "stderr_lines": [
+      "ERROR: invalid option: JSC_SIGNAL_FOR_GC=60"
+     ],
+     "ready": true,
+     "reason": "",
+     "selected": 60,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": null,
+     "onstack_added_after_webkit": null,
+     "unprotected": [],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       60,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 3899392000,
+      "go_collections": 3808,
+      "go_numgc": 3808,
+      "js_collections_requested": 12,
+      "js_result": 600000,
+      "js_rounds": 54,
+      "tight_loop_rounds": 5679
+     },
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present",
+     "reservation": {
+      "go_reports_ignored_after_release": true,
+      "reservation_checks": [
+       {
+        "check": "supplied",
+        "passed": true,
+        "detail": "an explicit reservation; the host infers nothing"
+       },
+       {
+        "check": "within libc's real-time range",
+        "passed": true,
+        "detail": "60 in [34, 64]",
+        "cannot_establish": "that no other library uses it"
+       },
+       {
+        "check": "kernel disposition is Go's handler",
+        "passed": true,
+        "detail": "owner go",
+        "cannot_establish": "that no Go subscriber exists: subscribed and unsubscribed signals look identical"
+       },
+       {
+        "check": "not blocked on the initializing thread",
+        "passed": true,
+        "cannot_establish": "the masks of threads created later"
+       },
+       {
+        "check": "not among the application's declared subscriptions",
+        "passed": true,
+        "cannot_establish": "subscriptions the application did not declare"
+       },
+       {
+        "check": "not ignored through os/signal",
+        "passed": true
+       },
+       {
+        "check": "JSC_SIGNAL_FOR_GC unset or equal",
+        "passed": true,
+        "detail": "JSC_SIGNAL_FOR_GC=60"
+       }
+      ],
+      "audit_after_init": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 60
+      },
+      "audit_after_workload": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 60
+      }
+     }
+    }
+   ]
+  },
+  {
+   "case": "reserved-violate-before",
+   "flags": [
+    "reserved-violate-before",
+    "-signal-reserve",
+    "60"
+   ],
+   "env": {},
+   "repeat": 10,
+   "ok": true,
+   "detail": {
+    "note": "every host check passed; the undeclared subscriber was silently lost",
+    "exits": {
+     "2": 8,
+     "0": 2
+    },
+    "raising the taken signal": {
+     "process died (exit 2)": 8,
+     "not received; survived": 2
+    }
+   },
+   "runs": [
+    {
+     "name": "reserved-violate-before-1",
+     "command": [
+      "/tmp/dfx2-wk-res",
+      "-signal-probe",
+      "reserved-violate-before",
+      "-signal-reserve",
+      "60"
+     ],
+     "env": {},
+     "exit": 2,
+     "events": [
+      "signal-probe",
+      "raising-reserved-signal"
+     ],
+     "stderr_lines": [
+      "signal 11 received but handler not on signal stack",
+      "mp.gsignal stack [0x42330d68000 0x42330d70000], mp.g0 stack [0x7ffd81e694c8 0x7ffd82668520], sp=0x42330da4530",
+      "fatal error: non-Go code set up signal handler without SA_ONSTACK flag",
+      "",
+      "runtime stack:",
+      "runtime.throw({0x785d04?, 0x0?})"
+     ],
+     "ready": true,
+     "reason": "",
+     "selected": 60,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": null,
+     "onstack_added_after_webkit": null,
+     "unprotected": [],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       60,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 3969024000,
+      "go_collections": 3876,
+      "go_numgc": 3876,
+      "js_collections_requested": 13,
+      "js_result": 600000,
+      "js_rounds": 55,
+      "tight_loop_rounds": 5628
+     },
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present",
+     "reservation": {
+      "hidden_subscriber": {
+       "declared_to_host": false,
+       "signal": 60
+      },
+      "hidden_received_before_selection": true,
+      "go_reports_ignored_after_release": true,
+      "hidden_received_after_release": false,
+      "reservation_checks": [
+       {
+        "check": "supplied",
+        "passed": true,
+        "detail": "an explicit reservation; the host infers nothing"
+       },
+       {
+        "check": "within libc's real-time range",
+        "passed": true,
+        "detail": "60 in [34, 64]",
+        "cannot_establish": "that no other library uses it"
+       },
+       {
+        "check": "kernel disposition is Go's handler",
+        "passed": true,
+        "detail": "owner go",
+        "cannot_establish": "that no Go subscriber exists: subscribed and unsubscribed signals look identical"
+       },
+       {
+        "check": "not blocked on the initializing thread",
+        "passed": true,
+        "cannot_establish": "the masks of threads created later"
+       },
+       {
+        "check": "not among the application's declared subscriptions",
+        "passed": true,
+        "cannot_establish": "subscriptions the application did not declare"
+       },
+       {
+        "check": "not ignored through os/signal",
+        "passed": true
+       },
+       {
+        "check": "JSC_SIGNAL_FOR_GC unset or equal",
+        "passed": true,
+        "detail": "JSC_SIGNAL_FOR_GC="
+       }
+      ],
+      "audit_after_init": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 60
+      },
+      "audit_after_workload": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 60
+      },
+      "kernel_view_indistinguishable": true
+     },
+     "raise": "process died (exit 2)"
+    },
+    {
+     "name": "reserved-violate-before-2",
+     "command": [
+      "/tmp/dfx2-wk-res",
+      "-signal-probe",
+      "reserved-violate-before",
+      "-signal-reserve",
+      "60"
+     ],
+     "env": {},
+     "exit": 2,
+     "events": [
+      "signal-probe",
+      "raising-reserved-signal"
+     ],
+     "stderr_lines": [
+      "signal 11 received but handler not on signal stack",
+      "mp.gsignal stack [0x3a4fd8316000 0x3a4fd831e000], mp.g0 stack [0x7fff76898878 0x7fff770978d0], sp=0x3a4fd8352530",
+      "fatal error: non-Go code set up signal handler without SA_ONSTACK flag",
+      "",
+      "runtime stack:",
+      "runtime.throw({0x785d04?, 0x0?})"
+     ],
+     "ready": true,
+     "reason": "",
+     "selected": 60,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": null,
+     "onstack_added_after_webkit": null,
+     "unprotected": [],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       60,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 3804160000,
+      "go_collections": 3715,
+      "go_numgc": 3715,
+      "js_collections_requested": 12,
+      "js_result": 600000,
+      "js_rounds": 52,
+      "tight_loop_rounds": 5565
+     },
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present",
+     "reservation": {
+      "hidden_subscriber": {
+       "declared_to_host": false,
+       "signal": 60
+      },
+      "hidden_received_before_selection": true,
+      "go_reports_ignored_after_release": true,
+      "hidden_received_after_release": false,
+      "reservation_checks": [
+       {
+        "check": "supplied",
+        "passed": true,
+        "detail": "an explicit reservation; the host infers nothing"
+       },
+       {
+        "check": "within libc's real-time range",
+        "passed": true,
+        "detail": "60 in [34, 64]",
+        "cannot_establish": "that no other library uses it"
+       },
+       {
+        "check": "kernel disposition is Go's handler",
+        "passed": true,
+        "detail": "owner go",
+        "cannot_establish": "that no Go subscriber exists: subscribed and unsubscribed signals look identical"
+       },
+       {
+        "check": "not blocked on the initializing thread",
+        "passed": true,
+        "cannot_establish": "the masks of threads created later"
+       },
+       {
+        "check": "not among the application's declared subscriptions",
+        "passed": true,
+        "cannot_establish": "subscriptions the application did not declare"
+       },
+       {
+        "check": "not ignored through os/signal",
+        "passed": true
+       },
+       {
+        "check": "JSC_SIGNAL_FOR_GC unset or equal",
+        "passed": true,
+        "detail": "JSC_SIGNAL_FOR_GC="
+       }
+      ],
+      "audit_after_init": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 60
+      },
+      "audit_after_workload": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 60
+      },
+      "kernel_view_indistinguishable": true
+     },
+     "raise": "process died (exit 2)"
+    },
+    {
+     "name": "reserved-violate-before-3",
+     "command": [
+      "/tmp/dfx2-wk-res",
+      "-signal-probe",
+      "reserved-violate-before",
+      "-signal-reserve",
+      "60"
+     ],
+     "env": {},
+     "exit": 2,
+     "events": [
+      "signal-probe",
+      "raising-reserved-signal"
+     ],
+     "stderr_lines": [
+      "signal 11 received but handler not on signal stack",
+      "mp.gsignal stack [0x252eb5a2a000 0x252eb5a32000], mp.g0 stack [0x7fffcbf74d48 0x7fffcc773da0], sp=0x252eb5a66530",
+      "fatal error: non-Go code set up signal handler without SA_ONSTACK flag",
+      "",
+      "runtime stack:",
+      "runtime.throw({0x785d04?, 0x0?})"
+     ],
+     "ready": true,
+     "reason": "",
+     "selected": 60,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": null,
+     "onstack_added_after_webkit": null,
+     "unprotected": [],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       60,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 4032512000,
+      "go_collections": 3938,
+      "go_numgc": 3938,
+      "js_collections_requested": 13,
+      "js_result": 600000,
+      "js_rounds": 55,
+      "tight_loop_rounds": 5544
+     },
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present",
+     "reservation": {
+      "hidden_subscriber": {
+       "declared_to_host": false,
+       "signal": 60
+      },
+      "hidden_received_before_selection": true,
+      "go_reports_ignored_after_release": true,
+      "hidden_received_after_release": false,
+      "reservation_checks": [
+       {
+        "check": "supplied",
+        "passed": true,
+        "detail": "an explicit reservation; the host infers nothing"
+       },
+       {
+        "check": "within libc's real-time range",
+        "passed": true,
+        "detail": "60 in [34, 64]",
+        "cannot_establish": "that no other library uses it"
+       },
+       {
+        "check": "kernel disposition is Go's handler",
+        "passed": true,
+        "detail": "owner go",
+        "cannot_establish": "that no Go subscriber exists: subscribed and unsubscribed signals look identical"
+       },
+       {
+        "check": "not blocked on the initializing thread",
+        "passed": true,
+        "cannot_establish": "the masks of threads created later"
+       },
+       {
+        "check": "not among the application's declared subscriptions",
+        "passed": true,
+        "cannot_establish": "subscriptions the application did not declare"
+       },
+       {
+        "check": "not ignored through os/signal",
+        "passed": true
+       },
+       {
+        "check": "JSC_SIGNAL_FOR_GC unset or equal",
+        "passed": true,
+        "detail": "JSC_SIGNAL_FOR_GC="
+       }
+      ],
+      "audit_after_init": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 60
+      },
+      "audit_after_workload": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 60
+      },
+      "kernel_view_indistinguishable": true
+     },
+     "raise": "process died (exit 2)"
+    },
+    {
+     "name": "reserved-violate-before-4",
+     "command": [
+      "/tmp/dfx2-wk-res",
+      "-signal-probe",
+      "reserved-violate-before",
+      "-signal-reserve",
+      "60"
+     ],
+     "env": {},
+     "exit": 2,
+     "events": [
+      "signal-probe",
+      "raising-reserved-signal"
+     ],
+     "stderr_lines": [
+      "signal 11 received but handler not on signal stack",
+      "mp.gsignal stack [0x3c78dd14000 0x3c78dd1c000], mp.g0 stack [0x7ffe0821bbd8 0x7ffe08a1ac30], sp=0x3c78dd50530",
+      "fatal error: non-Go code set up signal handler without SA_ONSTACK flag",
+      "",
+      "runtime stack:",
+      "runtime.throw({0x785d04?, 0x0?})"
+     ],
+     "ready": true,
+     "reason": "",
+     "selected": 60,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": null,
+     "onstack_added_after_webkit": null,
+     "unprotected": [],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       60,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 4220928000,
+      "go_collections": 4122,
+      "go_numgc": 4122,
+      "js_collections_requested": 13,
+      "js_result": 600000,
+      "js_rounds": 56,
+      "tight_loop_rounds": 5533
+     },
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present",
+     "reservation": {
+      "hidden_subscriber": {
+       "declared_to_host": false,
+       "signal": 60
+      },
+      "hidden_received_before_selection": true,
+      "go_reports_ignored_after_release": true,
+      "hidden_received_after_release": false,
+      "reservation_checks": [
+       {
+        "check": "supplied",
+        "passed": true,
+        "detail": "an explicit reservation; the host infers nothing"
+       },
+       {
+        "check": "within libc's real-time range",
+        "passed": true,
+        "detail": "60 in [34, 64]",
+        "cannot_establish": "that no other library uses it"
+       },
+       {
+        "check": "kernel disposition is Go's handler",
+        "passed": true,
+        "detail": "owner go",
+        "cannot_establish": "that no Go subscriber exists: subscribed and unsubscribed signals look identical"
+       },
+       {
+        "check": "not blocked on the initializing thread",
+        "passed": true,
+        "cannot_establish": "the masks of threads created later"
+       },
+       {
+        "check": "not among the application's declared subscriptions",
+        "passed": true,
+        "cannot_establish": "subscriptions the application did not declare"
+       },
+       {
+        "check": "not ignored through os/signal",
+        "passed": true
+       },
+       {
+        "check": "JSC_SIGNAL_FOR_GC unset or equal",
+        "passed": true,
+        "detail": "JSC_SIGNAL_FOR_GC="
+       }
+      ],
+      "audit_after_init": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 60
+      },
+      "audit_after_workload": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 60
+      },
+      "kernel_view_indistinguishable": true
+     },
+     "raise": "process died (exit 2)"
+    },
+    {
+     "name": "reserved-violate-before-5",
+     "command": [
+      "/tmp/dfx2-wk-res",
+      "-signal-probe",
+      "reserved-violate-before",
+      "-signal-reserve",
+      "60"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "signal-probe",
+      "raising-reserved-signal",
+      "raised-reserved-signal"
+     ],
+     "stderr_lines": [],
+     "ready": true,
+     "reason": "",
+     "selected": 60,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": null,
+     "onstack_added_after_webkit": null,
+     "unprotected": [],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       60,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 3983360000,
+      "go_collections": 3890,
+      "go_numgc": 3890,
+      "js_collections_requested": 12,
+      "js_result": 600000,
+      "js_rounds": 54,
+      "tight_loop_rounds": 5571
+     },
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present",
+     "reservation": {
+      "hidden_subscriber": {
+       "declared_to_host": false,
+       "signal": 60
+      },
+      "hidden_received_before_selection": true,
+      "go_reports_ignored_after_release": true,
+      "hidden_received_after_release": false,
+      "reservation_checks": [
+       {
+        "check": "supplied",
+        "passed": true,
+        "detail": "an explicit reservation; the host infers nothing"
+       },
+       {
+        "check": "within libc's real-time range",
+        "passed": true,
+        "detail": "60 in [34, 64]",
+        "cannot_establish": "that no other library uses it"
+       },
+       {
+        "check": "kernel disposition is Go's handler",
+        "passed": true,
+        "detail": "owner go",
+        "cannot_establish": "that no Go subscriber exists: subscribed and unsubscribed signals look identical"
+       },
+       {
+        "check": "not blocked on the initializing thread",
+        "passed": true,
+        "cannot_establish": "the masks of threads created later"
+       },
+       {
+        "check": "not among the application's declared subscriptions",
+        "passed": true,
+        "cannot_establish": "subscriptions the application did not declare"
+       },
+       {
+        "check": "not ignored through os/signal",
+        "passed": true
+       },
+       {
+        "check": "JSC_SIGNAL_FOR_GC unset or equal",
+        "passed": true,
+        "detail": "JSC_SIGNAL_FOR_GC="
+       }
+      ],
+      "audit_after_init": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 60
+      },
+      "audit_after_workload": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 60
+      },
+      "kernel_view_indistinguishable": true
+     },
+     "raise": "not received; survived"
+    },
+    {
+     "name": "reserved-violate-before-6",
+     "command": [
+      "/tmp/dfx2-wk-res",
+      "-signal-probe",
+      "reserved-violate-before",
+      "-signal-reserve",
+      "60"
+     ],
+     "env": {},
+     "exit": 2,
+     "events": [
+      "signal-probe",
+      "raising-reserved-signal"
+     ],
+     "stderr_lines": [
+      "signal 11 received but handler not on signal stack",
+      "mp.gsignal stack [0x3a595e958000 0x3a595e960000], mp.g0 stack [0x7ffdc7f0f4e8 0x7ffdc870e540], sp=0x3a595e994530",
+      "fatal error: non-Go code set up signal handler without SA_ONSTACK flag",
+      "",
+      "runtime stack:",
+      "runtime.throw({0x785d04?, 0x0?})"
+     ],
+     "ready": true,
+     "reason": "",
+     "selected": 60,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": null,
+     "onstack_added_after_webkit": null,
+     "unprotected": [],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       60,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 4003840000,
+      "go_collections": 3910,
+      "go_numgc": 3910,
+      "js_collections_requested": 13,
+      "js_result": 600000,
+      "js_rounds": 55,
+      "tight_loop_rounds": 5556
+     },
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present",
+     "reservation": {
+      "hidden_subscriber": {
+       "declared_to_host": false,
+       "signal": 60
+      },
+      "hidden_received_before_selection": true,
+      "go_reports_ignored_after_release": true,
+      "hidden_received_after_release": false,
+      "reservation_checks": [
+       {
+        "check": "supplied",
+        "passed": true,
+        "detail": "an explicit reservation; the host infers nothing"
+       },
+       {
+        "check": "within libc's real-time range",
+        "passed": true,
+        "detail": "60 in [34, 64]",
+        "cannot_establish": "that no other library uses it"
+       },
+       {
+        "check": "kernel disposition is Go's handler",
+        "passed": true,
+        "detail": "owner go",
+        "cannot_establish": "that no Go subscriber exists: subscribed and unsubscribed signals look identical"
+       },
+       {
+        "check": "not blocked on the initializing thread",
+        "passed": true,
+        "cannot_establish": "the masks of threads created later"
+       },
+       {
+        "check": "not among the application's declared subscriptions",
+        "passed": true,
+        "cannot_establish": "subscriptions the application did not declare"
+       },
+       {
+        "check": "not ignored through os/signal",
+        "passed": true
+       },
+       {
+        "check": "JSC_SIGNAL_FOR_GC unset or equal",
+        "passed": true,
+        "detail": "JSC_SIGNAL_FOR_GC="
+       }
+      ],
+      "audit_after_init": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 60
+      },
+      "audit_after_workload": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 60
+      },
+      "kernel_view_indistinguishable": true
+     },
+     "raise": "process died (exit 2)"
+    },
+    {
+     "name": "reserved-violate-before-7",
+     "command": [
+      "/tmp/dfx2-wk-res",
+      "-signal-probe",
+      "reserved-violate-before",
+      "-signal-reserve",
+      "60"
+     ],
+     "env": {},
+     "exit": 2,
+     "events": [
+      "signal-probe",
+      "raising-reserved-signal"
+     ],
+     "stderr_lines": [
+      "signal 11 received but handler not on signal stack",
+      "mp.gsignal stack [0xff904550000 0xff904558000], mp.g0 stack [0x7ffe81441b48 0x7ffe81c40ba0], sp=0xff90458c530",
+      "fatal error: non-Go code set up signal handler without SA_ONSTACK flag",
+      "",
+      "runtime stack:",
+      "runtime.throw({0x785d04?, 0x0?})"
+     ],
+     "ready": true,
+     "reason": "",
+     "selected": 60,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": null,
+     "onstack_added_after_webkit": null,
+     "unprotected": [],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       60,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 4143104000,
+      "go_collections": 4046,
+      "go_numgc": 4046,
+      "js_collections_requested": 13,
+      "js_result": 600000,
+      "js_rounds": 57,
+      "tight_loop_rounds": 5651
+     },
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present",
+     "reservation": {
+      "hidden_subscriber": {
+       "declared_to_host": false,
+       "signal": 60
+      },
+      "hidden_received_before_selection": true,
+      "go_reports_ignored_after_release": true,
+      "hidden_received_after_release": false,
+      "reservation_checks": [
+       {
+        "check": "supplied",
+        "passed": true,
+        "detail": "an explicit reservation; the host infers nothing"
+       },
+       {
+        "check": "within libc's real-time range",
+        "passed": true,
+        "detail": "60 in [34, 64]",
+        "cannot_establish": "that no other library uses it"
+       },
+       {
+        "check": "kernel disposition is Go's handler",
+        "passed": true,
+        "detail": "owner go",
+        "cannot_establish": "that no Go subscriber exists: subscribed and unsubscribed signals look identical"
+       },
+       {
+        "check": "not blocked on the initializing thread",
+        "passed": true,
+        "cannot_establish": "the masks of threads created later"
+       },
+       {
+        "check": "not among the application's declared subscriptions",
+        "passed": true,
+        "cannot_establish": "subscriptions the application did not declare"
+       },
+       {
+        "check": "not ignored through os/signal",
+        "passed": true
+       },
+       {
+        "check": "JSC_SIGNAL_FOR_GC unset or equal",
+        "passed": true,
+        "detail": "JSC_SIGNAL_FOR_GC="
+       }
+      ],
+      "audit_after_init": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 60
+      },
+      "audit_after_workload": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 60
+      },
+      "kernel_view_indistinguishable": true
+     },
+     "raise": "process died (exit 2)"
+    },
+    {
+     "name": "reserved-violate-before-8",
+     "command": [
+      "/tmp/dfx2-wk-res",
+      "-signal-probe",
+      "reserved-violate-before",
+      "-signal-reserve",
+      "60"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "signal-probe",
+      "raising-reserved-signal",
+      "raised-reserved-signal"
+     ],
+     "stderr_lines": [],
+     "ready": true,
+     "reason": "",
+     "selected": 60,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": null,
+     "onstack_added_after_webkit": null,
+     "unprotected": [],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       60,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 3953664000,
+      "go_collections": 3861,
+      "go_numgc": 3861,
+      "js_collections_requested": 12,
+      "js_result": 600000,
+      "js_rounds": 54,
+      "tight_loop_rounds": 5632
+     },
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present",
+     "reservation": {
+      "hidden_subscriber": {
+       "declared_to_host": false,
+       "signal": 60
+      },
+      "hidden_received_before_selection": true,
+      "go_reports_ignored_after_release": true,
+      "hidden_received_after_release": false,
+      "reservation_checks": [
+       {
+        "check": "supplied",
+        "passed": true,
+        "detail": "an explicit reservation; the host infers nothing"
+       },
+       {
+        "check": "within libc's real-time range",
+        "passed": true,
+        "detail": "60 in [34, 64]",
+        "cannot_establish": "that no other library uses it"
+       },
+       {
+        "check": "kernel disposition is Go's handler",
+        "passed": true,
+        "detail": "owner go",
+        "cannot_establish": "that no Go subscriber exists: subscribed and unsubscribed signals look identical"
+       },
+       {
+        "check": "not blocked on the initializing thread",
+        "passed": true,
+        "cannot_establish": "the masks of threads created later"
+       },
+       {
+        "check": "not among the application's declared subscriptions",
+        "passed": true,
+        "cannot_establish": "subscriptions the application did not declare"
+       },
+       {
+        "check": "not ignored through os/signal",
+        "passed": true
+       },
+       {
+        "check": "JSC_SIGNAL_FOR_GC unset or equal",
+        "passed": true,
+        "detail": "JSC_SIGNAL_FOR_GC="
+       }
+      ],
+      "audit_after_init": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 60
+      },
+      "audit_after_workload": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 60
+      },
+      "kernel_view_indistinguishable": true
+     },
+     "raise": "not received; survived"
+    },
+    {
+     "name": "reserved-violate-before-9",
+     "command": [
+      "/tmp/dfx2-wk-res",
+      "-signal-probe",
+      "reserved-violate-before",
+      "-signal-reserve",
+      "60"
+     ],
+     "env": {},
+     "exit": 2,
+     "events": [
+      "signal-probe",
+      "raising-reserved-signal"
+     ],
+     "stderr_lines": [
+      "signal 11 received but handler not on signal stack",
+      "mp.gsignal stack [0x20485b636000 0x20485b63e000], mp.g0 stack [0x7fff8fa1eb48 0x7fff9021dba0], sp=0x20485b672530",
+      "fatal error: non-Go code set up signal handler without SA_ONSTACK flag",
+      "",
+      "runtime stack:",
+      "runtime.throw({0x785d04?, 0x0?})"
+     ],
+     "ready": true,
+     "reason": "",
+     "selected": 60,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": null,
+     "onstack_added_after_webkit": null,
+     "unprotected": [],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       60,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 4003840000,
+      "go_collections": 3910,
+      "go_numgc": 3910,
+      "js_collections_requested": 13,
+      "js_result": 600000,
+      "js_rounds": 55,
+      "tight_loop_rounds": 5480
+     },
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present",
+     "reservation": {
+      "hidden_subscriber": {
+       "declared_to_host": false,
+       "signal": 60
+      },
+      "hidden_received_before_selection": true,
+      "go_reports_ignored_after_release": true,
+      "hidden_received_after_release": false,
+      "reservation_checks": [
+       {
+        "check": "supplied",
+        "passed": true,
+        "detail": "an explicit reservation; the host infers nothing"
+       },
+       {
+        "check": "within libc's real-time range",
+        "passed": true,
+        "detail": "60 in [34, 64]",
+        "cannot_establish": "that no other library uses it"
+       },
+       {
+        "check": "kernel disposition is Go's handler",
+        "passed": true,
+        "detail": "owner go",
+        "cannot_establish": "that no Go subscriber exists: subscribed and unsubscribed signals look identical"
+       },
+       {
+        "check": "not blocked on the initializing thread",
+        "passed": true,
+        "cannot_establish": "the masks of threads created later"
+       },
+       {
+        "check": "not among the application's declared subscriptions",
+        "passed": true,
+        "cannot_establish": "subscriptions the application did not declare"
+       },
+       {
+        "check": "not ignored through os/signal",
+        "passed": true
+       },
+       {
+        "check": "JSC_SIGNAL_FOR_GC unset or equal",
+        "passed": true,
+        "detail": "JSC_SIGNAL_FOR_GC="
+       }
+      ],
+      "audit_after_init": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 60
+      },
+      "audit_after_workload": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 60
+      },
+      "kernel_view_indistinguishable": true
+     },
+     "raise": "process died (exit 2)"
+    },
+    {
+     "name": "reserved-violate-before-10",
+     "command": [
+      "/tmp/dfx2-wk-res",
+      "-signal-probe",
+      "reserved-violate-before",
+      "-signal-reserve",
+      "60"
+     ],
+     "env": {},
+     "exit": 2,
+     "events": [
+      "signal-probe",
+      "raising-reserved-signal"
+     ],
+     "stderr_lines": [
+      "signal 11 received but handler not on signal stack",
+      "mp.gsignal stack [0x3dc949cc000 0x3dc949d4000], mp.g0 stack [0x7ffd668b7648 0x7ffd670b66a0], sp=0x3dc94a08530",
+      "fatal error: non-Go code set up signal handler without SA_ONSTACK flag",
+      "",
+      "runtime stack:",
+      "runtime.throw({0x785d04?, 0x0?})"
+     ],
+     "ready": true,
+     "reason": "",
+     "selected": 60,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": null,
+     "onstack_added_after_webkit": null,
+     "unprotected": [],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       60,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 4196352000,
+      "go_collections": 4098,
+      "go_numgc": 4098,
+      "js_collections_requested": 13,
+      "js_result": 600000,
+      "js_rounds": 56,
+      "tight_loop_rounds": 5548
+     },
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present",
+     "reservation": {
+      "hidden_subscriber": {
+       "declared_to_host": false,
+       "signal": 60
+      },
+      "hidden_received_before_selection": true,
+      "go_reports_ignored_after_release": true,
+      "hidden_received_after_release": false,
+      "reservation_checks": [
+       {
+        "check": "supplied",
+        "passed": true,
+        "detail": "an explicit reservation; the host infers nothing"
+       },
+       {
+        "check": "within libc's real-time range",
+        "passed": true,
+        "detail": "60 in [34, 64]",
+        "cannot_establish": "that no other library uses it"
+       },
+       {
+        "check": "kernel disposition is Go's handler",
+        "passed": true,
+        "detail": "owner go",
+        "cannot_establish": "that no Go subscriber exists: subscribed and unsubscribed signals look identical"
+       },
+       {
+        "check": "not blocked on the initializing thread",
+        "passed": true,
+        "cannot_establish": "the masks of threads created later"
+       },
+       {
+        "check": "not among the application's declared subscriptions",
+        "passed": true,
+        "cannot_establish": "subscriptions the application did not declare"
+       },
+       {
+        "check": "not ignored through os/signal",
+        "passed": true
+       },
+       {
+        "check": "JSC_SIGNAL_FOR_GC unset or equal",
+        "passed": true,
+        "detail": "JSC_SIGNAL_FOR_GC="
+       }
+      ],
+      "audit_after_init": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 60
+      },
+      "audit_after_workload": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 60
+      },
+      "kernel_view_indistinguishable": true
+     },
+     "raise": "process died (exit 2)"
+    }
+   ]
+  },
+  {
+   "case": "reserved-violate-after",
+   "flags": [
+    "reserved-violate-after",
+    "-signal-reserve",
+    "60"
+   ],
+   "env": {},
+   "repeat": 1,
+   "ok": true,
+   "detail": "a later Notify reinstalls Go's handler; the audit sees it after the fact",
+   "runs": [
+    {
+     "name": "reserved-violate-after",
+     "command": [
+      "/tmp/dfx2-wk-res",
+      "-signal-probe",
+      "reserved-violate-after",
+      "-signal-reserve",
+      "60"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": true,
+     "reason": "violation after initialization; the audit is the only check that can see it",
+     "selected": 60,
+     "fault": null,
+     "delivery": null,
+     "onstack_added": null,
+     "onstack_added_after_webkit": null,
+     "unprotected": [],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": null,
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present",
+     "reservation": {
+      "go_reports_ignored_after_release": true,
+      "reservation_checks": [
+       {
+        "check": "supplied",
+        "passed": true,
+        "detail": "an explicit reservation; the host infers nothing"
+       },
+       {
+        "check": "within libc's real-time range",
+        "passed": true,
+        "detail": "60 in [34, 64]",
+        "cannot_establish": "that no other library uses it"
+       },
+       {
+        "check": "kernel disposition is Go's handler",
+        "passed": true,
+        "detail": "owner go",
+        "cannot_establish": "that no Go subscriber exists: subscribed and unsubscribed signals look identical"
+       },
+       {
+        "check": "not blocked on the initializing thread",
+        "passed": true,
+        "cannot_establish": "the masks of threads created later"
+       },
+       {
+        "check": "not among the application's declared subscriptions",
+        "passed": true,
+        "cannot_establish": "subscriptions the application did not declare"
+       },
+       {
+        "check": "not ignored through os/signal",
+        "passed": true
+       },
+       {
+        "check": "JSC_SIGNAL_FOR_GC unset or equal",
+        "passed": true,
+        "detail": "JSC_SIGNAL_FOR_GC="
+       }
+      ],
+      "audit_after_init": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": true,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "signal": 60
+      },
+      "audit_after_violation": {
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ],
+       "jsc_owns_it": false,
+       "owner": "go",
+       "signal": 60
+      }
+     }
+    }
+   ]
+  }
+ ],
+ "passed": true
+}

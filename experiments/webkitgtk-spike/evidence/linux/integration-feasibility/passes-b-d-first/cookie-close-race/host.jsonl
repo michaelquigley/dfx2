@@ -1,0 +1,8 @@
+{"event":"filter-store","path":"/tmp/dfx2-feasibility/filters-2221350","t":"13:51:07.641"}
+{"cookie":true,"cookie_fail_injected":false,"csp":true,"event":"ready","filter":true,"pid":2221350,"t":"13:51:07.641"}
+{"credential":true,"ephemeral_session":true,"event":"opened","mode":"loopback","origin":"http://127.0.0.1:34335","t":"13:51:07.764","window":"A"}
+{"event":"closing","native_async":2,"native_requests":0,"navigated":false,"t":"13:51:07.765","why":"command","window":"A"}
+{"event":"filter-late","t":"13:51:07.767","window":"A"}
+{"event":"cookie-late","navigated":false,"ok":false,"t":"13:51:07.772","window":"A"}
+{"endpoint":{"admitted":0,"refused":{},"handled":0},"event":"closed","handler":{},"handlers_drained":true,"native_async":0,"native_requests":0,"t":"13:51:07.773","window":"A"}
+{"error":"\u003cnil\u003e","event":"exit","filter_store_removal":{"path":"/tmp/dfx2-feasibility/filters-2221350","attempts":1,"elapsed_ns":70340,"removed":true},"t":"13:51:07.774"}

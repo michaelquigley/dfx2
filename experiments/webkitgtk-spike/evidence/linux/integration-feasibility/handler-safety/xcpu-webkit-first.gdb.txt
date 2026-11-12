@@ -1,0 +1,66 @@
+=== registerThread on thread 1
+#0  unwrap () at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WTF/wtf/RawPtrTraits.h:44
+#1  operator-> () at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WTF/wtf/Ref.h:143
+#2  registerThread () at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WTF/wtf/linux/RealTimeThreads.cpp:86
+#3  0x00007fff8f96b617 in establishHandle () at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WTF/wtf/posix/ThreadingPOSIX.cpp:329
+#4  0x00007fff8f8f9bdf in create () at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WTF/wtf/Threading.cpp:273
+#5  0x00007fff8f89be5b in create () at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WTF/wtf/RunLoop.cpp:108
+#6  0x00007fff8f963c4a in platformInitialize () at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WTF/wtf/generic/WorkQueueGeneric.cpp:45
+#7  0x00007fff8f92fc80 in WorkQueueBase () at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WTF/wtf/WorkQueue.cpp:45
+#8  WorkQueue () at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WTF/wtf/WorkQueue.cpp:186
+#9  0x00007fff8f92fc3a in create () at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WTF/wtf/WorkQueue.cpp:182
+#10 0x00007fff867af8ac in ??? () at /usr/lib/x86_64-linux-gnu/libwebkit2gtk-4.1.so.0
+#11 0x00007fff867af83b in ??? () at /usr/lib/x86_64-linux-gnu/libwebkit2gtk-4.1.so.0
+#12 0x00007fff8671db77 in ??? () at /usr/lib/x86_64-linux-gnu/libwebkit2gtk-4.1.so.0
+#13 0x00007fffb0071b48 in ??? () at /usr/lib/x86_64-linux-gnu/libgobject-2.0.so.0
+#14 0x00007fffb0072558 in ??? () at /usr/lib/x86_64-linux-gnu/libgobject-2.0.so.0
+#15 0x00007fffb00745bb in g_object_new_valist () at /usr/lib/x86_64-linux-gnu/libgobject-2.0.so.0
+=== promoteThreadToRealTime
+#0  promoteThreadToRealTime () at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WTF/wtf/linux/RealTimeThreads.cpp:121
+#1  0x00007fff8f89c185 in operator() () at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WTF/wtf/Function.h:103
+#2  performWork () at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WTF/wtf/RunLoop.cpp:145
+#3  0x00007fff8f966dcd in operator() () at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WTF/wtf/glib/RunLoopGLib.cpp:153
+=== registerThread on thread 1
+#0  unwrap () at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WTF/wtf/RawPtrTraits.h:44
+#1  operator-> () at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WTF/wtf/Ref.h:143
+#2  registerThread () at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WTF/wtf/linux/RealTimeThreads.cpp:86
+#3  0x00007fff8f96b617 in establishHandle () at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WTF/wtf/posix/ThreadingPOSIX.cpp:329
+#4  0x00007fff8f8f9bdf in create () at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WTF/wtf/Threading.cpp:273
+#5  0x00007fff8f89be5b in create () at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WTF/wtf/RunLoop.cpp:108
+#6  0x00007fff8f963c4a in platformInitialize () at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WTF/wtf/generic/WorkQueueGeneric.cpp:45
+#7  0x00007fff8f92fc80 in WorkQueueBase () at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WTF/wtf/WorkQueue.cpp:45
+#8  WorkQueue () at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WTF/wtf/WorkQueue.cpp:186
+#9  0x00007fff8f92fc3a in create () at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WTF/wtf/WorkQueue.cpp:182
+#10 0x00007fff86515938 in ??? () at /usr/lib/x86_64-linux-gnu/libwebkit2gtk-4.1.so.0
+#11 0x00007fff86515846 in ??? () at /usr/lib/x86_64-linux-gnu/libwebkit2gtk-4.1.so.0
+#12 0x00007fff865685bb in ??? () at /usr/lib/x86_64-linux-gnu/libwebkit2gtk-4.1.so.0
+#13 0x00007fff8678ebfc in ??? () at /usr/lib/x86_64-linux-gnu/libwebkit2gtk-4.1.so.0
+#14 0x00007fff8677a4ab in ??? () at /usr/lib/x86_64-linux-gnu/libwebkit2gtk-4.1.so.0
+#15 0x00007fff86782649 in ??? () at /usr/lib/x86_64-linux-gnu/libwebkit2gtk-4.1.so.0
+=== registerThread on thread 1
+#0  unwrap () at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WTF/wtf/RawPtrTraits.h:44
+#1  operator-> () at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WTF/wtf/Ref.h:143
+#2  registerThread () at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WTF/wtf/linux/RealTimeThreads.cpp:86
+#3  0x00007fff8f96b617 in establishHandle () at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WTF/wtf/posix/ThreadingPOSIX.cpp:329
+#4  0x00007fff8f8f9bdf in create () at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WTF/wtf/Threading.cpp:273
+#5  0x00007fff8f89be5b in create () at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WTF/wtf/RunLoop.cpp:108
+#6  0x00007fff8f963c4a in platformInitialize () at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WTF/wtf/generic/WorkQueueGeneric.cpp:45
+#7  0x00007fff8f92fc80 in WorkQueueBase () at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WTF/wtf/WorkQueue.cpp:45
+#8  WorkQueue () at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WTF/wtf/WorkQueue.cpp:186
+#9  0x00007fff8f92fc3a in create () at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WTF/wtf/WorkQueue.cpp:182
+#10 0x00007fff86515938 in ??? () at /usr/lib/x86_64-linux-gnu/libwebkit2gtk-4.1.so.0
+#11 0x00007fff86515846 in ??? () at /usr/lib/x86_64-linux-gnu/libwebkit2gtk-4.1.so.0
+#12 0x00007fff865685bb in ??? () at /usr/lib/x86_64-linux-gnu/libwebkit2gtk-4.1.so.0
+#13 0x00007fff8667a81e in ??? () at /usr/lib/x86_64-linux-gnu/libwebkit2gtk-4.1.so.0
+#14 0x00007fff8677a4ab in ??? () at /usr/lib/x86_64-linux-gnu/libwebkit2gtk-4.1.so.0
+#15 0x00007fff86782649 in ??? () at /usr/lib/x86_64-linux-gnu/libwebkit2gtk-4.1.so.0
+=== promoteThreadToRealTime
+#0  promoteThreadToRealTime () at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WTF/wtf/linux/RealTimeThreads.cpp:121
+#1  0x00007fff8f89c185 in operator() () at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WTF/wtf/Function.h:103
+#2  performWork () at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WTF/wtf/RunLoop.cpp:145
+#3  0x00007fff8f966dcd in operator() () at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WTF/wtf/glib/RunLoopGLib.cpp:153
+=== promoteThreadToRealTime
+#0  promoteThreadToRealTime () at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WTF/wtf/linux/RealTimeThreads.cpp:121
+#1  0x00007fff8f89c185 in operator() () at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WTF/wtf/Function.h:103
+#2  performWork () at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WTF/wtf/RunLoop.cpp:145
+#3  0x00007fff8f966dcd in operator() () at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WTF/wtf/glib/RunLoopGLib.cpp:153

@@ -1,0 +1,1960 @@
+{
+ "checks": [
+  {
+   "check": "monitor resolved every required watch in the cgo host",
+   "ok": true,
+   "unresolved": []
+  },
+  {
+   "check": "positive control: host VM, Go main thread registered, fault handlers installed",
+   "ok": true,
+   "vm_hits": {
+    "vm-constructed": 1,
+    "heap-constructed": 1,
+    "global-context-create": 0,
+    "global-context-create-in-group": 1,
+    "context-group-create": 1,
+    "jsc-context-new": 1,
+    "jsc-virtual-machine-new": 1,
+    "jslock-acquired": 9,
+    "thread-registered-for-gc": 2,
+    "thread-group-add": 2,
+    "thread-suspend": 0,
+    "suspend-handler-ran": 0,
+    "fault-handlers-finalized": 1
+   }
+  },
+  {
+   "check": "monitored: VM-free (all VM, registration, suspension and fault-handler kinds 0)",
+   "ok": true,
+   "vm_hits": {
+    "vm-constructed": 0,
+    "heap-constructed": 0,
+    "global-context-create": 0,
+    "global-context-create-in-group": 0,
+    "context-group-create": 0,
+    "jsc-context-new": 0,
+    "jsc-virtual-machine-new": 0,
+    "jslock-acquired": 0,
+    "thread-registered-for-gc": 0,
+    "thread-group-add": 0,
+    "thread-suspend": 0,
+    "suspend-handler-ran": 0,
+    "fault-handlers-finalized": 0
+   }
+  },
+  {
+   "check": "reserved-env-60: VM-free (all VM, registration, suspension and fault-handler kinds 0)",
+   "ok": true,
+   "vm_hits": {
+    "vm-constructed": 0,
+    "heap-constructed": 0,
+    "global-context-create": 0,
+    "global-context-create-in-group": 0,
+    "context-group-create": 0,
+    "jsc-context-new": 0,
+    "jsc-virtual-machine-new": 0,
+    "jslock-acquired": 0,
+    "thread-registered-for-gc": 0,
+    "thread-group-add": 0,
+    "thread-suspend": 0,
+    "suspend-handler-ran": 0,
+    "fault-handlers-finalized": 0
+   }
+  },
+  {
+   "check": "monitored: faults recovered, endpoint alive, every Go-owned signal delivered, at every phase",
+   "ok": true
+  },
+  {
+   "check": "unmonitored: faults recovered, endpoint alive, every Go-owned signal delivered, at every phase",
+   "ok": true
+  },
+  {
+   "check": "reserved-env-60: faults recovered, endpoint alive, every Go-owned signal delivered, at every phase",
+   "ok": true
+  },
+  {
+   "check": "unmodified: after page load JSC owns SIGUSR1 and SIGXCPU, Go keeps SIGSEGV, SIGBUS, SIGHUP, SIGUSR2",
+   "ok": true,
+   "after_load": {
+    "SIGBUS": "go",
+    "SIGHUP": "go",
+    "SIGSEGV": "go",
+    "SIGUSR1": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+    "SIGUSR2": "go",
+    "SIGXCPU": "native:libjavascriptcoregtk-4.1.so.0.10.14"
+   }
+  },
+  {
+   "check": "JSC_SIGNAL_FOR_GC=60: SIGUSR1 stays Go's, 60 is JSC's; SIGXCPU still JSC's",
+   "ok": true,
+   "after_load": {
+    "SIGBUS": "go",
+    "SIGHUP": "go",
+    "SIGSEGV": "go",
+    "SIGUSR1": "go",
+    "SIGUSR2": "go",
+    "SIGXCPU": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+    "reserved 60": "native:libjavascriptcoregtk-4.1.so.0.10.14"
+   }
+  },
+  {
+   "check": "stray-usr1-external: kills the process",
+   "ok": true,
+   "exit": 2,
+   "received_by_go": null,
+   "stderr": [
+    "Overriding existing handler for signal 10. Set JSC_SIGNAL_FOR_GC if you want WebKit to use a different signal",
+    "SIGSEGV: segmentation violation",
+    "PC=0x7cd3e476b2f8 m=0 sigcode=1 addr=0x58"
+   ]
+  },
+  {
+   "check": "stray-usr1-self: kills the process",
+   "ok": true,
+   "exit": 2,
+   "received_by_go": null,
+   "stderr": [
+    "Overriding existing handler for signal 10. Set JSC_SIGNAL_FOR_GC if you want WebKit to use a different signal",
+    "SIGSEGV: segmentation violation",
+    "PC=0x75e6fd76b2f8 m=0 sigcode=1 addr=0x58"
+   ]
+  },
+  {
+   "check": "stray-usr1-native: kills the process",
+   "ok": true,
+   "exit": -11,
+   "received_by_go": null,
+   "stderr": [
+    "Overriding existing handler for signal 10. Set JSC_SIGNAL_FOR_GC if you want WebKit to use a different signal"
+   ]
+  },
+  {
+   "check": "stray-xcpu-external: survives",
+   "ok": true,
+   "exit": 0,
+   "received_by_go": false,
+   "stderr": [
+    "Overriding existing handler for signal 10. Set JSC_SIGNAL_FOR_GC if you want WebKit to use a different signal",
+    "2026/11/12 11:12:15 http: panic serving 127.0.0.1:58934: runtime error: invalid memory address or nil pointer dereference",
+    "net/http.(*conn).serve.func1()"
+   ]
+  },
+  {
+   "check": "stray-xcpu-native: survives",
+   "ok": true,
+   "exit": 0,
+   "received_by_go": false,
+   "stderr": [
+    "Overriding existing handler for signal 10. Set JSC_SIGNAL_FOR_GC if you want WebKit to use a different signal",
+    "2026/11/12 11:12:20 http: panic serving 127.0.0.1:59918: runtime error: invalid memory address or nil pointer dereference",
+    "net/http.(*conn).serve.func1()"
+   ]
+  },
+  {
+   "check": "stray-60-reserved-external: kills the process",
+   "ok": true,
+   "exit": 2,
+   "received_by_go": null,
+   "stderr": [
+    "ERROR: invalid option: JSC_SIGNAL_FOR_GC=60",
+    "ERROR: invalid option: JSC_SIGNAL_FOR_GC=60",
+    "ERROR: invalid option: JSC_SIGNAL_FOR_GC=60"
+   ]
+  },
+  {
+   "check": "stray-usr1-reserved-60-external: survives",
+   "ok": true,
+   "exit": 0,
+   "received_by_go": true,
+   "stderr": [
+    "ERROR: invalid option: JSC_SIGNAL_FOR_GC=60",
+    "ERROR: invalid option: JSC_SIGNAL_FOR_GC=60",
+    "ERROR: invalid option: JSC_SIGNAL_FOR_GC=60"
+   ]
+  },
+  {
+   "check": "the stray SIGUSR1 faults inside JSC's suspend handler",
+   "ok": true,
+   "frames": [
+    "{\"altstack_go_locked\":{\"size\":32768,\"state\":\"enabled\",\"tid\":365868},\"altstack_main\":{\"size\":32768,\"state\":\"enabled\",\"tid\":365744},\"deliveries\":[{\"mode\":\"self\",\"received_by_go\":true,\"signal\":1},{\"mode\":\"external\",\"received_by_go\":true,\"signal\":1},{\"error\":\"no native thread\",\"mode\":\"native\",\"signal\":1,\"target\":\"\"},{\"mode\":\"self\",\"received_by_go\":true,\"signal\":10},{\"mode\":\"external\",\"received_by_go\":true,\"signal\":10},{\"error\":\"no native thread\",\"mode\":\"native\",\"signal\":10,\"target\":\"\"},{\"mode\":\"self\",\"received_by_go\":true,\"signal\":12},{\"mode\":\"external\",\"received_by_go\":true,\"signal\":12},{\"error\":\"no native thread\",\"mode\":\"native\",\"signal\":12,\"target\":\"\"},{\"mode\":\"self\",\"received_by_go\":true,\"signal\":24},{\"mode\":\"external\",\"received_by_go\":true,\"signal\":24},{\"error\":\"no native thread\",\"mode\":\"native\",\"signal\":24,\"target\":\"\"}],\"dispositions\":{\"SIGBUS\":{\"owner\":\"go\",\"flags\":[\"SA_SIGINFO\",\"SA_ONSTACK\",\"SA_RESTART\"]},\"SIGHUP\":{\"owner\":\"go\",\"flags\":[\"SA_SIGINFO\",\"SA_ONSTACK\",\"SA_RESTART\"]},\"SIGSEGV\":{\"owner\":\"go\",\"flags\":[\"SA_SIGINFO\",\"SA_ONSTACK\",\"SA_RESTART\"]},\"SIGUSR1\":{\"owner\":\"go\",\"flags\":[\"SA_SIGINFO\",\"SA_ONSTACK\",\"SA_RESTART\"]},\"SIGUSR2\":{\"owner\":\"go\",\"flags\":[\"SA_SIGINFO\",\"SA_ONSTACK\",\"SA_RESTART\"]},\"SIGXCPU\":{\"owner\":\"go\",\"flags\":[\"SA_SIGINFO\",\"SA_ONSTACK\",\"SA_RESTART\"]}},\"event\":\"phase\",\"phase\":\"before-webkit\",\"progress\":1,\"progress_after\":1,\"t\":\"11:12:29.913\",\"threads\":{\"dfx2-cgo-probe blocked=\":7,\"dfx2-cgo-probe blocked=fffffffc3b3a3000\":1}}",
+    "{\"altstack_go_locked\":{\"size\":32768,\"state\":\"enabled\",\"tid\":365869},\"altstack_main\":{\"size\":32768,\"state\":\"enabled\",\"tid\":365744},\"deliveries\":[{\"mode\":\"self\",\"received_by_go\":true,\"signal\":1},{\"mode\":\"external\",\"received_by_go\":true,\"signal\":1},{\"mode\":\"native\",\"received_by_go\":true,\"signal\":1,\"target\":\"[pango] fontcon\"},{\"signal\":10,\"skipped\":\"owner native:libjavascriptcoregtk-4.1.so.0.10.14\"},{\"mode\":\"self\",\"received_by_go\":true,\"signal\":12},{\"mode\":\"external\",\"received_by_go\":true,\"signal\":12},{\"mode\":\"native\",\"received_by_go\":true,\"signal\":12,\"target\":\"[pango] fontcon\"},{\"signal\":24,\"skipped\":\"owner native:libjavascriptcoregtk-4.1.so.0.10.14\"}],\"dispositions\":{\"SIGBUS\":{\"owner\":\"go\",\"flags\":[\"SA_SIGINFO\",\"SA_ONSTACK\",\"SA_RESTART\"]},\"SIGHUP\":{\"owner\":\"go\",\"flags\":[\"SA_SIGINFO\",\"SA_ONSTACK\",\"SA_RESTART\"]},\"SIGSEGV\":{\"owner\":\"go\",\"flags\":[\"SA_SIGINFO\",\"SA_ONSTACK\",\"SA_RESTART\"]},\"SIGUSR1\":{\"owner\":\"native:libjavascriptcoregtk-4.1.so.0.10.14\",\"offset\":\"0x196b2d0\",\"flags\":[\"SA_SIGINFO\",\"SA_RESTART\"]},\"SIGUSR2\":{\"owner\":\"go\",\"flags\":[\"SA_SIGINFO\",\"SA_ONSTACK\",\"SA_RESTART\"]},\"SIGXCPU\":{\"owner\":\"native:libjavascriptcoregtk-4.1.so.0.10.14\",\"offset\":\"0x196d3f0\",\"flags\":[\"SA_RESTART\"]}},\"event\":\"phase\",\"phase\":\"after-load\",\"progress\":289,\"progress_after\":291,\"t\":\"11:12:32.878\",\"threads\":{\"PressureMonitor blocked=\":1,\"ReceiveQueue blocked=\":2,\"VBlankMonitor blocked=\":1,\"[pango] fontcon blocked=\":1,\"async-io blocked=\":1,\"dconf worker blocked=\":1,\"dfx2-c:traceq0 blocked=fffffffe3ffbfaff\":2,\"dfx2-cg:disk$0 blocked=fffffffe3ffbfaff\":1,\"dfx2-cgo-p:sh0 blocked=fffffffe3ffbfaff\":1,\"dfx2-cgo-probe blocked=\":9,\"dfx2-cgo-probe blocked=fffffffc3b3a3000\":1,\"dfx2-cgo:gdrv0 blocked=fffffffe3ffbfaff\":2,\"ebsiteDataStore blocked=\":1,\"gdbus blocked=\":1,\"gly-global-exec blocked=\":1,\"gly-hdl-loader blocked=\":1,\"gmain blocked=fffffffe7ffbfeff\":1,\"pool-0 blocked=\":1,\"pool-spawner blocked=\":1}}",
+    "{\"disposition\":{\"SIGBUS\":{\"owner\":\"go\",\"flags\":[\"SA_SIGINFO\",\"SA_ONSTACK\",\"SA_RESTART\"]},\"SIGHUP\":{\"owner\":\"go\",\"flags\":[\"SA_SIGINFO\",\"SA_ONSTACK\",\"SA_RESTART\"]},\"SIGSEGV\":{\"owner\":\"go\",\"flags\":[\"SA_SIGINFO\",\"SA_ONSTACK\",\"SA_RESTART\"]},\"SIGUSR1\":{\"owner\":\"native:libjavascriptcoregtk-4.1.so.0.10.14\",\"offset\":\"0x196b2d0\",\"flags\":[\"SA_SIGINFO\",\"SA_RESTART\"]},\"SIGUSR2\":{\"owner\":\"go\",\"flags\":[\"SA_SIGINFO\",\"SA_ONSTACK\",\"SA_RESTART\"]},\"SIGXCPU\":{\"owner\":\"native:libjavascriptcoregtk-4.1.so.0.10.14\",\"offset\":\"0x196d3f0\",\"flags\":[\"SA_RESTART\"]}},\"event\":\"stray-sending\",\"mode\":\"external\",\"signal\":10,\"t\":\"11:12:32.881\"}",
+    "Thread 1 \"dfx2-cgo-probe\" received signal SIGSEGV, Segmentation fault.",
+    "#0  signalHandlerSuspendResume () at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WTF/wtf/posix/ThreadingPOSIX.cpp:124",
+    "#1  0x00007fffef845cb0 in <signal handler called> () at /usr/lib/x86_64-linux-gnu/libc.so.6"
+   ]
+  },
+  {
+   "check": "purego-stray-usr1: kills the process",
+   "ok": true,
+   "exit": 2,
+   "dispositions": {
+    "SIGBUS": "go",
+    "SIGSEGV": "go",
+    "SIGUSR1": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+    "SIGXCPU": "native:libjavascriptcoregtk-4.1.so.0.10.14"
+   },
+   "stderr": [
+    "Overriding existing handler for signal 10. Set JSC_SIGNAL_FOR_GC if you want WebKit to use a different signal",
+    "SIGSEGV: segmentation violation",
+    "PC=0x73c56396b2f8 m=0 sigcode=1 addr=0x58"
+   ]
+  },
+  {
+   "check": "purego-stray-60-reserved: kills the process",
+   "ok": true,
+   "exit": 2,
+   "dispositions": {
+    "SIGBUS": "go",
+    "SIGSEGV": "go",
+    "SIGUSR1": "go",
+    "SIGXCPU": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+    "reserved 60": "native:libjavascriptcoregtk-4.1.so.0.10.14"
+   },
+   "stderr": [
+    "SIGSEGV: segmentation violation",
+    "PC=0x76b59c96b2f8 m=0 sigcode=1 addr=0x58",
+    "signal arrived during cgo execution"
+   ]
+  },
+  {
+   "check": "purego-stray-xcpu: survives",
+   "ok": true,
+   "exit": 0,
+   "dispositions": {
+    "SIGBUS": "go",
+    "SIGSEGV": "go",
+    "SIGUSR1": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+    "SIGXCPU": "native:libjavascriptcoregtk-4.1.so.0.10.14"
+   },
+   "stderr": [
+    "Overriding existing handler for signal 10. Set JSC_SIGNAL_FOR_GC if you want WebKit to use a different signal"
+   ]
+  }
+ ],
+ "passed": true,
+ "cases": [
+  {
+   "case": "monitored",
+   "command": [
+    "/tmp/dfx2-cgo-probe"
+   ],
+   "exit": 0,
+   "stderr_head": [
+    "warning: File \"/home/michael/local/go/src/runtime/runtime-gdb.py\" auto-loading has been declined by your `auto-load safe-path' set to \"$debugdir:$datadir/auto-load\".",
+    "Function \"JSC::initialize()\" not defined.",
+    "Function \"JSC::VM::VM(JSC::VM::VMType, JSC::HeapType, WTF::RunLoop*, bool*)\" not defined.",
+    "Function \"JSC::Heap::Heap(JSC::VM&, JSC::HeapType)\" not defined.",
+    "Function \"JSGlobalContextCreate\" not defined.",
+    "Function \"JSGlobalContextCreateInGroup\" not defined."
+   ],
+   "monitor": {
+    "totals": {
+     "jsc-initialize": {
+      "hits": 614,
+      "threads": 1,
+      "locations": 1,
+      "pending": false,
+      "optional": false
+     },
+     "vm-constructed": {
+      "hits": 0,
+      "threads": 0,
+      "locations": 1,
+      "pending": false,
+      "optional": false
+     },
+     "heap-constructed": {
+      "hits": 0,
+      "threads": 0,
+      "locations": 1,
+      "pending": false,
+      "optional": false
+     },
+     "global-context-create": {
+      "hits": 0,
+      "threads": 0,
+      "locations": 1,
+      "pending": false,
+      "optional": false
+     },
+     "global-context-create-in-group": {
+      "hits": 0,
+      "threads": 0,
+      "locations": 1,
+      "pending": false,
+      "optional": false
+     },
+     "context-group-create": {
+      "hits": 0,
+      "threads": 0,
+      "locations": 1,
+      "pending": false,
+      "optional": false
+     },
+     "jsc-context-new": {
+      "hits": 0,
+      "threads": 0,
+      "locations": 1,
+      "pending": false,
+      "optional": false
+     },
+     "jsc-virtual-machine-new": {
+      "hits": 0,
+      "threads": 0,
+      "locations": 2,
+      "pending": false,
+      "optional": false
+     },
+     "jslock-acquired": {
+      "hits": 0,
+      "threads": 0,
+      "locations": 1,
+      "pending": false,
+      "optional": false
+     },
+     "thread-registered-for-gc": {
+      "hits": 0,
+      "threads": 0,
+      "locations": 1,
+      "pending": false,
+      "optional": false
+     },
+     "thread-group-add": {
+      "hits": 0,
+      "threads": 0,
+      "locations": 1,
+      "pending": false,
+      "optional": false
+     },
+     "thread-suspend": {
+      "hits": 0,
+      "threads": 0,
+      "locations": 1,
+      "pending": false,
+      "optional": false
+     },
+     "suspend-handler-ran": {
+      "hits": 0,
+      "threads": 0,
+      "locations": 1,
+      "pending": false,
+      "optional": false
+     },
+     "fault-handlers-finalized": {
+      "hits": 0,
+      "threads": 0,
+      "locations": 1,
+      "pending": false,
+      "optional": false
+     },
+     "realtime-threads-created": {
+      "hits": 1,
+      "threads": 1,
+      "locations": 1,
+      "pending": false,
+      "optional": true
+     },
+     "realtime-thread-registered": {
+      "hits": 6,
+      "threads": 1,
+      "locations": 1,
+      "pending": false,
+      "optional": true
+     },
+     "highpriority-threads-created": {
+      "hits": 0,
+      "threads": 0,
+      "locations": 0,
+      "pending": true,
+      "optional": true
+     },
+     "highpriority-thread-registered": {
+      "hits": 0,
+      "threads": 0,
+      "locations": 0,
+      "pending": true,
+      "optional": true
+     },
+     "realtime-promote": {
+      "hits": 6,
+      "threads": 1,
+      "locations": 1,
+      "pending": false,
+      "optional": true
+     },
+     "realtime-rtkit": {
+      "hits": 4,
+      "threads": 1,
+      "locations": 1,
+      "pending": false,
+      "optional": true
+     },
+     "realtime-sigxcpu-callback": {
+      "hits": 0,
+      "threads": 0,
+      "locations": 1,
+      "pending": false,
+      "optional": true
+     },
+     "realtime-demote-all": {
+      "hits": 0,
+      "threads": 0,
+      "locations": 1,
+      "pending": false,
+      "optional": true
+     },
+     "scheduling-attributes": {
+      "hits": 0,
+      "threads": 0,
+      "locations": 0,
+      "pending": true,
+      "optional": true
+     },
+     "highpriority-rtkit": {
+      "hits": 0,
+      "threads": 0,
+      "locations": 0,
+      "pending": true,
+      "optional": true
+     },
+     "sched-setscheduler": {
+      "hits": 21,
+      "threads": 1,
+      "locations": 1,
+      "pending": false,
+      "optional": false
+     },
+     "libc-sigaction": {
+      "hits": 121,
+      "threads": 2,
+      "locations": 1,
+      "pending": false,
+      "optional": false
+     }
+    },
+    "first_hits": {
+     "libc-sigaction": {
+      "main_thread": true,
+      "thread_name": "dfx2-cgo-probe",
+      "go_frames": [
+       "runtime.callCgoSigaction @ exe (/home/michael/local/go/src/runtime/sys_linux_amd64.s:330)",
+       "runtime.sigaction @ exe (/home/michael/local/go/src/runtime/cgo_sigaction.go:57)",
+       "runtime.getsig @ exe (/home/michael/local/go/src/runtime/os_linux.go:516)",
+       "runtime.initsig @ exe (/home/michael/local/go/src/runtime/signal_unix.go:135)"
+      ],
+      "frames": [
+       "__GI___sigaction @ libc.so.6 (./signal/sigaction.c:27)",
+       "x_cgo_sigaction @ exe (gcc_sigaction.c:63)",
+       "runtime.callCgoSigaction @ exe (/home/michael/local/go/src/runtime/sys_linux_amd64.s:330)",
+       "runtime.sigaction @ exe (/home/michael/local/go/src/runtime/cgo_sigaction.go:57)",
+       "runtime.getsig @ exe (/home/michael/local/go/src/runtime/os_linux.go:516)",
+       "runtime.initsig @ exe (/home/michael/local/go/src/runtime/signal_unix.go:135)",
+       "runtime.mstartm0 @ exe (/home/michael/local/go/src/runtime/proc.go:1972)",
+       "runtime.mstart1 @ exe (/home/michael/local/go/src/runtime/proc.go:1940)",
+       "runtime.mstart0 @ exe (/home/michael/local/go/src/runtime/proc.go:1901)",
+       "runtime.mstart @ exe (/home/michael/local/go/src/runtime/asm_amd64.s:393)"
+      ],
+      "signal": 1
+     },
+     "jsc-initialize": {
+      "main_thread": true,
+      "thread_name": "dfx2-cgo-probe",
+      "go_frames": [],
+      "frames": [
+       "ScopedLambda @ libjavascriptcoregtk-4.1.so.0 (WTF/Headers/wtf/ScopedLambda.h:50)",
+       "ScopedLambdaFunctor<const (lambda at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/JavaScriptCore/runtime/InitializeThreading.cpp:81:16) &> @ libjavascriptcoregtk-4.1.so.0 (WTF/Headers/wtf/ScopedLambda.h:72)",
+       "scopedLambda<void (), (lambda at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/JavaScriptCore/runtime/InitializeThreading.cpp:81:16)> @ libjavascriptcoregtk-4.1.so.0 (WTF/Headers/wtf/ScopedLambda.h:122)",
+       "initialize<(lambda at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/JavaScriptCore/runtime/InitializeThreading.cpp:81:16)> @ libjavascriptcoregtk-4.1.so.0 (JavaScriptCore/PrivateHeaders/JavaScriptCore/InitializeThreading.h:42)",
+       "initialize @ libjavascriptcoregtk-4.1.so.0 (JavaScriptCore/runtime/InitializeThreading.cpp:81)",
+       "WebKit::InitializeWebKit2() @ libwebkit2gtk-4.1.so.0 (WebKit/Shared/WebKit2Initialize.cpp:42)",
+       "operator() @ libwebkit2gtk-4.1.so.0 (WebKit/UIProcess/API/glib/WebKitInitialize.cpp:117)",
+       "__invoke_impl<void, (lambda at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WebKit/UIProcess/API/glib/WebKitInitialize.cpp:113:30)> @ libwebkit2gtk-4.1.so.0 (/usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/bits/invoke.h:63)",
+       "__invoke<(lambda at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WebKit/UIProcess/API/glib/WebKitInitialize.cpp:113:30)> @ libwebkit2gtk-4.1.so.0 (/usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/bits/invoke.h:98)",
+       "operator() @ libwebkit2gtk-4.1.so.0 (/usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/mutex:911)"
+      ]
+     },
+     "sched-setscheduler": {
+      "main_thread": true,
+      "thread_name": "dfx2-cgo-probe",
+      "go_frames": [],
+      "frames": [
+       "__GI_sched_setscheduler @ libc.so.6 (../sysdeps/unix/syscall-template.S:120)",
+       "__pthread_setschedparam @ libc.so.6 (./nptl/pthread_setschedparam.c:55)",
+       "establishHandle @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/posix/ThreadingPOSIX.cpp:332)",
+       "create @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/Threading.cpp:273)",
+       "create @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/RunLoop.cpp:108)",
+       "platformInitialize @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/generic/WorkQueueGeneric.cpp:45)",
+       "WorkQueueBase @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/WorkQueue.cpp:45)",
+       "WorkQueue @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/WorkQueue.cpp:186)",
+       "create @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/WorkQueue.cpp:182)",
+       "WebsiteDataStore @ libwebkit2gtk-4.1.so.0 (WebKit/UIProcess/WebsiteData/WebsiteDataStore.cpp:164)"
+      ]
+     },
+     "realtime-threads-created": {
+      "main_thread": true,
+      "thread_name": "dfx2-cgo-probe",
+      "go_frames": [],
+      "frames": [
+       "RefPtr @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/RefPtr.h:48)",
+       "WeakPtrFactory @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/WeakPtrFactory.h:52)",
+       "CanMakeWeakPtrBase @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/CanMakeWeakPtr.h:50)",
+       "RealTimeThreads @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/linux/RealTimeThreads.cpp:67)",
+       "__pthread_once_slow @ libc.so.6 (./nptl/pthread_once.c:116)",
+       "___pthread_once @ libc.so.6 (./nptl/pthread_once.c:143)",
+       "__gthread_once @ libjavascriptcoregtk-4.1.so.0 (/usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/x86_64-linux-gnu/c++/15/bits/gthr-default.h:746)",
+       "call_once<(lambda at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WTF/wtf/linux/RealTimeThreads.cpp:61:30)> @ libjavascriptcoregtk-4.1.so.0 (/usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/mutex:918)",
+       "singleton @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/linux/RealTimeThreads.cpp:61)",
+       "establishHandle @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/posix/ThreadingPOSIX.cpp:329)"
+      ]
+     },
+     "realtime-thread-registered": {
+      "main_thread": true,
+      "thread_name": "dfx2-cgo-probe",
+      "go_frames": [],
+      "frames": [
+       "unwrap @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/RawPtrTraits.h:44)",
+       "operator-> @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/Ref.h:143)",
+       "registerThread @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/linux/RealTimeThreads.cpp:86)",
+       "establishHandle @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/posix/ThreadingPOSIX.cpp:329)",
+       "create @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/Threading.cpp:273)",
+       "create @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/RunLoop.cpp:108)",
+       "platformInitialize @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/generic/WorkQueueGeneric.cpp:45)",
+       "WorkQueueBase @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/WorkQueue.cpp:45)",
+       "WorkQueue @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/WorkQueue.cpp:186)",
+       "create @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/WorkQueue.cpp:182)"
+      ]
+     },
+     "realtime-promote": {
+      "main_thread": true,
+      "thread_name": "dfx2-cgo-probe",
+      "go_frames": [
+       "runtime.asmcgocall @ exe (/home/michael/local/go/src/runtime/asm_amd64.s:970)",
+       "runtime.systemstack @ exe (/home/michael/local/go/src/runtime/asm_amd64.s:531)"
+      ],
+      "frames": [
+       "promoteThreadToRealTime @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/linux/RealTimeThreads.cpp:121)",
+       "operator() @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/Function.h:103)",
+       "performWork @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/RunLoop.cpp:145)",
+       "operator() @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/glib/RunLoopGLib.cpp:153)",
+       "__invoke @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/glib/RunLoopGLib.cpp:152)",
+       "operator() @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/glib/RunLoopGLib.cpp:116)",
+       "__invoke @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/glib/RunLoopGLib.cpp:89)",
+       "?? @ libglib-2.0.so.0",
+       "?? @ libglib-2.0.so.0",
+       "g_main_loop_run @ libglib-2.0.so.0"
+      ]
+     },
+     "realtime-rtkit": {
+      "main_thread": true,
+      "thread_name": "dfx2-cgo-probe",
+      "go_frames": [
+       "runtime.asmcgocall @ exe (/home/michael/local/go/src/runtime/asm_amd64.s:970)"
+      ],
+      "frames": [
+       "realTimeKitMakeThreadRealTime @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/linux/RealTimeThreads.cpp:243)",
+       "promoteThreadToRealTime @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/linux/RealTimeThreads.cpp:128)",
+       "operator() @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/Function.h:103)",
+       "performWork @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/RunLoop.cpp:145)",
+       "operator() @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/glib/RunLoopGLib.cpp:153)",
+       "__invoke @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/glib/RunLoopGLib.cpp:152)",
+       "operator() @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/glib/RunLoopGLib.cpp:116)",
+       "__invoke @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/glib/RunLoopGLib.cpp:89)",
+       "?? @ libglib-2.0.so.0",
+       "?? @ libglib-2.0.so.0"
+      ]
+     }
+    },
+    "go_runtime_sigaction_installs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     23,
+     24,
+     25,
+     26,
+     27,
+     28,
+     29,
+     30,
+     31,
+     35,
+     36,
+     37,
+     38,
+     39,
+     40,
+     41,
+     42,
+     43,
+     44,
+     45,
+     46,
+     47,
+     48,
+     49,
+     50,
+     51,
+     52,
+     53,
+     54,
+     55,
+     56,
+     57,
+     58,
+     59,
+     60,
+     61,
+     62,
+     63,
+     64
+    ],
+    "native_sigaction_installs": [
+     [
+      10,
+      "dfx2-cgo-probe",
+      "operator() @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/posix/ThreadingPOSIX.cpp:217)"
+     ],
+     [
+      13,
+      "dfx2-cgo-probe",
+      "?? @ libgio-2.0.so.0"
+     ],
+     [
+      13,
+      "dfx2-cgo-probe",
+      "?? @ libgtk-3.so.0"
+     ],
+     [
+      13,
+      "dfx2-cgo-probe",
+      "?? @ libgvfsdbus.so"
+     ],
+     [
+      24,
+      "dfx2-cgo-probe",
+      "setupSignalHandler @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/linux/RealTimeThreads.cpp:191)"
+     ]
+    ],
+    "unresolved": [],
+    "vm_hits": {
+     "vm-constructed": 0,
+     "heap-constructed": 0,
+     "global-context-create": 0,
+     "global-context-create-in-group": 0,
+     "context-group-create": 0,
+     "jsc-context-new": 0,
+     "jsc-virtual-machine-new": 0,
+     "jslock-acquired": 0,
+     "thread-registered-for-gc": 0,
+     "thread-group-add": 0,
+     "thread-suspend": 0,
+     "suspend-handler-ran": 0,
+     "fault-handlers-finalized": 0
+    }
+   }
+  },
+  {
+   "case": "control-vm",
+   "command": [
+    "/tmp/dfx2-cgo-probe",
+    "-vm-control",
+    "-faults=false"
+   ],
+   "exit": 0,
+   "stderr_head": [
+    "warning: File \"/home/michael/local/go/src/runtime/runtime-gdb.py\" auto-loading has been declined by your `auto-load safe-path' set to \"$debugdir:$datadir/auto-load\".",
+    "Function \"JSC::initialize()\" not defined.",
+    "Function \"JSC::VM::VM(JSC::VM::VMType, JSC::HeapType, WTF::RunLoop*, bool*)\" not defined.",
+    "Function \"JSC::Heap::Heap(JSC::VM&, JSC::HeapType)\" not defined.",
+    "Function \"JSGlobalContextCreate\" not defined.",
+    "Function \"JSGlobalContextCreateInGroup\" not defined."
+   ],
+   "monitor": {
+    "totals": {
+     "jsc-initialize": {
+      "hits": 615,
+      "threads": 1,
+      "locations": 1,
+      "pending": false,
+      "optional": false
+     },
+     "vm-constructed": {
+      "hits": 1,
+      "threads": 1,
+      "locations": 1,
+      "pending": false,
+      "optional": false
+     },
+     "heap-constructed": {
+      "hits": 1,
+      "threads": 1,
+      "locations": 1,
+      "pending": false,
+      "optional": false
+     },
+     "global-context-create": {
+      "hits": 0,
+      "threads": 0,
+      "locations": 1,
+      "pending": false,
+      "optional": false
+     },
+     "global-context-create-in-group": {
+      "hits": 1,
+      "threads": 1,
+      "locations": 1,
+      "pending": false,
+      "optional": false
+     },
+     "context-group-create": {
+      "hits": 1,
+      "threads": 1,
+      "locations": 1,
+      "pending": false,
+      "optional": false
+     },
+     "jsc-context-new": {
+      "hits": 1,
+      "threads": 1,
+      "locations": 1,
+      "pending": false,
+      "optional": false
+     },
+     "jsc-virtual-machine-new": {
+      "hits": 1,
+      "threads": 1,
+      "locations": 2,
+      "pending": false,
+      "optional": false
+     },
+     "jslock-acquired": {
+      "hits": 9,
+      "threads": 1,
+      "locations": 1,
+      "pending": false,
+      "optional": false
+     },
+     "thread-registered-for-gc": {
+      "hits": 2,
+      "threads": 1,
+      "locations": 1,
+      "pending": false,
+      "optional": false
+     },
+     "thread-group-add": {
+      "hits": 2,
+      "threads": 1,
+      "locations": 1,
+      "pending": false,
+      "optional": false
+     },
+     "thread-suspend": {
+      "hits": 0,
+      "threads": 0,
+      "locations": 1,
+      "pending": false,
+      "optional": false
+     },
+     "suspend-handler-ran": {
+      "hits": 0,
+      "threads": 0,
+      "locations": 1,
+      "pending": false,
+      "optional": false
+     },
+     "fault-handlers-finalized": {
+      "hits": 1,
+      "threads": 1,
+      "locations": 1,
+      "pending": false,
+      "optional": false
+     },
+     "realtime-threads-created": {
+      "hits": 1,
+      "threads": 1,
+      "locations": 1,
+      "pending": false,
+      "optional": true
+     },
+     "realtime-thread-registered": {
+      "hits": 6,
+      "threads": 1,
+      "locations": 1,
+      "pending": false,
+      "optional": true
+     },
+     "highpriority-threads-created": {
+      "hits": 0,
+      "threads": 0,
+      "locations": 0,
+      "pending": true,
+      "optional": true
+     },
+     "highpriority-thread-registered": {
+      "hits": 0,
+      "threads": 0,
+      "locations": 0,
+      "pending": true,
+      "optional": true
+     },
+     "realtime-promote": {
+      "hits": 6,
+      "threads": 1,
+      "locations": 1,
+      "pending": false,
+      "optional": true
+     },
+     "realtime-rtkit": {
+      "hits": 4,
+      "threads": 1,
+      "locations": 1,
+      "pending": false,
+      "optional": true
+     },
+     "realtime-sigxcpu-callback": {
+      "hits": 0,
+      "threads": 0,
+      "locations": 1,
+      "pending": false,
+      "optional": true
+     },
+     "realtime-demote-all": {
+      "hits": 0,
+      "threads": 0,
+      "locations": 1,
+      "pending": false,
+      "optional": true
+     },
+     "scheduling-attributes": {
+      "hits": 0,
+      "threads": 0,
+      "locations": 0,
+      "pending": true,
+      "optional": true
+     },
+     "highpriority-rtkit": {
+      "hits": 0,
+      "threads": 0,
+      "locations": 0,
+      "pending": true,
+      "optional": true
+     },
+     "sched-setscheduler": {
+      "hits": 21,
+      "threads": 1,
+      "locations": 1,
+      "pending": false,
+      "optional": false
+     },
+     "libc-sigaction": {
+      "hits": 123,
+      "threads": 2,
+      "locations": 1,
+      "pending": false,
+      "optional": false
+     }
+    },
+    "first_hits": {
+     "libc-sigaction": {
+      "main_thread": true,
+      "thread_name": "dfx2-cgo-probe",
+      "go_frames": [
+       "runtime.callCgoSigaction @ exe (/home/michael/local/go/src/runtime/sys_linux_amd64.s:330)",
+       "runtime.sigaction @ exe (/home/michael/local/go/src/runtime/cgo_sigaction.go:57)",
+       "runtime.getsig @ exe (/home/michael/local/go/src/runtime/os_linux.go:516)",
+       "runtime.initsig @ exe (/home/michael/local/go/src/runtime/signal_unix.go:135)"
+      ],
+      "frames": [
+       "__GI___sigaction @ libc.so.6 (./signal/sigaction.c:27)",
+       "x_cgo_sigaction @ exe (gcc_sigaction.c:63)",
+       "runtime.callCgoSigaction @ exe (/home/michael/local/go/src/runtime/sys_linux_amd64.s:330)",
+       "runtime.sigaction @ exe (/home/michael/local/go/src/runtime/cgo_sigaction.go:57)",
+       "runtime.getsig @ exe (/home/michael/local/go/src/runtime/os_linux.go:516)",
+       "runtime.initsig @ exe (/home/michael/local/go/src/runtime/signal_unix.go:135)",
+       "runtime.mstartm0 @ exe (/home/michael/local/go/src/runtime/proc.go:1972)",
+       "runtime.mstart1 @ exe (/home/michael/local/go/src/runtime/proc.go:1940)",
+       "runtime.mstart0 @ exe (/home/michael/local/go/src/runtime/proc.go:1901)",
+       "runtime.mstart @ exe (/home/michael/local/go/src/runtime/asm_amd64.s:393)"
+      ],
+      "signal": 1
+     },
+     "jsc-initialize": {
+      "main_thread": true,
+      "thread_name": "dfx2-cgo-probe",
+      "go_frames": [],
+      "frames": [
+       "ScopedLambda @ libjavascriptcoregtk-4.1.so.0 (WTF/Headers/wtf/ScopedLambda.h:50)",
+       "ScopedLambdaFunctor<const (lambda at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/JavaScriptCore/runtime/InitializeThreading.cpp:81:16) &> @ libjavascriptcoregtk-4.1.so.0 (WTF/Headers/wtf/ScopedLambda.h:72)",
+       "scopedLambda<void (), (lambda at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/JavaScriptCore/runtime/InitializeThreading.cpp:81:16)> @ libjavascriptcoregtk-4.1.so.0 (WTF/Headers/wtf/ScopedLambda.h:122)",
+       "initialize<(lambda at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/JavaScriptCore/runtime/InitializeThreading.cpp:81:16)> @ libjavascriptcoregtk-4.1.so.0 (JavaScriptCore/PrivateHeaders/JavaScriptCore/InitializeThreading.h:42)",
+       "initialize @ libjavascriptcoregtk-4.1.so.0 (JavaScriptCore/runtime/InitializeThreading.cpp:81)",
+       "WebKit::InitializeWebKit2() @ libwebkit2gtk-4.1.so.0 (WebKit/Shared/WebKit2Initialize.cpp:42)",
+       "operator() @ libwebkit2gtk-4.1.so.0 (WebKit/UIProcess/API/glib/WebKitInitialize.cpp:117)",
+       "__invoke_impl<void, (lambda at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WebKit/UIProcess/API/glib/WebKitInitialize.cpp:113:30)> @ libwebkit2gtk-4.1.so.0 (/usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/bits/invoke.h:63)",
+       "__invoke<(lambda at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WebKit/UIProcess/API/glib/WebKitInitialize.cpp:113:30)> @ libwebkit2gtk-4.1.so.0 (/usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/bits/invoke.h:98)",
+       "operator() @ libwebkit2gtk-4.1.so.0 (/usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/mutex:911)"
+      ]
+     },
+     "sched-setscheduler": {
+      "main_thread": true,
+      "thread_name": "dfx2-cgo-probe",
+      "go_frames": [],
+      "frames": [
+       "__GI_sched_setscheduler @ libc.so.6 (../sysdeps/unix/syscall-template.S:120)",
+       "__pthread_setschedparam @ libc.so.6 (./nptl/pthread_setschedparam.c:55)",
+       "establishHandle @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/posix/ThreadingPOSIX.cpp:332)",
+       "create @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/Threading.cpp:273)",
+       "create @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/RunLoop.cpp:108)",
+       "platformInitialize @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/generic/WorkQueueGeneric.cpp:45)",
+       "WorkQueueBase @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/WorkQueue.cpp:45)",
+       "WorkQueue @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/WorkQueue.cpp:186)",
+       "create @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/WorkQueue.cpp:182)",
+       "WebsiteDataStore @ libwebkit2gtk-4.1.so.0 (WebKit/UIProcess/WebsiteData/WebsiteDataStore.cpp:164)"
+      ]
+     },
+     "realtime-threads-created": {
+      "main_thread": true,
+      "thread_name": "dfx2-cgo-probe",
+      "go_frames": [],
+      "frames": [
+       "RefPtr @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/RefPtr.h:48)",
+       "WeakPtrFactory @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/WeakPtrFactory.h:52)",
+       "CanMakeWeakPtrBase @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/CanMakeWeakPtr.h:50)",
+       "RealTimeThreads @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/linux/RealTimeThreads.cpp:67)",
+       "__pthread_once_slow @ libc.so.6 (./nptl/pthread_once.c:116)",
+       "___pthread_once @ libc.so.6 (./nptl/pthread_once.c:143)",
+       "__gthread_once @ libjavascriptcoregtk-4.1.so.0 (/usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/x86_64-linux-gnu/c++/15/bits/gthr-default.h:746)",
+       "call_once<(lambda at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WTF/wtf/linux/RealTimeThreads.cpp:61:30)> @ libjavascriptcoregtk-4.1.so.0 (/usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/mutex:918)",
+       "singleton @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/linux/RealTimeThreads.cpp:61)",
+       "establishHandle @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/posix/ThreadingPOSIX.cpp:329)"
+      ]
+     },
+     "realtime-thread-registered": {
+      "main_thread": true,
+      "thread_name": "dfx2-cgo-probe",
+      "go_frames": [],
+      "frames": [
+       "unwrap @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/RawPtrTraits.h:44)",
+       "operator-> @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/Ref.h:143)",
+       "registerThread @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/linux/RealTimeThreads.cpp:86)",
+       "establishHandle @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/posix/ThreadingPOSIX.cpp:329)",
+       "create @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/Threading.cpp:273)",
+       "create @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/RunLoop.cpp:108)",
+       "platformInitialize @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/generic/WorkQueueGeneric.cpp:45)",
+       "WorkQueueBase @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/WorkQueue.cpp:45)",
+       "WorkQueue @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/WorkQueue.cpp:186)",
+       "create @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/WorkQueue.cpp:182)"
+      ]
+     },
+     "realtime-promote": {
+      "main_thread": true,
+      "thread_name": "dfx2-cgo-probe",
+      "go_frames": [
+       "runtime.asmcgocall @ exe (/home/michael/local/go/src/runtime/asm_amd64.s:970)",
+       "runtime.systemstack @ exe (/home/michael/local/go/src/runtime/asm_amd64.s:531)"
+      ],
+      "frames": [
+       "promoteThreadToRealTime @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/linux/RealTimeThreads.cpp:121)",
+       "operator() @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/Function.h:103)",
+       "performWork @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/RunLoop.cpp:145)",
+       "operator() @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/glib/RunLoopGLib.cpp:153)",
+       "__invoke @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/glib/RunLoopGLib.cpp:152)",
+       "operator() @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/glib/RunLoopGLib.cpp:116)",
+       "__invoke @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/glib/RunLoopGLib.cpp:89)",
+       "?? @ libglib-2.0.so.0",
+       "?? @ libglib-2.0.so.0",
+       "g_main_loop_run @ libglib-2.0.so.0"
+      ]
+     },
+     "realtime-rtkit": {
+      "main_thread": true,
+      "thread_name": "dfx2-cgo-probe",
+      "go_frames": [
+       "runtime.asmcgocall @ exe (/home/michael/local/go/src/runtime/asm_amd64.s:970)"
+      ],
+      "frames": [
+       "realTimeKitMakeThreadRealTime @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/linux/RealTimeThreads.cpp:243)",
+       "promoteThreadToRealTime @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/linux/RealTimeThreads.cpp:128)",
+       "operator() @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/Function.h:103)",
+       "performWork @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/RunLoop.cpp:145)",
+       "operator() @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/glib/RunLoopGLib.cpp:153)",
+       "__invoke @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/glib/RunLoopGLib.cpp:152)",
+       "operator() @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/glib/RunLoopGLib.cpp:116)",
+       "__invoke @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/glib/RunLoopGLib.cpp:89)",
+       "?? @ libglib-2.0.so.0",
+       "?? @ libglib-2.0.so.0"
+      ]
+     },
+     "jsc-context-new": {
+      "main_thread": true,
+      "thread_name": "dfx2-cgo-probe",
+      "go_frames": [
+       "runtime.asmcgocall @ exe (/home/michael/local/go/src/runtime/asm_amd64.s:970)"
+      ],
+      "frames": [
+       "jsc_context_new @ libjavascriptcoregtk-4.1.so.0 (JavaScriptCore/API/glib/JSCContext.cpp:619)",
+       "host_vm_control @ exe (/home/michael/Repos/q/products/dfx2/experiments/webkitgtk-cgo-spike/native_linux.go:71)",
+       "_cgo_306fa80c29d1_Cfunc_host_vm_control @ exe (/tmp/go-build/cgo-gcc-prolog:214)",
+       "runtime.asmcgocall @ exe (/home/michael/local/go/src/runtime/asm_amd64.s:970)",
+       "?? @ exe",
+       "?? @ exe",
+       "g_get_monotonic_time_ns @ libglib-2.0.so.0"
+      ]
+     },
+     "jsc-virtual-machine-new": {
+      "main_thread": true,
+      "thread_name": "dfx2-cgo-probe",
+      "go_frames": [
+       "runtime.asmcgocall @ exe (/home/michael/local/go/src/runtime/asm_amd64.s:970)"
+      ],
+      "frames": [
+       "jsc_virtual_machine_new @ libjavascriptcoregtk-4.1.so.0 (JavaScriptCore/API/glib/JSCVirtualMachine.cpp:164)",
+       "jscContextConstructed @ libjavascriptcoregtk-4.1.so.0 (JavaScriptCore/API/glib/JSCContext.cpp:158)",
+       "?? @ libgobject-2.0.so.0",
+       "g_object_new_with_properties @ libgobject-2.0.so.0",
+       "g_object_new @ libgobject-2.0.so.0",
+       "host_vm_control @ exe (/home/michael/Repos/q/products/dfx2/experiments/webkitgtk-cgo-spike/native_linux.go:71)",
+       "_cgo_306fa80c29d1_Cfunc_host_vm_control @ exe (/tmp/go-build/cgo-gcc-prolog:214)",
+       "runtime.asmcgocall @ exe (/home/michael/local/go/src/runtime/asm_amd64.s:970)",
+       "?? @ exe",
+       "?? @ exe"
+      ]
+     },
+     "context-group-create": {
+      "main_thread": true,
+      "thread_name": "dfx2-cgo-probe",
+      "go_frames": [
+       "runtime.asmcgocall @ exe (/home/michael/local/go/src/runtime/asm_amd64.s:970)"
+      ],
+      "frames": [
+       "JSContextGroupCreate @ libjavascriptcoregtk-4.1.so.0 (JavaScriptCore/API/JSContextRef.cpp:70)",
+       "jscVirtualMachineEnsureContextGroup @ libjavascriptcoregtk-4.1.so.0 (JavaScriptCore/API/glib/JSCVirtualMachine.cpp:97)",
+       "jscVirtualMachineGetContextGroup @ libjavascriptcoregtk-4.1.so.0 (JavaScriptCore/API/glib/JSCVirtualMachine.cpp:128)",
+       "jscContextSetVirtualMachine @ libjavascriptcoregtk-4.1.so.0 (JavaScriptCore/API/glib/JSCContext.cpp:112)",
+       "jscContextConstructed @ libjavascriptcoregtk-4.1.so.0 (JavaScriptCore/API/glib/JSCContext.cpp:158)",
+       "?? @ libgobject-2.0.so.0",
+       "g_object_new_with_properties @ libgobject-2.0.so.0",
+       "g_object_new @ libgobject-2.0.so.0",
+       "host_vm_control @ exe (/home/michael/Repos/q/products/dfx2/experiments/webkitgtk-cgo-spike/native_linux.go:71)",
+       "_cgo_306fa80c29d1_Cfunc_host_vm_control @ exe (/tmp/go-build/cgo-gcc-prolog:214)"
+      ]
+     },
+     "vm-constructed": {
+      "main_thread": true,
+      "thread_name": "dfx2-cgo-probe",
+      "go_frames": [
+       "runtime.asmcgocall @ exe (/home/michael/local/go/src/runtime/asm_amd64.s:970)"
+      ],
+      "frames": [
+       "__atomic_base @ libjavascriptcoregtk-4.1.so.0 (/usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/bits/atomic_base.h:358)",
+       "atomic @ libjavascriptcoregtk-4.1.so.0 (/usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/atomic:869)",
+       "ThreadSafeRefCountedWithSuppressingSaferCPPCheckingBase @ libjavascriptcoregtk-4.1.so.0 (WTF/Headers/wtf/ThreadSafeRefCountedWithSuppressingSaferCPPChecking.h:89)",
+       "ThreadSafeRefCountedWithSuppressingSaferCPPChecking @ libjavascriptcoregtk-4.1.so.0 (WTF/Headers/wtf/ThreadSafeRefCountedWithSuppressingSaferCPPChecking.h:95)",
+       "VM @ libjavascriptcoregtk-4.1.so.0 (JavaScriptCore/runtime/VM.cpp:246)",
+       "createContextGroup @ libjavascriptcoregtk-4.1.so.0 (JavaScriptCore/runtime/VM.cpp:617)",
+       "JSContextGroupCreate @ libjavascriptcoregtk-4.1.so.0 (JavaScriptCore/API/JSContextRef.cpp:71)",
+       "jscVirtualMachineEnsureContextGroup @ libjavascriptcoregtk-4.1.so.0 (JavaScriptCore/API/glib/JSCVirtualMachine.cpp:97)",
+       "jscVirtualMachineGetContextGroup @ libjavascriptcoregtk-4.1.so.0 (JavaScriptCore/API/glib/JSCVirtualMachine.cpp:128)",
+       "jscContextSetVirtualMachine @ libjavascriptcoregtk-4.1.so.0 (JavaScriptCore/API/glib/JSCContext.cpp:112)"
+      ]
+     },
+     "heap-constructed": {
+      "main_thread": true,
+      "thread_name": "dfx2-cgo-probe",
+      "go_frames": [],
+      "frames": [
+       "HashTable @ libjavascriptcoregtk-4.1.so.0 (WTF/Headers/wtf/HashTable.h:646)",
+       "HashMap @ libjavascriptcoregtk-4.1.so.0 (WTF/Headers/wtf/HashMap.h:96)",
+       "Heap @ libjavascriptcoregtk-4.1.so.0 (JavaScriptCore/heap/Heap.cpp:328)",
+       "VM @ libjavascriptcoregtk-4.1.so.0 (JavaScriptCore/runtime/VM.cpp:254)",
+       "createContextGroup @ libjavascriptcoregtk-4.1.so.0 (JavaScriptCore/runtime/VM.cpp:617)",
+       "JSContextGroupCreate @ libjavascriptcoregtk-4.1.so.0 (JavaScriptCore/API/JSContextRef.cpp:71)",
+       "jscVirtualMachineEnsureContextGroup @ libjavascriptcoregtk-4.1.so.0 (JavaScriptCore/API/glib/JSCVirtualMachine.cpp:97)",
+       "jscVirtualMachineGetContextGroup @ libjavascriptcoregtk-4.1.so.0 (JavaScriptCore/API/glib/JSCVirtualMachine.cpp:128)",
+       "jscContextSetVirtualMachine @ libjavascriptcoregtk-4.1.so.0 (JavaScriptCore/API/glib/JSCContext.cpp:112)",
+       "jscContextConstructed @ libjavascriptcoregtk-4.1.so.0 (JavaScriptCore/API/glib/JSCContext.cpp:158)"
+      ]
+     },
+     "jslock-acquired": {
+      "main_thread": true,
+      "thread_name": "dfx2-cgo-probe",
+      "go_frames": [
+       "runtime.asmcgocall @ exe (/home/michael/local/go/src/runtime/asm_amd64.s:970)"
+      ],
+      "frames": [
+       "didAcquireLock @ libjavascriptcoregtk-4.1.so.0 (JavaScriptCore/runtime/JSLock.cpp:118)",
+       "VM @ libjavascriptcoregtk-4.1.so.0 (JavaScriptCore/runtime/VM.cpp:312)",
+       "createContextGroup @ libjavascriptcoregtk-4.1.so.0 (JavaScriptCore/runtime/VM.cpp:617)",
+       "JSContextGroupCreate @ libjavascriptcoregtk-4.1.so.0 (JavaScriptCore/API/JSContextRef.cpp:71)",
+       "jscVirtualMachineEnsureContextGroup @ libjavascriptcoregtk-4.1.so.0 (JavaScriptCore/API/glib/JSCVirtualMachine.cpp:97)",
+       "jscVirtualMachineGetContextGroup @ libjavascriptcoregtk-4.1.so.0 (JavaScriptCore/API/glib/JSCVirtualMachine.cpp:128)",
+       "jscContextSetVirtualMachine @ libjavascriptcoregtk-4.1.so.0 (JavaScriptCore/API/glib/JSCContext.cpp:112)",
+       "jscContextConstructed @ libjavascriptcoregtk-4.1.so.0 (JavaScriptCore/API/glib/JSCContext.cpp:158)",
+       "?? @ libgobject-2.0.so.0",
+       "g_object_new_with_properties @ libgobject-2.0.so.0"
+      ]
+     },
+     "thread-registered-for-gc": {
+      "main_thread": true,
+      "thread_name": "dfx2-cgo-probe",
+      "go_frames": [
+       "runtime.asmcgocall @ exe (/home/michael/local/go/src/runtime/asm_amd64.s:970)"
+      ],
+      "frames": [
+       "unwrap @ libjavascriptcoregtk-4.1.so.0 (WTF/Headers/wtf/RawPtrTraits.h:44)",
+       "get @ libjavascriptcoregtk-4.1.so.0 (WTF/Headers/wtf/Ref.h:146)",
+       "Ref @ libjavascriptcoregtk-4.1.so.0 (WTF/Headers/wtf/Ref.h:95)",
+       "addCurrentThread @ libjavascriptcoregtk-4.1.so.0 (JavaScriptCore/PrivateHeaders/JavaScriptCore/MachineStackMarker.h:52)",
+       "didAcquireLock @ libjavascriptcoregtk-4.1.so.0 (JavaScriptCore/runtime/JSLock.cpp:141)",
+       "VM @ libjavascriptcoregtk-4.1.so.0 (JavaScriptCore/runtime/VM.cpp:312)",
+       "createContextGroup @ libjavascriptcoregtk-4.1.so.0 (JavaScriptCore/runtime/VM.cpp:617)",
+       "JSContextGroupCreate @ libjavascriptcoregtk-4.1.so.0 (JavaScriptCore/API/JSContextRef.cpp:71)",
+       "jscVirtualMachineEnsureContextGroup @ libjavascriptcoregtk-4.1.so.0 (JavaScriptCore/API/glib/JSCVirtualMachine.cpp:97)",
+       "jscVirtualMachineGetContextGroup @ libjavascriptcoregtk-4.1.so.0 (JavaScriptCore/API/glib/JSCVirtualMachine.cpp:128)"
+      ]
+     },
+     "thread-group-add": {
+      "main_thread": true,
+      "thread_name": "dfx2-cgo-probe",
+      "go_frames": [],
+      "frames": [
+       "currentSingleton @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/Threading.h:452)",
+       "addCurrentThread @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/ThreadGroup.cpp:46)",
+       "addCurrentThread @ libjavascriptcoregtk-4.1.so.0 (JavaScriptCore/PrivateHeaders/JavaScriptCore/MachineStackMarker.h:52)",
+       "didAcquireLock @ libjavascriptcoregtk-4.1.so.0 (JavaScriptCore/runtime/JSLock.cpp:141)",
+       "VM @ libjavascriptcoregtk-4.1.so.0 (JavaScriptCore/runtime/VM.cpp:312)",
+       "createContextGroup @ libjavascriptcoregtk-4.1.so.0 (JavaScriptCore/runtime/VM.cpp:617)",
+       "JSContextGroupCreate @ libjavascriptcoregtk-4.1.so.0 (JavaScriptCore/API/JSContextRef.cpp:71)",
+       "jscVirtualMachineEnsureContextGroup @ libjavascriptcoregtk-4.1.so.0 (JavaScriptCore/API/glib/JSCVirtualMachine.cpp:97)",
+       "jscVirtualMachineGetContextGroup @ libjavascriptcoregtk-4.1.so.0 (JavaScriptCore/API/glib/JSCVirtualMachine.cpp:128)",
+       "jscContextSetVirtualMachine @ libjavascriptcoregtk-4.1.so.0 (JavaScriptCore/API/glib/JSCContext.cpp:112)"
+      ]
+     },
+     "fault-handlers-finalized": {
+      "main_thread": true,
+      "thread_name": "dfx2-cgo-probe",
+      "go_frames": [],
+      "frames": [
+       "AssertNotFrozenScope @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/WTFConfig.h:145)",
+       "finalize @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/threads/Signals.cpp:577)",
+       "operator() @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/WTFConfig.cpp:216)",
+       "__invoke_impl<void, (lambda at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WTF/wtf/WTFConfig.cpp:215:26)> @ libjavascriptcoregtk-4.1.so.0 (/usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/bits/invoke.h:63)",
+       "__invoke<(lambda at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WTF/wtf/WTFConfig.cpp:215:26)> @ libjavascriptcoregtk-4.1.so.0 (/usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/bits/invoke.h:98)",
+       "operator() @ libjavascriptcoregtk-4.1.so.0 (/usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/mutex:911)",
+       "operator() @ libjavascriptcoregtk-4.1.so.0 (/usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/mutex:847)",
+       "__invoke @ libjavascriptcoregtk-4.1.so.0 (/usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/mutex:847)",
+       "__pthread_once_slow @ libc.so.6 (./nptl/pthread_once.c:116)",
+       "___pthread_once @ libc.so.6 (./nptl/pthread_once.c:143)"
+      ]
+     },
+     "global-context-create-in-group": {
+      "main_thread": true,
+      "thread_name": "dfx2-cgo-probe",
+      "go_frames": [
+       "runtime.asmcgocall @ exe (/home/michael/local/go/src/runtime/asm_amd64.s:970)"
+      ],
+      "frames": [
+       "JSGlobalContextCreateInGroup @ libjavascriptcoregtk-4.1.so.0 (JavaScriptCore/API/JSContextRef.cpp:140)",
+       "jscContextSetVirtualMachine @ libjavascriptcoregtk-4.1.so.0 (JavaScriptCore/API/glib/JSCContext.cpp:112)",
+       "jscContextConstructed @ libjavascriptcoregtk-4.1.so.0 (JavaScriptCore/API/glib/JSCContext.cpp:158)",
+       "?? @ libgobject-2.0.so.0",
+       "g_object_new_with_properties @ libgobject-2.0.so.0",
+       "g_object_new @ libgobject-2.0.so.0",
+       "host_vm_control @ exe (/home/michael/Repos/q/products/dfx2/experiments/webkitgtk-cgo-spike/native_linux.go:71)",
+       "_cgo_306fa80c29d1_Cfunc_host_vm_control @ exe (/tmp/go-build/cgo-gcc-prolog:214)",
+       "runtime.asmcgocall @ exe (/home/michael/local/go/src/runtime/asm_amd64.s:970)",
+       "?? @ exe"
+      ]
+     }
+    },
+    "go_runtime_sigaction_installs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     23,
+     24,
+     25,
+     26,
+     27,
+     28,
+     29,
+     30,
+     31,
+     35,
+     36,
+     37,
+     38,
+     39,
+     40,
+     41,
+     42,
+     43,
+     44,
+     45,
+     46,
+     47,
+     48,
+     49,
+     50,
+     51,
+     52,
+     53,
+     54,
+     55,
+     56,
+     57,
+     58,
+     59,
+     60,
+     61,
+     62,
+     63,
+     64
+    ],
+    "native_sigaction_installs": [
+     [
+      7,
+      "dfx2-cgo-probe",
+      "finalize @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/threads/Signals.cpp:605)"
+     ],
+     [
+      10,
+      "dfx2-cgo-probe",
+      "operator() @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/posix/ThreadingPOSIX.cpp:217)"
+     ],
+     [
+      11,
+      "dfx2-cgo-probe",
+      "finalize @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/threads/Signals.cpp:603)"
+     ],
+     [
+      13,
+      "dfx2-cgo-probe",
+      "?? @ libgio-2.0.so.0"
+     ],
+     [
+      13,
+      "dfx2-cgo-probe",
+      "?? @ libgtk-3.so.0"
+     ],
+     [
+      13,
+      "dfx2-cgo-probe",
+      "?? @ libgvfsdbus.so"
+     ],
+     [
+      24,
+      "dfx2-cgo-probe",
+      "setupSignalHandler @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/linux/RealTimeThreads.cpp:191)"
+     ]
+    ],
+    "unresolved": [],
+    "vm_hits": {
+     "vm-constructed": 1,
+     "heap-constructed": 1,
+     "global-context-create": 0,
+     "global-context-create-in-group": 1,
+     "context-group-create": 1,
+     "jsc-context-new": 1,
+     "jsc-virtual-machine-new": 1,
+     "jslock-acquired": 9,
+     "thread-registered-for-gc": 2,
+     "thread-group-add": 2,
+     "thread-suspend": 0,
+     "suspend-handler-ran": 0,
+     "fault-handlers-finalized": 1
+    }
+   }
+  },
+  {
+   "case": "unmonitored",
+   "command": [
+    "/tmp/dfx2-cgo-probe"
+   ],
+   "exit": 0,
+   "stderr_head": [
+    "2026/11/12 11:11:30 http: panic serving 127.0.0.1:46252: runtime error: invalid memory address or nil pointer dereference",
+    "net/http.(*conn).serve.func1()",
+    "panic({0xa775c8?, 0xac3f40?})",
+    "main.busFault({0x1e115f20a00b?, 0x0?})",
+    "main.main.func2({0xabe758, 0x1e115f232000}, 0x0?)",
+    "net/http.HandlerFunc.ServeHTTP(0x1e115efa6000?, {0xabe758?, 0x1e115f232000?}, 0x6a90da?)"
+   ]
+  },
+  {
+   "case": "reserved-env-60",
+   "command": [
+    "/tmp/dfx2-cgo-probe",
+    "-gc-env",
+    "60"
+   ],
+   "exit": 0,
+   "stderr_head": [
+    "warning: File \"/home/michael/local/go/src/runtime/runtime-gdb.py\" auto-loading has been declined by your `auto-load safe-path' set to \"$debugdir:$datadir/auto-load\".",
+    "Function \"JSC::initialize()\" not defined.",
+    "Function \"JSC::VM::VM(JSC::VM::VMType, JSC::HeapType, WTF::RunLoop*, bool*)\" not defined.",
+    "Function \"JSC::Heap::Heap(JSC::VM&, JSC::HeapType)\" not defined.",
+    "Function \"JSGlobalContextCreate\" not defined.",
+    "Function \"JSGlobalContextCreateInGroup\" not defined."
+   ],
+   "monitor": {
+    "totals": {
+     "jsc-initialize": {
+      "hits": 611,
+      "threads": 1,
+      "locations": 1,
+      "pending": false,
+      "optional": false
+     },
+     "vm-constructed": {
+      "hits": 0,
+      "threads": 0,
+      "locations": 1,
+      "pending": false,
+      "optional": false
+     },
+     "heap-constructed": {
+      "hits": 0,
+      "threads": 0,
+      "locations": 1,
+      "pending": false,
+      "optional": false
+     },
+     "global-context-create": {
+      "hits": 0,
+      "threads": 0,
+      "locations": 1,
+      "pending": false,
+      "optional": false
+     },
+     "global-context-create-in-group": {
+      "hits": 0,
+      "threads": 0,
+      "locations": 1,
+      "pending": false,
+      "optional": false
+     },
+     "context-group-create": {
+      "hits": 0,
+      "threads": 0,
+      "locations": 1,
+      "pending": false,
+      "optional": false
+     },
+     "jsc-context-new": {
+      "hits": 0,
+      "threads": 0,
+      "locations": 1,
+      "pending": false,
+      "optional": false
+     },
+     "jsc-virtual-machine-new": {
+      "hits": 0,
+      "threads": 0,
+      "locations": 2,
+      "pending": false,
+      "optional": false
+     },
+     "jslock-acquired": {
+      "hits": 0,
+      "threads": 0,
+      "locations": 1,
+      "pending": false,
+      "optional": false
+     },
+     "thread-registered-for-gc": {
+      "hits": 0,
+      "threads": 0,
+      "locations": 1,
+      "pending": false,
+      "optional": false
+     },
+     "thread-group-add": {
+      "hits": 0,
+      "threads": 0,
+      "locations": 1,
+      "pending": false,
+      "optional": false
+     },
+     "thread-suspend": {
+      "hits": 0,
+      "threads": 0,
+      "locations": 1,
+      "pending": false,
+      "optional": false
+     },
+     "suspend-handler-ran": {
+      "hits": 0,
+      "threads": 0,
+      "locations": 1,
+      "pending": false,
+      "optional": false
+     },
+     "fault-handlers-finalized": {
+      "hits": 0,
+      "threads": 0,
+      "locations": 1,
+      "pending": false,
+      "optional": false
+     },
+     "realtime-threads-created": {
+      "hits": 1,
+      "threads": 1,
+      "locations": 1,
+      "pending": false,
+      "optional": true
+     },
+     "realtime-thread-registered": {
+      "hits": 6,
+      "threads": 1,
+      "locations": 1,
+      "pending": false,
+      "optional": true
+     },
+     "highpriority-threads-created": {
+      "hits": 0,
+      "threads": 0,
+      "locations": 0,
+      "pending": true,
+      "optional": true
+     },
+     "highpriority-thread-registered": {
+      "hits": 0,
+      "threads": 0,
+      "locations": 0,
+      "pending": true,
+      "optional": true
+     },
+     "realtime-promote": {
+      "hits": 6,
+      "threads": 1,
+      "locations": 1,
+      "pending": false,
+      "optional": true
+     },
+     "realtime-rtkit": {
+      "hits": 4,
+      "threads": 1,
+      "locations": 1,
+      "pending": false,
+      "optional": true
+     },
+     "realtime-sigxcpu-callback": {
+      "hits": 0,
+      "threads": 0,
+      "locations": 1,
+      "pending": false,
+      "optional": true
+     },
+     "realtime-demote-all": {
+      "hits": 0,
+      "threads": 0,
+      "locations": 1,
+      "pending": false,
+      "optional": true
+     },
+     "scheduling-attributes": {
+      "hits": 0,
+      "threads": 0,
+      "locations": 0,
+      "pending": true,
+      "optional": true
+     },
+     "highpriority-rtkit": {
+      "hits": 0,
+      "threads": 0,
+      "locations": 0,
+      "pending": true,
+      "optional": true
+     },
+     "sched-setscheduler": {
+      "hits": 21,
+      "threads": 1,
+      "locations": 1,
+      "pending": false,
+      "optional": false
+     },
+     "libc-sigaction": {
+      "hits": 122,
+      "threads": 2,
+      "locations": 1,
+      "pending": false,
+      "optional": false
+     }
+    },
+    "first_hits": {
+     "libc-sigaction": {
+      "main_thread": true,
+      "thread_name": "dfx2-cgo-probe",
+      "go_frames": [
+       "runtime.callCgoSigaction @ exe (/home/michael/local/go/src/runtime/sys_linux_amd64.s:330)",
+       "runtime.sigaction @ exe (/home/michael/local/go/src/runtime/cgo_sigaction.go:57)",
+       "runtime.getsig @ exe (/home/michael/local/go/src/runtime/os_linux.go:516)",
+       "runtime.initsig @ exe (/home/michael/local/go/src/runtime/signal_unix.go:135)"
+      ],
+      "frames": [
+       "__GI___sigaction @ libc.so.6 (./signal/sigaction.c:27)",
+       "x_cgo_sigaction @ exe (gcc_sigaction.c:63)",
+       "runtime.callCgoSigaction @ exe (/home/michael/local/go/src/runtime/sys_linux_amd64.s:330)",
+       "runtime.sigaction @ exe (/home/michael/local/go/src/runtime/cgo_sigaction.go:57)",
+       "runtime.getsig @ exe (/home/michael/local/go/src/runtime/os_linux.go:516)",
+       "runtime.initsig @ exe (/home/michael/local/go/src/runtime/signal_unix.go:135)",
+       "runtime.mstartm0 @ exe (/home/michael/local/go/src/runtime/proc.go:1972)",
+       "runtime.mstart1 @ exe (/home/michael/local/go/src/runtime/proc.go:1940)",
+       "runtime.mstart0 @ exe (/home/michael/local/go/src/runtime/proc.go:1901)",
+       "runtime.mstart @ exe (/home/michael/local/go/src/runtime/asm_amd64.s:393)"
+      ],
+      "signal": 1
+     },
+     "jsc-initialize": {
+      "main_thread": true,
+      "thread_name": "dfx2-cgo-probe",
+      "go_frames": [],
+      "frames": [
+       "ScopedLambda @ libjavascriptcoregtk-4.1.so.0 (WTF/Headers/wtf/ScopedLambda.h:50)",
+       "ScopedLambdaFunctor<const (lambda at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/JavaScriptCore/runtime/InitializeThreading.cpp:81:16) &> @ libjavascriptcoregtk-4.1.so.0 (WTF/Headers/wtf/ScopedLambda.h:72)",
+       "scopedLambda<void (), (lambda at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/JavaScriptCore/runtime/InitializeThreading.cpp:81:16)> @ libjavascriptcoregtk-4.1.so.0 (WTF/Headers/wtf/ScopedLambda.h:122)",
+       "initialize<(lambda at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/JavaScriptCore/runtime/InitializeThreading.cpp:81:16)> @ libjavascriptcoregtk-4.1.so.0 (JavaScriptCore/PrivateHeaders/JavaScriptCore/InitializeThreading.h:42)",
+       "initialize @ libjavascriptcoregtk-4.1.so.0 (JavaScriptCore/runtime/InitializeThreading.cpp:81)",
+       "WebKit::InitializeWebKit2() @ libwebkit2gtk-4.1.so.0 (WebKit/Shared/WebKit2Initialize.cpp:42)",
+       "operator() @ libwebkit2gtk-4.1.so.0 (WebKit/UIProcess/API/glib/WebKitInitialize.cpp:117)",
+       "__invoke_impl<void, (lambda at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WebKit/UIProcess/API/glib/WebKitInitialize.cpp:113:30)> @ libwebkit2gtk-4.1.so.0 (/usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/bits/invoke.h:63)",
+       "__invoke<(lambda at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WebKit/UIProcess/API/glib/WebKitInitialize.cpp:113:30)> @ libwebkit2gtk-4.1.so.0 (/usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/bits/invoke.h:98)",
+       "operator() @ libwebkit2gtk-4.1.so.0 (/usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/mutex:911)"
+      ]
+     },
+     "sched-setscheduler": {
+      "main_thread": true,
+      "thread_name": "dfx2-cgo-probe",
+      "go_frames": [],
+      "frames": [
+       "__GI_sched_setscheduler @ libc.so.6 (../sysdeps/unix/syscall-template.S:120)",
+       "__pthread_setschedparam @ libc.so.6 (./nptl/pthread_setschedparam.c:55)",
+       "establishHandle @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/posix/ThreadingPOSIX.cpp:332)",
+       "create @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/Threading.cpp:273)",
+       "create @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/RunLoop.cpp:108)",
+       "platformInitialize @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/generic/WorkQueueGeneric.cpp:45)",
+       "WorkQueueBase @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/WorkQueue.cpp:45)",
+       "WorkQueue @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/WorkQueue.cpp:186)",
+       "create @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/WorkQueue.cpp:182)",
+       "WebsiteDataStore @ libwebkit2gtk-4.1.so.0 (WebKit/UIProcess/WebsiteData/WebsiteDataStore.cpp:164)"
+      ]
+     },
+     "realtime-threads-created": {
+      "main_thread": true,
+      "thread_name": "dfx2-cgo-probe",
+      "go_frames": [],
+      "frames": [
+       "RefPtr @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/RefPtr.h:48)",
+       "WeakPtrFactory @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/WeakPtrFactory.h:52)",
+       "CanMakeWeakPtrBase @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/CanMakeWeakPtr.h:50)",
+       "RealTimeThreads @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/linux/RealTimeThreads.cpp:67)",
+       "__pthread_once_slow @ libc.so.6 (./nptl/pthread_once.c:116)",
+       "___pthread_once @ libc.so.6 (./nptl/pthread_once.c:143)",
+       "__gthread_once @ libjavascriptcoregtk-4.1.so.0 (/usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/x86_64-linux-gnu/c++/15/bits/gthr-default.h:746)",
+       "call_once<(lambda at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WTF/wtf/linux/RealTimeThreads.cpp:61:30)> @ libjavascriptcoregtk-4.1.so.0 (/usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/mutex:918)",
+       "singleton @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/linux/RealTimeThreads.cpp:61)",
+       "establishHandle @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/posix/ThreadingPOSIX.cpp:329)"
+      ]
+     },
+     "realtime-thread-registered": {
+      "main_thread": true,
+      "thread_name": "dfx2-cgo-probe",
+      "go_frames": [],
+      "frames": [
+       "unwrap @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/RawPtrTraits.h:44)",
+       "operator-> @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/Ref.h:143)",
+       "registerThread @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/linux/RealTimeThreads.cpp:86)",
+       "establishHandle @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/posix/ThreadingPOSIX.cpp:329)",
+       "create @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/Threading.cpp:273)",
+       "create @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/RunLoop.cpp:108)",
+       "platformInitialize @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/generic/WorkQueueGeneric.cpp:45)",
+       "WorkQueueBase @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/WorkQueue.cpp:45)",
+       "WorkQueue @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/WorkQueue.cpp:186)",
+       "create @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/WorkQueue.cpp:182)"
+      ]
+     },
+     "realtime-promote": {
+      "main_thread": true,
+      "thread_name": "dfx2-cgo-probe",
+      "go_frames": [
+       "runtime.asmcgocall @ exe (/home/michael/local/go/src/runtime/asm_amd64.s:970)",
+       "runtime.systemstack @ exe (/home/michael/local/go/src/runtime/asm_amd64.s:531)"
+      ],
+      "frames": [
+       "promoteThreadToRealTime @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/linux/RealTimeThreads.cpp:121)",
+       "operator() @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/Function.h:103)",
+       "performWork @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/RunLoop.cpp:145)",
+       "operator() @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/glib/RunLoopGLib.cpp:153)",
+       "__invoke @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/glib/RunLoopGLib.cpp:152)",
+       "operator() @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/glib/RunLoopGLib.cpp:116)",
+       "__invoke @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/glib/RunLoopGLib.cpp:89)",
+       "?? @ libglib-2.0.so.0",
+       "?? @ libglib-2.0.so.0",
+       "g_main_loop_run @ libglib-2.0.so.0"
+      ]
+     },
+     "realtime-rtkit": {
+      "main_thread": true,
+      "thread_name": "dfx2-cgo-probe",
+      "go_frames": [
+       "runtime.asmcgocall @ exe (/home/michael/local/go/src/runtime/asm_amd64.s:970)"
+      ],
+      "frames": [
+       "realTimeKitMakeThreadRealTime @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/linux/RealTimeThreads.cpp:243)",
+       "promoteThreadToRealTime @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/linux/RealTimeThreads.cpp:128)",
+       "operator() @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/Function.h:103)",
+       "performWork @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/RunLoop.cpp:145)",
+       "operator() @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/glib/RunLoopGLib.cpp:153)",
+       "__invoke @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/glib/RunLoopGLib.cpp:152)",
+       "operator() @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/glib/RunLoopGLib.cpp:116)",
+       "__invoke @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/glib/RunLoopGLib.cpp:89)",
+       "?? @ libglib-2.0.so.0",
+       "?? @ libglib-2.0.so.0"
+      ]
+     }
+    },
+    "go_runtime_sigaction_installs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     23,
+     24,
+     25,
+     26,
+     27,
+     28,
+     29,
+     30,
+     31,
+     35,
+     36,
+     37,
+     38,
+     39,
+     40,
+     41,
+     42,
+     43,
+     44,
+     45,
+     46,
+     47,
+     48,
+     49,
+     50,
+     51,
+     52,
+     53,
+     54,
+     55,
+     56,
+     57,
+     58,
+     59,
+     60,
+     61,
+     62,
+     63,
+     64
+    ],
+    "native_sigaction_installs": [
+     [
+      13,
+      "dfx2-cgo-probe",
+      "?? @ libgio-2.0.so.0"
+     ],
+     [
+      13,
+      "dfx2-cgo-probe",
+      "?? @ libgtk-3.so.0"
+     ],
+     [
+      13,
+      "dfx2-cgo-probe",
+      "?? @ libgvfsdbus.so"
+     ],
+     [
+      24,
+      "dfx2-cgo-probe",
+      "setupSignalHandler @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/linux/RealTimeThreads.cpp:191)"
+     ],
+     [
+      60,
+      "dfx2-cgo-probe",
+      "operator() @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/posix/ThreadingPOSIX.cpp:217)"
+     ]
+    ],
+    "unresolved": [],
+    "vm_hits": {
+     "vm-constructed": 0,
+     "heap-constructed": 0,
+     "global-context-create": 0,
+     "global-context-create-in-group": 0,
+     "context-group-create": 0,
+     "jsc-context-new": 0,
+     "jsc-virtual-machine-new": 0,
+     "jslock-acquired": 0,
+     "thread-registered-for-gc": 0,
+     "thread-group-add": 0,
+     "thread-suspend": 0,
+     "suspend-handler-ran": 0,
+     "fault-handlers-finalized": 0
+    }
+   }
+  },
+  {
+   "case": "stray-usr1-external",
+   "command": [
+    "/tmp/dfx2-cgo-probe",
+    "-stray",
+    "10",
+    "-stray-mode",
+    "external",
+    "-faults=false"
+   ],
+   "exit": 2,
+   "stderr_head": [
+    "Overriding existing handler for signal 10. Set JSC_SIGNAL_FOR_GC if you want WebKit to use a different signal",
+    "SIGSEGV: segmentation violation",
+    "PC=0x7cd3e476b2f8 m=0 sigcode=1 addr=0x58",
+    "signal arrived during cgo execution",
+    "runtime.cgocall(0x74c660, 0x27f9816e9a30)",
+    "main._Cfunc_gtk_main()"
+   ],
+   "survived": false,
+   "received_by_go": null
+  },
+  {
+   "case": "stray-usr1-self",
+   "command": [
+    "/tmp/dfx2-cgo-probe",
+    "-stray",
+    "10",
+    "-stray-mode",
+    "self",
+    "-faults=false"
+   ],
+   "exit": 2,
+   "stderr_head": [
+    "Overriding existing handler for signal 10. Set JSC_SIGNAL_FOR_GC if you want WebKit to use a different signal",
+    "SIGSEGV: segmentation violation",
+    "PC=0x75e6fd76b2f8 m=0 sigcode=1 addr=0x58",
+    "signal arrived during cgo execution",
+    "runtime.cgocall(0x74c660, 0xaec5664fa30)",
+    "main._Cfunc_gtk_main()"
+   ],
+   "survived": false,
+   "received_by_go": null
+  },
+  {
+   "case": "stray-usr1-native",
+   "command": [
+    "/tmp/dfx2-cgo-probe",
+    "-stray",
+    "10",
+    "-stray-mode",
+    "native",
+    "-faults=false"
+   ],
+   "exit": -11,
+   "stderr_head": [
+    "Overriding existing handler for signal 10. Set JSC_SIGNAL_FOR_GC if you want WebKit to use a different signal"
+   ],
+   "survived": false,
+   "received_by_go": null
+  },
+  {
+   "case": "stray-xcpu-external",
+   "command": [
+    "/tmp/dfx2-cgo-probe",
+    "-stray",
+    "24",
+    "-stray-mode",
+    "external",
+    "-faults=false"
+   ],
+   "exit": 0,
+   "stderr_head": [
+    "Overriding existing handler for signal 10. Set JSC_SIGNAL_FOR_GC if you want WebKit to use a different signal",
+    "2026/11/12 11:12:15 http: panic serving 127.0.0.1:58934: runtime error: invalid memory address or nil pointer dereference",
+    "net/http.(*conn).serve.func1()",
+    "panic({0xa775c8?, 0xac3f40?})",
+    "main.busFault({0x20e46962800b?, 0x0?})",
+    "main.main.func2({0xabe758, 0x20e469722000}, 0x0?)"
+   ],
+   "survived": true,
+   "received_by_go": false
+  },
+  {
+   "case": "stray-xcpu-native",
+   "command": [
+    "/tmp/dfx2-cgo-probe",
+    "-stray",
+    "24",
+    "-stray-mode",
+    "native",
+    "-faults=false"
+   ],
+   "exit": 0,
+   "stderr_head": [
+    "Overriding existing handler for signal 10. Set JSC_SIGNAL_FOR_GC if you want WebKit to use a different signal",
+    "2026/11/12 11:12:20 http: panic serving 127.0.0.1:59918: runtime error: invalid memory address or nil pointer dereference",
+    "net/http.(*conn).serve.func1()",
+    "panic({0xa775c8?, 0xac3f40?})",
+    "main.busFault({0x19620de3a233?, 0x0?})",
+    "main.main.func2({0xabe758, 0x19620e060000}, 0x0?)"
+   ],
+   "survived": true,
+   "received_by_go": false
+  },
+  {
+   "case": "stray-60-reserved-external",
+   "command": [
+    "/tmp/dfx2-cgo-probe",
+    "-gc-env",
+    "60",
+    "-stray",
+    "60",
+    "-stray-mode",
+    "external",
+    "-faults=false"
+   ],
+   "exit": 2,
+   "stderr_head": [
+    "ERROR: invalid option: JSC_SIGNAL_FOR_GC=60",
+    "ERROR: invalid option: JSC_SIGNAL_FOR_GC=60",
+    "ERROR: invalid option: JSC_SIGNAL_FOR_GC=60",
+    "SIGSEGV: segmentation violation",
+    "PC=0x70c202b6b2f8 m=0 sigcode=1 addr=0x58",
+    "signal arrived during cgo execution"
+   ],
+   "survived": false,
+   "received_by_go": null
+  },
+  {
+   "case": "stray-usr1-reserved-60-external",
+   "command": [
+    "/tmp/dfx2-cgo-probe",
+    "-gc-env",
+    "60",
+    "-stray",
+    "10",
+    "-stray-mode",
+    "external",
+    "-faults=false"
+   ],
+   "exit": 0,
+   "stderr_head": [
+    "ERROR: invalid option: JSC_SIGNAL_FOR_GC=60",
+    "ERROR: invalid option: JSC_SIGNAL_FOR_GC=60",
+    "ERROR: invalid option: JSC_SIGNAL_FOR_GC=60",
+    "2026/11/12 11:12:27 http: panic serving 127.0.0.1:47826: runtime error: invalid memory address or nil pointer dereference",
+    "net/http.(*conn).serve.func1()",
+    "panic({0xa775c8?, 0xac3f40?})"
+   ],
+   "survived": true,
+   "received_by_go": true
+  },
+  {
+   "case": "purego-stray-usr1",
+   "flags": [],
+   "signal": 10,
+   "dispositions": {
+    "SIGBUS": "go",
+    "SIGSEGV": "go",
+    "SIGUSR1": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+    "SIGXCPU": "native:libjavascriptcoregtk-4.1.so.0.10.14"
+   },
+   "alive_after": false,
+   "exit": 2,
+   "stderr_head": [
+    "Overriding existing handler for signal 10. Set JSC_SIGNAL_FOR_GC if you want WebKit to use a different signal",
+    "SIGSEGV: segmentation violation",
+    "PC=0x73c56396b2f8 m=0 sigcode=1 addr=0x58",
+    "signal arrived during cgo execution"
+   ]
+  },
+  {
+   "case": "purego-stray-60-reserved",
+   "flags": [
+    "-signal-reserve",
+    "60"
+   ],
+   "signal": 60,
+   "dispositions": {
+    "SIGBUS": "go",
+    "SIGSEGV": "go",
+    "SIGUSR1": "go",
+    "SIGXCPU": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+    "reserved 60": "native:libjavascriptcoregtk-4.1.so.0.10.14"
+   },
+   "alive_after": false,
+   "exit": 2,
+   "stderr_head": [
+    "SIGSEGV: segmentation violation",
+    "PC=0x76b59c96b2f8 m=0 sigcode=1 addr=0x58",
+    "signal arrived during cgo execution",
+    "runtime.cgocall(0x6dd520, 0x12c96210e000)"
+   ]
+  },
+  {
+   "case": "purego-stray-xcpu",
+   "flags": [],
+   "signal": 24,
+   "dispositions": {
+    "SIGBUS": "go",
+    "SIGSEGV": "go",
+    "SIGUSR1": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+    "SIGXCPU": "native:libjavascriptcoregtk-4.1.so.0.10.14"
+   },
+   "alive_after": true,
+   "exit": 0,
+   "stderr_head": [
+    "Overriding existing handler for signal 10. Set JSC_SIGNAL_FOR_GC if you want WebKit to use a different signal"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,103 @@
+{
+ "scenario": "cookie-close-race",
+ "flags": [],
+ "checks": [
+  {
+   "check": "close during installation: no navigation, ownership drained",
+   "ok": true,
+   "late": [
+    {
+     "event": "cookie-late",
+     "navigated": false,
+     "ok": false,
+     "t": "13:51:07.772",
+     "window": "A"
+    },
+    {
+     "event": "filter-late",
+     "t": "13:51:07.767",
+     "window": "A"
+    }
+   ],
+   "closed": {
+    "endpoint": {
+     "admitted": 0,
+     "refused": {},
+     "handled": 0
+    },
+    "event": "closed",
+    "handler": {},
+    "handlers_drained": true,
+    "native_async": 0,
+    "native_requests": 0,
+    "t": "13:51:07.773",
+    "window": "A"
+   }
+  }
+ ],
+ "ok": true,
+ "detail": {
+  "late": [
+   {
+    "event": "cookie-late",
+    "navigated": false,
+    "ok": false,
+    "t": "13:51:07.772",
+    "window": "A"
+   },
+   {
+    "event": "filter-late",
+    "t": "13:51:07.767",
+    "window": "A"
+   }
+  ]
+ },
+ "exit": {
+  "host_exit": 0,
+  "timed_out": false,
+  "children_pending": false,
+  "child_failure": false,
+  "fatal_log": false
+ },
+ "adopted_exits": [
+  [
+   "unobserved",
+   0
+  ],
+  [
+   "bwrap",
+   -9
+  ],
+  [
+   "WebKitNetworkPr",
+   0
+  ],
+  [
+   "bwrap",
+   -9
+  ]
+ ],
+ "observed_processes": [
+  "WebKitNetworkPr",
+  "bwrap",
+  "dfx2-wk-feas",
+  "glycin-svg"
+ ],
+ "filter_store_removal": {
+  "path": "/tmp/dfx2-feasibility/filters-2221350",
+  "attempts": 1,
+  "elapsed_ns": 70340,
+  "removed": true
+ },
+ "xdg_manifest": [
+  "cache/fontconfig/25ccf6dd56fd7585eff0dc50a0a881d4-le64.cache-9",
+  "cache/fontconfig/363ec821d90eaa905a460bbdd9de4669-le64.cache-9",
+  "cache/fontconfig/97123a202d96d9eee11f7b2e48a774ca-le64.cache-9",
+  "cache/fontconfig/CACHEDIR.TAG",
+  "cache/mesa_shader_cache/index",
+  "cache/mesa_shader_cache/marker",
+  "data/gvfs-metadata/root",
+  "data/gvfs-metadata/root-8ef8151b.log"
+ ],
+ "seconds": 0.3
+}

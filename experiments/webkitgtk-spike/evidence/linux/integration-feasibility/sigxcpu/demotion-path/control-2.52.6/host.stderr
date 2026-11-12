@@ -1,0 +1,28 @@
+warning: File "/home/michael/local/go/src/runtime/runtime-gdb.py" auto-loading has been declined by your `auto-load safe-path' set to "$debugdir:$datadir/auto-load".
+Function "JSC::initialize()" not defined.
+Function "JSC::VM::VM(JSC::VM::VMType, JSC::HeapType, WTF::RunLoop*, bool*)" not defined.
+Function "JSC::Heap::Heap(JSC::VM&, JSC::HeapType)" not defined.
+Function "JSGlobalContextCreate" not defined.
+Function "JSGlobalContextCreateInGroup" not defined.
+Function "JSContextGroupCreate" not defined.
+Function "jsc_context_new" not defined.
+Function "jsc_virtual_machine_new" not defined.
+Function "JSC::JSLock::didAcquireLock()" not defined.
+Function "JSC::MachineThreads::addCurrentThread()" not defined.
+Function "WTF::ThreadGroup::addCurrentThread()" not defined.
+Function "WTF::Thread::suspend(WTF::ThreadSuspendLocker const&)" not defined.
+Function "WTF::Thread::signalHandlerSuspendResume(int, siginfo_t*, void*)" not defined.
+Function "WTF::SignalHandlers::finalize()" not defined.
+Function "WTF::RealTimeThreads::RealTimeThreads()" not defined.
+Function "WTF::RealTimeThreads::registerThread(WTF::Thread&)" not defined.
+Function "WTF::HighPriorityThreads::HighPriorityThreads()" not defined.
+Function "WTF::HighPriorityThreads::registerThread(WTF::Thread&)" not defined.
+Function "WTF::RealTimeThreads::promoteThreadToRealTime(WTF::Thread const&)" not defined.
+Function "WTF::RealTimeThreads::realTimeKitMakeThreadRealTime(unsigned long, unsigned long, unsigned int)" not defined.
+Function "WTF::RealTimeThreads::signalCallback(int, GIOCondition, void*)" not defined.
+Function "WTF::RealTimeThreads::demoteAllThreadsFromRealTime()" not defined.
+Function "WTF::Thread::updateSchedulingAttributes(WTF::ThreadSchedulingState) const" not defined.
+Function "WTF::HighPriorityThreads::realTimeKitMakeThreadHighPriority(unsigned long, unsigned long, int)" not defined.
+Function "sched_setscheduler" not defined.
+Function "sigaction" not defined.
+VM 0x7fffe0400000 on pid 270147 received NeedDebuggerBreak trap

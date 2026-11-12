@@ -1,0 +1,25 @@
+command: /tmp/dfx2-wk-candidate -mode loopback -dock-devtools -autorun slow -close-busy 2s -quit-after 10s
+Overriding existing handler for signal 10. Set JSC_SIGNAL_FOR_GC if you want WebKit to use a different signal
+12:50:59.824022 WebKitGTK 2.52.6 mode=loopback origin=http://127.0.0.1:39059 scale=1
+12:51:00.854558 load event=0 uri=http://127.0.0.1:39059/?autorun=slow
+12:51:00.855544 req 1 start GET /?autorun=slow from 127.0.0.1:42606 (0 B body, outstanding 1)
+12:51:00.855657 req 1 handler done 200 in 0s (outstanding 0)
+12:51:00.858825 load event=2 uri=http://127.0.0.1:39059/?autorun=slow
+12:51:00.860205 req 2 start GET /app.css from 127.0.0.1:42606 (0 B body, outstanding 1)
+12:51:00.860315 req 2 handler done 200 in 0s (outstanding 0)
+12:51:00.862188 req 3 start GET /app.js from 127.0.0.1:42618 (0 B body, outstanding 1)
+12:51:00.862534 req 3 handler done 200 in 0s (outstanding 0)
+12:51:00.964358 req 4 start POST /api/report from 127.0.0.1:42626 (64 B body, outstanding 1)
+12:51:00.964428 report: [loopback] loaded /?autorun=slow (assets app.css ✓ app.js ✓)
+12:51:00.964434 req 4 handler done 204 in 0s (outstanding 0)
+12:51:00.986663 load event=3 uri=http://127.0.0.1:39059/?autorun=slow
+12:51:00.990175 javascript: {"origin":"http://127.0.0.1:39059","secure":true,"crypto":true,"storage":"yes"}
+12:51:00.994288 req 5 start GET /api/slow?tag=busy from 127.0.0.1:42618 (0 B body, outstanding 1)
+12:51:00.994569 req 6 start POST /api/report from 127.0.0.1:42634 (33 B body, outstanding 2)
+12:51:00.994634 report: [loopback] slow: started tag=busy
+12:51:00.994641 req 6 handler done 204 in 0s (outstanding 1)
+12:51:01.328204 inspector attached=true
+12:51:02.995304 closing: close while busy; native requests=0 async=0 handlers=0
+12:51:02.995395 fixture: /api/slow tag="busy" saw cancellation: context canceled
+12:51:02.995691 req 5 handler canceled (context canceled), returned 503 in 2.001s (outstanding 0)
+12:51:03.015115 closed: requests=0 native-async=0 handlers=0 stats={Started:0 Finished:0 Canceled:0 Dropped:0 Refused:0}

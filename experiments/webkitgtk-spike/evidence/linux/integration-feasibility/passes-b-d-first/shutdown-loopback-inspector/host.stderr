@@ -1,0 +1,2 @@
+Overriding existing handler for signal 10. Set JSC_SIGNAL_FOR_GC if you want WebKit to use a different signal
+VM 0x7f88c2400000 on pid 2223596 received NeedDebuggerBreak trap

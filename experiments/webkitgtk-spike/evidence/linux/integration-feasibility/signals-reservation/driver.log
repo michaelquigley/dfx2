@@ -1,0 +1,15 @@
+{"case": "hidden-subscriber", "ok": true, "detail": "flaw reproduced: the inferred selector took a subscribed signal; release silently cancelled the subscription"}
+{"case": "hidden-subscriber-jsc", "ok": true, "detail": {"exits": {"2": 8, "0": 2}, "raising the taken signal": {"process died (exit 2)": 8, "not received; survived": 2}}}
+{"case": "reserved", "ok": true, "detail": {"exits": {"0": 10}}}
+{"case": "reserved-34", "ok": true, "detail": "refused: Go leaves 34 to libc; its default disposition is not availability"}
+{"case": "reserved-35", "ok": true, "detail": "the lowest Go-owned real-time signal"}
+{"case": "reserved-missing", "ok": true, "detail": "refused; nothing inferred, JSC never initialized"}
+{"case": "reserved-invalid-10", "ok": true, "detail": "refused: SIGUSR1, declared"}
+{"case": "reserved-invalid-33", "ok": true, "detail": "refused: libc-internal"}
+{"case": "reserved-invalid-65", "ok": true, "detail": "refused: beyond SIGRTMAX"}
+{"case": "reserved-foreign", "ok": true, "detail": "injected native owner: refused"}
+{"case": "reserved-env-mismatch", "ok": true, "detail": "refused"}
+{"case": "reserved-env-equal", "ok": true, "detail": "accepted"}
+{"case": "reserved-violate-before", "ok": true, "detail": {"note": "every host check passed; the undeclared subscriber was silently lost", "exits": {"2": 8, "0": 2}, "raising the taken signal": {"process died (exit 2)": 8, "not received; survived": 2}}}
+{"case": "reserved-violate-after", "ok": true, "detail": "a later Notify reinstalls Go's handler; the audit sees it after the fact"}
+{"passed": true, "failed": []}

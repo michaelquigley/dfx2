@@ -93,10 +93,11 @@ func installCallbacks() {
 // g_idle_add_full always queues onto the main context. g_main_context_invoke
 // is unsuitable: it may execute synchronously on the calling worker.
 type poster struct {
-	mu     sync.Mutex
-	closed bool
-	source uint32
-	queue  []func()
+	mu       sync.Mutex
+	closed   bool
+	source   uint32
+	queue    []func()
+	callback uintptr // the idle trampoline; callbacks.one when zero
 }
 
 func (p *poster) post(f func()) bool {
@@ -109,7 +110,11 @@ func (p *poster) post(f func()) bool {
 		p.queue = append(p.queue, f)
 	}
 	if p.source == 0 {
-		p.source = n.gIdleAddFull(0, callbacks.one, 0, 0)
+		cb := p.callback
+		if cb == 0 {
+			cb = callbacks.one
+		}
+		p.source = n.gIdleAddFull(0, cb, 0, 0)
 	}
 	return p.source != 0
 }

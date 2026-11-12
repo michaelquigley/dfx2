@@ -1,0 +1,55 @@
+{
+ "os": "Ubuntu 26.04.1 LTS",
+ "kernel": "7.0.0-43-generic",
+ "go": "go version go1.27.1 linux/amd64",
+ "session": "wayland",
+ "gdk_backend": "default",
+ "pkg_config": {
+  "webkit2gtk-4.1": "2.52.6",
+  "javascriptcoregtk-4.1": "2.52.6",
+  "gtk+-3.0": "3.24.52",
+  "libsoup-3.0": "3.6.6",
+  "glib-2.0": "2.88.0"
+ },
+ "packages": [
+  "libglib2.0-0t64 2.88.0-1ubuntu0.1",
+  "libgtk-3-0t64 3.24.52-0ubuntu1",
+  "libjavascriptcoregtk-4.1-0 2.52.6-0ubuntu0.26.04.1",
+  "libsoup-3.0-0 3.6.6-1ubuntu0.3",
+  "libwebkit2gtk-4.1-0 2.52.6-0ubuntu0.26.04.1"
+ ],
+ "library_paths": {
+  "libwebkit2gtk-4.1.so.0": "/usr/lib/x86_64-linux-gnu/libwebkit2gtk-4.1.so.0.21.10",
+  "libjavascriptcoregtk-4.1.so.0": "/usr/lib/x86_64-linux-gnu/libjavascriptcoregtk-4.1.so.0.10.14",
+  "libgtk-3.so.0": "/usr/lib/x86_64-linux-gnu/libgtk-3.so.0.2420.32",
+  "libsoup-3.0.so.0": "/usr/lib/x86_64-linux-gnu/libsoup-3.0.so.0.7.4",
+  "libglib-2.0.so.0": "/usr/lib/x86_64-linux-gnu/libglib-2.0.so.0.8800.0"
+ },
+ "revision": "9b482579cf2279a00545208cb19a4ace14e3c8f2",
+ "dirty": [
+  "M experiments/webkitgtk-spike/README.md",
+  " M experiments/webkitgtk-spike/exitwatch.py",
+  " M experiments/webkitgtk-spike/host_linux.go",
+  " M experiments/webkitgtk-spike/host_other.go",
+  " M experiments/webkitgtk-spike/main.go",
+  " M experiments/webview2-spike/README.md",
+  "?? docs/future/webview-feasibility-spike.md",
+  "?? experiments/webkitgtk-spike/evidence/linux/integration-feasibility/",
+  "?? experiments/webkitgtk-spike/feasibility.py",
+  "?? experiments/webkitgtk-spike/feasibility_env.py",
+  "?? experiments/webkitgtk-spike/feasibility_linux.go",
+  "?? experiments/webkitgtk-spike/handler_safety.py",
+  "?? experiments/webkitgtk-spike/handler_safety_linux.go",
+  "?? experiments/webkitgtk-spike/handler_safety_xcpu.gdb",
+  "?? experiments/webkitgtk-spike/reservation_linux.go",
+  "?? experiments/webkitgtk-spike/signal_probe.py",
+  "?? experiments/webkitgtk-spike/signals_linux.go",
+  "?? experiments/webkitgtk-spike/vmfree.py",
+  "?? experiments/webkitgtk-spike/vmfree_linux.go",
+  "?? experiments/webkitgtk-spike/vmwatch_gdb.py",
+  "?? experiments/webview2-spike/evidence/windows/integration-feasibility/",
+  "?? experiments/webview2-spike/feasibility/"
+ ],
+ "binary": "/tmp/dfx2-wk-feas",
+ "binary_sha256": "88e80dd1a607f2da7fb9e2690894121ae719a57f078c29cd24485b944aa7bfed"
+}

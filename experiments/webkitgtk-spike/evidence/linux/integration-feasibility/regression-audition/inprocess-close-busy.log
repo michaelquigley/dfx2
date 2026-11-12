@@ -1,0 +1,24 @@
+command: /tmp/dfx2-wk-feas -mode inprocess -autorun slow -close-busy 300ms -quit-after 10s
+Overriding existing handler for signal 10. Set JSC_SIGNAL_FOR_GC if you want WebKit to use a different signal
+13:51:39.041597 WebKitGTK 2.52.6 mode=inprocess origin=dfx2://spike scale=1
+13:51:39.132772 load event=0 uri=dfx2://spike/?autorun=slow
+13:51:39.132932 req 1 start GET /?autorun=slow (0 B body, outstanding 1)
+13:51:39.133007 req 1 handler done 200 in 0s (outstanding 0)
+13:51:39.133679 load event=2 uri=dfx2://spike/?autorun=slow
+13:51:39.133995 req 2 start GET /app.css (0 B body, outstanding 1)
+13:51:39.134028 req 2 handler done 200 in 0s (outstanding 0)
+13:51:39.134192 req 3 start GET /app.js (0 B body, outstanding 1)
+13:51:39.134317 req 3 handler done 200 in 0s (outstanding 0)
+13:51:39.190826 req 4 start POST /api/report (65 B body, outstanding 1)
+13:51:39.190883 report: [inprocess] loaded /?autorun=slow (assets app.css ✓ app.js ✓)
+13:51:39.190912 req 4 handler done 204 in 0s (outstanding 0)
+13:51:39.210114 load event=3 uri=dfx2://spike/?autorun=slow
+13:51:39.213369 req 5 start GET /api/slow?tag=busy (0 B body, outstanding 1)
+13:51:39.213566 req 6 start POST /api/report (34 B body, outstanding 2)
+13:51:39.213597 report: [inprocess] slow: started tag=busy
+13:51:39.213611 req 6 handler done 204 in 0s (outstanding 1)
+13:51:39.215152 javascript: {"origin":"dfx2://spike","secure":true,"crypto":true,"storage":"yes"}
+13:51:39.514087 closing: close while busy; native requests=1 async=0 handlers=1
+13:51:39.514163 fixture: /api/slow tag="busy" saw cancellation: context canceled
+13:51:39.514302 req 5 handler canceled (context done), returned 503 in 301ms after close: result dropped (outstanding 0)
+13:51:39.518981 closed: requests=0 native-async=0 handlers=0 stats={Started:6 Finished:5 Canceled:1 Dropped:1 Refused:0}

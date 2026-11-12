@@ -1,0 +1,41 @@
+{"cookie":true,"cookie_fail_injected":false,"csp":true,"event":"ready","filter":false,"pid":2220334,"t":"13:50:39.916"}
+{"credential":true,"ephemeral_session":true,"event":"opened","mode":"loopback","origin":"http://127.0.0.1:46575","t":"13:50:40.027","window":"A"}
+{"event":"cookie-installed","http_only":true,"same_site":"strict","t":"13:50:40.034","window":"A"}
+{"event":"navigate","t":"13:50:40.034","uri":"http://127.0.0.1:46575/","window":"A"}
+{"event":"navigation-allowed","method":"GET","redirect":false,"t":"13:50:40.121","uri":"http://127.0.0.1:46575/","window":"A"}
+{"event":"load","load_event":0,"t":"13:50:40.122","uri":"http://127.0.0.1:46575/","window":"A"}
+{"event":"load","load_event":2,"t":"13:50:40.124","uri":"http://127.0.0.1:46575/","window":"A"}
+{"event":"load","load_event":3,"t":"13:50:40.303","uri":"http://127.0.0.1:46575/","window":"A"}
+{"credential":true,"ephemeral_session":true,"event":"opened","mode":"loopback","origin":"http://127.0.0.1:45191","t":"13:50:40.306","window":"B"}
+{"event":"cookie-installed","http_only":true,"same_site":"strict","t":"13:50:40.328","window":"B"}
+{"event":"navigate","t":"13:50:40.328","uri":"http://127.0.0.1:45191/","window":"B"}
+{"event":"navigation-allowed","method":"GET","redirect":false,"t":"13:50:40.415","uri":"http://127.0.0.1:45191/","window":"B"}
+{"event":"load","load_event":0,"t":"13:50:40.416","uri":"http://127.0.0.1:45191/","window":"B"}
+{"event":"load","load_event":2,"t":"13:50:40.417","uri":"http://127.0.0.1:45191/","window":"B"}
+{"event":"load","load_event":3,"t":"13:50:40.461","uri":"http://127.0.0.1:45191/","window":"B"}
+{"async":0,"event":"status","t":"13:50:40.462","windows":{"A":{"closing":false,"destroyed":false,"endpoint":{"admitted":4,"refused":{},"handled":4},"handler":{"GET /":1,"GET /logo.svg":1,"GET /probe.css":1,"GET /probe.js":1},"mode":"loopback","native_async":0,"native_requests":0,"port":46575},"B":{"closing":false,"destroyed":false,"endpoint":{"admitted":4,"refused":{},"handled":4},"handler":{"GET /":1,"GET /logo.svg":1,"GET /probe.css":1,"GET /probe.js":1},"mode":"loopback","native_async":0,"native_requests":0,"port":45191}}}
+{"async":0,"event":"status","t":"13:50:40.462","windows":{"A":{"closing":false,"destroyed":false,"endpoint":{"admitted":4,"refused":{},"handled":4},"handler":{"GET /":1,"GET /logo.svg":1,"GET /probe.css":1,"GET /probe.js":1},"mode":"loopback","native_async":0,"native_requests":0,"port":46575},"B":{"closing":false,"destroyed":false,"endpoint":{"admitted":4,"refused":{},"handled":4},"handler":{"GET /":1,"GET /logo.svg":1,"GET /probe.css":1,"GET /probe.js":1},"mode":"loopback","native_async":0,"native_requests":0,"port":45191}}}
+{"async":0,"event":"status","t":"13:50:40.462","windows":{"A":{"closing":false,"destroyed":false,"endpoint":{"admitted":4,"refused":{},"handled":4},"handler":{"GET /":1,"GET /logo.svg":1,"GET /probe.css":1,"GET /probe.js":1},"mode":"loopback","native_async":0,"native_requests":0,"port":46575},"B":{"closing":false,"destroyed":false,"endpoint":{"admitted":4,"refused":{},"handled":4},"handler":{"GET /":1,"GET /logo.svg":1,"GET /probe.css":1,"GET /probe.js":1},"mode":"loopback","native_async":0,"native_requests":0,"port":45191}}}
+{"event":"navigation-allowed","method":"GET","redirect":false,"t":"13:50:41.973","uri":"http://127.0.0.1:46575/#pinged","window":"A"}
+{"body":"return probe.attacks('http://127.0.0.1:37099', 'http://127.0.0.1:45191')","error":"","event":"js","result":{"iframe-same":"no load","img":"added","prefetch":"added","eventsource":"threw SecurityError","websocket":"threw SecurityError","font":"added","beacon":"true","iframe-cross":"added","xhr":"0","script":"added","ping":"clicked","other-endpoint":"threw TypeError","fetch":"threw TypeError","redirect-img":"added","redirect-fetch":"threw TypeError","css":"added"},"t":"13:50:43.983","window":"A"}
+{"event":"navigation-refused","kind":"navigation","method":"GET","redirect":false,"t":"13:50:43.986","uri":"http://127.0.0.1:37099/nav","window":"A"}
+{"body":"return probe.navigate('location', 'http://127.0.0.1:37099')","error":"","event":"js","result":"location","t":"13:50:43.986","window":"A"}
+{"body":"return location.href","error":"","event":"js","result":"http://127.0.0.1:46575/#pinged","t":"13:50:45.486","window":"A"}
+{"event":"navigation-allowed","method":"GET","redirect":false,"t":"13:50:45.488","uri":"http://127.0.0.1:46575/api/redirect-out?to=http%3A%2F%2F127.0.0.1%3A37099%2Fredirect-nav","window":"A"}
+{"body":"return probe.navigate('redirect', 'http://127.0.0.1:37099')","error":"","event":"js","result":"redirect","t":"13:50:45.489","window":"A"}
+{"event":"load","load_event":0,"t":"13:50:45.490","uri":"http://127.0.0.1:46575/#pinged","window":"A"}
+{"event":"navigation-refused","kind":"navigation","method":"GET","redirect":true,"t":"13:50:45.493","uri":"http://127.0.0.1:37099/redirect-nav","window":"A"}
+{"code":102,"domain":"WebKitPolicyError","error_page":false,"event":"load-failed","from_post":false,"message":"Frame load interrupted","method":"GET","t":"13:50:45.494","uri":"http://127.0.0.1:37099/redirect-nav","window":"A"}
+{"event":"load","load_event":3,"t":"13:50:45.494","uri":"http://127.0.0.1:46575/#pinged","window":"A"}
+{"body":"return location.href","error":"","event":"js","result":"http://127.0.0.1:46575/#pinged","t":"13:50:46.987","window":"A"}
+{"event":"popup-refused","t":"13:50:46.988","window":"A"}
+{"body":"return probe.navigate('popup', 'http://127.0.0.1:37099')","error":"","event":"js","result":"null","t":"13:50:46.988","window":"A"}
+{"body":"return location.href","error":"","event":"js","result":"http://127.0.0.1:46575/#pinged","t":"13:50:48.489","window":"A"}
+{"body":"return probe.navigate('form', 'http://127.0.0.1:37099')","error":"","event":"js","result":"form","t":"13:50:48.492","window":"A"}
+{"body":"return location.href","error":"","event":"js","result":"http://127.0.0.1:46575/#pinged","t":"13:50:49.992","window":"A"}
+{"async":0,"event":"status","t":"13:50:50.993","windows":{"A":{"closing":false,"destroyed":false,"endpoint":{"admitted":7,"refused":{},"handled":7},"handler":{"GET /":1,"GET /api/redirect-out":3,"GET /logo.svg":1,"GET /probe.css":1,"GET /probe.js":1},"mode":"loopback","native_async":0,"native_requests":0,"port":46575},"B":{"closing":false,"destroyed":false,"endpoint":{"admitted":4,"refused":{},"handled":4},"handler":{"GET /":1,"GET /logo.svg":1,"GET /probe.css":1,"GET /probe.js":1},"mode":"loopback","native_async":0,"native_requests":0,"port":45191}}}
+{"event":"closing","native_async":0,"native_requests":0,"navigated":true,"t":"13:50:51.430","why":"quit","window":"A"}
+{"event":"closing","native_async":0,"native_requests":0,"navigated":true,"t":"13:50:51.435","why":"quit","window":"B"}
+{"endpoint":{"admitted":7,"refused":{},"handled":7},"event":"closed","handler":{"GET /":1,"GET /api/redirect-out":3,"GET /logo.svg":1,"GET /probe.css":1,"GET /probe.js":1},"handlers_drained":true,"native_async":0,"native_requests":0,"t":"13:50:51.439","window":"A"}
+{"endpoint":{"admitted":4,"refused":{},"handled":4},"event":"closed","handler":{"GET /":1,"GET /logo.svg":1,"GET /probe.css":1,"GET /probe.js":1},"handlers_drained":true,"native_async":0,"native_requests":0,"t":"13:50:51.442","window":"B"}
+{"error":"\u003cnil\u003e","event":"exit","filter_store_removal":{"path":"","attempts":0,"elapsed_ns":0,"removed":false},"t":"13:50:51.452"}

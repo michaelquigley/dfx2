@@ -1,0 +1,115 @@
+diff --git a/experiments/webkitgtk-spike/exitwatch.py b/experiments/webkitgtk-spike/exitwatch.py
+index 5e355fd..3de1e94 100644
+--- a/experiments/webkitgtk-spike/exitwatch.py
++++ b/experiments/webkitgtk-spike/exitwatch.py
+@@ -51,8 +51,9 @@ def descendants(root, seen):
+             pass
+ 
+ 
+-def observe(proc, timeout=120, child_timeout=15):
+-    seen = {}
++def observe(proc, timeout=120, child_timeout=15, seen=None):
++    """seen may carry identities a caller sampled while the host ran."""
++    seen = {} if seen is None else seen
+     started = time.monotonic()
+     deadline = started + timeout
+     timed_out = False
+diff --git a/experiments/webkitgtk-spike/host_linux.go b/experiments/webkitgtk-spike/host_linux.go
+index 13c42b9..a7a235b 100644
+--- a/experiments/webkitgtk-spike/host_linux.go
++++ b/experiments/webkitgtk-spike/host_linux.go
+@@ -93,10 +93,11 @@ func installCallbacks() {
+ // g_idle_add_full always queues onto the main context. g_main_context_invoke
+ // is unsuitable: it may execute synchronously on the calling worker.
+ type poster struct {
+-	mu     sync.Mutex
+-	closed bool
+-	source uint32
+-	queue  []func()
++	mu       sync.Mutex
++	closed   bool
++	source   uint32
++	queue    []func()
++	callback uintptr // the idle trampoline; callbacks.one when zero
+ }
+ 
+ func (p *poster) post(f func()) bool {
+@@ -109,7 +110,11 @@ func (p *poster) post(f func()) bool {
+ 		p.queue = append(p.queue, f)
+ 	}
+ 	if p.source == 0 {
+-		p.source = n.gIdleAddFull(0, callbacks.one, 0, 0)
++		cb := p.callback
++		if cb == 0 {
++			cb = callbacks.one
++		}
++		p.source = n.gIdleAddFull(0, cb, 0, 0)
+ 	}
+ 	return p.source != 0
+ }
+diff --git a/experiments/webkitgtk-spike/host_other.go b/experiments/webkitgtk-spike/host_other.go
+index fd1cbce..04b9ed4 100644
+--- a/experiments/webkitgtk-spike/host_other.go
++++ b/experiments/webkitgtk-spike/host_other.go
+@@ -5,3 +5,14 @@ package main
+ import "errors"
+ 
+ func runHost(config) error { return errors.New("this experiment's native host is Linux only") }
++
++func runSignalProbe(string, string, bool, string, int) error {
++	return errors.New("the signal probe is Linux only")
++}
++
++type feasConfig struct {
++	filter, csp, cookie, cookieFail bool
++	root                            string
++}
++
++func runFeasibility(feasConfig) error { return errors.New("the feasibility host is Linux only") }
+diff --git a/experiments/webkitgtk-spike/main.go b/experiments/webkitgtk-spike/main.go
+index 40cd863..3eece11 100644
+--- a/experiments/webkitgtk-spike/main.go
++++ b/experiments/webkitgtk-spike/main.go
+@@ -5,6 +5,7 @@ import (
+ 	"fmt"
+ 	"log"
+ 	"os"
++	"path/filepath"
+ 	"time"
+ )
+ 
+@@ -39,7 +40,34 @@ func main() {
+ 	flag.IntVar(&c.width, "width", 1000, "window width")
+ 	flag.IntVar(&c.height, "height", 760, "window height")
+ 	flag.BoolVar(&c.windowClose, "window-close", false, "audition: timed exit through GTK delete-event")
++	feasible := flag.Bool("feasibility", false, "feasibility passes B-D: a multi-window host driven by console commands (see feasibility.py)")
++	var fc feasConfig
++	flag.BoolVar(&fc.filter, "feas-filter", true, "with -feasibility: native content filter limiting loads to each window's origin")
++	flag.BoolVar(&fc.csp, "feas-csp", true, "with -feasibility: owned endpoints add a same-origin Content-Security-Policy")
++	flag.BoolVar(&fc.cookie, "feas-cookie", true, "with -feasibility: owned loopback endpoints require a native-installed credential cookie")
++	flag.BoolVar(&fc.cookieFail, "feas-cookie-fail", false, "with -feasibility: injected cookie installation failure")
++	flag.StringVar(&fc.root, "feas-root", filepath.Join(os.TempDir(), "dfx2-feasibility"), "with -feasibility: experiment-owned directory for compiled filters")
++	signalProbe := flag.String("signal-probe", "", "feasibility pass A, one disposable process: baseline, configured, configured-onstack, configured-onstack-all, late, env, no-symbol or no-signal")
++	signalFault := flag.String("signal-fault", "", "with -signal-probe: after JSC initialization, recover a Go fault: segv or bus")
++	signalWebKit := flag.Bool("signal-webkit", false, "with -signal-probe: also bring up GTK and a WebKit view running a page")
++	signalOrder := flag.String("signal-order", "jsc-first", "with -signal-webkit: jsc-first (proposed) or webkit-first")
++	signalThreads := flag.Int("signal-js-threads", 1, "with -signal-probe: 2 also runs JavaScript on two more Go threads in one context group")
+ 	flag.Parse()
++	if *feasible {
++		log.SetFlags(log.Ltime | log.Lmicroseconds)
++		if err := runFeasibility(fc); err != nil {
++			fmt.Fprintln(os.Stderr, err)
++			os.Exit(1)
++		}
++		return
++	}
++	if *signalProbe != "" {
++		if err := runSignalProbe(*signalProbe, *signalFault, *signalWebKit, *signalOrder, *signalThreads); err != nil {
++			fmt.Fprintln(os.Stderr, err)
++			os.Exit(1)
++		}
++		return
++	}
+ 	if c.dockDevtools {
+ 		c.devtools = true
+ 	}

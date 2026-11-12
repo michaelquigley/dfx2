@@ -1,0 +1,541 @@
+{
+ "scenario": "confinement-control",
+ "flags": [
+  "-feas-vmfree",
+  "-signal-reserve",
+  "60",
+  "-feas-filter=false",
+  "-feas-csp=false"
+ ],
+ "checks": [
+  {
+   "check": "control: collector receives requests",
+   "ok": true,
+   "received": [
+    [
+     "GET",
+     "/img",
+     true
+    ],
+    [
+     "GET",
+     "/script",
+     true
+    ],
+    [
+     "GET",
+     "/css",
+     true
+    ],
+    [
+     "GET",
+     "/fetch",
+     true
+    ],
+    [
+     "GET",
+     "/font",
+     true
+    ],
+    [
+     "GET",
+     "/xhr",
+     true
+    ],
+    [
+     "POST",
+     "/beacon",
+     true
+    ],
+    [
+     "GET",
+     "/ws",
+     true
+    ],
+    [
+     "GET",
+     "/sse",
+     false
+    ],
+    [
+     "GET",
+     "/redirect-fetch",
+     false
+    ],
+    [
+     "GET",
+     "/redirect-img",
+     true
+    ],
+    [
+     "POST",
+     "/ping",
+     true
+    ]
+   ]
+  },
+  {
+   "check": "control: credential leaks without enforcement",
+   "ok": true,
+   "leaked": 10
+  },
+  {
+   "check": "A's page never invoked B's handler",
+   "ok": true,
+   "b_before": {
+    "GET /": 1,
+    "GET /logo.svg": 1,
+    "GET /probe.css": 1,
+    "GET /probe.js": 1
+   },
+   "b_after": {
+    "GET /": 1,
+    "GET /logo.svg": 1,
+    "GET /probe.css": 1,
+    "GET /probe.js": 1
+   }
+  },
+  {
+   "check": "top-level navigation, redirect, popup and form to another port never left the origin",
+   "ok": true,
+   "mechanism": {
+    "location": "navigation policy",
+    "redirect": "navigation policy",
+    "form": "navigation policy",
+    "popup": "create signal"
+   },
+   "final_uris": {
+    "location": "http://127.0.0.1:41475/?run=armed&id=nav-location&then=navigate&how=location&collector=http%3A//127.0.0.1%3A33361",
+    "redirect": "http://127.0.0.1:41475/?run=armed&id=nav-redirect&then=navigate&how=redirect&collector=http%3A//127.0.0.1%3A33361",
+    "form": "http://127.0.0.1:41475/?run=armed&id=nav-form&then=navigate&how=form&collector=http%3A//127.0.0.1%3A33361"
+   }
+  },
+  {
+   "check": "SIGSEGV and SIGBUS still Go's at exit",
+   "ok": true,
+   "exit_signals": {
+    "SIGBUS": {
+     "signal": 7,
+     "owner": "go",
+     "flags": [
+      "SA_SIGINFO",
+      "SA_ONSTACK",
+      "SA_RESTART",
+      "SA_RESTORER"
+     ]
+    },
+    "SIGSEGV": {
+     "signal": 11,
+     "owner": "go",
+     "flags": [
+      "SA_SIGINFO",
+      "SA_ONSTACK",
+      "SA_RESTART",
+      "SA_RESTORER"
+     ]
+    },
+    "SIGUSR1": {
+     "signal": 10,
+     "owner": "go",
+     "flags": [
+      "SA_SIGINFO",
+      "SA_ONSTACK",
+      "SA_RESTART",
+      "SA_RESTORER"
+     ]
+    },
+    "SIGXCPU": {
+     "signal": 24,
+     "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+     "offset": "0x196d3f0",
+     "flags": [
+      "SA_RESTART",
+      "SA_RESTORER"
+     ]
+    },
+    "reserved 60": {
+     "signal": 60,
+     "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+     "offset": "0x196b2d0",
+     "flags": [
+      "SA_SIGINFO",
+      "SA_RESTART",
+      "SA_RESTORER"
+     ]
+    }
+   }
+  }
+ ],
+ "ok": true,
+ "detail": {
+  "page_view": {
+   "img": "added",
+   "script": "added",
+   "css": "added",
+   "font": "added",
+   "fetch": "opaque",
+   "xhr": "0",
+   "beacon": "true",
+   "websocket": "error",
+   "eventsource": "error",
+   "prefetch": "added",
+   "iframe-cross": "added",
+   "iframe-same": "loaded 14",
+   "redirect-img": "added",
+   "redirect-fetch": "threw TypeError",
+   "ping": "clicked",
+   "other-endpoint": "threw TypeError"
+  },
+  "mechanism": {
+   "location": "navigation policy",
+   "redirect": "navigation policy",
+   "form": "navigation policy",
+   "popup": "create signal"
+  },
+  "collector": [
+   {
+    "method": "GET",
+    "path": "/img",
+    "credential": true,
+    "app_cookie": [],
+    "origin": null,
+    "upgrade": null,
+    "t": 1794505722.363
+   },
+   {
+    "method": "GET",
+    "path": "/script",
+    "credential": true,
+    "app_cookie": [],
+    "origin": null,
+    "upgrade": null,
+    "t": 1794505722.363
+   },
+   {
+    "method": "GET",
+    "path": "/css",
+    "credential": true,
+    "app_cookie": [],
+    "origin": null,
+    "upgrade": null,
+    "t": 1794505722.363
+   },
+   {
+    "method": "GET",
+    "path": "/fetch",
+    "credential": true,
+    "app_cookie": [],
+    "origin": null,
+    "upgrade": null,
+    "t": 1794505722.364
+   },
+   {
+    "method": "GET",
+    "path": "/font",
+    "credential": true,
+    "app_cookie": [],
+    "origin": null,
+    "upgrade": null,
+    "t": 1794505722.375
+   },
+   {
+    "method": "GET",
+    "path": "/xhr",
+    "credential": true,
+    "app_cookie": [],
+    "origin": "http://127.0.0.1:41475",
+    "upgrade": null,
+    "t": 1794505722.375
+   },
+   {
+    "method": "POST",
+    "path": "/beacon",
+    "credential": true,
+    "app_cookie": [],
+    "origin": "http://127.0.0.1:41475",
+    "upgrade": null,
+    "t": 1794505722.394
+   },
+   {
+    "method": "GET",
+    "path": "/ws",
+    "credential": true,
+    "app_cookie": [],
+    "origin": "http://127.0.0.1:41475",
+    "upgrade": "websocket",
+    "t": 1794505722.395
+   },
+   {
+    "method": "GET",
+    "path": "/sse",
+    "credential": false,
+    "app_cookie": [],
+    "origin": "http://127.0.0.1:41475",
+    "upgrade": null,
+    "t": 1794505722.482
+   },
+   {
+    "method": "GET",
+    "path": "/redirect-fetch",
+    "credential": false,
+    "app_cookie": [],
+    "origin": "http://127.0.0.1:41475",
+    "upgrade": null,
+    "t": 1794505722.497
+   },
+   {
+    "method": "GET",
+    "path": "/redirect-img",
+    "credential": true,
+    "app_cookie": [],
+    "origin": null,
+    "upgrade": null,
+    "t": 1794505722.497
+   },
+   {
+    "method": "POST",
+    "path": "/ping",
+    "credential": true,
+    "app_cookie": [],
+    "origin": "http://127.0.0.1:41475",
+    "upgrade": null,
+    "t": 1794505722.5
+   }
+  ],
+  "refusals": [
+   [
+    "navigation",
+    "COLLECTOR/iframe"
+   ],
+   [
+    "navigation",
+    "COLLECTOR/nav"
+   ],
+   [
+    "navigation",
+    "COLLECTOR/redirect-nav"
+   ],
+   [
+    "navigation",
+    "COLLECTOR/form"
+   ]
+  ]
+ },
+ "exit": {
+  "host_exit": 0,
+  "timed_out": false,
+  "children_pending": false,
+  "child_failure": false,
+  "fatal_log": false
+ },
+ "observed_processes": [
+  "WebKitNetworkPr",
+  "WebKitWebProces",
+  "bwrap",
+  "dfx2-wk-candida",
+  "glycin-svg",
+  "gst-plugin-scan"
+ ],
+ "signals": {
+  "start": {
+   "SIGBUS": {
+    "signal": 7,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "SIGSEGV": {
+    "signal": 11,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "SIGUSR1": {
+    "signal": 10,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "SIGXCPU": {
+    "signal": 24,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "reserved 60": {
+    "signal": 60,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   }
+  },
+  "ready": {
+   "SIGBUS": {
+    "signal": 7,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "SIGSEGV": {
+    "signal": 11,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "SIGUSR1": {
+    "signal": 10,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "SIGXCPU": {
+    "signal": 24,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "reserved 60": {
+    "signal": 60,
+    "owner": "default"
+   }
+  },
+  "exit": {
+   "SIGBUS": {
+    "signal": 7,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "SIGSEGV": {
+    "signal": 11,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "SIGUSR1": {
+    "signal": 10,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "SIGXCPU": {
+    "signal": 24,
+    "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+    "offset": "0x196d3f0",
+    "flags": [
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "reserved 60": {
+    "signal": 60,
+    "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+    "offset": "0x196b2d0",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   }
+  }
+ },
+ "reservation": {
+  "checks": [
+   {
+    "check": "supplied",
+    "passed": true,
+    "detail": "an explicit reservation; the host infers nothing"
+   },
+   {
+    "check": "within libc's real-time range",
+    "passed": true,
+    "detail": "60 in [34, 64]",
+    "cannot_establish": "that no other library uses it"
+   },
+   {
+    "check": "kernel disposition is Go's handler",
+    "passed": true,
+    "detail": "owner go",
+    "cannot_establish": "that no Go subscriber exists: subscribed and unsubscribed signals look identical"
+   },
+   {
+    "check": "not blocked on the initializing thread",
+    "passed": true,
+    "cannot_establish": "the masks of threads created later"
+   },
+   {
+    "check": "not among the application's declared subscriptions",
+    "passed": true,
+    "cannot_establish": "subscriptions the application did not declare"
+   },
+   {
+    "check": "not ignored through os/signal",
+    "passed": true
+   },
+   {
+    "check": "JSC_SIGNAL_FOR_GC unset or equal",
+    "passed": true,
+    "detail": "JSC_SIGNAL_FOR_GC="
+   }
+  ],
+  "configured": true,
+  "signal": 60
+ },
+ "filter_store_removal": {
+  "path": "",
+  "attempts": 0,
+  "elapsed_ns": 0,
+  "removed": false
+ },
+ "refused_js": 0,
+ "monitor": "not run: browser cases only (--no-monitor)",
+ "seconds": 10.5
+}

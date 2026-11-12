@@ -1,0 +1,382 @@
+{
+ "scenario": "unmonitored-2.54.2",
+ "checks": [
+  {
+   "check": "the Go subscriber hears SIGXCPU",
+   "ok": true,
+   "received": true
+  }
+ ],
+ "ok": true,
+ "env": {
+  "LD_LIBRARY_PATH": "/tmp/dfx2-webkit-runtime/root/usr/lib/x86_64-linux-gnu",
+  "WEBKIT_INJECTED_BUNDLE_PATH": "/tmp/dfx2-webkit-runtime/root/usr/lib/x86_64-linux-gnu/webkit2gtk-4.1/injected-bundle"
+ },
+ "host_libraries": [
+  "/tmp/dfx2-webkit-runtime/root/usr/lib/x86_64-linux-gnu/libjavascriptcoregtk-4.1.so.0.11.9",
+  "/tmp/dfx2-webkit-runtime/root/usr/lib/x86_64-linux-gnu/libwebkit2gtk-4.1.so.0.24.5"
+ ],
+ "settled": {
+  "sigxcpu": {
+   "signal": 24,
+   "owner": "go",
+   "flags": [
+    "SA_SIGINFO",
+    "SA_ONSTACK",
+    "SA_RESTART",
+    "SA_RESTORER"
+   ]
+  },
+  "record": {
+   "at": "10:20:31.847",
+   "limits": {
+    "Max cpu time": "unlimited unlimited seconds",
+    "Max nice priority": "0 0",
+    "Max realtime priority": "0 0",
+    "Max realtime timeout": "200000 200000 us"
+   },
+   "sched": {
+    "not_default": [
+     {
+      "tid": 267625,
+      "name": "ListStore Queue",
+      "policy": "OTHER",
+      "uclamp_min": 204
+     },
+     {
+      "tid": 267627,
+      "name": "ebsiteDataStore",
+      "policy": "OTHER",
+      "uclamp_min": 204
+     },
+     {
+      "tid": 267630,
+      "name": "dfx2-wk:disk$0",
+      "policy": "BATCH",
+      "nice": 19
+     },
+     {
+      "tid": 267647,
+      "name": "PressureMonitor",
+      "policy": "OTHER",
+      "uclamp_min": 1024
+     },
+     {
+      "tid": 267817,
+      "name": "ReceiveQueue",
+      "policy": "OTHER",
+      "uclamp_min": 1024
+     },
+     {
+      "tid": 267820,
+      "name": "ReceiveQueue",
+      "policy": "OTHER",
+      "uclamp_min": 1024
+     },
+     {
+      "tid": 267847,
+      "name": "VBlankMonitor",
+      "policy": "OTHER",
+      "uclamp_min": 204
+     },
+     {
+      "tid": 267853,
+      "name": "ebsiteDataStore",
+      "policy": "OTHER",
+      "uclamp_min": 204
+     },
+     {
+      "tid": 267856,
+      "name": "ReceiveQueue",
+      "policy": "OTHER",
+      "uclamp_min": 1024
+     },
+     {
+      "tid": 267858,
+      "name": "ReceiveQueue",
+      "policy": "OTHER",
+      "uclamp_min": 1024
+     },
+     {
+      "tid": 267860,
+      "name": "dfx2-w:traceq0",
+      "policy": "BATCH",
+      "nice": 19
+     },
+     {
+      "tid": 267862,
+      "name": "dfx2-w:traceq0",
+      "policy": "BATCH",
+      "nice": 19
+     },
+     {
+      "tid": 267915,
+      "name": "dfx2-wk:disk$1",
+      "policy": "BATCH",
+      "nice": 19
+     },
+     {
+      "tid": 268303,
+      "name": "VBlankMonitor",
+      "policy": "OTHER",
+      "uclamp_min": 204
+     },
+     {
+      "tid": 268512,
+      "name": "dfx2-w:traceq0",
+      "policy": "BATCH",
+      "nice": 19
+     },
+     {
+      "tid": 268514,
+      "name": "dfx2-w:traceq0",
+      "policy": "BATCH",
+      "nice": 19
+     }
+    ],
+    "threads": 44
+   }
+  }
+ },
+ "native_probe": {
+  "after": {
+   "disposition": {
+    "signal": 24,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "sched": {
+    "not_default": [
+     {
+      "tid": 267625,
+      "name": "ListStore Queue",
+      "policy": "OTHER",
+      "uclamp_min": 204
+     },
+     {
+      "tid": 267627,
+      "name": "ebsiteDataStore",
+      "policy": "OTHER",
+      "uclamp_min": 204
+     },
+     {
+      "tid": 267630,
+      "name": "dfx2-wk:disk$0",
+      "policy": "BATCH",
+      "nice": 19
+     },
+     {
+      "tid": 267647,
+      "name": "PressureMonitor",
+      "policy": "OTHER",
+      "uclamp_min": 1024
+     },
+     {
+      "tid": 267817,
+      "name": "ReceiveQueue",
+      "policy": "OTHER",
+      "uclamp_min": 1024
+     },
+     {
+      "tid": 267820,
+      "name": "ReceiveQueue",
+      "policy": "OTHER",
+      "uclamp_min": 1024
+     },
+     {
+      "tid": 267847,
+      "name": "VBlankMonitor",
+      "policy": "OTHER",
+      "uclamp_min": 204
+     },
+     {
+      "tid": 267853,
+      "name": "ebsiteDataStore",
+      "policy": "OTHER",
+      "uclamp_min": 204
+     },
+     {
+      "tid": 267856,
+      "name": "ReceiveQueue",
+      "policy": "OTHER",
+      "uclamp_min": 1024
+     },
+     {
+      "tid": 267858,
+      "name": "ReceiveQueue",
+      "policy": "OTHER",
+      "uclamp_min": 1024
+     },
+     {
+      "tid": 267860,
+      "name": "dfx2-w:traceq0",
+      "policy": "BATCH",
+      "nice": 19
+     },
+     {
+      "tid": 267862,
+      "name": "dfx2-w:traceq0",
+      "policy": "BATCH",
+      "nice": 19
+     },
+     {
+      "tid": 267915,
+      "name": "dfx2-wk:disk$1",
+      "policy": "BATCH",
+      "nice": 19
+     },
+     {
+      "tid": 268303,
+      "name": "VBlankMonitor",
+      "policy": "OTHER",
+      "uclamp_min": 204
+     },
+     {
+      "tid": 268512,
+      "name": "dfx2-w:traceq0",
+      "policy": "BATCH",
+      "nice": 19
+     },
+     {
+      "tid": 268514,
+      "name": "dfx2-w:traceq0",
+      "policy": "BATCH",
+      "nice": 19
+     }
+    ],
+    "threads": 45
+   }
+  },
+  "before": {
+   "disposition": {
+    "signal": 24,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "sched": {
+    "not_default": [
+     {
+      "tid": 267625,
+      "name": "ListStore Queue",
+      "policy": "OTHER",
+      "uclamp_min": 204
+     },
+     {
+      "tid": 267627,
+      "name": "ebsiteDataStore",
+      "policy": "OTHER",
+      "uclamp_min": 204
+     },
+     {
+      "tid": 267630,
+      "name": "dfx2-wk:disk$0",
+      "policy": "BATCH",
+      "nice": 19
+     },
+     {
+      "tid": 267647,
+      "name": "PressureMonitor",
+      "policy": "OTHER",
+      "uclamp_min": 1024
+     },
+     {
+      "tid": 267817,
+      "name": "ReceiveQueue",
+      "policy": "OTHER",
+      "uclamp_min": 1024
+     },
+     {
+      "tid": 267820,
+      "name": "ReceiveQueue",
+      "policy": "OTHER",
+      "uclamp_min": 1024
+     },
+     {
+      "tid": 267847,
+      "name": "VBlankMonitor",
+      "policy": "OTHER",
+      "uclamp_min": 204
+     },
+     {
+      "tid": 267853,
+      "name": "ebsiteDataStore",
+      "policy": "OTHER",
+      "uclamp_min": 204
+     },
+     {
+      "tid": 267856,
+      "name": "ReceiveQueue",
+      "policy": "OTHER",
+      "uclamp_min": 1024
+     },
+     {
+      "tid": 267858,
+      "name": "ReceiveQueue",
+      "policy": "OTHER",
+      "uclamp_min": 1024
+     },
+     {
+      "tid": 267860,
+      "name": "dfx2-w:traceq0",
+      "policy": "BATCH",
+      "nice": 19
+     },
+     {
+      "tid": 267862,
+      "name": "dfx2-w:traceq0",
+      "policy": "BATCH",
+      "nice": 19
+     },
+     {
+      "tid": 267915,
+      "name": "dfx2-wk:disk$1",
+      "policy": "BATCH",
+      "nice": 19
+     },
+     {
+      "tid": 268303,
+      "name": "VBlankMonitor",
+      "policy": "OTHER",
+      "uclamp_min": 204
+     },
+     {
+      "tid": 268512,
+      "name": "dfx2-w:traceq0",
+      "policy": "BATCH",
+      "nice": 19
+     },
+     {
+      "tid": 268514,
+      "name": "dfx2-w:traceq0",
+      "policy": "BATCH",
+      "nice": 19
+     }
+    ],
+    "threads": 44
+   }
+  },
+  "event": "xcpu",
+  "mode": "native",
+  "received_by_go": true,
+  "t": "10:20:31.872",
+  "target_name": "[pango] fontcon",
+  "target_tid": 267618
+ },
+ "exit": {
+  "host_exit": 0,
+  "timed_out": false,
+  "children_pending": false,
+  "child_failure": false,
+  "fatal_log": false
+ }
+}

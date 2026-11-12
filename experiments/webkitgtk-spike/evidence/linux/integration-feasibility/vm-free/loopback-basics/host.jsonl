@@ -1,0 +1,78 @@
+To enable execution of this file add
+	add-auto-load-safe-path /home/michael/local/go/src/runtime/runtime-gdb.py
+line to your configuration file "/tmp/dfx2-feasibility/xdg-loopback-basics-107515/config/gdb/gdbinit".
+To completely disable this security protection add
+	set auto-load safe-path /
+line to your configuration file "/tmp/dfx2-feasibility/xdg-loopback-basics-107515/config/gdb/gdbinit".
+For more information about this security protection see the
+"Auto-loading safe path" section in the GDB manual.  E.g., run from the shell:
+	info "(gdb)Auto-loading safe path"
+Breakpoint 1 (JSC::initialize()) pending.
+Breakpoint 2 (JSC::VM::VM(JSC::VM::VMType, JSC::HeapType, WTF::RunLoop*, bool*)) pending.
+Breakpoint 3 (JSC::Heap::Heap(JSC::VM&, JSC::HeapType)) pending.
+Breakpoint 4 (JSGlobalContextCreate) pending.
+Breakpoint 5 (JSGlobalContextCreateInGroup) pending.
+Breakpoint 6 (JSContextGroupCreate) pending.
+Breakpoint 7 (jsc_context_new) pending.
+Breakpoint 8 (jsc_virtual_machine_new) pending.
+Breakpoint 9 (JSC::JSLock::didAcquireLock()) pending.
+Breakpoint 10 (JSC::MachineThreads::addCurrentThread()) pending.
+Breakpoint 11 (WTF::ThreadGroup::addCurrentThread()) pending.
+Breakpoint 12 (WTF::Thread::suspend(WTF::ThreadSuspendLocker const&)) pending.
+Breakpoint 13 (WTF::Thread::signalHandlerSuspendResume(int, siginfo_t*, void*)) pending.
+Breakpoint 14 (WTF::SignalHandlers::finalize()) pending.
+Breakpoint 15 (WTF::RealTimeThreads::RealTimeThreads()) pending.
+Breakpoint 16 (WTF::RealTimeThreads::registerThread(WTF::Thread&)) pending.
+Breakpoint 17 (sigaction) pending.
+
+This GDB supports auto-downloading debuginfo from the following URLs:
+  <https://debuginfod.ubuntu.com>
+Debuginfod has been disabled.
+To make this setting permanent, add 'set debuginfod enabled off' to .gdbinit.
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/usr/lib/x86_64-linux-gnu/libthread_db.so.1".
+{"dispositions":{"SIGBUS":{"signal":7,"owner":"go","flags":["SA_SIGINFO","SA_ONSTACK","SA_RESTART","SA_RESTORER"]},"SIGSEGV":{"signal":11,"owner":"go","flags":["SA_SIGINFO","SA_ONSTACK","SA_RESTART","SA_RESTORER"]},"SIGUSR1":{"signal":10,"owner":"go","flags":["SA_SIGINFO","SA_ONSTACK","SA_RESTART","SA_RESTORER"]},"SIGXCPU":{"signal":24,"owner":"go","flags":["SA_SIGINFO","SA_ONSTACK","SA_RESTART","SA_RESTORER"]},"reserved 60":{"signal":60,"owner":"go","flags":["SA_SIGINFO","SA_ONSTACK","SA_RESTART","SA_RESTORER"]}},"event":"signals","stage":"start","t":"23:37:25.214"}
+{"event":"filter-store","path":"/tmp/dfx2-feasibility/filters-108203","t":"23:37:25.939"}
+{"cookie":true,"cookie_fail_injected":false,"csp":true,"event":"ready","filter":true,"pid":108203,"reservation":{"checks":[{"check":"supplied","passed":true,"detail":"an explicit reservation; the host infers nothing"},{"check":"within libc's real-time range","passed":true,"detail":"60 in [34, 64]","cannot_establish":"that no other library uses it"},{"check":"kernel disposition is Go's handler","passed":true,"detail":"owner go","cannot_establish":"that no Go subscriber exists: subscribed and unsubscribed signals look identical"},{"check":"not blocked on the initializing thread","passed":true,"cannot_establish":"the masks of threads created later"},{"check":"not among the application's declared subscriptions","passed":true,"cannot_establish":"subscriptions the application did not declare"},{"check":"not ignored through os/signal","passed":true},{"check":"JSC_SIGNAL_FOR_GC unset or equal","passed":true,"detail":"JSC_SIGNAL_FOR_GC="}],"configured":true,"signal":60},"t":"23:37:25.939","vmfree":true}
+{"dispositions":{"SIGBUS":{"signal":7,"owner":"go","flags":["SA_SIGINFO","SA_ONSTACK","SA_RESTART","SA_RESTORER"]},"SIGSEGV":{"signal":11,"owner":"go","flags":["SA_SIGINFO","SA_ONSTACK","SA_RESTART","SA_RESTORER"]},"SIGUSR1":{"signal":10,"owner":"go","flags":["SA_SIGINFO","SA_ONSTACK","SA_RESTART","SA_RESTORER"]},"SIGXCPU":{"signal":24,"owner":"go","flags":["SA_SIGINFO","SA_ONSTACK","SA_RESTART","SA_RESTORER"]},"reserved 60":{"signal":60,"owner":"native:libjavascriptcoregtk-4.1.so.0.10.14","offset":"0x196b2d0","flags":["SA_SIGINFO","SA_RESTART","SA_RESTORER"]}},"event":"signals","stage":"ready","t":"23:37:25.941"}
+{"credential":true,"ephemeral_session":true,"event":"opened","mode":"loopback","origin":"http://127.0.0.1:46247","t":"23:37:32.709","window":"A"}
+{"event":"filter-installed","rules":"[{\"action\":{\"type\":\"block\"},\"trigger\":{\"url-filter\":\".*\"}},{\"action\":{\"type\":\"ignore-previous-rules\"},\"trigger\":{\"url-filter\":\"^http://127\\\\.0\\\\.0\\\\.1:46247/\"}},{\"action\":{\"type\":\"block\"},\"trigger\":{\"load-context\":[\"child-frame\"],\"resource-type\":[\"document\"],\"url-filter\":\".*\"}}]","t":"23:37:32.767","window":"A"}
+{"event":"cookie-installed","http_only":true,"same_site":"strict","t":"23:37:33.296","window":"A"}
+{"event":"navigate","t":"23:37:33.296","uri":"http://127.0.0.1:46247/","window":"A"}
+{"event":"navigation-allowed","method":"GET","redirect":false,"t":"23:37:34.574","uri":"http://127.0.0.1:46247/","window":"A"}
+{"event":"load","load_event":0,"t":"23:37:34.576","uri":"http://127.0.0.1:46247/","window":"A"}
+{"event":"load","load_event":2,"t":"23:37:34.580","uri":"http://127.0.0.1:46247/","window":"A"}
+{"event":"load","load_event":3,"t":"23:37:34.873","uri":"http://127.0.0.1:46247/","window":"A"}
+{"event":"navigation-allowed","method":"GET","redirect":false,"t":"23:37:34.875","uri":"http://127.0.0.1:46247/?run=checks\u0026id=c","window":"A"}
+{"event":"load","load_event":0,"t":"23:37:34.877","uri":"http://127.0.0.1:46247/?run=checks\u0026id=c","window":"A"}
+{"event":"load","load_event":2,"t":"23:37:34.883","uri":"http://127.0.0.1:46247/?run=checks\u0026id=c","window":"A"}
+{"event":"load","load_event":3,"t":"23:37:34.888","uri":"http://127.0.0.1:46247/?run=checks\u0026id=c","window":"A"}
+{"event":"report","report":{"id":"c","run":"checks","href":"http://127.0.0.1:46247/?run=checks\u0026id=c","result":{"origin":"http://127.0.0.1:46247","css":true,"img":true,"script":true,"cookieVisible":false,"query":"é\u0026ü","echoLength":1005,"echoSha":"a5903776f0c8d72f5b1e8689519fc8d9d6317785a20e31659786c8d8703a6b8c"}},"t":"23:37:34.890","window":"A"}
+{"event":"navigation-allowed","method":"GET","redirect":false,"t":"23:37:34.892","uri":"http://127.0.0.1:46247/?run=checks\u0026id=c","window":"A"}
+{"event":"load","load_event":0,"t":"23:37:34.894","uri":"http://127.0.0.1:46247/?run=checks\u0026id=c","window":"A"}
+{"event":"load","load_event":2,"t":"23:37:34.899","uri":"http://127.0.0.1:46247/?run=checks\u0026id=c","window":"A"}
+{"event":"load","load_event":3,"t":"23:37:34.903","uri":"http://127.0.0.1:46247/?run=checks\u0026id=c","window":"A"}
+{"event":"report","report":{"id":"c","run":"checks","href":"http://127.0.0.1:46247/?run=checks\u0026id=c","result":{"origin":"http://127.0.0.1:46247","css":true,"img":true,"script":true,"cookieVisible":false,"query":"é\u0026ü","echoLength":1005,"echoSha":"a5903776f0c8d72f5b1e8689519fc8d9d6317785a20e31659786c8d8703a6b8c"}},"t":"23:37:34.905","window":"A"}
+{"async":0,"event":"status","signals":{"SIGBUS":{"signal":7,"owner":"go","flags":["SA_SIGINFO","SA_ONSTACK","SA_RESTART","SA_RESTORER"]},"SIGSEGV":{"signal":11,"owner":"go","flags":["SA_SIGINFO","SA_ONSTACK","SA_RESTART","SA_RESTORER"]},"SIGUSR1":{"signal":10,"owner":"go","flags":["SA_SIGINFO","SA_ONSTACK","SA_RESTART","SA_RESTORER"]},"SIGXCPU":{"signal":24,"owner":"native:libjavascriptcoregtk-4.1.so.0.10.14","offset":"0x196d3f0","flags":["SA_RESTART","SA_RESTORER"]},"reserved 60":{"signal":60,"owner":"native:libjavascriptcoregtk-4.1.so.0.10.14","offset":"0x196b2d0","flags":["SA_SIGINFO","SA_RESTART","SA_RESTORER"]}},"t":"23:37:34.908","windows":{"A":{"closing":false,"destroyed":false,"endpoint":{"admitted":18,"refused":{},"handled":18},"handler":{"GET /":3,"GET /api/query":2,"GET /logo.svg":3,"GET /probe.css":3,"GET /probe.js":3,"POST /api/echo":2,"POST /api/report":2},"mode":"loopback","native_async":0,"native_requests":0,"port":46247,"title":"dfx2 feasibility probe","uri":"http://127.0.0.1:46247/?run=checks\u0026id=c"}}}
+{"event":"navigation-allowed","method":"GET","redirect":false,"t":"23:37:34.911","uri":"http://127.0.0.1:46247/api/redirect","window":"A"}
+{"event":"load","load_event":0,"t":"23:37:34.914","uri":"http://127.0.0.1:46247/api/redirect","window":"A"}
+{"event":"navigation-allowed","method":"GET","redirect":true,"t":"23:37:34.916","uri":"http://127.0.0.1:46247/api/query?x=redirected","window":"A"}
+{"event":"load","load_event":1,"t":"23:37:34.917","uri":"http://127.0.0.1:46247/api/query?x=redirected","window":"A"}
+{"event":"load","load_event":2,"t":"23:37:34.920","uri":"http://127.0.0.1:46247/api/query?x=redirected","window":"A"}
+{"event":"load","load_event":3,"t":"23:37:34.923","uri":"http://127.0.0.1:46247/api/query?x=redirected","window":"A"}
+{"async":0,"event":"status","signals":{"SIGBUS":{"signal":7,"owner":"go","flags":["SA_SIGINFO","SA_ONSTACK","SA_RESTART","SA_RESTORER"]},"SIGSEGV":{"signal":11,"owner":"go","flags":["SA_SIGINFO","SA_ONSTACK","SA_RESTART","SA_RESTORER"]},"SIGUSR1":{"signal":10,"owner":"go","flags":["SA_SIGINFO","SA_ONSTACK","SA_RESTART","SA_RESTORER"]},"SIGXCPU":{"signal":24,"owner":"native:libjavascriptcoregtk-4.1.so.0.10.14","offset":"0x196d3f0","flags":["SA_RESTART","SA_RESTORER"]},"reserved 60":{"signal":60,"owner":"native:libjavascriptcoregtk-4.1.so.0.10.14","offset":"0x196b2d0","flags":["SA_SIGINFO","SA_RESTART","SA_RESTORER"]}},"t":"23:37:34.925","windows":{"A":{"closing":false,"destroyed":false,"endpoint":{"admitted":20,"refused":{},"handled":20},"handler":{"GET /":3,"GET /api/query":3,"GET /api/redirect":1,"GET /logo.svg":3,"GET /probe.css":3,"GET /probe.js":3,"POST /api/echo":2,"POST /api/report":2},"mode":"loopback","native_async":0,"native_requests":0,"port":46247,"title":"","uri":"http://127.0.0.1:46247/api/query?x=redirected"}}}
+{"event":"navigation-allowed","method":"GET","redirect":false,"t":"23:37:34.928","uri":"http://127.0.0.1:46247/?run=stream\u0026id=s","window":"A"}
+{"event":"load","load_event":0,"t":"23:37:34.932","uri":"http://127.0.0.1:46247/?run=stream\u0026id=s","window":"A"}
+{"event":"load","load_event":2,"t":"23:37:34.934","uri":"http://127.0.0.1:46247/?run=stream\u0026id=s","window":"A"}
+{"event":"load","load_event":3,"t":"23:37:34.939","uri":"http://127.0.0.1:46247/?run=stream\u0026id=s","window":"A"}
+{"event":"report","report":{"id":"s","run":"stream","href":"http://127.0.0.1:46247/?run=stream\u0026id=s","result":[{"text":"chunk-1\n","at":9.000000000000002},{"text":"chunk-2 after ack\n","at":9.000000000000002},{"text":"done\n","at":10}]},"t":"23:37:34.940","window":"A"}
+{"async":0,"event":"status","signals":{"SIGBUS":{"signal":7,"owner":"go","flags":["SA_SIGINFO","SA_ONSTACK","SA_RESTART","SA_RESTORER"]},"SIGSEGV":{"signal":11,"owner":"go","flags":["SA_SIGINFO","SA_ONSTACK","SA_RESTART","SA_RESTORER"]},"SIGUSR1":{"signal":10,"owner":"go","flags":["SA_SIGINFO","SA_ONSTACK","SA_RESTART","SA_RESTORER"]},"SIGXCPU":{"signal":24,"owner":"native:libjavascriptcoregtk-4.1.so.0.10.14","offset":"0x196d3f0","flags":["SA_RESTART","SA_RESTORER"]},"reserved 60":{"signal":60,"owner":"native:libjavascriptcoregtk-4.1.so.0.10.14","offset":"0x196b2d0","flags":["SA_SIGINFO","SA_RESTART","SA_RESTORER"]}},"t":"23:37:34.942","windows":{"A":{"closing":false,"destroyed":false,"endpoint":{"admitted":27,"refused":{},"handled":27},"handler":{"GET /":4,"GET /api/query":3,"GET /api/redirect":1,"GET /api/stream":1,"GET /logo.svg":4,"GET /probe.css":4,"GET /probe.js":4,"POST /api/echo":2,"POST /api/report":3,"POST /api/stream-ack":1},"mode":"loopback","native_async":0,"native_requests":0,"port":46247,"title":"dfx2 feasibility probe","uri":"http://127.0.0.1:46247/?run=stream\u0026id=s"}}}
+{"event":"selftest","statuses":{"right credential":200,"right credential, exact Origin":200,"right credential, wrong Host":403,"right credential, wrong Origin":403},"t":"23:37:34.944","window":"A"}
+{"async":0,"event":"status","signals":{"SIGBUS":{"signal":7,"owner":"go","flags":["SA_SIGINFO","SA_ONSTACK","SA_RESTART","SA_RESTORER"]},"SIGSEGV":{"signal":11,"owner":"go","flags":["SA_SIGINFO","SA_ONSTACK","SA_RESTART","SA_RESTORER"]},"SIGUSR1":{"signal":10,"owner":"go","flags":["SA_SIGINFO","SA_ONSTACK","SA_RESTART","SA_RESTORER"]},"SIGXCPU":{"signal":24,"owner":"native:libjavascriptcoregtk-4.1.so.0.10.14","offset":"0x196d3f0","flags":["SA_RESTART","SA_RESTORER"]},"reserved 60":{"signal":60,"owner":"native:libjavascriptcoregtk-4.1.so.0.10.14","offset":"0x196b2d0","flags":["SA_SIGINFO","SA_RESTART","SA_RESTORER"]}},"t":"23:37:34.946","windows":{"A":{"closing":false,"destroyed":false,"endpoint":{"admitted":29,"refused":{"host":1,"no-credential":1,"origin":1,"wrong-credential":2},"handled":29},"handler":{"GET /":4,"GET /api/query":5,"GET /api/redirect":1,"GET /api/stream":1,"GET /logo.svg":4,"GET /probe.css":4,"GET /probe.js":4,"POST /api/echo":2,"POST /api/report":3,"POST /api/stream-ack":1},"mode":"loopback","native_async":0,"native_requests":0,"port":46247,"title":"dfx2 feasibility probe","uri":"http://127.0.0.1:46247/?run=stream\u0026id=s"}}}
+{"command":"js","error":"refused: the VM-free host evaluates no JavaScript","event":"error","t":"23:37:34.946"}
+{"error":"","event":"snapshot","path":"evidence/linux/integration-feasibility/vm-free/loopback-basics/loopback-page.png","t":"23:37:34.961","window":"A"}
+{"event":"closing","native_async":0,"native_requests":0,"navigated":true,"t":"23:37:34.962","why":"quit","window":"A"}
+{"endpoint":{"admitted":29,"refused":{"host":1,"no-credential":1,"origin":1,"wrong-credential":2},"handled":29},"event":"closed","handler":{"GET /":4,"GET /api/query":5,"GET /api/redirect":1,"GET /api/stream":1,"GET /logo.svg":4,"GET /probe.css":4,"GET /probe.js":4,"POST /api/echo":2,"POST /api/report":3,"POST /api/stream-ack":1},"handlers_drained":true,"native_async":0,"native_requests":0,"t":"23:37:34.967","window":"A"}
+{"dispositions":{"SIGBUS":{"signal":7,"owner":"go","flags":["SA_SIGINFO","SA_ONSTACK","SA_RESTART","SA_RESTORER"]},"SIGSEGV":{"signal":11,"owner":"go","flags":["SA_SIGINFO","SA_ONSTACK","SA_RESTART","SA_RESTORER"]},"SIGUSR1":{"signal":10,"owner":"go","flags":["SA_SIGINFO","SA_ONSTACK","SA_RESTART","SA_RESTORER"]},"SIGXCPU":{"signal":24,"owner":"native:libjavascriptcoregtk-4.1.so.0.10.14","offset":"0x196d3f0","flags":["SA_RESTART","SA_RESTORER"]},"reserved 60":{"signal":60,"owner":"native:libjavascriptcoregtk-4.1.so.0.10.14","offset":"0x196b2d0","flags":["SA_SIGINFO","SA_RESTART","SA_RESTORER"]}},"event":"signals","stage":"exit","t":"23:37:34.972"}
+{"error":"\u003cnil\u003e","event":"exit","filter_store_removal":{"path":"/tmp/dfx2-feasibility/filters-108203","attempts":1,"elapsed_ns":73229,"removed":true},"t":"23:37:34.972"}
+[Inferior 1 (process 108203) exited normally]

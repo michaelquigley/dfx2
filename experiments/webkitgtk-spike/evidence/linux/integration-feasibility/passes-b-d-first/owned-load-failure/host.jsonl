@@ -1,0 +1,56 @@
+{"event":"filter-store","path":"/tmp/dfx2-feasibility/filters-2222541","t":"13:51:13.276"}
+{"cookie":true,"cookie_fail_injected":false,"csp":true,"event":"ready","filter":true,"pid":2222541,"t":"13:51:13.276"}
+{"credential":true,"ephemeral_session":true,"event":"opened","mode":"loopback","origin":"http://127.0.0.1:39881","t":"13:51:13.384","window":"L"}
+{"event":"filter-installed","rules":"[{\"action\":{\"type\":\"block\"},\"trigger\":{\"url-filter\":\".*\"}},{\"action\":{\"type\":\"ignore-previous-rules\"},\"trigger\":{\"url-filter\":\"^http://127\\\\.0\\\\.0\\\\.1:39881/\"}},{\"action\":{\"type\":\"block\"},\"trigger\":{\"load-context\":[\"child-frame\"],\"resource-type\":[\"document\"],\"url-filter\":\".*\"}}]","t":"13:51:13.385","window":"L"}
+{"event":"cookie-installed","http_only":true,"same_site":"strict","t":"13:51:13.391","window":"L"}
+{"event":"navigate","t":"13:51:13.391","uri":"http://127.0.0.1:39881/","window":"L"}
+{"event":"navigation-allowed","method":"GET","redirect":false,"t":"13:51:13.482","uri":"http://127.0.0.1:39881/","window":"L"}
+{"event":"load","load_event":0,"t":"13:51:13.482","uri":"http://127.0.0.1:39881/","window":"L"}
+{"event":"load","load_event":2,"t":"13:51:13.484","uri":"http://127.0.0.1:39881/","window":"L"}
+{"event":"load","load_event":3,"t":"13:51:13.660","uri":"http://127.0.0.1:39881/","window":"L"}
+{"event":"navigation-allowed","method":"GET","redirect":false,"t":"13:51:13.661","uri":"http://127.0.0.1:39881/api/abort","window":"L"}
+{"body":"location.href = '/api/abort'; return 1","error":"","event":"js","result":1,"t":"13:51:13.662","window":"L"}
+{"event":"load","load_event":0,"t":"13:51:13.662","uri":"http://127.0.0.1:39881/","window":"L"}
+{"code":34,"domain":"g-io-error-quark","error_page":true,"event":"load-failed","from_post":false,"message":"Connection terminated unexpectedly","method":"GET","retry_offered":true,"t":"13:51:13.663","uri":"http://127.0.0.1:39881/api/abort","window":"L"}
+{"event":"load","load_event":3,"t":"13:51:13.663","uri":"http://127.0.0.1:39881/","window":"L"}
+{"event":"load","load_event":0,"t":"13:51:13.663","uri":"http://127.0.0.1:39881/api/abort","window":"L"}
+{"event":"load","load_event":2,"t":"13:51:13.664","uri":"http://127.0.0.1:39881/api/abort","window":"L"}
+{"event":"load","load_event":3,"t":"13:51:13.680","uri":"http://127.0.0.1:39881/api/abort","window":"L"}
+{"error":"","event":"snapshot","path":"evidence/linux/integration-feasibility/passes-b-d/owned-load-failure/error-loopback.png","t":"13:51:13.695","window":"L"}
+{"body":"return {retry: !!document.getElementById('retry'), cookie: document.cookie}","error":"","event":"js","result":{"retry":true,"cookie":""},"t":"13:51:13.695","window":"L"}
+{"action":"start","event":"error-action","t":"13:51:13.696","uri":"http://127.0.0.1:39881/","window":"L"}
+{"body":"document.getElementById('start').click(); return 1","error":"","event":"js","result":1,"t":"13:51:13.696","window":"L"}
+{"event":"navigation-allowed","method":"GET","redirect":false,"t":"13:51:13.696","uri":"http://127.0.0.1:39881/","window":"L"}
+{"event":"load","load_event":0,"t":"13:51:13.697","uri":"http://127.0.0.1:39881/","window":"L"}
+{"event":"load","load_event":2,"t":"13:51:13.699","uri":"http://127.0.0.1:39881/","window":"L"}
+{"event":"load","load_event":3,"t":"13:51:13.702","uri":"http://127.0.0.1:39881/","window":"L"}
+{"body":"return location.pathname","error":"","event":"js","result":"/","t":"13:51:13.702","window":"L"}
+{"credential":false,"ephemeral_session":true,"event":"opened","mode":"inprocess","origin":"dfx2://spike","t":"13:51:13.705","window":"P"}
+{"event":"filter-installed","rules":"[{\"action\":{\"type\":\"block\"},\"trigger\":{\"url-filter\":\".*\"}},{\"action\":{\"type\":\"ignore-previous-rules\"},\"trigger\":{\"url-filter\":\"^dfx2://spike/\"}},{\"action\":{\"type\":\"block\"},\"trigger\":{\"load-context\":[\"child-frame\"],\"resource-type\":[\"document\"],\"url-filter\":\".*\"}}]","t":"13:51:13.706","window":"P"}
+{"event":"navigate","t":"13:51:13.706","uri":"dfx2://spike/","window":"P"}
+{"event":"navigation-allowed","method":"GET","redirect":false,"t":"13:51:13.794","uri":"dfx2://spike/","window":"P"}
+{"event":"load","load_event":0,"t":"13:51:13.795","uri":"dfx2://spike/","window":"P"}
+{"event":"load","load_event":2,"t":"13:51:13.796","uri":"dfx2://spike/","window":"P"}
+{"event":"load","load_event":3,"t":"13:51:13.839","uri":"dfx2://spike/","window":"P"}
+{"event":"navigation-allowed","method":"GET","redirect":false,"t":"13:51:13.840","uri":"dfx2://spike/api/abort","window":"P"}
+{"body":"location.href = '/api/abort'; return 1","error":"","event":"js","result":1,"t":"13:51:13.840","window":"P"}
+{"event":"load","load_event":0,"t":"13:51:13.840","uri":"dfx2://spike/","window":"P"}
+{"code":1,"domain":"dfx2-spike","error_page":true,"event":"load-failed","from_post":false,"message":"injected transport failure: no response","method":"GET","retry_offered":true,"t":"13:51:13.841","uri":"dfx2://spike/api/abort","window":"P"}
+{"event":"load","load_event":3,"t":"13:51:13.841","uri":"dfx2://spike/","window":"P"}
+{"event":"load","load_event":0,"t":"13:51:13.841","uri":"dfx2://spike/api/abort","window":"P"}
+{"event":"load","load_event":2,"t":"13:51:13.842","uri":"dfx2://spike/api/abort","window":"P"}
+{"event":"load","load_event":3,"t":"13:51:13.858","uri":"dfx2://spike/api/abort","window":"P"}
+{"error":"","event":"snapshot","path":"evidence/linux/integration-feasibility/passes-b-d/owned-load-failure/error-inprocess.png","t":"13:51:13.872","window":"P"}
+{"body":"return {retry: !!document.getElementById('retry'), cookie: document.cookie}","error":"","event":"js","result":{"retry":true,"cookie":""},"t":"13:51:13.872","window":"P"}
+{"action":"start","event":"error-action","t":"13:51:13.873","uri":"dfx2://spike/","window":"P"}
+{"body":"document.getElementById('start').click(); return 1","error":"","event":"js","result":1,"t":"13:51:13.873","window":"P"}
+{"event":"navigation-allowed","method":"GET","redirect":false,"t":"13:51:13.873","uri":"dfx2://spike/","window":"P"}
+{"event":"load","load_event":0,"t":"13:51:13.874","uri":"dfx2://spike/","window":"P"}
+{"event":"load","load_event":2,"t":"13:51:13.875","uri":"dfx2://spike/","window":"P"}
+{"event":"load","load_event":3,"t":"13:51:13.878","uri":"dfx2://spike/","window":"P"}
+{"body":"return location.pathname","error":"","event":"js","result":"/","t":"13:51:13.878","window":"P"}
+{"event":"closing","native_async":0,"native_requests":0,"navigated":true,"t":"13:51:13.878","why":"quit","window":"L"}
+{"event":"closing","native_async":0,"native_requests":0,"navigated":true,"t":"13:51:13.879","why":"quit","window":"P"}
+{"endpoint":{"admitted":11,"refused":{},"handled":11},"event":"closed","handler":{"GET /":2,"GET /api/abort":3,"GET /logo.svg":2,"GET /probe.css":2,"GET /probe.js":2},"handlers_drained":true,"native_async":0,"native_requests":0,"t":"13:51:13.880","window":"L"}
+{"endpoint":{"admitted":0,"refused":{},"handled":8},"event":"closed","handler":{"GET /":2,"GET /logo.svg":2,"GET /probe.css":2,"GET /probe.js":2},"handlers_drained":true,"native_async":0,"native_requests":0,"t":"13:51:13.881","window":"P"}
+{"error":"\u003cnil\u003e","event":"exit","filter_store_removal":{"path":"/tmp/dfx2-feasibility/filters-2222541","attempts":1,"elapsed_ns":52666,"removed":true},"t":"13:51:13.883"}

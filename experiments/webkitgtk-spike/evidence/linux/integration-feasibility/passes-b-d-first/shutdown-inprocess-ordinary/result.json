@@ -1,0 +1,86 @@
+{
+ "scenario": "shutdown-inprocess-ordinary",
+ "flags": [],
+ "checks": [
+  {
+   "check": "ordinary close drains",
+   "ok": true,
+   "closed": {
+    "endpoint": {
+     "admitted": 0,
+     "refused": {},
+     "handled": 4
+    },
+    "event": "closed",
+    "handler": {
+     "GET /": 1,
+     "GET /logo.svg": 1,
+     "GET /probe.css": 1,
+     "GET /probe.js": 1
+    },
+    "handlers_drained": true,
+    "native_async": 0,
+    "native_requests": 0,
+    "t": "13:51:18.588",
+    "window": "S"
+   }
+  }
+ ],
+ "ok": true,
+ "detail": {},
+ "exit": {
+  "host_exit": 0,
+  "timed_out": false,
+  "children_pending": false,
+  "child_failure": false,
+  "fatal_log": false
+ },
+ "adopted_exits": [
+  [
+   "unobserved",
+   0
+  ],
+  [
+   "bwrap",
+   -9
+  ],
+  [
+   "bwrap",
+   -9
+  ],
+  [
+   "WebKitNetworkPr",
+   0
+  ],
+  [
+   "WebKitWebProces",
+   0
+  ]
+ ],
+ "observed_processes": [
+  "WebKitNetworkPr",
+  "WebKitWebProces",
+  "bwrap",
+  "dfx2-wk-feas",
+  "glycin-svg",
+  "gst-plugin-scan"
+ ],
+ "filter_store_removal": {
+  "path": "/tmp/dfx2-feasibility/filters-2223714",
+  "attempts": 1,
+  "elapsed_ns": 64296,
+  "removed": true
+ },
+ "xdg_manifest": [
+  "cache/fontconfig/25ccf6dd56fd7585eff0dc50a0a881d4-le64.cache-9",
+  "cache/fontconfig/363ec821d90eaa905a460bbdd9de4669-le64.cache-9",
+  "cache/fontconfig/97123a202d96d9eee11f7b2e48a774ca-le64.cache-9",
+  "cache/fontconfig/CACHEDIR.TAG",
+  "cache/gstreamer-1.0/registry.x86_64.bin",
+  "cache/mesa_shader_cache/index",
+  "cache/mesa_shader_cache/marker",
+  "data/gvfs-metadata/root",
+  "data/gvfs-metadata/root-eda096ad.log"
+ ],
+ "seconds": 0.5
+}

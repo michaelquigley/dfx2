@@ -1,0 +1,181 @@
+{
+ "scenario": "storage",
+ "flags": [],
+ "checks": [
+  {
+   "check": "B cannot read A's cookie, local or session storage",
+   "ok": true,
+   "a": {
+    "session": "A",
+    "cookie": "vis=A",
+    "local": "A"
+   },
+   "b": {
+    "session": null,
+    "cookie": "",
+    "local": null
+   }
+  },
+  {
+   "check": "B's request for A's cached resource reaches the server",
+   "ok": true,
+   "server_requests": {
+    "A fetch x2": 2,
+    "A image x2": 2,
+    "B image x2": 2
+   }
+  },
+  {
+   "check": "reload keeps A's session",
+   "ok": true,
+   "a": {
+    "cookie": "vis=A",
+    "session": "A",
+    "local": "A"
+   }
+  },
+  {
+   "check": "B kept working while A closed",
+   "ok": true,
+   "b_during": [
+    {
+     "x": "during"
+    },
+    {
+     "x": "during"
+    },
+    {
+     "x": "during"
+    }
+   ]
+  },
+  {
+   "check": "reopened A has a fresh session",
+   "ok": true,
+   "a2": {
+    "cookie": "",
+    "local": null,
+    "session": null
+   }
+  },
+  {
+   "check": "B is unchanged",
+   "ok": true,
+   "b": {
+    "local": "B",
+    "cookie": "vis=B",
+    "session": "B"
+   }
+  },
+  {
+   "check": "the attachment server outlives its browsers",
+   "ok": true,
+   "status": 200
+  }
+ ],
+ "ok": true,
+ "observations": {
+  "cache": {
+   "A fetch x2 reached server": 2,
+   "A image x2 reached server": 2,
+   "B image x2 reached server": 2
+  }
+ },
+ "detail": {
+  "processes": {
+   "two windows": [
+    "WebKitNetworkPr",
+    "WebKitNetworkPr",
+    "WebKitWebProces",
+    "WebKitWebProces",
+    "bwrap",
+    "bwrap",
+    "glycin-svg"
+   ],
+   "after closing A": [
+    "WebKitNetworkPr",
+    "WebKitWebProces",
+    "bwrap",
+    "bwrap",
+    "glycin-svg"
+   ],
+   "no windows": [
+    "WebKitNetworkPr",
+    "WebKitWebProces",
+    "WebKitWebProces",
+    "bwrap",
+    "bwrap",
+    "glycin-svg"
+   ]
+  },
+  "app_cookie_names_per_cached_request": [
+   [
+    "vis"
+   ],
+   [
+    "vis"
+   ],
+   [
+    "vis"
+   ],
+   [
+    "vis"
+   ],
+   [
+    "vis"
+   ],
+   [
+    "vis"
+   ]
+  ]
+ },
+ "exit": {
+  "host_exit": 0,
+  "timed_out": false,
+  "children_pending": false,
+  "child_failure": false,
+  "fatal_log": false
+ },
+ "adopted_exits": [
+  [
+   "unobserved",
+   0
+  ],
+  [
+   "bwrap",
+   -9
+  ],
+  [
+   "bwrap",
+   -9
+  ]
+ ],
+ "observed_processes": [
+  "WebKitNetworkPr",
+  "WebKitWebProces",
+  "bwrap",
+  "dfx2-wk-feas",
+  "glycin-svg",
+  "gst-plugin-scan"
+ ],
+ "filter_store_removal": {
+  "path": "/tmp/dfx2-feasibility/filters-2221779",
+  "attempts": 1,
+  "elapsed_ns": 548741,
+  "removed": true
+ },
+ "xdg_manifest": [
+  "cache/event-sound-cache.tdb.7f8d5c37476f457cae8a599c576dd36f.x86_64-pc-linux-gnu",
+  "cache/fontconfig/25ccf6dd56fd7585eff0dc50a0a881d4-le64.cache-9",
+  "cache/fontconfig/363ec821d90eaa905a460bbdd9de4669-le64.cache-9",
+  "cache/fontconfig/97123a202d96d9eee11f7b2e48a774ca-le64.cache-9",
+  "cache/fontconfig/CACHEDIR.TAG",
+  "cache/gstreamer-1.0/registry.x86_64.bin",
+  "cache/mesa_shader_cache/index",
+  "cache/mesa_shader_cache/marker",
+  "config/pulse/cookie",
+  "data/gvfs-metadata/root",
+  "data/gvfs-metadata/root-1fbd1a4f.log"
+ ],
+ "seconds": 1.4
+}

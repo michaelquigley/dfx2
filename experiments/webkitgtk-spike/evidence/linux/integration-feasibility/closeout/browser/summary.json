@@ -1,0 +1,6576 @@
+{
+ "reserve": 60,
+ "controls": [],
+ "scenarios": [
+  {
+   "scenario": "loopback-basics",
+   "flags": [
+    "-feas-vmfree",
+    "-signal-reserve",
+    "60"
+   ],
+   "checks": [
+    {
+     "check": "assets, query and POST through the credential",
+     "ok": true,
+     "checks": {
+      "origin": "http://127.0.0.1:41921",
+      "css": true,
+      "img": true,
+      "script": true,
+      "cookieVisible": false,
+      "query": "\u00e9&\u00fc",
+      "echoLength": 1005,
+      "echoSha": "a5903776f0c8d72f5b1e8689519fc8d9d6317785a20e31659786c8d8703a6b8c"
+     }
+    },
+    {
+     "check": "credential invisible to JavaScript",
+     "ok": true
+    },
+    {
+     "check": "native reload keeps authentication without reprovisioning",
+     "ok": true,
+     "installs": 1
+    },
+    {
+     "check": "same-origin redirect authenticated, no credential in the URL",
+     "ok": true,
+     "uri": "http://127.0.0.1:41921/api/query?x=redirected"
+    },
+    {
+     "check": "loopback stream: chunk 1 visible before the handler finished",
+     "ok": true,
+     "chunks": [
+      {
+       "text": "chunk-1\n",
+       "at": 6
+      },
+      {
+       "text": "chunk-2 after ack\n",
+       "at": 7
+      },
+      {
+       "text": "done\n",
+       "at": 7
+      }
+     ]
+    },
+    {
+     "check": "external clients without the right credential refused",
+     "ok": true,
+     "statuses": {
+      "none": 403,
+      "wrong credential": 403,
+      "wrong credential and Origin": 403
+     }
+    },
+    {
+     "check": "right credential: wrong Host or Origin refused; exact or absent Origin admitted",
+     "ok": true,
+     "selftest": {
+      "right credential": 200,
+      "right credential, exact Origin": 200,
+      "right credential, wrong Host": 403,
+      "right credential, wrong Origin": 403
+     }
+    },
+    {
+     "check": "refusals never reached the handler",
+     "ok": true,
+     "endpoint": {
+      "admitted": 29,
+      "refused": {
+       "host": 1,
+       "no-credential": 1,
+       "origin": 1,
+       "wrong-credential": 2
+      },
+      "handled": 29
+     }
+    },
+    {
+     "check": "the VM-free host refuses native JavaScript",
+     "ok": true
+    },
+    {
+     "check": "SIGSEGV and SIGBUS still Go's at exit",
+     "ok": true,
+     "exit_signals": {
+      "SIGBUS": {
+       "signal": 7,
+       "owner": "go",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "SIGSEGV": {
+       "signal": 11,
+       "owner": "go",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "SIGUSR1": {
+       "signal": 10,
+       "owner": "go",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "SIGXCPU": {
+       "signal": 24,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "offset": "0x196d3f0",
+       "flags": [
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "reserved 60": {
+       "signal": 60,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "offset": "0x196b2d0",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      }
+     }
+    }
+   ],
+   "ok": true,
+   "detail": {
+    "status": {
+     "closing": false,
+     "destroyed": false,
+     "endpoint": {
+      "admitted": 29,
+      "refused": {
+       "host": 1,
+       "no-credential": 1,
+       "origin": 1,
+       "wrong-credential": 2
+      },
+      "handled": 29
+     },
+     "handler": {
+      "GET /": 4,
+      "GET /api/query": 5,
+      "GET /api/redirect": 1,
+      "GET /api/stream": 1,
+      "GET /logo.svg": 4,
+      "GET /probe.css": 4,
+      "GET /probe.js": 4,
+      "POST /api/echo": 2,
+      "POST /api/report": 3,
+      "POST /api/stream-ack": 1
+     },
+     "mode": "loopback",
+     "native_async": 0,
+     "native_requests": 0,
+     "port": 41921,
+     "title": "dfx2 feasibility probe",
+     "uri": "http://127.0.0.1:41921/?run=stream&id=s"
+    }
+   },
+   "exit": {
+    "host_exit": 0,
+    "timed_out": false,
+    "children_pending": false,
+    "child_failure": false,
+    "fatal_log": false
+   },
+   "observed_processes": [
+    "WebKitNetworkPr",
+    "WebKitWebProces",
+    "bwrap",
+    "dfx2-wk-candida",
+    "glycin-svg",
+    "gst-plugin-scan"
+   ],
+   "signals": {
+    "start": {
+     "SIGBUS": {
+      "signal": 7,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGSEGV": {
+      "signal": 11,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGUSR1": {
+      "signal": 10,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGXCPU": {
+      "signal": 24,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "reserved 60": {
+      "signal": 60,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     }
+    },
+    "ready": {
+     "SIGBUS": {
+      "signal": 7,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGSEGV": {
+      "signal": 11,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGUSR1": {
+      "signal": 10,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGXCPU": {
+      "signal": 24,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "reserved 60": {
+      "signal": 60,
+      "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      "offset": "0x196b2d0",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     }
+    },
+    "exit": {
+     "SIGBUS": {
+      "signal": 7,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGSEGV": {
+      "signal": 11,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGUSR1": {
+      "signal": 10,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGXCPU": {
+      "signal": 24,
+      "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      "offset": "0x196d3f0",
+      "flags": [
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "reserved 60": {
+      "signal": 60,
+      "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      "offset": "0x196b2d0",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     }
+    }
+   },
+   "reservation": {
+    "checks": [
+     {
+      "check": "supplied",
+      "passed": true,
+      "detail": "an explicit reservation; the host infers nothing"
+     },
+     {
+      "check": "within libc's real-time range",
+      "passed": true,
+      "detail": "60 in [34, 64]",
+      "cannot_establish": "that no other library uses it"
+     },
+     {
+      "check": "kernel disposition is Go's handler",
+      "passed": true,
+      "detail": "owner go",
+      "cannot_establish": "that no Go subscriber exists: subscribed and unsubscribed signals look identical"
+     },
+     {
+      "check": "not blocked on the initializing thread",
+      "passed": true,
+      "cannot_establish": "the masks of threads created later"
+     },
+     {
+      "check": "not among the application's declared subscriptions",
+      "passed": true,
+      "cannot_establish": "subscriptions the application did not declare"
+     },
+     {
+      "check": "not ignored through os/signal",
+      "passed": true
+     },
+     {
+      "check": "JSC_SIGNAL_FOR_GC unset or equal",
+      "passed": true,
+      "detail": "JSC_SIGNAL_FOR_GC="
+     }
+    ],
+    "configured": true,
+    "signal": 60
+   },
+   "filter_store_removal": {
+    "path": "/tmp/dfx2-feasibility/filters-469543",
+    "attempts": 1,
+    "elapsed_ns": 96811,
+    "removed": true
+   },
+   "refused_js": 1,
+   "monitor": "not run: browser cases only (--no-monitor)",
+   "seconds": 1.7
+  },
+  {
+   "scenario": "confinement-filter-csp",
+   "flags": [
+    "-feas-vmfree",
+    "-signal-reserve",
+    "60"
+   ],
+   "checks": [
+    {
+     "check": "collector received nothing",
+     "ok": true,
+     "received": []
+    },
+    {
+     "check": "no credential reached the collector",
+     "ok": true,
+     "leaked": 0
+    },
+    {
+     "check": "A's page never invoked B's handler",
+     "ok": true,
+     "b_before": {
+      "GET /": 1,
+      "GET /logo.svg": 1,
+      "GET /probe.css": 1,
+      "GET /probe.js": 1
+     },
+     "b_after": {
+      "GET /": 1,
+      "GET /logo.svg": 1,
+      "GET /probe.css": 1,
+      "GET /probe.js": 1
+     }
+    },
+    {
+     "check": "top-level navigation, redirect, popup and form to another port never left the origin",
+     "ok": true,
+     "mechanism": {
+      "location": "navigation policy",
+      "redirect": "navigation policy",
+      "form": "silent",
+      "popup": "silent (window.open returned null)"
+     },
+     "final_uris": {
+      "location": "http://127.0.0.1:37777/?run=armed&id=nav-location&then=navigate&how=location&collector=http%3A//127.0.0.1%3A36257",
+      "redirect": "http://127.0.0.1:37777/?run=armed&id=nav-redirect&then=navigate&how=redirect&collector=http%3A//127.0.0.1%3A36257",
+      "form": "http://127.0.0.1:37777/?run=armed&id=nav-form&then=navigate&how=form&collector=http%3A//127.0.0.1%3A36257"
+     }
+    },
+    {
+     "check": "SIGSEGV and SIGBUS still Go's at exit",
+     "ok": true,
+     "exit_signals": {
+      "SIGBUS": {
+       "signal": 7,
+       "owner": "go",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "SIGSEGV": {
+       "signal": 11,
+       "owner": "go",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "SIGUSR1": {
+       "signal": 10,
+       "owner": "go",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "SIGXCPU": {
+       "signal": 24,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "offset": "0x196d3f0",
+       "flags": [
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "reserved 60": {
+       "signal": 60,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "offset": "0x196b2d0",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      }
+     }
+    }
+   ],
+   "ok": true,
+   "detail": {
+    "page_view": {
+     "img": "added",
+     "script": "added",
+     "css": "added",
+     "font": "added",
+     "fetch": "threw TypeError",
+     "xhr": "0",
+     "beacon": "true",
+     "websocket": "threw SecurityError",
+     "eventsource": "threw SecurityError",
+     "prefetch": "added",
+     "iframe-cross": "added",
+     "iframe-same": "no load",
+     "redirect-img": "added",
+     "redirect-fetch": "threw TypeError",
+     "ping": "clicked",
+     "other-endpoint": "threw TypeError"
+    },
+    "mechanism": {
+     "location": "navigation policy",
+     "redirect": "navigation policy",
+     "form": "silent",
+     "popup": "silent (window.open returned null)"
+    },
+    "collector": [],
+    "refusals": [
+     [
+      "navigation",
+      "COLLECTOR/nav"
+     ],
+     [
+      "navigation",
+      "COLLECTOR/redirect-nav"
+     ]
+    ]
+   },
+   "exit": {
+    "host_exit": 0,
+    "timed_out": false,
+    "children_pending": false,
+    "child_failure": false,
+    "fatal_log": false
+   },
+   "observed_processes": [
+    "WebKitNetworkPr",
+    "WebKitWebProces",
+    "bwrap",
+    "dfx2-wk-candida",
+    "glycin-svg",
+    "gst-plugin-scan"
+   ],
+   "signals": {
+    "start": {
+     "SIGBUS": {
+      "signal": 7,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGSEGV": {
+      "signal": 11,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGUSR1": {
+      "signal": 10,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGXCPU": {
+      "signal": 24,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "reserved 60": {
+      "signal": 60,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     }
+    },
+    "ready": {
+     "SIGBUS": {
+      "signal": 7,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGSEGV": {
+      "signal": 11,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGUSR1": {
+      "signal": 10,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGXCPU": {
+      "signal": 24,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "reserved 60": {
+      "signal": 60,
+      "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      "offset": "0x196b2d0",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     }
+    },
+    "exit": {
+     "SIGBUS": {
+      "signal": 7,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGSEGV": {
+      "signal": 11,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGUSR1": {
+      "signal": 10,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGXCPU": {
+      "signal": 24,
+      "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      "offset": "0x196d3f0",
+      "flags": [
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "reserved 60": {
+      "signal": 60,
+      "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      "offset": "0x196b2d0",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     }
+    }
+   },
+   "reservation": {
+    "checks": [
+     {
+      "check": "supplied",
+      "passed": true,
+      "detail": "an explicit reservation; the host infers nothing"
+     },
+     {
+      "check": "within libc's real-time range",
+      "passed": true,
+      "detail": "60 in [34, 64]",
+      "cannot_establish": "that no other library uses it"
+     },
+     {
+      "check": "kernel disposition is Go's handler",
+      "passed": true,
+      "detail": "owner go",
+      "cannot_establish": "that no Go subscriber exists: subscribed and unsubscribed signals look identical"
+     },
+     {
+      "check": "not blocked on the initializing thread",
+      "passed": true,
+      "cannot_establish": "the masks of threads created later"
+     },
+     {
+      "check": "not among the application's declared subscriptions",
+      "passed": true,
+      "cannot_establish": "subscriptions the application did not declare"
+     },
+     {
+      "check": "not ignored through os/signal",
+      "passed": true
+     },
+     {
+      "check": "JSC_SIGNAL_FOR_GC unset or equal",
+      "passed": true,
+      "detail": "JSC_SIGNAL_FOR_GC="
+     }
+    ],
+    "configured": true,
+    "signal": 60
+   },
+   "filter_store_removal": {
+    "path": "/tmp/dfx2-feasibility/filters-470836",
+    "attempts": 1,
+    "elapsed_ns": 70720,
+    "removed": true
+   },
+   "refused_js": 0,
+   "monitor": "not run: browser cases only (--no-monitor)",
+   "seconds": 11.7
+  },
+  {
+   "scenario": "confinement-filter-only",
+   "flags": [
+    "-feas-vmfree",
+    "-signal-reserve",
+    "60",
+    "-feas-csp=false"
+   ],
+   "checks": [
+    {
+     "check": "collector received nothing",
+     "ok": true,
+     "received": []
+    },
+    {
+     "check": "no credential reached the collector",
+     "ok": true,
+     "leaked": 0
+    },
+    {
+     "check": "A's page never invoked B's handler",
+     "ok": true,
+     "b_before": {
+      "GET /": 1,
+      "GET /logo.svg": 1,
+      "GET /probe.css": 1,
+      "GET /probe.js": 1
+     },
+     "b_after": {
+      "GET /": 1,
+      "GET /logo.svg": 1,
+      "GET /probe.css": 1,
+      "GET /probe.js": 1
+     }
+    },
+    {
+     "check": "top-level navigation, redirect, popup and form to another port never left the origin",
+     "ok": true,
+     "mechanism": {
+      "location": "navigation policy",
+      "redirect": "navigation policy",
+      "form": "navigation policy",
+      "popup": "silent (window.open returned null)"
+     },
+     "final_uris": {
+      "location": "http://127.0.0.1:39727/?run=armed&id=nav-location&then=navigate&how=location&collector=http%3A//127.0.0.1%3A44379",
+      "redirect": "http://127.0.0.1:39727/?run=armed&id=nav-redirect&then=navigate&how=redirect&collector=http%3A//127.0.0.1%3A44379",
+      "form": "http://127.0.0.1:39727/?run=armed&id=nav-form&then=navigate&how=form&collector=http%3A//127.0.0.1%3A44379"
+     }
+    },
+    {
+     "check": "SIGSEGV and SIGBUS still Go's at exit",
+     "ok": true,
+     "exit_signals": {
+      "SIGBUS": {
+       "signal": 7,
+       "owner": "go",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "SIGSEGV": {
+       "signal": 11,
+       "owner": "go",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "SIGUSR1": {
+       "signal": 10,
+       "owner": "go",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "SIGXCPU": {
+       "signal": 24,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "offset": "0x196d3f0",
+       "flags": [
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "reserved 60": {
+       "signal": 60,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "offset": "0x196b2d0",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      }
+     }
+    }
+   ],
+   "ok": true,
+   "detail": {
+    "page_view": {
+     "img": "added",
+     "script": "added",
+     "css": "added",
+     "font": "added",
+     "fetch": "threw TypeError",
+     "xhr": "0",
+     "beacon": "false",
+     "websocket": "error",
+     "eventsource": "error",
+     "prefetch": "added",
+     "iframe-cross": "added",
+     "iframe-same": "no load",
+     "redirect-img": "added",
+     "redirect-fetch": "threw TypeError",
+     "ping": "clicked",
+     "other-endpoint": "threw TypeError"
+    },
+    "mechanism": {
+     "location": "navigation policy",
+     "redirect": "navigation policy",
+     "form": "navigation policy",
+     "popup": "silent (window.open returned null)"
+    },
+    "collector": [],
+    "refusals": [
+     [
+      "navigation",
+      "COLLECTOR/iframe"
+     ],
+     [
+      "navigation",
+      "COLLECTOR/nav"
+     ],
+     [
+      "navigation",
+      "COLLECTOR/redirect-nav"
+     ],
+     [
+      "navigation",
+      "COLLECTOR/form"
+     ]
+    ]
+   },
+   "exit": {
+    "host_exit": 0,
+    "timed_out": false,
+    "children_pending": false,
+    "child_failure": false,
+    "fatal_log": false
+   },
+   "observed_processes": [
+    "WebKitNetworkPr",
+    "WebKitWebProces",
+    "bwrap",
+    "dfx2-wk-candida",
+    "glycin-svg",
+    "gst-plugin-scan"
+   ],
+   "signals": {
+    "start": {
+     "SIGBUS": {
+      "signal": 7,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGSEGV": {
+      "signal": 11,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGUSR1": {
+      "signal": 10,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGXCPU": {
+      "signal": 24,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "reserved 60": {
+      "signal": 60,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     }
+    },
+    "ready": {
+     "SIGBUS": {
+      "signal": 7,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGSEGV": {
+      "signal": 11,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGUSR1": {
+      "signal": 10,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGXCPU": {
+      "signal": 24,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "reserved 60": {
+      "signal": 60,
+      "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      "offset": "0x196b2d0",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     }
+    },
+    "exit": {
+     "SIGBUS": {
+      "signal": 7,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGSEGV": {
+      "signal": 11,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGUSR1": {
+      "signal": 10,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGXCPU": {
+      "signal": 24,
+      "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      "offset": "0x196d3f0",
+      "flags": [
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "reserved 60": {
+      "signal": 60,
+      "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      "offset": "0x196b2d0",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     }
+    }
+   },
+   "reservation": {
+    "checks": [
+     {
+      "check": "supplied",
+      "passed": true,
+      "detail": "an explicit reservation; the host infers nothing"
+     },
+     {
+      "check": "within libc's real-time range",
+      "passed": true,
+      "detail": "60 in [34, 64]",
+      "cannot_establish": "that no other library uses it"
+     },
+     {
+      "check": "kernel disposition is Go's handler",
+      "passed": true,
+      "detail": "owner go",
+      "cannot_establish": "that no Go subscriber exists: subscribed and unsubscribed signals look identical"
+     },
+     {
+      "check": "not blocked on the initializing thread",
+      "passed": true,
+      "cannot_establish": "the masks of threads created later"
+     },
+     {
+      "check": "not among the application's declared subscriptions",
+      "passed": true,
+      "cannot_establish": "subscriptions the application did not declare"
+     },
+     {
+      "check": "not ignored through os/signal",
+      "passed": true
+     },
+     {
+      "check": "JSC_SIGNAL_FOR_GC unset or equal",
+      "passed": true,
+      "detail": "JSC_SIGNAL_FOR_GC="
+     }
+    ],
+    "configured": true,
+    "signal": 60
+   },
+   "filter_store_removal": {
+    "path": "/tmp/dfx2-feasibility/filters-472364",
+    "attempts": 1,
+    "elapsed_ns": 83354,
+    "removed": true
+   },
+   "refused_js": 0,
+   "monitor": "not run: browser cases only (--no-monitor)",
+   "seconds": 11.3
+  },
+  {
+   "scenario": "confinement-csp-only",
+   "flags": [
+    "-feas-vmfree",
+    "-signal-reserve",
+    "60",
+    "-feas-filter=false"
+   ],
+   "checks": [
+    {
+     "check": "collector received nothing",
+     "ok": true,
+     "received": []
+    },
+    {
+     "check": "no credential reached the collector",
+     "ok": true,
+     "leaked": 0
+    },
+    {
+     "check": "A's page never invoked B's handler",
+     "ok": true,
+     "b_before": {
+      "GET /": 1,
+      "GET /logo.svg": 1,
+      "GET /probe.css": 1,
+      "GET /probe.js": 1
+     },
+     "b_after": {
+      "GET /": 1,
+      "GET /logo.svg": 1,
+      "GET /probe.css": 1,
+      "GET /probe.js": 1
+     }
+    },
+    {
+     "check": "top-level navigation, redirect, popup and form to another port never left the origin",
+     "ok": true,
+     "mechanism": {
+      "location": "navigation policy",
+      "redirect": "navigation policy",
+      "form": "silent",
+      "popup": "create signal"
+     },
+     "final_uris": {
+      "location": "http://127.0.0.1:42429/?run=armed&id=nav-location&then=navigate&how=location&collector=http%3A//127.0.0.1%3A35303",
+      "redirect": "http://127.0.0.1:42429/?run=armed&id=nav-redirect&then=navigate&how=redirect&collector=http%3A//127.0.0.1%3A35303",
+      "form": "http://127.0.0.1:42429/?run=armed&id=nav-form&then=navigate&how=form&collector=http%3A//127.0.0.1%3A35303"
+     }
+    },
+    {
+     "check": "SIGSEGV and SIGBUS still Go's at exit",
+     "ok": true,
+     "exit_signals": {
+      "SIGBUS": {
+       "signal": 7,
+       "owner": "go",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "SIGSEGV": {
+       "signal": 11,
+       "owner": "go",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "SIGUSR1": {
+       "signal": 10,
+       "owner": "go",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "SIGXCPU": {
+       "signal": 24,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "offset": "0x196d3f0",
+       "flags": [
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "reserved 60": {
+       "signal": 60,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "offset": "0x196b2d0",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      }
+     }
+    }
+   ],
+   "ok": true,
+   "detail": {
+    "page_view": {
+     "img": "added",
+     "script": "added",
+     "css": "added",
+     "font": "added",
+     "fetch": "threw TypeError",
+     "xhr": "0",
+     "beacon": "true",
+     "websocket": "threw SecurityError",
+     "eventsource": "threw SecurityError",
+     "prefetch": "added",
+     "iframe-cross": "added",
+     "iframe-same": "no load",
+     "redirect-img": "added",
+     "redirect-fetch": "threw TypeError",
+     "ping": "clicked",
+     "other-endpoint": "threw TypeError"
+    },
+    "mechanism": {
+     "location": "navigation policy",
+     "redirect": "navigation policy",
+     "form": "silent",
+     "popup": "create signal"
+    },
+    "collector": [],
+    "refusals": [
+     [
+      "navigation",
+      "COLLECTOR/nav"
+     ],
+     [
+      "navigation",
+      "COLLECTOR/redirect-nav"
+     ]
+    ]
+   },
+   "exit": {
+    "host_exit": 0,
+    "timed_out": false,
+    "children_pending": false,
+    "child_failure": false,
+    "fatal_log": false
+   },
+   "observed_processes": [
+    "WebKitNetworkPr",
+    "WebKitWebProces",
+    "bwrap",
+    "dfx2-wk-candida",
+    "glycin-svg",
+    "gst-plugin-scan"
+   ],
+   "signals": {
+    "start": {
+     "SIGBUS": {
+      "signal": 7,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGSEGV": {
+      "signal": 11,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGUSR1": {
+      "signal": 10,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGXCPU": {
+      "signal": 24,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "reserved 60": {
+      "signal": 60,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     }
+    },
+    "ready": {
+     "SIGBUS": {
+      "signal": 7,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGSEGV": {
+      "signal": 11,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGUSR1": {
+      "signal": 10,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGXCPU": {
+      "signal": 24,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "reserved 60": {
+      "signal": 60,
+      "owner": "default"
+     }
+    },
+    "exit": {
+     "SIGBUS": {
+      "signal": 7,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGSEGV": {
+      "signal": 11,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGUSR1": {
+      "signal": 10,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGXCPU": {
+      "signal": 24,
+      "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      "offset": "0x196d3f0",
+      "flags": [
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "reserved 60": {
+      "signal": 60,
+      "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      "offset": "0x196b2d0",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     }
+    }
+   },
+   "reservation": {
+    "checks": [
+     {
+      "check": "supplied",
+      "passed": true,
+      "detail": "an explicit reservation; the host infers nothing"
+     },
+     {
+      "check": "within libc's real-time range",
+      "passed": true,
+      "detail": "60 in [34, 64]",
+      "cannot_establish": "that no other library uses it"
+     },
+     {
+      "check": "kernel disposition is Go's handler",
+      "passed": true,
+      "detail": "owner go",
+      "cannot_establish": "that no Go subscriber exists: subscribed and unsubscribed signals look identical"
+     },
+     {
+      "check": "not blocked on the initializing thread",
+      "passed": true,
+      "cannot_establish": "the masks of threads created later"
+     },
+     {
+      "check": "not among the application's declared subscriptions",
+      "passed": true,
+      "cannot_establish": "subscriptions the application did not declare"
+     },
+     {
+      "check": "not ignored through os/signal",
+      "passed": true
+     },
+     {
+      "check": "JSC_SIGNAL_FOR_GC unset or equal",
+      "passed": true,
+      "detail": "JSC_SIGNAL_FOR_GC="
+     }
+    ],
+    "configured": true,
+    "signal": 60
+   },
+   "filter_store_removal": {
+    "path": "",
+    "attempts": 0,
+    "elapsed_ns": 0,
+    "removed": false
+   },
+   "refused_js": 0,
+   "monitor": "not run: browser cases only (--no-monitor)",
+   "seconds": 11.2
+  },
+  {
+   "scenario": "confinement-control",
+   "flags": [
+    "-feas-vmfree",
+    "-signal-reserve",
+    "60",
+    "-feas-filter=false",
+    "-feas-csp=false"
+   ],
+   "checks": [
+    {
+     "check": "control: collector receives requests",
+     "ok": true,
+     "received": [
+      [
+       "GET",
+       "/img",
+       true
+      ],
+      [
+       "GET",
+       "/script",
+       true
+      ],
+      [
+       "GET",
+       "/css",
+       true
+      ],
+      [
+       "GET",
+       "/fetch",
+       true
+      ],
+      [
+       "GET",
+       "/font",
+       true
+      ],
+      [
+       "GET",
+       "/xhr",
+       true
+      ],
+      [
+       "POST",
+       "/beacon",
+       true
+      ],
+      [
+       "GET",
+       "/ws",
+       true
+      ],
+      [
+       "GET",
+       "/sse",
+       false
+      ],
+      [
+       "GET",
+       "/redirect-fetch",
+       false
+      ],
+      [
+       "GET",
+       "/redirect-img",
+       true
+      ],
+      [
+       "POST",
+       "/ping",
+       true
+      ]
+     ]
+    },
+    {
+     "check": "control: credential leaks without enforcement",
+     "ok": true,
+     "leaked": 10
+    },
+    {
+     "check": "A's page never invoked B's handler",
+     "ok": true,
+     "b_before": {
+      "GET /": 1,
+      "GET /logo.svg": 1,
+      "GET /probe.css": 1,
+      "GET /probe.js": 1
+     },
+     "b_after": {
+      "GET /": 1,
+      "GET /logo.svg": 1,
+      "GET /probe.css": 1,
+      "GET /probe.js": 1
+     }
+    },
+    {
+     "check": "top-level navigation, redirect, popup and form to another port never left the origin",
+     "ok": true,
+     "mechanism": {
+      "location": "navigation policy",
+      "redirect": "navigation policy",
+      "form": "navigation policy",
+      "popup": "create signal"
+     },
+     "final_uris": {
+      "location": "http://127.0.0.1:41475/?run=armed&id=nav-location&then=navigate&how=location&collector=http%3A//127.0.0.1%3A33361",
+      "redirect": "http://127.0.0.1:41475/?run=armed&id=nav-redirect&then=navigate&how=redirect&collector=http%3A//127.0.0.1%3A33361",
+      "form": "http://127.0.0.1:41475/?run=armed&id=nav-form&then=navigate&how=form&collector=http%3A//127.0.0.1%3A33361"
+     }
+    },
+    {
+     "check": "SIGSEGV and SIGBUS still Go's at exit",
+     "ok": true,
+     "exit_signals": {
+      "SIGBUS": {
+       "signal": 7,
+       "owner": "go",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "SIGSEGV": {
+       "signal": 11,
+       "owner": "go",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "SIGUSR1": {
+       "signal": 10,
+       "owner": "go",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "SIGXCPU": {
+       "signal": 24,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "offset": "0x196d3f0",
+       "flags": [
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "reserved 60": {
+       "signal": 60,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "offset": "0x196b2d0",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      }
+     }
+    }
+   ],
+   "ok": true,
+   "detail": {
+    "page_view": {
+     "img": "added",
+     "script": "added",
+     "css": "added",
+     "font": "added",
+     "fetch": "opaque",
+     "xhr": "0",
+     "beacon": "true",
+     "websocket": "error",
+     "eventsource": "error",
+     "prefetch": "added",
+     "iframe-cross": "added",
+     "iframe-same": "loaded 14",
+     "redirect-img": "added",
+     "redirect-fetch": "threw TypeError",
+     "ping": "clicked",
+     "other-endpoint": "threw TypeError"
+    },
+    "mechanism": {
+     "location": "navigation policy",
+     "redirect": "navigation policy",
+     "form": "navigation policy",
+     "popup": "create signal"
+    },
+    "collector": [
+     {
+      "method": "GET",
+      "path": "/img",
+      "credential": true,
+      "app_cookie": [],
+      "origin": null,
+      "upgrade": null,
+      "t": 1794505722.363
+     },
+     {
+      "method": "GET",
+      "path": "/script",
+      "credential": true,
+      "app_cookie": [],
+      "origin": null,
+      "upgrade": null,
+      "t": 1794505722.363
+     },
+     {
+      "method": "GET",
+      "path": "/css",
+      "credential": true,
+      "app_cookie": [],
+      "origin": null,
+      "upgrade": null,
+      "t": 1794505722.363
+     },
+     {
+      "method": "GET",
+      "path": "/fetch",
+      "credential": true,
+      "app_cookie": [],
+      "origin": null,
+      "upgrade": null,
+      "t": 1794505722.364
+     },
+     {
+      "method": "GET",
+      "path": "/font",
+      "credential": true,
+      "app_cookie": [],
+      "origin": null,
+      "upgrade": null,
+      "t": 1794505722.375
+     },
+     {
+      "method": "GET",
+      "path": "/xhr",
+      "credential": true,
+      "app_cookie": [],
+      "origin": "http://127.0.0.1:41475",
+      "upgrade": null,
+      "t": 1794505722.375
+     },
+     {
+      "method": "POST",
+      "path": "/beacon",
+      "credential": true,
+      "app_cookie": [],
+      "origin": "http://127.0.0.1:41475",
+      "upgrade": null,
+      "t": 1794505722.394
+     },
+     {
+      "method": "GET",
+      "path": "/ws",
+      "credential": true,
+      "app_cookie": [],
+      "origin": "http://127.0.0.1:41475",
+      "upgrade": "websocket",
+      "t": 1794505722.395
+     },
+     {
+      "method": "GET",
+      "path": "/sse",
+      "credential": false,
+      "app_cookie": [],
+      "origin": "http://127.0.0.1:41475",
+      "upgrade": null,
+      "t": 1794505722.482
+     },
+     {
+      "method": "GET",
+      "path": "/redirect-fetch",
+      "credential": false,
+      "app_cookie": [],
+      "origin": "http://127.0.0.1:41475",
+      "upgrade": null,
+      "t": 1794505722.497
+     },
+     {
+      "method": "GET",
+      "path": "/redirect-img",
+      "credential": true,
+      "app_cookie": [],
+      "origin": null,
+      "upgrade": null,
+      "t": 1794505722.497
+     },
+     {
+      "method": "POST",
+      "path": "/ping",
+      "credential": true,
+      "app_cookie": [],
+      "origin": "http://127.0.0.1:41475",
+      "upgrade": null,
+      "t": 1794505722.5
+     }
+    ],
+    "refusals": [
+     [
+      "navigation",
+      "COLLECTOR/iframe"
+     ],
+     [
+      "navigation",
+      "COLLECTOR/nav"
+     ],
+     [
+      "navigation",
+      "COLLECTOR/redirect-nav"
+     ],
+     [
+      "navigation",
+      "COLLECTOR/form"
+     ]
+    ]
+   },
+   "exit": {
+    "host_exit": 0,
+    "timed_out": false,
+    "children_pending": false,
+    "child_failure": false,
+    "fatal_log": false
+   },
+   "observed_processes": [
+    "WebKitNetworkPr",
+    "WebKitWebProces",
+    "bwrap",
+    "dfx2-wk-candida",
+    "glycin-svg",
+    "gst-plugin-scan"
+   ],
+   "signals": {
+    "start": {
+     "SIGBUS": {
+      "signal": 7,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGSEGV": {
+      "signal": 11,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGUSR1": {
+      "signal": 10,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGXCPU": {
+      "signal": 24,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "reserved 60": {
+      "signal": 60,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     }
+    },
+    "ready": {
+     "SIGBUS": {
+      "signal": 7,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGSEGV": {
+      "signal": 11,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGUSR1": {
+      "signal": 10,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGXCPU": {
+      "signal": 24,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "reserved 60": {
+      "signal": 60,
+      "owner": "default"
+     }
+    },
+    "exit": {
+     "SIGBUS": {
+      "signal": 7,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGSEGV": {
+      "signal": 11,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGUSR1": {
+      "signal": 10,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGXCPU": {
+      "signal": 24,
+      "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      "offset": "0x196d3f0",
+      "flags": [
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "reserved 60": {
+      "signal": 60,
+      "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      "offset": "0x196b2d0",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     }
+    }
+   },
+   "reservation": {
+    "checks": [
+     {
+      "check": "supplied",
+      "passed": true,
+      "detail": "an explicit reservation; the host infers nothing"
+     },
+     {
+      "check": "within libc's real-time range",
+      "passed": true,
+      "detail": "60 in [34, 64]",
+      "cannot_establish": "that no other library uses it"
+     },
+     {
+      "check": "kernel disposition is Go's handler",
+      "passed": true,
+      "detail": "owner go",
+      "cannot_establish": "that no Go subscriber exists: subscribed and unsubscribed signals look identical"
+     },
+     {
+      "check": "not blocked on the initializing thread",
+      "passed": true,
+      "cannot_establish": "the masks of threads created later"
+     },
+     {
+      "check": "not among the application's declared subscriptions",
+      "passed": true,
+      "cannot_establish": "subscriptions the application did not declare"
+     },
+     {
+      "check": "not ignored through os/signal",
+      "passed": true
+     },
+     {
+      "check": "JSC_SIGNAL_FOR_GC unset or equal",
+      "passed": true,
+      "detail": "JSC_SIGNAL_FOR_GC="
+     }
+    ],
+    "configured": true,
+    "signal": 60
+   },
+   "filter_store_removal": {
+    "path": "",
+    "attempts": 0,
+    "elapsed_ns": 0,
+    "removed": false
+   },
+   "refused_js": 0,
+   "monitor": "not run: browser cases only (--no-monitor)",
+   "seconds": 10.5
+  },
+  {
+   "scenario": "inprocess-isolation",
+   "flags": [
+    "-feas-vmfree",
+    "-signal-reserve",
+    "60"
+   ],
+   "checks": [
+    {
+     "check": "in-process page, assets, query and POST",
+     "ok": true,
+     "checks": {
+      "origin": "dfx2://spike",
+      "css": true,
+      "img": true,
+      "script": true,
+      "cookieVisible": false,
+      "query": "\u00e9&\u00fc",
+      "echoLength": 1005,
+      "echoSha": "a5903776f0c8d72f5b1e8689519fc8d9d6317785a20e31659786c8d8703a6b8c"
+     }
+    },
+    {
+     "check": "naming the shared origin reaches only the window's own handler",
+     "ok": true,
+     "i1": {
+      "GET /": 3,
+      "GET /api/count": 1,
+      "GET /api/query": 1,
+      "GET /logo.svg": 3,
+      "GET /probe.css": 3,
+      "GET /probe.js": 3,
+      "POST /api/echo": 1,
+      "POST /api/report": 2
+     },
+     "i2": {
+      "GET /": 1,
+      "GET /logo.svg": 1,
+      "GET /probe.css": 1,
+      "GET /probe.js": 1
+     }
+    },
+    {
+     "check": "an in-process page cannot reach the collector",
+     "ok": true,
+     "received": []
+    },
+    {
+     "check": "same in-process origin, separate sessions: I2 cannot read I1's storage",
+     "ok": true,
+     "i1": {
+      "cookie": "",
+      "local": "I1",
+      "session": "I1"
+     },
+     "i2": {
+      "cookie": "",
+      "local": null,
+      "session": null
+     }
+    },
+    {
+     "check": "SIGSEGV and SIGBUS still Go's at exit",
+     "ok": true,
+     "exit_signals": {
+      "SIGBUS": {
+       "signal": 7,
+       "owner": "go",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "SIGSEGV": {
+       "signal": 11,
+       "owner": "go",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "SIGUSR1": {
+       "signal": 10,
+       "owner": "go",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "SIGXCPU": {
+       "signal": 24,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "offset": "0x196d3f0",
+       "flags": [
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "reserved 60": {
+       "signal": 60,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "offset": "0x196b2d0",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      }
+     }
+    }
+   ],
+   "ok": true,
+   "detail": {},
+   "exit": {
+    "host_exit": 0,
+    "timed_out": false,
+    "children_pending": false,
+    "child_failure": false,
+    "fatal_log": false
+   },
+   "observed_processes": [
+    "WebKitNetworkPr",
+    "WebKitWebProces",
+    "bwrap",
+    "dfx2-wk-candida",
+    "glycin-svg",
+    "gst-plugin-scan"
+   ],
+   "signals": {
+    "start": {
+     "SIGBUS": {
+      "signal": 7,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGSEGV": {
+      "signal": 11,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGUSR1": {
+      "signal": 10,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGXCPU": {
+      "signal": 24,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "reserved 60": {
+      "signal": 60,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     }
+    },
+    "ready": {
+     "SIGBUS": {
+      "signal": 7,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGSEGV": {
+      "signal": 11,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGUSR1": {
+      "signal": 10,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGXCPU": {
+      "signal": 24,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "reserved 60": {
+      "signal": 60,
+      "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      "offset": "0x196b2d0",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     }
+    },
+    "exit": {
+     "SIGBUS": {
+      "signal": 7,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGSEGV": {
+      "signal": 11,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGUSR1": {
+      "signal": 10,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGXCPU": {
+      "signal": 24,
+      "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      "offset": "0x196d3f0",
+      "flags": [
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "reserved 60": {
+      "signal": 60,
+      "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      "offset": "0x196b2d0",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     }
+    }
+   },
+   "reservation": {
+    "checks": [
+     {
+      "check": "supplied",
+      "passed": true,
+      "detail": "an explicit reservation; the host infers nothing"
+     },
+     {
+      "check": "within libc's real-time range",
+      "passed": true,
+      "detail": "60 in [34, 64]",
+      "cannot_establish": "that no other library uses it"
+     },
+     {
+      "check": "kernel disposition is Go's handler",
+      "passed": true,
+      "detail": "owner go",
+      "cannot_establish": "that no Go subscriber exists: subscribed and unsubscribed signals look identical"
+     },
+     {
+      "check": "not blocked on the initializing thread",
+      "passed": true,
+      "cannot_establish": "the masks of threads created later"
+     },
+     {
+      "check": "not among the application's declared subscriptions",
+      "passed": true,
+      "cannot_establish": "subscriptions the application did not declare"
+     },
+     {
+      "check": "not ignored through os/signal",
+      "passed": true
+     },
+     {
+      "check": "JSC_SIGNAL_FOR_GC unset or equal",
+      "passed": true,
+      "detail": "JSC_SIGNAL_FOR_GC="
+     }
+    ],
+    "configured": true,
+    "signal": 60
+   },
+   "filter_store_removal": {
+    "path": "/tmp/dfx2-feasibility/filters-476460",
+    "attempts": 1,
+    "elapsed_ns": 154055,
+    "removed": true
+   },
+   "refused_js": 0,
+   "monitor": "not run: browser cases only (--no-monitor)",
+   "seconds": 7.7
+  },
+  {
+   "scenario": "cookie-close-race",
+   "flags": [
+    "-feas-vmfree",
+    "-signal-reserve",
+    "60"
+   ],
+   "checks": [
+    {
+     "check": "close during installation: no navigation, ownership drained",
+     "ok": true,
+     "late": [
+      {
+       "event": "cookie-late",
+       "navigated": false,
+       "ok": false,
+       "t": "12:48:58.517",
+       "window": "A"
+      },
+      {
+       "event": "filter-late",
+       "t": "12:48:58.512",
+       "window": "A"
+      }
+     ],
+     "closed": {
+      "endpoint": {
+       "admitted": 0,
+       "refused": {},
+       "handled": 0
+      },
+      "event": "closed",
+      "handler": {},
+      "handlers_drained": true,
+      "native_async": 0,
+      "native_requests": 0,
+      "t": "12:48:58.518",
+      "window": "A"
+     }
+    },
+    {
+     "check": "SIGSEGV and SIGBUS still Go's at exit",
+     "ok": true,
+     "exit_signals": {
+      "SIGBUS": {
+       "signal": 7,
+       "owner": "go",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "SIGSEGV": {
+       "signal": 11,
+       "owner": "go",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "SIGUSR1": {
+       "signal": 10,
+       "owner": "go",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "SIGXCPU": {
+       "signal": 24,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "offset": "0x196d3f0",
+       "flags": [
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "reserved 60": {
+       "signal": 60,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "offset": "0x196b2d0",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      }
+     }
+    }
+   ],
+   "ok": true,
+   "detail": {
+    "late": [
+     {
+      "event": "cookie-late",
+      "navigated": false,
+      "ok": false,
+      "t": "12:48:58.517",
+      "window": "A"
+     },
+     {
+      "event": "filter-late",
+      "t": "12:48:58.512",
+      "window": "A"
+     }
+    ]
+   },
+   "exit": {
+    "host_exit": 0,
+    "timed_out": false,
+    "children_pending": false,
+    "child_failure": false,
+    "fatal_log": false
+   },
+   "observed_processes": [
+    "WebKitNetworkPr",
+    "bwrap",
+    "dfx2-wk-candida",
+    "glycin-svg"
+   ],
+   "signals": {
+    "start": {
+     "SIGBUS": {
+      "signal": 7,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGSEGV": {
+      "signal": 11,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGUSR1": {
+      "signal": 10,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGXCPU": {
+      "signal": 24,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "reserved 60": {
+      "signal": 60,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     }
+    },
+    "ready": {
+     "SIGBUS": {
+      "signal": 7,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGSEGV": {
+      "signal": 11,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGUSR1": {
+      "signal": 10,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGXCPU": {
+      "signal": 24,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "reserved 60": {
+      "signal": 60,
+      "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      "offset": "0x196b2d0",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     }
+    },
+    "exit": {
+     "SIGBUS": {
+      "signal": 7,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGSEGV": {
+      "signal": 11,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGUSR1": {
+      "signal": 10,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGXCPU": {
+      "signal": 24,
+      "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      "offset": "0x196d3f0",
+      "flags": [
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "reserved 60": {
+      "signal": 60,
+      "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      "offset": "0x196b2d0",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     }
+    }
+   },
+   "reservation": {
+    "checks": [
+     {
+      "check": "supplied",
+      "passed": true,
+      "detail": "an explicit reservation; the host infers nothing"
+     },
+     {
+      "check": "within libc's real-time range",
+      "passed": true,
+      "detail": "60 in [34, 64]",
+      "cannot_establish": "that no other library uses it"
+     },
+     {
+      "check": "kernel disposition is Go's handler",
+      "passed": true,
+      "detail": "owner go",
+      "cannot_establish": "that no Go subscriber exists: subscribed and unsubscribed signals look identical"
+     },
+     {
+      "check": "not blocked on the initializing thread",
+      "passed": true,
+      "cannot_establish": "the masks of threads created later"
+     },
+     {
+      "check": "not among the application's declared subscriptions",
+      "passed": true,
+      "cannot_establish": "subscriptions the application did not declare"
+     },
+     {
+      "check": "not ignored through os/signal",
+      "passed": true
+     },
+     {
+      "check": "JSC_SIGNAL_FOR_GC unset or equal",
+      "passed": true,
+      "detail": "JSC_SIGNAL_FOR_GC="
+     }
+    ],
+    "configured": true,
+    "signal": 60
+   },
+   "filter_store_removal": {
+    "path": "/tmp/dfx2-feasibility/filters-477388",
+    "attempts": 1,
+    "elapsed_ns": 141397,
+    "removed": true
+   },
+   "refused_js": 0,
+   "monitor": "not run: browser cases only (--no-monitor)",
+   "seconds": 0.3
+  },
+  {
+   "scenario": "cookie-failure-injected",
+   "flags": [
+    "-feas-vmfree",
+    "-signal-reserve",
+    "60",
+    "-feas-cookie-fail"
+   ],
+   "checks": [
+    {
+     "check": "injected installation failure: visible, no navigation, drained",
+     "ok": true,
+     "failed": {
+      "error": "injected: cookie installation failure",
+      "event": "cookie-failed",
+      "t": "12:48:58.840",
+      "window": "A"
+     },
+     "closed": {
+      "endpoint": {
+       "admitted": 0,
+       "refused": {},
+       "handled": 0
+      },
+      "event": "closed",
+      "handler": {},
+      "handlers_drained": true,
+      "native_async": 0,
+      "native_requests": 0,
+      "t": "12:48:58.841",
+      "window": "A"
+     }
+    },
+    {
+     "check": "SIGSEGV and SIGBUS still Go's at exit",
+     "ok": true,
+     "exit_signals": {
+      "SIGBUS": {
+       "signal": 7,
+       "owner": "go",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "SIGSEGV": {
+       "signal": 11,
+       "owner": "go",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "SIGUSR1": {
+       "signal": 10,
+       "owner": "go",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "SIGXCPU": {
+       "signal": 24,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "offset": "0x196d3f0",
+       "flags": [
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "reserved 60": {
+       "signal": 60,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "offset": "0x196b2d0",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      }
+     }
+    }
+   ],
+   "ok": true,
+   "detail": {},
+   "exit": {
+    "host_exit": 0,
+    "timed_out": false,
+    "children_pending": false,
+    "child_failure": false,
+    "fatal_log": false
+   },
+   "observed_processes": [
+    "WebKitNetworkPr",
+    "bwrap",
+    "dfx2-wk-candida",
+    "glycin-svg"
+   ],
+   "signals": {
+    "start": {
+     "SIGBUS": {
+      "signal": 7,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGSEGV": {
+      "signal": 11,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGUSR1": {
+      "signal": 10,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGXCPU": {
+      "signal": 24,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "reserved 60": {
+      "signal": 60,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     }
+    },
+    "ready": {
+     "SIGBUS": {
+      "signal": 7,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGSEGV": {
+      "signal": 11,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGUSR1": {
+      "signal": 10,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGXCPU": {
+      "signal": 24,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "reserved 60": {
+      "signal": 60,
+      "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      "offset": "0x196b2d0",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     }
+    },
+    "exit": {
+     "SIGBUS": {
+      "signal": 7,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGSEGV": {
+      "signal": 11,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGUSR1": {
+      "signal": 10,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGXCPU": {
+      "signal": 24,
+      "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      "offset": "0x196d3f0",
+      "flags": [
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "reserved 60": {
+      "signal": 60,
+      "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      "offset": "0x196b2d0",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     }
+    }
+   },
+   "reservation": {
+    "checks": [
+     {
+      "check": "supplied",
+      "passed": true,
+      "detail": "an explicit reservation; the host infers nothing"
+     },
+     {
+      "check": "within libc's real-time range",
+      "passed": true,
+      "detail": "60 in [34, 64]",
+      "cannot_establish": "that no other library uses it"
+     },
+     {
+      "check": "kernel disposition is Go's handler",
+      "passed": true,
+      "detail": "owner go",
+      "cannot_establish": "that no Go subscriber exists: subscribed and unsubscribed signals look identical"
+     },
+     {
+      "check": "not blocked on the initializing thread",
+      "passed": true,
+      "cannot_establish": "the masks of threads created later"
+     },
+     {
+      "check": "not among the application's declared subscriptions",
+      "passed": true,
+      "cannot_establish": "subscriptions the application did not declare"
+     },
+     {
+      "check": "not ignored through os/signal",
+      "passed": true
+     },
+     {
+      "check": "JSC_SIGNAL_FOR_GC unset or equal",
+      "passed": true,
+      "detail": "JSC_SIGNAL_FOR_GC="
+     }
+    ],
+    "configured": true,
+    "signal": 60
+   },
+   "filter_store_removal": {
+    "path": "/tmp/dfx2-feasibility/filters-477605",
+    "attempts": 1,
+    "elapsed_ns": 97715,
+    "removed": true
+   },
+   "refused_js": 0,
+   "monitor": "not run: browser cases only (--no-monitor)",
+   "seconds": 0.3
+  },
+  {
+   "scenario": "storage",
+   "flags": [
+    "-feas-vmfree",
+    "-signal-reserve",
+    "60"
+   ],
+   "checks": [
+    {
+     "check": "B cannot read A's cookie, local or session storage",
+     "ok": true,
+     "a": {
+      "cookie": "vis=A",
+      "local": "A",
+      "session": "A"
+     },
+     "b": {
+      "cookie": "",
+      "local": null,
+      "session": null
+     }
+    },
+    {
+     "check": "B's request for A's cached resource reaches the server",
+     "ok": true,
+     "server_requests": {
+      "A fetch x2": 2,
+      "A image x2": 2,
+      "B image x2": 2
+     }
+    },
+    {
+     "check": "native reload keeps A's session",
+     "ok": true,
+     "a": {
+      "cookie": "vis=A",
+      "local": "A",
+      "session": "A"
+     }
+    },
+    {
+     "check": "B kept working while A closed",
+     "ok": true,
+     "during": [
+      {
+       "x": "during0"
+      },
+      {
+       "x": "during1"
+      },
+      {
+       "x": "during2"
+      }
+     ]
+    },
+    {
+     "check": "reopened A has a fresh session",
+     "ok": true,
+     "a2": {
+      "cookie": "",
+      "local": null,
+      "session": null
+     }
+    },
+    {
+     "check": "B is unchanged",
+     "ok": true,
+     "b": {
+      "cookie": "vis=B",
+      "local": "B",
+      "session": "B"
+     }
+    },
+    {
+     "check": "the attachment server outlives its browsers",
+     "ok": true,
+     "status": 200
+    },
+    {
+     "check": "SIGSEGV and SIGBUS still Go's at exit",
+     "ok": true,
+     "exit_signals": {
+      "SIGBUS": {
+       "signal": 7,
+       "owner": "go",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "SIGSEGV": {
+       "signal": 11,
+       "owner": "go",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "SIGUSR1": {
+       "signal": 10,
+       "owner": "go",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "SIGXCPU": {
+       "signal": 24,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "offset": "0x196d3f0",
+       "flags": [
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "reserved 60": {
+       "signal": 60,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "offset": "0x196b2d0",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      }
+     }
+    }
+   ],
+   "ok": true,
+   "detail": {},
+   "exit": {
+    "host_exit": 0,
+    "timed_out": false,
+    "children_pending": false,
+    "child_failure": false,
+    "fatal_log": false
+   },
+   "observed_processes": [
+    "WebKitNetworkPr",
+    "WebKitWebProces",
+    "bwrap",
+    "dfx2-wk-candida",
+    "glycin-svg",
+    "gst-plugin-scan"
+   ],
+   "signals": {
+    "start": {
+     "SIGBUS": {
+      "signal": 7,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGSEGV": {
+      "signal": 11,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGUSR1": {
+      "signal": 10,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGXCPU": {
+      "signal": 24,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "reserved 60": {
+      "signal": 60,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     }
+    },
+    "ready": {
+     "SIGBUS": {
+      "signal": 7,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGSEGV": {
+      "signal": 11,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGUSR1": {
+      "signal": 10,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGXCPU": {
+      "signal": 24,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "reserved 60": {
+      "signal": 60,
+      "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      "offset": "0x196b2d0",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     }
+    },
+    "exit": {
+     "SIGBUS": {
+      "signal": 7,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGSEGV": {
+      "signal": 11,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGUSR1": {
+      "signal": 10,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGXCPU": {
+      "signal": 24,
+      "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      "offset": "0x196d3f0",
+      "flags": [
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "reserved 60": {
+      "signal": 60,
+      "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      "offset": "0x196b2d0",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     }
+    }
+   },
+   "reservation": {
+    "checks": [
+     {
+      "check": "supplied",
+      "passed": true,
+      "detail": "an explicit reservation; the host infers nothing"
+     },
+     {
+      "check": "within libc's real-time range",
+      "passed": true,
+      "detail": "60 in [34, 64]",
+      "cannot_establish": "that no other library uses it"
+     },
+     {
+      "check": "kernel disposition is Go's handler",
+      "passed": true,
+      "detail": "owner go",
+      "cannot_establish": "that no Go subscriber exists: subscribed and unsubscribed signals look identical"
+     },
+     {
+      "check": "not blocked on the initializing thread",
+      "passed": true,
+      "cannot_establish": "the masks of threads created later"
+     },
+     {
+      "check": "not among the application's declared subscriptions",
+      "passed": true,
+      "cannot_establish": "subscriptions the application did not declare"
+     },
+     {
+      "check": "not ignored through os/signal",
+      "passed": true
+     },
+     {
+      "check": "JSC_SIGNAL_FOR_GC unset or equal",
+      "passed": true,
+      "detail": "JSC_SIGNAL_FOR_GC="
+     }
+    ],
+    "configured": true,
+    "signal": 60
+   },
+   "filter_store_removal": {
+    "path": "/tmp/dfx2-feasibility/filters-477818",
+    "attempts": 1,
+    "elapsed_ns": 152745,
+    "removed": true
+   },
+   "refused_js": 0,
+   "monitor": "not run: browser cases only (--no-monitor)",
+   "seconds": 4.5
+  },
+  {
+   "scenario": "error-pages",
+   "flags": [
+    "-feas-vmfree",
+    "-signal-reserve",
+    "60"
+   ],
+   "checks": [
+    {
+     "check": "failed GET: Retry and Return to start, no script",
+     "ok": true,
+     "failed": {
+      "code": 39,
+      "domain": "g-io-error-quark",
+      "error_page": true,
+      "event": "load-failed",
+      "from_post": false,
+      "message": "Could not connect to 127.0.0.1: Connection refused",
+      "method": "GET",
+      "retry_offered": true,
+      "t": "12:49:06.507",
+      "uri": "http://127.0.0.1:37463/api/query?x=later",
+      "window": "E"
+     },
+     "page": {
+      "event": "error-page",
+      "retry": true,
+      "retry_at": [
+       130,
+       262
+      ],
+      "script": false,
+      "start_at": [
+       350,
+       262
+      ],
+      "t": "12:49:06.507",
+      "uri": "http://127.0.0.1:37463/api/query?x=later",
+      "window": "E"
+     }
+    },
+    {
+     "check": "clicked Retry repeats the failed GET once the service returns",
+     "ok": true
+    },
+    {
+     "check": "a page-supplied action is refused",
+     "ok": true
+    },
+    {
+     "check": "failed POST shows only Return to start",
+     "ok": true,
+     "failed": {
+      "code": 39,
+      "domain": "g-io-error-quark",
+      "error_page": true,
+      "event": "load-failed",
+      "from_post": true,
+      "message": "Could not connect to 127.0.0.1: Connection refused",
+      "method": "POST",
+      "retry_offered": false,
+      "t": "12:49:08.105",
+      "uri": "http://127.0.0.1:37463/api/form",
+      "window": "E"
+     }
+    },
+    {
+     "check": "a click where Retry would be does nothing on the POST page",
+     "ok": true
+    },
+    {
+     "check": "clicked Return to start is a GET and replays nothing",
+     "ok": true,
+     "edits": []
+    },
+    {
+     "check": "a GET reached by 303 after a POST offers Retry of the GET",
+     "ok": true,
+     "failed": {
+      "code": 34,
+      "domain": "g-io-error-quark",
+      "error_page": true,
+      "event": "load-failed",
+      "from_post": true,
+      "message": "Connection terminated unexpectedly",
+      "method": "GET",
+      "retry_offered": true,
+      "t": "12:49:10.211",
+      "uri": "http://127.0.0.1:37463/broken",
+      "window": "E"
+     }
+    },
+    {
+     "check": "Retry after the 303 replays no POST",
+     "ok": true,
+     "post_303": 1,
+     "broken": 2
+    },
+    {
+     "check": "a POST preserved by 307 offers no Retry",
+     "ok": true,
+     "failed": {
+      "code": 34,
+      "domain": "g-io-error-quark",
+      "error_page": true,
+      "event": "load-failed",
+      "from_post": true,
+      "message": "Connection terminated unexpectedly",
+      "method": "POST",
+      "retry_offered": false,
+      "t": "12:49:10.251",
+      "uri": "http://127.0.0.1:37463/broken-post",
+      "window": "E"
+     }
+    },
+    {
+     "check": "404 and 500 display; a failed fetch or asset leaves the page",
+     "ok": true,
+     "missing": "404 from the server",
+     "e500": "500 from the server",
+     "broken": {
+      "fetched": "rejected: TypeError",
+      "path": "/",
+      "form": true
+     }
+    },
+    {
+     "check": "initial-load failure, then clicked Retry",
+     "ok": true,
+     "initial": {
+      "code": 39,
+      "domain": "g-io-error-quark",
+      "error_page": true,
+      "event": "load-failed",
+      "from_post": false,
+      "message": "Could not connect to 127.0.0.1: Connection refused",
+      "method": "GET",
+      "retry_offered": true,
+      "t": "12:49:12.522",
+      "uri": "http://127.0.0.1:37463/",
+      "window": "F"
+     }
+    },
+    {
+     "check": "SIGSEGV and SIGBUS still Go's at exit",
+     "ok": true,
+     "exit_signals": {
+      "SIGBUS": {
+       "signal": 7,
+       "owner": "go",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "SIGSEGV": {
+       "signal": 11,
+       "owner": "go",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "SIGUSR1": {
+       "signal": 10,
+       "owner": "go",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "SIGXCPU": {
+       "signal": 24,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "offset": "0x196d3f0",
+       "flags": [
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "reserved 60": {
+       "signal": 60,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "offset": "0x196b2d0",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      }
+     }
+    }
+   ],
+   "ok": true,
+   "detail": {
+    "edits": [
+     {
+      "method": "POST",
+      "path": "/post-303",
+      "credential": false,
+      "app_cookie": [],
+      "origin": "http://127.0.0.1:37463",
+      "upgrade": null,
+      "t": 1794505750.209
+     },
+     {
+      "method": "POST",
+      "path": "/post-307",
+      "credential": false,
+      "app_cookie": [],
+      "origin": "http://127.0.0.1:37463",
+      "upgrade": null,
+      "t": 1794505750.25
+     },
+     {
+      "method": "POST",
+      "path": "/broken-post",
+      "credential": false,
+      "app_cookie": [],
+      "origin": "http://127.0.0.1:37463",
+      "upgrade": null,
+      "t": 1794505750.251
+     }
+    ]
+   },
+   "exit": {
+    "host_exit": 0,
+    "timed_out": false,
+    "children_pending": false,
+    "child_failure": false,
+    "fatal_log": false
+   },
+   "observed_processes": [
+    "WebKitNetworkPr",
+    "WebKitWebProces",
+    "bwrap",
+    "dfx2-wk-candida",
+    "glycin-svg",
+    "gst-plugin-scan"
+   ],
+   "signals": {
+    "start": {
+     "SIGBUS": {
+      "signal": 7,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGSEGV": {
+      "signal": 11,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGUSR1": {
+      "signal": 10,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGXCPU": {
+      "signal": 24,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "reserved 60": {
+      "signal": 60,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     }
+    },
+    "ready": {
+     "SIGBUS": {
+      "signal": 7,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGSEGV": {
+      "signal": 11,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGUSR1": {
+      "signal": 10,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGXCPU": {
+      "signal": 24,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "reserved 60": {
+      "signal": 60,
+      "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      "offset": "0x196b2d0",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     }
+    },
+    "exit": {
+     "SIGBUS": {
+      "signal": 7,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGSEGV": {
+      "signal": 11,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGUSR1": {
+      "signal": 10,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGXCPU": {
+      "signal": 24,
+      "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      "offset": "0x196d3f0",
+      "flags": [
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "reserved 60": {
+      "signal": 60,
+      "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      "offset": "0x196b2d0",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     }
+    }
+   },
+   "reservation": {
+    "checks": [
+     {
+      "check": "supplied",
+      "passed": true,
+      "detail": "an explicit reservation; the host infers nothing"
+     },
+     {
+      "check": "within libc's real-time range",
+      "passed": true,
+      "detail": "60 in [34, 64]",
+      "cannot_establish": "that no other library uses it"
+     },
+     {
+      "check": "kernel disposition is Go's handler",
+      "passed": true,
+      "detail": "owner go",
+      "cannot_establish": "that no Go subscriber exists: subscribed and unsubscribed signals look identical"
+     },
+     {
+      "check": "not blocked on the initializing thread",
+      "passed": true,
+      "cannot_establish": "the masks of threads created later"
+     },
+     {
+      "check": "not among the application's declared subscriptions",
+      "passed": true,
+      "cannot_establish": "subscriptions the application did not declare"
+     },
+     {
+      "check": "not ignored through os/signal",
+      "passed": true
+     },
+     {
+      "check": "JSC_SIGNAL_FOR_GC unset or equal",
+      "passed": true,
+      "detail": "JSC_SIGNAL_FOR_GC="
+     }
+    ],
+    "configured": true,
+    "signal": 60
+   },
+   "filter_store_removal": {
+    "path": "/tmp/dfx2-feasibility/filters-478781",
+    "attempts": 1,
+    "elapsed_ns": 88016,
+    "removed": true
+   },
+   "refused_js": 0,
+   "monitor": "not run: browser cases only (--no-monitor)",
+   "seconds": 9.7
+  },
+  {
+   "scenario": "owned-load-failure",
+   "flags": [
+    "-feas-vmfree",
+    "-signal-reserve",
+    "60"
+   ],
+   "checks": [
+    {
+     "check": "loopback: native load failure shows the error page",
+     "ok": true,
+     "failed": {
+      "code": 34,
+      "domain": "g-io-error-quark",
+      "error_page": true,
+      "event": "load-failed",
+      "from_post": false,
+      "message": "Connection terminated unexpectedly",
+      "method": "GET",
+      "retry_offered": true,
+      "t": "12:49:14.696",
+      "uri": "http://127.0.0.1:40961/api/abort",
+      "window": "L"
+     }
+    },
+    {
+     "check": "loopback: clicked Return to start reloads the start page",
+     "ok": true,
+     "uri": "http://127.0.0.1:40961/"
+    },
+    {
+     "check": "inprocess: native load failure shows the error page",
+     "ok": true,
+     "failed": {
+      "code": 1,
+      "domain": "dfx2-spike",
+      "error_page": true,
+      "event": "load-failed",
+      "from_post": false,
+      "message": "injected transport failure: no response",
+      "method": "GET",
+      "retry_offered": true,
+      "t": "12:49:15.875",
+      "uri": "dfx2://spike/api/abort",
+      "window": "P"
+     }
+    },
+    {
+     "check": "inprocess: clicked Return to start reloads the start page",
+     "ok": true,
+     "uri": "dfx2://spike/"
+    },
+    {
+     "check": "SIGSEGV and SIGBUS still Go's at exit",
+     "ok": true,
+     "exit_signals": {
+      "SIGBUS": {
+       "signal": 7,
+       "owner": "go",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "SIGSEGV": {
+       "signal": 11,
+       "owner": "go",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "SIGUSR1": {
+       "signal": 10,
+       "owner": "go",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "SIGXCPU": {
+       "signal": 24,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "offset": "0x196d3f0",
+       "flags": [
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "reserved 60": {
+       "signal": 60,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "offset": "0x196b2d0",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      }
+     }
+    }
+   ],
+   "ok": true,
+   "detail": {},
+   "exit": {
+    "host_exit": 0,
+    "timed_out": false,
+    "children_pending": false,
+    "child_failure": false,
+    "fatal_log": false
+   },
+   "observed_processes": [
+    "WebKitNetworkPr",
+    "WebKitWebProces",
+    "bwrap",
+    "dfx2-wk-candida",
+    "glycin-svg",
+    "gst-plugin-scan"
+   ],
+   "signals": {
+    "start": {
+     "SIGBUS": {
+      "signal": 7,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGSEGV": {
+      "signal": 11,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGUSR1": {
+      "signal": 10,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGXCPU": {
+      "signal": 24,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "reserved 60": {
+      "signal": 60,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     }
+    },
+    "ready": {
+     "SIGBUS": {
+      "signal": 7,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGSEGV": {
+      "signal": 11,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGUSR1": {
+      "signal": 10,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGXCPU": {
+      "signal": 24,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "reserved 60": {
+      "signal": 60,
+      "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      "offset": "0x196b2d0",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     }
+    },
+    "exit": {
+     "SIGBUS": {
+      "signal": 7,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGSEGV": {
+      "signal": 11,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGUSR1": {
+      "signal": 10,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGXCPU": {
+      "signal": 24,
+      "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      "offset": "0x196d3f0",
+      "flags": [
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "reserved 60": {
+      "signal": 60,
+      "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      "offset": "0x196b2d0",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     }
+    }
+   },
+   "reservation": {
+    "checks": [
+     {
+      "check": "supplied",
+      "passed": true,
+      "detail": "an explicit reservation; the host infers nothing"
+     },
+     {
+      "check": "within libc's real-time range",
+      "passed": true,
+      "detail": "60 in [34, 64]",
+      "cannot_establish": "that no other library uses it"
+     },
+     {
+      "check": "kernel disposition is Go's handler",
+      "passed": true,
+      "detail": "owner go",
+      "cannot_establish": "that no Go subscriber exists: subscribed and unsubscribed signals look identical"
+     },
+     {
+      "check": "not blocked on the initializing thread",
+      "passed": true,
+      "cannot_establish": "the masks of threads created later"
+     },
+     {
+      "check": "not among the application's declared subscriptions",
+      "passed": true,
+      "cannot_establish": "subscriptions the application did not declare"
+     },
+     {
+      "check": "not ignored through os/signal",
+      "passed": true
+     },
+     {
+      "check": "JSC_SIGNAL_FOR_GC unset or equal",
+      "passed": true,
+      "detail": "JSC_SIGNAL_FOR_GC="
+     }
+    ],
+    "configured": true,
+    "signal": 60
+   },
+   "filter_store_removal": {
+    "path": "/tmp/dfx2-feasibility/filters-479814",
+    "attempts": 1,
+    "elapsed_ns": 86183,
+    "removed": true
+   },
+   "refused_js": 0,
+   "monitor": "not run: browser cases only (--no-monitor)",
+   "seconds": 2.9
+  },
+  {
+   "scenario": "shutdown-loopback-ordinary",
+   "flags": [
+    "-feas-vmfree",
+    "-signal-reserve",
+    "60"
+   ],
+   "checks": [
+    {
+     "check": "ordinary close drains",
+     "ok": true,
+     "closed": {
+      "endpoint": {
+       "admitted": 4,
+       "refused": {},
+       "handled": 4
+      },
+      "event": "closed",
+      "handler": {
+       "GET /": 1,
+       "GET /logo.svg": 1,
+       "GET /probe.css": 1,
+       "GET /probe.js": 1
+      },
+      "handlers_drained": true,
+      "native_async": 0,
+      "native_requests": 0,
+      "t": "12:49:17.560",
+      "window": "S"
+     }
+    },
+    {
+     "check": "SIGSEGV and SIGBUS still Go's at exit",
+     "ok": true,
+     "exit_signals": {
+      "SIGBUS": {
+       "signal": 7,
+       "owner": "go",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "SIGSEGV": {
+       "signal": 11,
+       "owner": "go",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "SIGUSR1": {
+       "signal": 10,
+       "owner": "go",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "SIGXCPU": {
+       "signal": 24,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "offset": "0x196d3f0",
+       "flags": [
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "reserved 60": {
+       "signal": 60,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "offset": "0x196b2d0",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      }
+     }
+    }
+   ],
+   "ok": true,
+   "detail": {},
+   "exit": {
+    "host_exit": 0,
+    "timed_out": false,
+    "children_pending": false,
+    "child_failure": false,
+    "fatal_log": false
+   },
+   "observed_processes": [
+    "WebKitNetworkPr",
+    "WebKitWebProces",
+    "bwrap",
+    "dfx2-wk-candida",
+    "glycin-svg",
+    "gst-plugin-scan"
+   ],
+   "signals": {
+    "start": {
+     "SIGBUS": {
+      "signal": 7,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGSEGV": {
+      "signal": 11,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGUSR1": {
+      "signal": 10,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGXCPU": {
+      "signal": 24,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "reserved 60": {
+      "signal": 60,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     }
+    },
+    "ready": {
+     "SIGBUS": {
+      "signal": 7,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGSEGV": {
+      "signal": 11,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGUSR1": {
+      "signal": 10,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGXCPU": {
+      "signal": 24,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "reserved 60": {
+      "signal": 60,
+      "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      "offset": "0x196b2d0",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     }
+    },
+    "exit": {
+     "SIGBUS": {
+      "signal": 7,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGSEGV": {
+      "signal": 11,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGUSR1": {
+      "signal": 10,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGXCPU": {
+      "signal": 24,
+      "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      "offset": "0x196d3f0",
+      "flags": [
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "reserved 60": {
+      "signal": 60,
+      "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      "offset": "0x196b2d0",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     }
+    }
+   },
+   "reservation": {
+    "checks": [
+     {
+      "check": "supplied",
+      "passed": true,
+      "detail": "an explicit reservation; the host infers nothing"
+     },
+     {
+      "check": "within libc's real-time range",
+      "passed": true,
+      "detail": "60 in [34, 64]",
+      "cannot_establish": "that no other library uses it"
+     },
+     {
+      "check": "kernel disposition is Go's handler",
+      "passed": true,
+      "detail": "owner go",
+      "cannot_establish": "that no Go subscriber exists: subscribed and unsubscribed signals look identical"
+     },
+     {
+      "check": "not blocked on the initializing thread",
+      "passed": true,
+      "cannot_establish": "the masks of threads created later"
+     },
+     {
+      "check": "not among the application's declared subscriptions",
+      "passed": true,
+      "cannot_establish": "subscriptions the application did not declare"
+     },
+     {
+      "check": "not ignored through os/signal",
+      "passed": true
+     },
+     {
+      "check": "JSC_SIGNAL_FOR_GC unset or equal",
+      "passed": true,
+      "detail": "JSC_SIGNAL_FOR_GC="
+     }
+    ],
+    "configured": true,
+    "signal": 60
+   },
+   "filter_store_removal": {
+    "path": "/tmp/dfx2-feasibility/filters-480585",
+    "attempts": 1,
+    "elapsed_ns": 119397,
+    "removed": true
+   },
+   "refused_js": 0,
+   "monitor": "not run: browser cases only (--no-monitor)",
+   "seconds": 1.6
+  },
+  {
+   "scenario": "shutdown-loopback-pending",
+   "flags": [
+    "-feas-vmfree",
+    "-signal-reserve",
+    "60"
+   ],
+   "checks": [
+    {
+     "check": "pending close drains",
+     "ok": true,
+     "closed": {
+      "endpoint": {
+       "admitted": 10,
+       "refused": {},
+       "handled": 10
+      },
+      "event": "closed",
+      "handler": {
+       "GET /": 2,
+       "GET /api/slow": 1,
+       "GET /logo.svg": 2,
+       "GET /probe.css": 2,
+       "GET /probe.js": 2,
+       "POST /api/report": 1
+      },
+      "handlers_drained": true,
+      "native_async": 0,
+      "native_requests": 0,
+      "t": "12:49:19.469",
+      "window": "S"
+     }
+    },
+    {
+     "check": "SIGSEGV and SIGBUS still Go's at exit",
+     "ok": true,
+     "exit_signals": {
+      "SIGBUS": {
+       "signal": 7,
+       "owner": "go",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "SIGSEGV": {
+       "signal": 11,
+       "owner": "go",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "SIGUSR1": {
+       "signal": 10,
+       "owner": "go",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "SIGXCPU": {
+       "signal": 24,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "offset": "0x196d3f0",
+       "flags": [
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "reserved 60": {
+       "signal": 60,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "offset": "0x196b2d0",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      }
+     }
+    }
+   ],
+   "ok": true,
+   "detail": {},
+   "exit": {
+    "host_exit": 0,
+    "timed_out": false,
+    "children_pending": false,
+    "child_failure": false,
+    "fatal_log": false
+   },
+   "observed_processes": [
+    "WebKitNetworkPr",
+    "WebKitWebProces",
+    "bwrap",
+    "dfx2-wk-candida",
+    "glycin-svg",
+    "gst-plugin-scan"
+   ],
+   "signals": {
+    "start": {
+     "SIGBUS": {
+      "signal": 7,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGSEGV": {
+      "signal": 11,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGUSR1": {
+      "signal": 10,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGXCPU": {
+      "signal": 24,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "reserved 60": {
+      "signal": 60,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     }
+    },
+    "ready": {
+     "SIGBUS": {
+      "signal": 7,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGSEGV": {
+      "signal": 11,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGUSR1": {
+      "signal": 10,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGXCPU": {
+      "signal": 24,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "reserved 60": {
+      "signal": 60,
+      "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      "offset": "0x196b2d0",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     }
+    },
+    "exit": {
+     "SIGBUS": {
+      "signal": 7,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGSEGV": {
+      "signal": 11,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGUSR1": {
+      "signal": 10,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGXCPU": {
+      "signal": 24,
+      "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      "offset": "0x196d3f0",
+      "flags": [
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "reserved 60": {
+      "signal": 60,
+      "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      "offset": "0x196b2d0",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     }
+    }
+   },
+   "reservation": {
+    "checks": [
+     {
+      "check": "supplied",
+      "passed": true,
+      "detail": "an explicit reservation; the host infers nothing"
+     },
+     {
+      "check": "within libc's real-time range",
+      "passed": true,
+      "detail": "60 in [34, 64]",
+      "cannot_establish": "that no other library uses it"
+     },
+     {
+      "check": "kernel disposition is Go's handler",
+      "passed": true,
+      "detail": "owner go",
+      "cannot_establish": "that no Go subscriber exists: subscribed and unsubscribed signals look identical"
+     },
+     {
+      "check": "not blocked on the initializing thread",
+      "passed": true,
+      "cannot_establish": "the masks of threads created later"
+     },
+     {
+      "check": "not among the application's declared subscriptions",
+      "passed": true,
+      "cannot_establish": "subscriptions the application did not declare"
+     },
+     {
+      "check": "not ignored through os/signal",
+      "passed": true
+     },
+     {
+      "check": "JSC_SIGNAL_FOR_GC unset or equal",
+      "passed": true,
+      "detail": "JSC_SIGNAL_FOR_GC="
+     }
+    ],
+    "configured": true,
+    "signal": 60
+   },
+   "filter_store_removal": {
+    "path": "/tmp/dfx2-feasibility/filters-480860",
+    "attempts": 1,
+    "elapsed_ns": 87096,
+    "removed": true
+   },
+   "refused_js": 0,
+   "monitor": "not run: browser cases only (--no-monitor)",
+   "seconds": 1.9
+  },
+  {
+   "scenario": "shutdown-loopback-inspector",
+   "flags": [
+    "-feas-vmfree",
+    "-signal-reserve",
+    "60"
+   ],
+   "checks": [
+    {
+     "check": "inspector close drains",
+     "ok": true,
+     "closed": {
+      "endpoint": {
+       "admitted": 10,
+       "refused": {},
+       "handled": 10
+      },
+      "event": "closed",
+      "handler": {
+       "GET /": 2,
+       "GET /api/slow": 1,
+       "GET /logo.svg": 2,
+       "GET /probe.css": 2,
+       "GET /probe.js": 2,
+       "POST /api/report": 1
+      },
+      "handlers_drained": true,
+      "native_async": 0,
+      "native_requests": 0,
+      "t": "12:49:22.852",
+      "window": "S"
+     }
+    },
+    {
+     "check": "SIGSEGV and SIGBUS still Go's at exit",
+     "ok": true,
+     "exit_signals": {
+      "SIGBUS": {
+       "signal": 7,
+       "owner": "go",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "SIGSEGV": {
+       "signal": 11,
+       "owner": "go",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "SIGUSR1": {
+       "signal": 10,
+       "owner": "go",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "SIGXCPU": {
+       "signal": 24,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "offset": "0x196d3f0",
+       "flags": [
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "reserved 60": {
+       "signal": 60,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "offset": "0x196b2d0",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      }
+     }
+    }
+   ],
+   "ok": true,
+   "detail": {},
+   "exit": {
+    "host_exit": 0,
+    "timed_out": false,
+    "children_pending": false,
+    "child_failure": false,
+    "fatal_log": false
+   },
+   "observed_processes": [
+    "WebKitNetworkPr",
+    "WebKitWebProces",
+    "bwrap",
+    "dfx2-wk-candida",
+    "glycin-svg",
+    "gst-plugin-scan"
+   ],
+   "signals": {
+    "start": {
+     "SIGBUS": {
+      "signal": 7,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGSEGV": {
+      "signal": 11,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGUSR1": {
+      "signal": 10,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGXCPU": {
+      "signal": 24,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "reserved 60": {
+      "signal": 60,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     }
+    },
+    "ready": {
+     "SIGBUS": {
+      "signal": 7,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGSEGV": {
+      "signal": 11,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGUSR1": {
+      "signal": 10,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGXCPU": {
+      "signal": 24,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "reserved 60": {
+      "signal": 60,
+      "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      "offset": "0x196b2d0",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     }
+    },
+    "exit": {
+     "SIGBUS": {
+      "signal": 7,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGSEGV": {
+      "signal": 11,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGUSR1": {
+      "signal": 10,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGXCPU": {
+      "signal": 24,
+      "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      "offset": "0x196d3f0",
+      "flags": [
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "reserved 60": {
+      "signal": 60,
+      "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      "offset": "0x196b2d0",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     }
+    }
+   },
+   "reservation": {
+    "checks": [
+     {
+      "check": "supplied",
+      "passed": true,
+      "detail": "an explicit reservation; the host infers nothing"
+     },
+     {
+      "check": "within libc's real-time range",
+      "passed": true,
+      "detail": "60 in [34, 64]",
+      "cannot_establish": "that no other library uses it"
+     },
+     {
+      "check": "kernel disposition is Go's handler",
+      "passed": true,
+      "detail": "owner go",
+      "cannot_establish": "that no Go subscriber exists: subscribed and unsubscribed signals look identical"
+     },
+     {
+      "check": "not blocked on the initializing thread",
+      "passed": true,
+      "cannot_establish": "the masks of threads created later"
+     },
+     {
+      "check": "not among the application's declared subscriptions",
+      "passed": true,
+      "cannot_establish": "subscriptions the application did not declare"
+     },
+     {
+      "check": "not ignored through os/signal",
+      "passed": true
+     },
+     {
+      "check": "JSC_SIGNAL_FOR_GC unset or equal",
+      "passed": true,
+      "detail": "JSC_SIGNAL_FOR_GC="
+     }
+    ],
+    "configured": true,
+    "signal": 60
+   },
+   "filter_store_removal": {
+    "path": "/tmp/dfx2-feasibility/filters-481738",
+    "attempts": 1,
+    "elapsed_ns": 308808,
+    "removed": true
+   },
+   "refused_js": 0,
+   "monitor": "not run: browser cases only (--no-monitor)",
+   "seconds": 3.4
+  },
+  {
+   "scenario": "shutdown-inprocess-ordinary",
+   "flags": [
+    "-feas-vmfree",
+    "-signal-reserve",
+    "60"
+   ],
+   "checks": [
+    {
+     "check": "ordinary close drains",
+     "ok": true,
+     "closed": {
+      "endpoint": {
+       "admitted": 0,
+       "refused": {},
+       "handled": 4
+      },
+      "event": "closed",
+      "handler": {
+       "GET /": 1,
+       "GET /logo.svg": 1,
+       "GET /probe.css": 1,
+       "GET /probe.js": 1
+      },
+      "handlers_drained": true,
+      "native_async": 0,
+      "native_requests": 0,
+      "t": "12:49:24.482",
+      "window": "S"
+     }
+    },
+    {
+     "check": "SIGSEGV and SIGBUS still Go's at exit",
+     "ok": true,
+     "exit_signals": {
+      "SIGBUS": {
+       "signal": 7,
+       "owner": "go",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "SIGSEGV": {
+       "signal": 11,
+       "owner": "go",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "SIGUSR1": {
+       "signal": 10,
+       "owner": "go",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "SIGXCPU": {
+       "signal": 24,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "offset": "0x196d3f0",
+       "flags": [
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "reserved 60": {
+       "signal": 60,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "offset": "0x196b2d0",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      }
+     }
+    }
+   ],
+   "ok": true,
+   "detail": {},
+   "exit": {
+    "host_exit": 0,
+    "timed_out": false,
+    "children_pending": false,
+    "child_failure": false,
+    "fatal_log": false
+   },
+   "observed_processes": [
+    "WebKitNetworkPr",
+    "WebKitWebProces",
+    "bwrap",
+    "dfx2-wk-candida",
+    "glycin-svg",
+    "gst-plugin-scan"
+   ],
+   "signals": {
+    "start": {
+     "SIGBUS": {
+      "signal": 7,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGSEGV": {
+      "signal": 11,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGUSR1": {
+      "signal": 10,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGXCPU": {
+      "signal": 24,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "reserved 60": {
+      "signal": 60,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     }
+    },
+    "ready": {
+     "SIGBUS": {
+      "signal": 7,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGSEGV": {
+      "signal": 11,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGUSR1": {
+      "signal": 10,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGXCPU": {
+      "signal": 24,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "reserved 60": {
+      "signal": 60,
+      "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      "offset": "0x196b2d0",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     }
+    },
+    "exit": {
+     "SIGBUS": {
+      "signal": 7,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGSEGV": {
+      "signal": 11,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGUSR1": {
+      "signal": 10,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGXCPU": {
+      "signal": 24,
+      "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      "offset": "0x196d3f0",
+      "flags": [
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "reserved 60": {
+      "signal": 60,
+      "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      "offset": "0x196b2d0",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     }
+    }
+   },
+   "reservation": {
+    "checks": [
+     {
+      "check": "supplied",
+      "passed": true,
+      "detail": "an explicit reservation; the host infers nothing"
+     },
+     {
+      "check": "within libc's real-time range",
+      "passed": true,
+      "detail": "60 in [34, 64]",
+      "cannot_establish": "that no other library uses it"
+     },
+     {
+      "check": "kernel disposition is Go's handler",
+      "passed": true,
+      "detail": "owner go",
+      "cannot_establish": "that no Go subscriber exists: subscribed and unsubscribed signals look identical"
+     },
+     {
+      "check": "not blocked on the initializing thread",
+      "passed": true,
+      "cannot_establish": "the masks of threads created later"
+     },
+     {
+      "check": "not among the application's declared subscriptions",
+      "passed": true,
+      "cannot_establish": "subscriptions the application did not declare"
+     },
+     {
+      "check": "not ignored through os/signal",
+      "passed": true
+     },
+     {
+      "check": "JSC_SIGNAL_FOR_GC unset or equal",
+      "passed": true,
+      "detail": "JSC_SIGNAL_FOR_GC="
+     }
+    ],
+    "configured": true,
+    "signal": 60
+   },
+   "filter_store_removal": {
+    "path": "/tmp/dfx2-feasibility/filters-482079",
+    "attempts": 1,
+    "elapsed_ns": 63426,
+    "removed": true
+   },
+   "refused_js": 0,
+   "monitor": "not run: browser cases only (--no-monitor)",
+   "seconds": 1.6
+  },
+  {
+   "scenario": "shutdown-inprocess-pending",
+   "flags": [
+    "-feas-vmfree",
+    "-signal-reserve",
+    "60"
+   ],
+   "checks": [
+    {
+     "check": "pending close drains",
+     "ok": true,
+     "closed": {
+      "endpoint": {
+       "admitted": 0,
+       "refused": {},
+       "handled": 10
+      },
+      "event": "closed",
+      "handler": {
+       "GET /": 2,
+       "GET /api/slow": 1,
+       "GET /logo.svg": 2,
+       "GET /probe.css": 2,
+       "GET /probe.js": 2,
+       "POST /api/report": 1
+      },
+      "handlers_drained": true,
+      "native_async": 0,
+      "native_requests": 0,
+      "t": "12:49:26.347",
+      "window": "S"
+     }
+    },
+    {
+     "check": "SIGSEGV and SIGBUS still Go's at exit",
+     "ok": true,
+     "exit_signals": {
+      "SIGBUS": {
+       "signal": 7,
+       "owner": "go",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "SIGSEGV": {
+       "signal": 11,
+       "owner": "go",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "SIGUSR1": {
+       "signal": 10,
+       "owner": "go",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "SIGXCPU": {
+       "signal": 24,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "offset": "0x196d3f0",
+       "flags": [
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "reserved 60": {
+       "signal": 60,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "offset": "0x196b2d0",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      }
+     }
+    }
+   ],
+   "ok": true,
+   "detail": {},
+   "exit": {
+    "host_exit": 0,
+    "timed_out": false,
+    "children_pending": false,
+    "child_failure": false,
+    "fatal_log": false
+   },
+   "observed_processes": [
+    "WebKitNetworkPr",
+    "WebKitWebProces",
+    "bwrap",
+    "dfx2-wk-candida",
+    "glycin-svg",
+    "gst-plugin-scan"
+   ],
+   "signals": {
+    "start": {
+     "SIGBUS": {
+      "signal": 7,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGSEGV": {
+      "signal": 11,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGUSR1": {
+      "signal": 10,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGXCPU": {
+      "signal": 24,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "reserved 60": {
+      "signal": 60,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     }
+    },
+    "ready": {
+     "SIGBUS": {
+      "signal": 7,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGSEGV": {
+      "signal": 11,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGUSR1": {
+      "signal": 10,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGXCPU": {
+      "signal": 24,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "reserved 60": {
+      "signal": 60,
+      "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      "offset": "0x196b2d0",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     }
+    },
+    "exit": {
+     "SIGBUS": {
+      "signal": 7,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGSEGV": {
+      "signal": 11,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGUSR1": {
+      "signal": 10,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGXCPU": {
+      "signal": 24,
+      "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      "offset": "0x196d3f0",
+      "flags": [
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "reserved 60": {
+      "signal": 60,
+      "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      "offset": "0x196b2d0",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     }
+    }
+   },
+   "reservation": {
+    "checks": [
+     {
+      "check": "supplied",
+      "passed": true,
+      "detail": "an explicit reservation; the host infers nothing"
+     },
+     {
+      "check": "within libc's real-time range",
+      "passed": true,
+      "detail": "60 in [34, 64]",
+      "cannot_establish": "that no other library uses it"
+     },
+     {
+      "check": "kernel disposition is Go's handler",
+      "passed": true,
+      "detail": "owner go",
+      "cannot_establish": "that no Go subscriber exists: subscribed and unsubscribed signals look identical"
+     },
+     {
+      "check": "not blocked on the initializing thread",
+      "passed": true,
+      "cannot_establish": "the masks of threads created later"
+     },
+     {
+      "check": "not among the application's declared subscriptions",
+      "passed": true,
+      "cannot_establish": "subscriptions the application did not declare"
+     },
+     {
+      "check": "not ignored through os/signal",
+      "passed": true
+     },
+     {
+      "check": "JSC_SIGNAL_FOR_GC unset or equal",
+      "passed": true,
+      "detail": "JSC_SIGNAL_FOR_GC="
+     }
+    ],
+    "configured": true,
+    "signal": 60
+   },
+   "filter_store_removal": {
+    "path": "/tmp/dfx2-feasibility/filters-482850",
+    "attempts": 1,
+    "elapsed_ns": 100392,
+    "removed": true
+   },
+   "refused_js": 0,
+   "monitor": "not run: browser cases only (--no-monitor)",
+   "seconds": 1.9
+  },
+  {
+   "scenario": "shutdown-inprocess-inspector",
+   "flags": [
+    "-feas-vmfree",
+    "-signal-reserve",
+    "60"
+   ],
+   "checks": [
+    {
+     "check": "inspector close drains",
+     "ok": true,
+     "closed": {
+      "endpoint": {
+       "admitted": 0,
+       "refused": {},
+       "handled": 10
+      },
+      "event": "closed",
+      "handler": {
+       "GET /": 2,
+       "GET /api/slow": 1,
+       "GET /logo.svg": 2,
+       "GET /probe.css": 2,
+       "GET /probe.js": 2,
+       "POST /api/report": 1
+      },
+      "handlers_drained": true,
+      "native_async": 0,
+      "native_requests": 0,
+      "t": "12:49:29.681",
+      "window": "S"
+     }
+    },
+    {
+     "check": "SIGSEGV and SIGBUS still Go's at exit",
+     "ok": true,
+     "exit_signals": {
+      "SIGBUS": {
+       "signal": 7,
+       "owner": "go",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "SIGSEGV": {
+       "signal": 11,
+       "owner": "go",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "SIGUSR1": {
+       "signal": 10,
+       "owner": "go",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "SIGXCPU": {
+       "signal": 24,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "offset": "0x196d3f0",
+       "flags": [
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "reserved 60": {
+       "signal": 60,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "offset": "0x196b2d0",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      }
+     }
+    }
+   ],
+   "ok": true,
+   "detail": {},
+   "exit": {
+    "host_exit": 0,
+    "timed_out": false,
+    "children_pending": false,
+    "child_failure": false,
+    "fatal_log": false
+   },
+   "observed_processes": [
+    "WebKitNetworkPr",
+    "WebKitWebProces",
+    "bwrap",
+    "dfx2-wk-candida",
+    "glycin-svg",
+    "gst-plugin-scan"
+   ],
+   "signals": {
+    "start": {
+     "SIGBUS": {
+      "signal": 7,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGSEGV": {
+      "signal": 11,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGUSR1": {
+      "signal": 10,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGXCPU": {
+      "signal": 24,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "reserved 60": {
+      "signal": 60,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     }
+    },
+    "ready": {
+     "SIGBUS": {
+      "signal": 7,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGSEGV": {
+      "signal": 11,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGUSR1": {
+      "signal": 10,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGXCPU": {
+      "signal": 24,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "reserved 60": {
+      "signal": 60,
+      "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      "offset": "0x196b2d0",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     }
+    },
+    "exit": {
+     "SIGBUS": {
+      "signal": 7,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGSEGV": {
+      "signal": 11,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGUSR1": {
+      "signal": 10,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGXCPU": {
+      "signal": 24,
+      "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      "offset": "0x196d3f0",
+      "flags": [
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "reserved 60": {
+      "signal": 60,
+      "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      "offset": "0x196b2d0",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     }
+    }
+   },
+   "reservation": {
+    "checks": [
+     {
+      "check": "supplied",
+      "passed": true,
+      "detail": "an explicit reservation; the host infers nothing"
+     },
+     {
+      "check": "within libc's real-time range",
+      "passed": true,
+      "detail": "60 in [34, 64]",
+      "cannot_establish": "that no other library uses it"
+     },
+     {
+      "check": "kernel disposition is Go's handler",
+      "passed": true,
+      "detail": "owner go",
+      "cannot_establish": "that no Go subscriber exists: subscribed and unsubscribed signals look identical"
+     },
+     {
+      "check": "not blocked on the initializing thread",
+      "passed": true,
+      "cannot_establish": "the masks of threads created later"
+     },
+     {
+      "check": "not among the application's declared subscriptions",
+      "passed": true,
+      "cannot_establish": "subscriptions the application did not declare"
+     },
+     {
+      "check": "not ignored through os/signal",
+      "passed": true
+     },
+     {
+      "check": "JSC_SIGNAL_FOR_GC unset or equal",
+      "passed": true,
+      "detail": "JSC_SIGNAL_FOR_GC="
+     }
+    ],
+    "configured": true,
+    "signal": 60
+   },
+   "filter_store_removal": {
+    "path": "/tmp/dfx2-feasibility/filters-483570",
+    "attempts": 1,
+    "elapsed_ns": 277126,
+    "removed": true
+   },
+   "refused_js": 0,
+   "monitor": "not run: browser cases only (--no-monitor)",
+   "seconds": 3.4
+  },
+  {
+   "scenario": "combined",
+   "flags": [
+    "-feas-vmfree",
+    "-signal-reserve",
+    "60"
+   ],
+   "checks": [
+    {
+     "check": "A: page, assets, query and POST",
+     "ok": true
+    },
+    {
+     "check": "I: page, assets, query and POST",
+     "ok": true
+    },
+    {
+     "check": "A closed with its request pending and drained, while I kept working",
+     "ok": true,
+     "closed": {
+      "endpoint": {
+       "admitted": 22,
+       "refused": {},
+       "handled": 22
+      },
+      "event": "closed",
+      "handler": {
+       "GET /": 4,
+       "GET /api/query": 1,
+       "GET /api/slow": 1,
+       "GET /logo.svg": 4,
+       "GET /probe.css": 4,
+       "GET /probe.js": 4,
+       "POST /api/echo": 1,
+       "POST /api/report": 3
+      },
+      "handlers_drained": true,
+      "native_async": 0,
+      "native_requests": 0,
+      "t": "12:49:32.828",
+      "window": "A"
+     },
+     "during": [
+      {
+       "x": "during0"
+      },
+      {
+       "x": "during1"
+      },
+      {
+       "x": "during2"
+      }
+     ]
+    },
+    {
+     "check": "reopened A: fresh session at a new endpoint",
+     "ok": true,
+     "fresh": {
+      "cookie": "",
+      "local": null,
+      "session": null
+     }
+    },
+    {
+     "check": "A: clicked Retry repeats the failed GET once, nothing automatic",
+     "ok": true,
+     "retry_navigations": 1,
+     "handler_calls": {
+      "first navigation": 3,
+      "retry": -3
+     }
+    },
+    {
+     "check": "I: clicked Retry repeats the failed GET once, nothing automatic",
+     "ok": true,
+     "retry_navigations": 1,
+     "handler_calls": {
+      "first navigation": 0,
+      "retry": 0
+     }
+    },
+    {
+     "check": "I: final close with a request pending drains",
+     "ok": true,
+     "closed": {
+      "endpoint": {
+       "admitted": 0,
+       "refused": {},
+       "handled": 45
+      },
+      "event": "closed",
+      "handler": {
+       "GET /": 8,
+       "GET /api/query": 4,
+       "GET /api/slow": 2,
+       "GET /logo.svg": 8,
+       "GET /probe.css": 8,
+       "GET /probe.js": 8,
+       "POST /api/echo": 1,
+       "POST /api/report": 6
+      },
+      "handlers_drained": true,
+      "native_async": 0,
+      "native_requests": 0,
+      "t": "12:49:33.989",
+      "window": "I"
+     }
+    },
+    {
+     "check": "A: final close with a request pending drains",
+     "ok": true,
+     "closed": {
+      "endpoint": {
+       "admitted": 23,
+       "refused": {},
+       "handled": 23
+      },
+      "event": "closed",
+      "handler": {
+       "GET /": 4,
+       "GET /api/abort": 4,
+       "GET /api/slow": 1,
+       "GET /logo.svg": 4,
+       "GET /probe.css": 4,
+       "GET /probe.js": 4,
+       "POST /api/report": 2
+      },
+      "handlers_drained": true,
+      "native_async": 0,
+      "native_requests": 0,
+      "t": "12:49:34.000",
+      "window": "A"
+     }
+    },
+    {
+     "check": "SIGSEGV and SIGBUS still Go's at exit",
+     "ok": true,
+     "exit_signals": {
+      "SIGBUS": {
+       "signal": 7,
+       "owner": "go",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "SIGSEGV": {
+       "signal": 11,
+       "owner": "go",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "SIGUSR1": {
+       "signal": 10,
+       "owner": "go",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "SIGXCPU": {
+       "signal": 24,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "offset": "0x196d3f0",
+       "flags": [
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "reserved 60": {
+       "signal": 60,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "offset": "0x196b2d0",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      }
+     }
+    }
+   ],
+   "ok": true,
+   "detail": {},
+   "exit": {
+    "host_exit": 0,
+    "timed_out": false,
+    "children_pending": false,
+    "child_failure": false,
+    "fatal_log": false
+   },
+   "observed_processes": [
+    "WebKitNetworkPr",
+    "WebKitWebProces",
+    "bwrap",
+    "dfx2-wk-candida",
+    "glycin-svg",
+    "gst-plugin-scan"
+   ],
+   "signals": {
+    "start": {
+     "SIGBUS": {
+      "signal": 7,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGSEGV": {
+      "signal": 11,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGUSR1": {
+      "signal": 10,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGXCPU": {
+      "signal": 24,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "reserved 60": {
+      "signal": 60,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     }
+    },
+    "ready": {
+     "SIGBUS": {
+      "signal": 7,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGSEGV": {
+      "signal": 11,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGUSR1": {
+      "signal": 10,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGXCPU": {
+      "signal": 24,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "reserved 60": {
+      "signal": 60,
+      "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      "offset": "0x196b2d0",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     }
+    },
+    "exit": {
+     "SIGBUS": {
+      "signal": 7,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGSEGV": {
+      "signal": 11,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGUSR1": {
+      "signal": 10,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGXCPU": {
+      "signal": 24,
+      "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      "offset": "0x196d3f0",
+      "flags": [
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "reserved 60": {
+      "signal": 60,
+      "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      "offset": "0x196b2d0",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     }
+    }
+   },
+   "reservation": {
+    "checks": [
+     {
+      "check": "supplied",
+      "passed": true,
+      "detail": "an explicit reservation; the host infers nothing"
+     },
+     {
+      "check": "within libc's real-time range",
+      "passed": true,
+      "detail": "60 in [34, 64]",
+      "cannot_establish": "that no other library uses it"
+     },
+     {
+      "check": "kernel disposition is Go's handler",
+      "passed": true,
+      "detail": "owner go",
+      "cannot_establish": "that no Go subscriber exists: subscribed and unsubscribed signals look identical"
+     },
+     {
+      "check": "not blocked on the initializing thread",
+      "passed": true,
+      "cannot_establish": "the masks of threads created later"
+     },
+     {
+      "check": "not among the application's declared subscriptions",
+      "passed": true,
+      "cannot_establish": "subscriptions the application did not declare"
+     },
+     {
+      "check": "not ignored through os/signal",
+      "passed": true
+     },
+     {
+      "check": "JSC_SIGNAL_FOR_GC unset or equal",
+      "passed": true,
+      "detail": "JSC_SIGNAL_FOR_GC="
+     }
+    ],
+    "configured": true,
+    "signal": 60
+   },
+   "filter_store_removal": {
+    "path": "/tmp/dfx2-feasibility/filters-483911",
+    "attempts": 1,
+    "elapsed_ns": 310933,
+    "removed": true
+   },
+   "refused_js": 0,
+   "monitor": "not run: browser cases only (--no-monitor)",
+   "seconds": 4.3
+  },
+  {
+   "scenario": "forced-crash",
+   "flags": [
+    "-feas-vmfree",
+    "-signal-reserve",
+    "60"
+   ],
+   "checks": [
+    {
+     "check": "a killed host leaves its own filter store, named by its pid",
+     "ok": true,
+     "residue": [
+      "ContentRuleList-window-1"
+     ]
+    },
+    {
+     "check": "the next host starts with its own fresh store",
+     "ok": true
+    },
+    {
+     "check": "the next host removed only its own store; the residue remains",
+     "ok": true,
+     "second_exit": 0
+    }
+   ],
+   "ok": true,
+   "exit_expected": "SIGKILL",
+   "detail": {
+    "residue_store": "/tmp/dfx2-feasibility/filters-484338",
+    "fresh_store": "/tmp/dfx2-feasibility/filters-484592"
+   },
+   "exit": {
+    "host_exit": -9,
+    "timed_out": false,
+    "children_pending": false,
+    "child_failure": false,
+    "fatal_log": false
+   },
+   "adopted_exits": [],
+   "observed_processes": [
+    "WebKitNetworkPr",
+    "WebKitWebProces",
+    "bwrap",
+    "dfx2-wk-candida",
+    "glycin-svg",
+    "gst-plugin-scan"
+   ],
+   "filter_store_removal": null,
+   "xdg_manifest": [
+    "cache/fontconfig/25ccf6dd56fd7585eff0dc50a0a881d4-le64.cache-9",
+    "cache/fontconfig/363ec821d90eaa905a460bbdd9de4669-le64.cache-9",
+    "cache/fontconfig/97123a202d96d9eee11f7b2e48a774ca-le64.cache-9",
+    "cache/fontconfig/CACHEDIR.TAG",
+    "cache/gstreamer-1.0/registry.x86_64.bin",
+    "cache/mesa_shader_cache/08/660d0b9efd25c1aecedbddaf7b8a5a4cf3887f0a55bfb3a781573ab3e56565",
+    "cache/mesa_shader_cache/0c/6cbaa5fb56a43ec79ef1338d604f4d246065ab524dea0119d4eb0519e8c59d",
+    "cache/mesa_shader_cache/19/8d69320c1cb0d87164e1afc634d4baec0e5c23abfed1bcdcf5b435395f2cf7",
+    "cache/mesa_shader_cache/3d/71fb93b10a8589a231f1219e16af1683fc2d89158401f19af6738b4607cf36",
+    "cache/mesa_shader_cache/4d/a77013fe2fe963d0189da14b4617866d87cc2ad932797739dbfee150094760",
+    "cache/mesa_shader_cache/52/29e698c5a78c9a7aa829ac4902a37746ec40662b5111cd4c478c14a3e75f02",
+    "cache/mesa_shader_cache/59/63b50f8a8fdc9a7bac2a49d0e0bd6dbd918511641d933731df1df507ca1856",
+    "cache/mesa_shader_cache/59/86bc12e216eaaec73f061b7691e14aab3de96da686c7b0b8c9b9014b7d0b61",
+    "cache/mesa_shader_cache/64/23bf218ccc5579d4b69f45be543d8c6f1dc98acee009ca623f5329fb2f056e",
+    "cache/mesa_shader_cache/67/6785125cbfbf75100bcf965a340e204558b00a75e611592b69a2111e2ddbc1",
+    "cache/mesa_shader_cache/6a/15c5e105241e2b0ef97b74273ece42c68f38074479583be1728dae5b548702",
+    "cache/mesa_shader_cache/94/a756c1cba7375612e1d894373c87b6ad147e9c416d5f8b1c53ec00921ca934",
+    "cache/mesa_shader_cache/b1/960bc4a9892c50c69d23805dcd6b64b116bdf9d38c54081f3111cf2f6d93f3",
+    "cache/mesa_shader_cache/ef/9d270460853fa94c6ab5522e2c95a6756c42d4b7f5d5089f47185f89cc9f15",
+    "cache/mesa_shader_cache/index",
+    "cache/mesa_shader_cache/marker",
+    "data/gvfs-metadata/root",
+    "data/gvfs-metadata/root-750292d9.log"
+   ],
+   "seconds": 3.1
+  }
+ ],
+ "passed": true
+}

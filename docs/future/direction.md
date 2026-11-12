@@ -13,7 +13,7 @@ dfx2 drops Dear ImGui and cgo. It draws native UI itself and shows web UI in the
 
 **Programming model and first application.** Source compatibility with dfx or dfw is not a goal. Preserve the immediate-mode programming model, with a smoother, more idiomatic Go API. Sessionmixer is the first real application that will guide the native UI work.
 
-The next design discussion is [webview integration on the shared foundation](foundation.md): browser lifetime, explicit transports and their limits, followed by a Sessionmixer integration plan. Choices not recorded under Decisions below remain proposals.
+The next design slice is the [webview integration draft](webview-integration.md): a native mixer and a browser over the same application model, with explicit transports and shared lifetime, followed by a Sessionmixer integration plan. Choices not recorded under Decisions below remain proposals.
 
 ## Decisions
 
@@ -28,6 +28,12 @@ The next design discussion is [webview integration on the shared foundation](fou
 **Frames run on demand, including animation.** Input, resize, scale changes and explicit invalidation request frames; pending invalidations coalesce around the latest published state. Active animations request subsequent frames through a shared per-window scheduler, paced to the display where supported. Progress uses monotonic elapsed time rather than frame counts. Once activity settles, the window has no permanent redraw timer. Animation retains presentation state under stable control keys without changing application values or generating user commands; direct dragging follows the pointer immediately. Hidden or minimized windows can suspend drawing and catch up when shown. The view runs once per frame; layout or rendering retries reuse recorded output, and consumed input is not replayed.
 
 **Webview transport is explicit.** Keep ordinary Go `http.Handler` as the endpoint boundary. Choose in-process dispatch for finite buffered requests/responses with defined limits, an owned loopback server for normal HTTP facilities, or attachment to an existing server whose lifetime remains independent. Never fall back automatically between transports. Closing a window cancels work owned by its endpoint; the initial in-process contract does not promise handler cancellation on fetch abort or page reload. Detailed limits, origin policy and API spelling remain open.
+
+**Browser readiness stays internal for ordinary opening.** Open returns a window when creation is accepted; the framework loads the initial page when ready. Close works throughout startup, and unexpected initialization failure follows application cancel-and-drain. No public readiness callback is needed just to show a handler-backed page.
+
+**Browser failures follow their ownership tier.** HTTP errors and rejected commands remain page/application results. Initial and subsequent page-load failures stay local to the browser window, visibly reported and retryable. Unexpected browser initialization, native-host and browser-process failures cancel and drain the application; automatic browser recovery is deferred.
+
+**Browser navigation and storage start narrowly.** Owned-handler windows stay on their assigned origin, refusing outside navigation, popups and subframes without launching an external browser. Owned loopback endpoints use a native-installed HttpOnly session cookie with host/origin checks; owned pages keep resource loads and requests on their assigned origin, including the port. These mechanisms remain to validate on both hosts. Endpoint access policy stays separate from browser credential delivery so future external-client tokens, separate cookie sessions or explicitly unauthenticated access do not change the transport or ownership contract. Those policies are deferred. Existing-URL windows declare allowed navigation origins and never own the server. Browser storage is temporary and isolated per window: reload preserves its session, close ends it, and reopening starts fresh. The [focused draft](webview-integration.md) distinguishes these agreed behaviors from mechanisms still to prove.
 
 **A repository of its own; dfx stays maintained.** dfx2 is built here, while dfx (and dfw) keep being maintained until every product has migrated. There's no in-place rewrite of dfx.
 

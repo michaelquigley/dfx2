@@ -1,0 +1,221 @@
+{
+ "scenario": "error-pages",
+ "flags": [],
+ "checks": [
+  {
+   "check": "failed GET: Retry and Return to start, no script",
+   "ok": true,
+   "failed": {
+    "code": 39,
+    "domain": "g-io-error-quark",
+    "error_page": true,
+    "event": "load-failed",
+    "from_post": false,
+    "message": "Could not connect to 127.0.0.1: Connection refused",
+    "method": "GET",
+    "retry_offered": true,
+    "t": "13:51:10.306",
+    "uri": "http://127.0.0.1:33367/api/query?x=later",
+    "window": "E"
+   },
+   "page": {
+    "start": true,
+    "scripts": 0,
+    "retry": true,
+    "text": "This page did not load\n\nhttp://127.0.0.1:33367/api/query?x=later\n\nNothing was submitted.\n\nRetry Return to start"
+   }
+  },
+  {
+   "check": "a forged action is refused",
+   "ok": true
+  },
+  {
+   "check": "explicit Retry repeats the failed GET once the service returns",
+   "ok": true
+  },
+  {
+   "check": "failed POST shows only Return to start",
+   "ok": true,
+   "failed": {
+    "code": 39,
+    "domain": "g-io-error-quark",
+    "error_page": true,
+    "event": "load-failed",
+    "from_post": true,
+    "message": "Could not connect to 127.0.0.1: Connection refused",
+    "method": "POST",
+    "retry_offered": false,
+    "t": "13:51:10.854",
+    "uri": "http://127.0.0.1:33367/api/form",
+    "window": "E"
+   }
+  },
+  {
+   "check": "Return to start is a GET and replays nothing",
+   "ok": true,
+   "posts": 0
+  },
+  {
+   "check": "a GET reached by 303 after a POST offers Retry of the GET",
+   "ok": true,
+   "failed": {
+    "code": 34,
+    "domain": "g-io-error-quark",
+    "error_page": true,
+    "event": "load-failed",
+    "from_post": true,
+    "message": "Connection terminated unexpectedly",
+    "method": "GET",
+    "retry_offered": true,
+    "t": "13:51:10.881",
+    "uri": "http://127.0.0.1:33367/broken",
+    "window": "E"
+   }
+  },
+  {
+   "check": "Retry after the 303 replays no POST",
+   "ok": true,
+   "post_303": 1,
+   "broken": 2
+  },
+  {
+   "check": "a POST preserved by 307 offers no Retry",
+   "ok": true,
+   "failed": {
+    "code": 34,
+    "domain": "g-io-error-quark",
+    "error_page": true,
+    "event": "load-failed",
+    "from_post": true,
+    "message": "Connection terminated unexpectedly",
+    "method": "POST",
+    "retry_offered": false,
+    "t": "13:51:10.897",
+    "uri": "http://127.0.0.1:33367/broken-post",
+    "window": "E"
+   }
+  },
+  {
+   "check": "404 and 500 display; a failed fetch or asset leaves the page",
+   "ok": true,
+   "missing": "404 from the server",
+   "e500": "500 from the server",
+   "fetched": "rejected: TypeError",
+   "still": "/ true"
+  },
+  {
+   "check": "initial-load failure, then explicit Retry",
+   "ok": true,
+   "initial": {
+    "code": 39,
+    "domain": "g-io-error-quark",
+    "error_page": true,
+    "event": "load-failed",
+    "from_post": false,
+    "message": "Could not connect to 127.0.0.1: Connection refused",
+    "method": "GET",
+    "retry_offered": true,
+    "t": "13:51:12.570",
+    "uri": "http://127.0.0.1:33367/",
+    "window": "F"
+   }
+  }
+ ],
+ "ok": true,
+ "detail": {
+  "posts": [
+   {
+    "method": "POST",
+    "path": "/post-303",
+    "credential": false,
+    "app_cookie": [],
+    "origin": "http://127.0.0.1:33367",
+    "upgrade": null,
+    "t": 1794423070.88
+   },
+   {
+    "method": "POST",
+    "path": "/post-307",
+    "credential": false,
+    "app_cookie": [],
+    "origin": "http://127.0.0.1:33367",
+    "upgrade": null,
+    "t": 1794423070.896
+   },
+   {
+    "method": "POST",
+    "path": "/broken-post",
+    "credential": false,
+    "app_cookie": [],
+    "origin": "http://127.0.0.1:33367",
+    "upgrade": null,
+    "t": 1794423070.897
+   }
+  ]
+ },
+ "exit": {
+  "host_exit": 0,
+  "timed_out": false,
+  "children_pending": false,
+  "child_failure": false,
+  "fatal_log": false
+ },
+ "adopted_exits": [
+  [
+   "unobserved",
+   0
+  ],
+  [
+   "bwrap",
+   -9
+  ],
+  [
+   "WebKitNetworkPr",
+   0
+  ],
+  [
+   "WebKitWebProces",
+   0
+  ],
+  [
+   "WebKitNetworkPr",
+   0
+  ],
+  [
+   "WebKitWebProces",
+   0
+  ],
+  [
+   "bwrap",
+   -9
+  ]
+ ],
+ "observed_processes": [
+  "WebKitNetworkPr",
+  "WebKitWebProces",
+  "bwrap",
+  "dfx2-wk-feas",
+  "glycin-svg",
+  "gst-plugin-scan"
+ ],
+ "filter_store_removal": {
+  "path": "/tmp/dfx2-feasibility/filters-2222132",
+  "attempts": 1,
+  "elapsed_ns": 153440,
+  "removed": true
+ },
+ "xdg_manifest": [
+  "cache/event-sound-cache.tdb.7f8d5c37476f457cae8a599c576dd36f.x86_64-pc-linux-gnu",
+  "cache/fontconfig/25ccf6dd56fd7585eff0dc50a0a881d4-le64.cache-9",
+  "cache/fontconfig/363ec821d90eaa905a460bbdd9de4669-le64.cache-9",
+  "cache/fontconfig/97123a202d96d9eee11f7b2e48a774ca-le64.cache-9",
+  "cache/fontconfig/CACHEDIR.TAG",
+  "cache/gstreamer-1.0/registry.x86_64.bin",
+  "cache/mesa_shader_cache/index",
+  "cache/mesa_shader_cache/marker",
+  "config/pulse/cookie",
+  "data/gvfs-metadata/root",
+  "data/gvfs-metadata/root-b56264ec.log"
+ ],
+ "seconds": 3.7
+}

@@ -1,0 +1,29 @@
+{"event":"filter-store","path":"/tmp/dfx2-feasibility/filters-2220995","t":"13:51:01.936"}
+{"cookie":true,"cookie_fail_injected":false,"csp":true,"event":"ready","filter":true,"pid":2220995,"t":"13:51:01.936"}
+{"credential":false,"ephemeral_session":true,"event":"opened","mode":"inprocess","origin":"dfx2://spike","t":"13:51:02.045","window":"I1"}
+{"event":"filter-installed","rules":"[{\"action\":{\"type\":\"block\"},\"trigger\":{\"url-filter\":\".*\"}},{\"action\":{\"type\":\"ignore-previous-rules\"},\"trigger\":{\"url-filter\":\"^dfx2://spike/\"}},{\"action\":{\"type\":\"block\"},\"trigger\":{\"load-context\":[\"child-frame\"],\"resource-type\":[\"document\"],\"url-filter\":\".*\"}}]","t":"13:51:02.050","window":"I1"}
+{"event":"navigate","t":"13:51:02.050","uri":"dfx2://spike/","window":"I1"}
+{"event":"navigation-allowed","method":"GET","redirect":false,"t":"13:51:02.139","uri":"dfx2://spike/","window":"I1"}
+{"event":"load","load_event":0,"t":"13:51:02.140","uri":"dfx2://spike/","window":"I1"}
+{"event":"load","load_event":2,"t":"13:51:02.141","uri":"dfx2://spike/","window":"I1"}
+{"event":"load","load_event":3,"t":"13:51:02.318","uri":"dfx2://spike/","window":"I1"}
+{"credential":false,"ephemeral_session":true,"event":"opened","mode":"inprocess","origin":"dfx2://spike","t":"13:51:02.323","window":"I2"}
+{"event":"filter-installed","rules":"[{\"action\":{\"type\":\"block\"},\"trigger\":{\"url-filter\":\".*\"}},{\"action\":{\"type\":\"ignore-previous-rules\"},\"trigger\":{\"url-filter\":\"^dfx2://spike/\"}},{\"action\":{\"type\":\"block\"},\"trigger\":{\"load-context\":[\"child-frame\"],\"resource-type\":[\"document\"],\"url-filter\":\".*\"}}]","t":"13:51:02.323","window":"I2"}
+{"event":"navigate","t":"13:51:02.323","uri":"dfx2://spike/","window":"I2"}
+{"event":"navigation-allowed","method":"GET","redirect":false,"t":"13:51:02.427","uri":"dfx2://spike/","window":"I2"}
+{"event":"load","load_event":0,"t":"13:51:02.427","uri":"dfx2://spike/","window":"I2"}
+{"event":"load","load_event":2,"t":"13:51:02.428","uri":"dfx2://spike/","window":"I2"}
+{"event":"load","load_event":3,"t":"13:51:02.472","uri":"dfx2://spike/","window":"I2"}
+{"body":"return probe.checks()","error":"","event":"js","result":{"query":"é\u0026ü","echoSha":"a5903776f0c8d72f5b1e8689519fc8d9d6317785a20e31659786c8d8703a6b8c","img":true,"cookieVisible":false,"css":true,"echoLength":1005,"script":true,"origin":"dfx2://spike"},"t":"13:51:02.475","window":"I1"}
+{"async":0,"event":"status","t":"13:51:02.475","windows":{"I1":{"closing":false,"destroyed":false,"endpoint":{"admitted":0,"refused":{},"handled":6},"handler":{"GET /":1,"GET /api/query":1,"GET /logo.svg":1,"GET /probe.css":1,"GET /probe.js":1,"POST /api/echo":1},"mode":"inprocess","native_async":0,"native_requests":0,"port":0},"I2":{"closing":false,"destroyed":false,"endpoint":{"admitted":0,"refused":{},"handled":4},"handler":{"GET /":1,"GET /logo.svg":1,"GET /probe.css":1,"GET /probe.js":1},"mode":"inprocess","native_async":0,"native_requests":0,"port":0}}}
+{"body":"return fetch('dfx2://spike/api/count').then(r =\u003e r.json())","error":"","event":"js","result":{"GET /probe.css":1,"GET /probe.js":1,"GET /logo.svg":1,"POST /api/echo":1,"GET /api/count":1,"GET /":1,"GET /api/query":1},"t":"13:51:02.477","window":"I1"}
+{"async":0,"event":"status","t":"13:51:02.477","windows":{"I1":{"closing":false,"destroyed":false,"endpoint":{"admitted":0,"refused":{},"handled":7},"handler":{"GET /":1,"GET /api/count":1,"GET /api/query":1,"GET /logo.svg":1,"GET /probe.css":1,"GET /probe.js":1,"POST /api/echo":1},"mode":"inprocess","native_async":0,"native_requests":0,"port":0},"I2":{"closing":false,"destroyed":false,"endpoint":{"admitted":0,"refused":{},"handled":4},"handler":{"GET /":1,"GET /logo.svg":1,"GET /probe.css":1,"GET /probe.js":1},"mode":"inprocess","native_async":0,"native_requests":0,"port":0}}}
+{"event":"navigation-allowed","method":"GET","redirect":false,"t":"13:51:03.987","uri":"dfx2://spike/#pinged","window":"I1"}
+{"body":"return probe.attacks('http://127.0.0.1:45029', '')","error":"","event":"js","result":{"iframe-cross":"added","eventsource":"threw SecurityError","iframe-same":"no load","fetch":"threw TypeError","font":"added","beacon":"true","img":"added","css":"added","ping":"clicked","xhr":"0","redirect-img":"added","websocket":"threw SecurityError","script":"added","prefetch":"added","redirect-fetch":"302"},"t":"13:51:05.990","window":"I1"}
+{"body":"return probe.storageSet('I1')","error":"","event":"js","result":{"local":"I1","cookie":"","session":"I1"},"t":"13:51:06.993","window":"I1"}
+{"body":"return probe.storageRead()","error":"","event":"js","result":{"cookie":"","local":null,"session":null},"t":"13:51:06.994","window":"I2"}
+{"event":"closing","native_async":0,"native_requests":0,"navigated":true,"t":"13:51:07.444","why":"quit","window":"I1"}
+{"event":"closing","native_async":0,"native_requests":0,"navigated":true,"t":"13:51:07.450","why":"quit","window":"I2"}
+{"endpoint":{"admitted":0,"refused":{},"handled":9},"event":"closed","handler":{"GET /":1,"GET /api/count":1,"GET /api/query":1,"GET /api/redirect-out":2,"GET /logo.svg":1,"GET /probe.css":1,"GET /probe.js":1,"POST /api/echo":1},"handlers_drained":true,"native_async":0,"native_requests":0,"t":"13:51:07.454","window":"I1"}
+{"endpoint":{"admitted":0,"refused":{},"handled":4},"event":"closed","handler":{"GET /":1,"GET /logo.svg":1,"GET /probe.css":1,"GET /probe.js":1},"handlers_drained":true,"native_async":0,"native_requests":0,"t":"13:51:07.456","window":"I2"}
+{"error":"\u003cnil\u003e","event":"exit","filter_store_removal":{"path":"/tmp/dfx2-feasibility/filters-2220995","attempts":1,"elapsed_ns":290489,"removed":true},"t":"13:51:07.481"}

@@ -1,0 +1,245 @@
+{
+ "reserve": 60,
+ "checks": [
+  {
+   "check": "JSC suspends the registered main thread while it runs Go",
+   "ok": true,
+   "delivered_to_main_by_phase": {
+    "go": 527,
+    "js": 11
+   },
+   "tgkill_senders_by_phase": {
+    "ollector Thread during go": 234,
+    "HeapHelper during js": 11,
+    "HeapHelper during go": 293
+   },
+   "thread_stack": {
+    "goroutine_local": "0x11ddb44696d0",
+    "goroutine_stack_inside_mapping": false,
+    "mapping_hi": "0x7ffe56842000",
+    "mapping_lo": "0x7ffe56820000"
+   }
+  },
+  {
+   "check": "untraced: scanning threads burn CPU only while the main thread is in Go",
+   "ok": true,
+   "scanner_cpu_ticks": {
+    "HeapHelper during c": 0,
+    "HeapHelper during go": 16,
+    "ollector Thread during c": 0,
+    "ollector Thread during go": 0
+   },
+   "exits": [
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "check": "narrow: identified fault handlers only, segv recovered",
+   "ok": true,
+   "identity": [
+    {
+     "check": "installed by the forced JSC initialization",
+     "passed": true,
+     "detail": "native:libjavascriptcoregtk-4.1.so.0.10.14"
+    },
+    {
+     "check": "one handler for SIGSEGV and SIGBUS",
+     "passed": true
+    },
+    {
+     "check": "not the suspend handler",
+     "passed": true
+    },
+    {
+     "check": "flags SA_SIGINFO only (plus libc's SA_RESTORER)",
+     "passed": true,
+     "detail": "0x4000004 0x4000004"
+    },
+    {
+     "check": "mask is every signal except the GC suspend signal",
+     "passed": true,
+     "detail": "0xf7fffffe7ffbfeff, expected 0xf7fffffe7ffbfeff"
+    }
+   ],
+   "recovered": "runtime error: invalid memory address or nil pointer dereference"
+  },
+  {
+   "check": "narrow: identified fault handlers only, bus recovered",
+   "ok": true,
+   "identity": [
+    {
+     "check": "installed by the forced JSC initialization",
+     "passed": true,
+     "detail": "native:libjavascriptcoregtk-4.1.so.0.10.14"
+    },
+    {
+     "check": "one handler for SIGSEGV and SIGBUS",
+     "passed": true
+    },
+    {
+     "check": "not the suspend handler",
+     "passed": true
+    },
+    {
+     "check": "flags SA_SIGINFO only (plus libc's SA_RESTORER)",
+     "passed": true,
+     "detail": "0x4000004 0x4000004"
+    },
+    {
+     "check": "mask is every signal except the GC suspend signal",
+     "passed": true,
+     "detail": "0xf7fffffe7ffbfeff, expected 0xf7fffffe7ffbfeff"
+    }
+   ],
+   "recovered": "runtime error: invalid memory address or nil pointer dereference"
+  },
+  {
+   "check": "narrow, injected SIGBUS change: identity refused, nothing modified, Go fault still fatal",
+   "ok": true,
+   "failed": [
+    "installed by the forced JSC initialization",
+    "one handler for SIGSEGV and SIGBUS",
+    "flags SA_SIGINFO only (plus libc's SA_RESTORER)",
+    "mask is every signal except the GC suspend signal"
+   ],
+   "stderr": [
+    "signal 11 received but handler not on signal stack",
+    "mp.gsignal stack [0x939f4406000 0x939f440e000], mp.g0 stack [0x7cc97169c150 0x7cc971e9bd50], sp=0x939f46c9ef0",
+    "fatal error: non-Go code set up signal handler without SA_ONSTACK flag",
+    "runtime stack:"
+   ]
+  },
+  {
+   "check": "narrow with WebKit (jsc-first): recovered; SIGXCPU recorded, not patched",
+   "ok": true,
+   "unprotected": [
+    [
+     60,
+     "native:libjavascriptcoregtk-4.1.so.0.10.14"
+    ]
+   ],
+   "sigxcpu_timeline": [
+    [
+     1,
+     "go",
+     null
+    ],
+    [
+     2,
+     "go",
+     null
+    ],
+    [
+     3,
+     "go",
+     null
+    ],
+    [
+     4,
+     "go",
+     null
+    ],
+    [
+     5,
+     "go",
+     null
+    ],
+    [
+     6,
+     "go",
+     null
+    ]
+   ],
+   "limits": {
+    "cpu_time_limit": "unlimited unlimited seconds",
+    "realtime_timeout_limit": "200000 200000 us"
+   }
+  },
+  {
+   "check": "narrow with WebKit (webkit-first): recovered; SIGXCPU recorded, not patched",
+   "ok": true,
+   "unprotected": [
+    [
+     24,
+     "native:libjavascriptcoregtk-4.1.so.0.10.14"
+    ],
+    [
+     60,
+     "native:libjavascriptcoregtk-4.1.so.0.10.14"
+    ]
+   ],
+   "sigxcpu_timeline": [
+    [
+     1,
+     "native:libjavascriptcoregtk-4.1.so.0.10.14",
+     null
+    ],
+    [
+     2,
+     "native:libjavascriptcoregtk-4.1.so.0.10.14",
+     null
+    ],
+    [
+     3,
+     "native:libjavascriptcoregtk-4.1.so.0.10.14",
+     null
+    ],
+    [
+     4,
+     "native:libjavascriptcoregtk-4.1.so.0.10.14",
+     null
+    ],
+    [
+     5,
+     "native:libjavascriptcoregtk-4.1.so.0.10.14",
+     null
+    ],
+    [
+     6,
+     "native:libjavascriptcoregtk-4.1.so.0.10.14",
+     null
+    ]
+   ],
+   "limits": {
+    "cpu_time_limit": "unlimited unlimited seconds",
+    "realtime_timeout_limit": "200000 200000 us"
+   }
+  },
+  {
+   "check": "handler offsets symbolized from the matching debug file",
+   "ok": true,
+   "build_id": "e01f2b5c37edc2b2ae9d18b3d93306694d33ed27",
+   "debug_sha256": "212595dc04e5a6218865b65785c7faa19e45616e1d9a0ac3c83460fafc1187df",
+   "symbols": {
+    "0x196d3f0": [
+     "WTF::sigxcpuHandler(int)",
+     "/usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WTF/wtf/linux/RealTimeThreads.cpp:167"
+    ],
+    "0x196b2d0": [
+     "WTF::Thread::signalHandlerSuspendResume(int, siginfo_t*, void*)",
+     "/usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WTF/wtf/posix/ThreadingPOSIX.cpp:120"
+    ],
+    "0x1961f30": [
+     "WTF::jscSignalHandler(int, siginfo_t*, void*)",
+     "/usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WTF/wtf/threads/Signals.cpp:489"
+    ]
+   }
+  },
+  {
+   "check": "SIGXCPU registration traced in both orders",
+   "ok": true,
+   "breakpoints": {
+    "jsc-first": {
+     "=== registerThread on thread 1": 1
+    },
+    "webkit-first": {
+     "=== registerThread on thread 1": 3,
+     "=== promoteThreadToRealTime": 3
+    }
+   }
+  }
+ ],
+ "passed": true
+}

@@ -1,0 +1,175 @@
+{
+ "scenario": "loopback-basics",
+ "flags": [],
+ "checks": [
+  {
+   "check": "assets, query and POST through the credential",
+   "ok": true,
+   "checks": {
+    "css": true,
+    "echoLength": 1005,
+    "script": true,
+    "cookieVisible": false,
+    "origin": "http://127.0.0.1:35455",
+    "img": true,
+    "echoSha": "a5903776f0c8d72f5b1e8689519fc8d9d6317785a20e31659786c8d8703a6b8c",
+    "query": "\u00e9&\u00fc"
+   }
+  },
+  {
+   "check": "credential invisible to JavaScript",
+   "ok": true
+  },
+  {
+   "check": "reload keeps authentication without reprovisioning",
+   "ok": true,
+   "installs": 1
+  },
+  {
+   "check": "same-origin redirect authenticated, no credential in the URL",
+   "ok": true,
+   "redirected": {
+    "uri": "http://127.0.0.1:35455/api/query?x=redirected",
+    "body": "{\"x\":\"redirected\"}\n"
+   }
+  },
+  {
+   "check": "loopback stream: chunk 1 visible before the handler finished",
+   "ok": true,
+   "chunks": [
+    {
+     "text": "chunk-1\n",
+     "at": 5
+    },
+    {
+     "at": 6,
+     "text": "chunk-2 after ack\n"
+    },
+    {
+     "at": 6,
+     "text": "done\n"
+    }
+   ]
+  },
+  {
+   "check": "external clients without the right credential refused",
+   "ok": true,
+   "statuses": {
+    "none": 403,
+    "wrong credential": 403,
+    "wrong credential and Origin": 403
+   }
+  },
+  {
+   "check": "right credential: wrong Host or Origin refused; exact or absent Origin admitted",
+   "ok": true,
+   "selftest": {
+    "right credential": 200,
+    "right credential, exact Origin": 200,
+    "right credential, wrong Host": 403,
+    "right credential, wrong Origin": 403
+   }
+  },
+  {
+   "check": "refusals never reached the handler",
+   "ok": true,
+   "endpoint": {
+    "admitted": 22,
+    "refused": {
+     "host": 1,
+     "no-credential": 1,
+     "origin": 1,
+     "wrong-credential": 2
+    },
+    "handled": 22
+   }
+  }
+ ],
+ "ok": true,
+ "detail": {
+  "status": {
+   "closing": false,
+   "destroyed": false,
+   "endpoint": {
+    "admitted": 22,
+    "refused": {
+     "host": 1,
+     "no-credential": 1,
+     "origin": 1,
+     "wrong-credential": 2
+    },
+    "handled": 22
+   },
+   "handler": {
+    "GET /": 3,
+    "GET /api/query": 5,
+    "GET /api/redirect": 1,
+    "GET /api/stream": 1,
+    "GET /logo.svg": 3,
+    "GET /probe.css": 3,
+    "GET /probe.js": 3,
+    "POST /api/echo": 2,
+    "POST /api/stream-ack": 1
+   },
+   "mode": "loopback",
+   "native_async": 0,
+   "native_requests": 0,
+   "port": 35455
+  }
+ },
+ "exit": {
+  "host_exit": 0,
+  "timed_out": false,
+  "children_pending": false,
+  "child_failure": false,
+  "fatal_log": false
+ },
+ "adopted_exits": [
+  [
+   "bwrap",
+   0
+  ],
+  [
+   "bwrap",
+   -9
+  ],
+  [
+   "WebKitNetworkPr",
+   0
+  ],
+  [
+   "WebKitWebProces",
+   0
+  ],
+  [
+   "bwrap",
+   -9
+  ]
+ ],
+ "observed_processes": [
+  "WebKitNetworkPr",
+  "WebKitWebProces",
+  "bwrap",
+  "dfx2-wk-feas",
+  "glycin-svg",
+  "gst-plugin-scan"
+ ],
+ "filter_store_removal": {
+  "path": "/tmp/dfx2-feasibility/filters-2228297",
+  "attempts": 1,
+  "elapsed_ns": 54988,
+  "removed": true
+ },
+ "xdg_manifest": [
+  "cache/fontconfig/25ccf6dd56fd7585eff0dc50a0a881d4-le64.cache-9",
+  "cache/fontconfig/363ec821d90eaa905a460bbdd9de4669-le64.cache-9",
+  "cache/fontconfig/97123a202d96d9eee11f7b2e48a774ca-le64.cache-9",
+  "cache/fontconfig/CACHEDIR.TAG",
+  "cache/gstreamer-1.0/registry.x86_64.bin",
+  "cache/mesa_shader_cache/index",
+  "cache/mesa_shader_cache/marker",
+  "data/gvfs-metadata/root",
+  "data/gvfs-metadata/root-13279aaa.log"
+ ],
+ "seconds": 0.6
+}

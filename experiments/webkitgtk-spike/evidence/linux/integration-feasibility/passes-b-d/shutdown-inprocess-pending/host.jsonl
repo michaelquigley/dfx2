@@ -1,0 +1,13 @@
+{"event":"filter-store","path":"/tmp/dfx2-feasibility/filters-2232986","t":"13:53:31.230"}
+{"cookie":true,"cookie_fail_injected":false,"csp":true,"event":"ready","filter":true,"pid":2232986,"t":"13:53:31.230"}
+{"credential":false,"ephemeral_session":true,"event":"opened","mode":"inprocess","origin":"dfx2://spike","t":"13:53:31.338","window":"S"}
+{"event":"filter-installed","rules":"[{\"action\":{\"type\":\"block\"},\"trigger\":{\"url-filter\":\".*\"}},{\"action\":{\"type\":\"ignore-previous-rules\"},\"trigger\":{\"url-filter\":\"^dfx2://spike/\"}},{\"action\":{\"type\":\"block\"},\"trigger\":{\"load-context\":[\"child-frame\"],\"resource-type\":[\"document\"],\"url-filter\":\".*\"}}]","t":"13:53:31.343","window":"S"}
+{"event":"navigate","t":"13:53:31.343","uri":"dfx2://spike/","window":"S"}
+{"event":"navigation-allowed","method":"GET","redirect":false,"t":"13:53:31.430","uri":"dfx2://spike/","window":"S"}
+{"event":"load","load_event":0,"t":"13:53:31.431","uri":"dfx2://spike/","window":"S"}
+{"event":"load","load_event":2,"t":"13:53:31.432","uri":"dfx2://spike/","window":"S"}
+{"event":"load","load_event":3,"t":"13:53:31.610","uri":"dfx2://spike/","window":"S"}
+{"body":"fetch('api/slow'); return 1","error":"","event":"js","result":1,"t":"13:53:31.612","window":"S"}
+{"event":"closing","native_async":0,"native_requests":1,"navigated":true,"t":"13:53:32.111","why":"command","window":"S"}
+{"endpoint":{"admitted":0,"refused":{},"handled":5},"event":"closed","handler":{"GET /":1,"GET /api/slow":1,"GET /logo.svg":1,"GET /probe.css":1,"GET /probe.js":1},"handlers_drained":true,"native_async":0,"native_requests":0,"t":"13:53:32.117","window":"S"}
+{"error":"\u003cnil\u003e","event":"exit","filter_store_removal":{"path":"/tmp/dfx2-feasibility/filters-2232986","attempts":1,"elapsed_ns":71546,"removed":true},"t":"13:53:32.120"}

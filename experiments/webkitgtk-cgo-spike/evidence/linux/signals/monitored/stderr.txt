@@ -1,0 +1,186 @@
+warning: File "/home/michael/local/go/src/runtime/runtime-gdb.py" auto-loading has been declined by your `auto-load safe-path' set to "$debugdir:$datadir/auto-load".
+Function "JSC::initialize()" not defined.
+Function "JSC::VM::VM(JSC::VM::VMType, JSC::HeapType, WTF::RunLoop*, bool*)" not defined.
+Function "JSC::Heap::Heap(JSC::VM&, JSC::HeapType)" not defined.
+Function "JSGlobalContextCreate" not defined.
+Function "JSGlobalContextCreateInGroup" not defined.
+Function "JSContextGroupCreate" not defined.
+Function "jsc_virtual_machine_new" not defined.
+Function "JSC::JSLock::didAcquireLock()" not defined.
+Function "JSC::MachineThreads::addCurrentThread()" not defined.
+Function "WTF::ThreadGroup::addCurrentThread()" not defined.
+Function "WTF::Thread::suspend(WTF::ThreadSuspendLocker const&)" not defined.
+Function "WTF::Thread::signalHandlerSuspendResume(int, siginfo_t*, void*)" not defined.
+Function "WTF::SignalHandlers::finalize()" not defined.
+Function "WTF::RealTimeThreads::RealTimeThreads()" not defined.
+Function "WTF::RealTimeThreads::registerThread(WTF::Thread&)" not defined.
+Function "WTF::HighPriorityThreads::HighPriorityThreads()" not defined.
+Function "WTF::HighPriorityThreads::registerThread(WTF::Thread&)" not defined.
+Function "WTF::RealTimeThreads::promoteThreadToRealTime(WTF::Thread const&)" not defined.
+Function "WTF::RealTimeThreads::realTimeKitMakeThreadRealTime(unsigned long, unsigned long, unsigned int)" not defined.
+Function "WTF::RealTimeThreads::signalCallback(int, GIOCondition, void*)" not defined.
+Function "WTF::RealTimeThreads::demoteAllThreadsFromRealTime()" not defined.
+Function "WTF::Thread::updateSchedulingAttributes(WTF::ThreadSchedulingState) const" not defined.
+Function "WTF::HighPriorityThreads::realTimeKitMakeThreadHighPriority(unsigned long, unsigned long, int)" not defined.
+Function "sched_setscheduler" not defined.
+2026/11/12 11:10:48 http: panic serving 127.0.0.1:60236: runtime error: invalid memory address or nil pointer dereference
+goroutine 50 [running]:
+net/http.(*conn).serve.func1()
+	/home/michael/local/go/src/net/http/server.go:1939 +0xbb
+panic({0xa775c8?, 0xac3f40?})
+	/home/michael/local/go/src/runtime/panic.go:859 +0x125
+main.busFault({0x3fcd585c421b?, 0x0?})
+	/home/michael/Repos/q/products/dfx2/experiments/webkitgtk-cgo-spike/probe_linux.go:267 +0x12b
+main.main.func2({0xabe758, 0x3fcd58958000}, 0x0?)
+	/home/michael/Repos/q/products/dfx2/experiments/webkitgtk-cgo-spike/main_linux.go:96 +0x52
+net/http.HandlerFunc.ServeHTTP(0x3fcd587360c0?, {0xabe758?, 0x3fcd58958000?}, 0x6a90da?)
+	/home/michael/local/go/src/net/http/server.go:2338 +0x29
+net/http.(*ServeMux).ServeHTTP(0x485d19?, {0xabe758, 0x3fcd58958000}, 0x3fcd586e6140)
+	/home/michael/local/go/src/net/http/server.go:2903 +0x1cf
+net/http.serverHandler.ServeHTTP({0x3fcd58696380?}, {0xabe758?, 0x3fcd58958000?}, 0x1?)
+	/home/michael/local/go/src/net/http/server.go:3413 +0x8e
+net/http.(*conn).serve(0x3fcd5869a090, {0xabea90, 0x3fcd58694120})
+	/home/michael/local/go/src/net/http/server.go:2137 +0x6dc
+created by net/http.(*Server).Serve in goroutine 23
+	/home/michael/local/go/src/net/http/server.go:3581 +0x4fd
+2026/11/12 11:10:48 http: panic serving 127.0.0.1:60252: runtime error: invalid memory address or nil pointer dereference
+goroutine 66 [running]:
+net/http.(*conn).serve.func1()
+	/home/michael/local/go/src/net/http/server.go:1939 +0xbb
+panic({0xa9cfb8?, 0x3fcd585ac210?})
+	/home/michael/local/go/src/runtime/panic.go:859 +0x125
+main.busFault({0x3fcd585c424b?, 0x0?})
+	/home/michael/Repos/q/products/dfx2/experiments/webkitgtk-cgo-spike/probe_linux.go:281 +0x10a
+main.main.func2({0xabe758, 0x3fcd589580f0}, 0x0?)
+	/home/michael/Repos/q/products/dfx2/experiments/webkitgtk-cgo-spike/main_linux.go:96 +0x52
+net/http.HandlerFunc.ServeHTTP(0x3fcd587360c0?, {0xabe758?, 0x3fcd589580f0?}, 0x6a90da?)
+	/home/michael/local/go/src/net/http/server.go:2338 +0x29
+net/http.(*ServeMux).ServeHTTP(0x485d19?, {0xabe758, 0x3fcd589580f0}, 0x3fcd589ac000)
+	/home/michael/local/go/src/net/http/server.go:2903 +0x1cf
+net/http.serverHandler.ServeHTTP({0x3fcd589a6000?}, {0xabe758?, 0x3fcd589580f0?}, 0x1?)
+	/home/michael/local/go/src/net/http/server.go:3413 +0x8e
+net/http.(*conn).serve(0x3fcd589a2000, {0xabea90, 0x3fcd58694120})
+	/home/michael/local/go/src/net/http/server.go:2137 +0x6dc
+created by net/http.(*Server).Serve in goroutine 23
+	/home/michael/local/go/src/net/http/server.go:3581 +0x4fd
+Overriding existing handler for signal 10. Set JSC_SIGNAL_FOR_GC if you want WebKit to use a different signal
+2026/11/12 11:11:04 http: panic serving 127.0.0.1:42182: runtime error: invalid memory address or nil pointer dereference
+goroutine 55 [running]:
+net/http.(*conn).serve.func1()
+	/home/michael/local/go/src/net/http/server.go:1939 +0xbb
+panic({0xa775c8?, 0xac3f40?})
+	/home/michael/local/go/src/runtime/panic.go:859 +0x125
+main.busFault({0x3fcd587bc023?, 0x0?})
+	/home/michael/Repos/q/products/dfx2/experiments/webkitgtk-cgo-spike/probe_linux.go:267 +0x12b
+main.main.func2({0xabe758, 0x3fcd58882000}, 0x0?)
+	/home/michael/Repos/q/products/dfx2/experiments/webkitgtk-cgo-spike/main_linux.go:96 +0x52
+net/http.HandlerFunc.ServeHTTP(0x3fcd587360c0?, {0xabe758?, 0x3fcd58882000?}, 0x6a90da?)
+	/home/michael/local/go/src/net/http/server.go:2338 +0x29
+net/http.(*ServeMux).ServeHTTP(0x485d19?, {0xabe758, 0x3fcd58882000}, 0x3fcd588148c0)
+	/home/michael/local/go/src/net/http/server.go:2903 +0x1cf
+net/http.serverHandler.ServeHTTP({0x3fcd587b8580?}, {0xabe758?, 0x3fcd58882000?}, 0x1?)
+	/home/michael/local/go/src/net/http/server.go:3413 +0x8e
+net/http.(*conn).serve(0x3fcd5878a240, {0xabea90, 0x3fcd58694120})
+	/home/michael/local/go/src/net/http/server.go:2137 +0x6dc
+created by net/http.(*Server).Serve in goroutine 23
+	/home/michael/local/go/src/net/http/server.go:3581 +0x4fd
+2026/11/12 11:11:04 http: panic serving 127.0.0.1:42186: runtime error: invalid memory address or nil pointer dereference
+goroutine 40 [running]:
+net/http.(*conn).serve.func1()
+	/home/michael/local/go/src/net/http/server.go:1939 +0xbb
+panic({0xa9cfb8?, 0x3fcd586aa000?})
+	/home/michael/local/go/src/runtime/panic.go:859 +0x125
+main.busFault({0x3fcd585c41d3?, 0x0?})
+	/home/michael/Repos/q/products/dfx2/experiments/webkitgtk-cgo-spike/probe_linux.go:281 +0x10a
+main.main.func2({0xabe758, 0x3fcd58a78000}, 0x0?)
+	/home/michael/Repos/q/products/dfx2/experiments/webkitgtk-cgo-spike/main_linux.go:96 +0x52
+net/http.HandlerFunc.ServeHTTP(0x3fcd587360c0?, {0xabe758?, 0x3fcd58a78000?}, 0x6a90da?)
+	/home/michael/local/go/src/net/http/server.go:2338 +0x29
+net/http.(*ServeMux).ServeHTTP(0x485d19?, {0xabe758, 0x3fcd58a78000}, 0x3fcd5890c3c0)
+	/home/michael/local/go/src/net/http/server.go:2903 +0x1cf
+net/http.serverHandler.ServeHTTP({0x3fcd589a6080?}, {0xabe758?, 0x3fcd58a78000?}, 0x1?)
+	/home/michael/local/go/src/net/http/server.go:3413 +0x8e
+net/http.(*conn).serve(0x3fcd5869a2d0, {0xabea90, 0x3fcd58694120})
+	/home/michael/local/go/src/net/http/server.go:2137 +0x6dc
+created by net/http.(*Server).Serve in goroutine 23
+	/home/michael/local/go/src/net/http/server.go:3581 +0x4fd
+2026/11/12 11:11:07 http: panic serving 127.0.0.1:42216: runtime error: invalid memory address or nil pointer dereference
+goroutine 116 [running]:
+net/http.(*conn).serve.func1()
+	/home/michael/local/go/src/net/http/server.go:1939 +0xbb
+panic({0xa775c8?, 0xac3f40?})
+	/home/michael/local/go/src/runtime/panic.go:859 +0x125
+main.busFault({0x3fcd58748143?, 0x0?})
+	/home/michael/Repos/q/products/dfx2/experiments/webkitgtk-cgo-spike/probe_linux.go:267 +0x12b
+main.main.func2({0xabe758, 0x3fcd58792000}, 0x0?)
+	/home/michael/Repos/q/products/dfx2/experiments/webkitgtk-cgo-spike/main_linux.go:96 +0x52
+net/http.HandlerFunc.ServeHTTP(0x3fcd587360c0?, {0xabe758?, 0x3fcd58792000?}, 0x6a90da?)
+	/home/michael/local/go/src/net/http/server.go:2338 +0x29
+net/http.(*ServeMux).ServeHTTP(0x485d19?, {0xabe758, 0x3fcd58792000}, 0x3fcd5880a140)
+	/home/michael/local/go/src/net/http/server.go:2903 +0x1cf
+net/http.serverHandler.ServeHTTP({0x3fcd58696040?}, {0xabe758?, 0x3fcd58792000?}, 0x1?)
+	/home/michael/local/go/src/net/http/server.go:3413 +0x8e
+net/http.(*conn).serve(0x3fcd5878a090, {0xabea90, 0x3fcd58694120})
+	/home/michael/local/go/src/net/http/server.go:2137 +0x6dc
+created by net/http.(*Server).Serve in goroutine 23
+	/home/michael/local/go/src/net/http/server.go:3581 +0x4fd
+2026/11/12 11:11:07 http: panic serving 127.0.0.1:42220: runtime error: invalid memory address or nil pointer dereference
+goroutine 118 [running]:
+net/http.(*conn).serve.func1()
+	/home/michael/local/go/src/net/http/server.go:1939 +0xbb
+panic({0xa9cfb8?, 0x3fcd58998048?})
+	/home/michael/local/go/src/runtime/panic.go:859 +0x125
+main.busFault({0x3fcd587bc00b?, 0x0?})
+	/home/michael/Repos/q/products/dfx2/experiments/webkitgtk-cgo-spike/probe_linux.go:281 +0x10a
+main.main.func2({0xabe758, 0x3fcd589b6000}, 0x0?)
+	/home/michael/Repos/q/products/dfx2/experiments/webkitgtk-cgo-spike/main_linux.go:96 +0x52
+net/http.HandlerFunc.ServeHTTP(0x3fcd587360c0?, {0xabe758?, 0x3fcd589b6000?}, 0x6a90da?)
+	/home/michael/local/go/src/net/http/server.go:2338 +0x29
+net/http.(*ServeMux).ServeHTTP(0x485d19?, {0xabe758, 0x3fcd589b6000}, 0x3fcd5880a280)
+	/home/michael/local/go/src/net/http/server.go:2903 +0x1cf
+net/http.serverHandler.ServeHTTP({0x3fcd58696280?}, {0xabe758?, 0x3fcd589b6000?}, 0x1?)
+	/home/michael/local/go/src/net/http/server.go:3413 +0x8e
+net/http.(*conn).serve(0x3fcd5878a1b0, {0xabea90, 0x3fcd58694120})
+	/home/michael/local/go/src/net/http/server.go:2137 +0x6dc
+created by net/http.(*Server).Serve in goroutine 23
+	/home/michael/local/go/src/net/http/server.go:3581 +0x4fd
+2026/11/12 11:11:08 http: panic serving 127.0.0.1:42242: runtime error: invalid memory address or nil pointer dereference
+goroutine 62 [running]:
+net/http.(*conn).serve.func1()
+	/home/michael/local/go/src/net/http/server.go:1939 +0xbb
+panic({0xa775c8?, 0xac3f40?})
+	/home/michael/local/go/src/runtime/panic.go:859 +0x125
+main.busFault({0x3fcd58748143?, 0x0?})
+	/home/michael/Repos/q/products/dfx2/experiments/webkitgtk-cgo-spike/probe_linux.go:267 +0x12b
+main.main.func2({0xabe758, 0x3fcd5865a000}, 0x0?)
+	/home/michael/Repos/q/products/dfx2/experiments/webkitgtk-cgo-spike/main_linux.go:96 +0x52
+net/http.HandlerFunc.ServeHTTP(0x3fcd587360c0?, {0xabe758?, 0x3fcd5865a000?}, 0x6a90da?)
+	/home/michael/local/go/src/net/http/server.go:2338 +0x29
+net/http.(*ServeMux).ServeHTTP(0x485d19?, {0xabe758, 0x3fcd5865a000}, 0x3fcd58814140)
+	/home/michael/local/go/src/net/http/server.go:2903 +0x1cf
+net/http.serverHandler.ServeHTTP({0x3fcd589a6000?}, {0xabe758?, 0x3fcd5865a000?}, 0x1?)
+	/home/michael/local/go/src/net/http/server.go:3413 +0x8e
+net/http.(*conn).serve(0x3fcd5869a090, {0xabea90, 0x3fcd58694120})
+	/home/michael/local/go/src/net/http/server.go:2137 +0x6dc
+created by net/http.(*Server).Serve in goroutine 23
+	/home/michael/local/go/src/net/http/server.go:3581 +0x4fd
+2026/11/12 11:11:08 http: panic serving 127.0.0.1:42254: runtime error: invalid memory address or nil pointer dereference
+goroutine 110 [running]:
+net/http.(*conn).serve.func1()
+	/home/michael/local/go/src/net/http/server.go:1939 +0xbb
+panic({0xa9cfb8?, 0x3fcd586aa048?})
+	/home/michael/local/go/src/runtime/panic.go:859 +0x125
+main.busFault({0x3fcd58748173?, 0x0?})
+	/home/michael/Repos/q/products/dfx2/experiments/webkitgtk-cgo-spike/probe_linux.go:281 +0x10a
+main.main.func2({0xabe758, 0x3fcd5865a0f0}, 0x0?)
+	/home/michael/Repos/q/products/dfx2/experiments/webkitgtk-cgo-spike/main_linux.go:96 +0x52
+net/http.HandlerFunc.ServeHTTP(0x3fcd587360c0?, {0xabe758?, 0x3fcd5865a0f0?}, 0x6a90da?)
+	/home/michael/local/go/src/net/http/server.go:2338 +0x29
+net/http.(*ServeMux).ServeHTTP(0x485d19?, {0xabe758, 0x3fcd5865a0f0}, 0x3fcd58846140)
+	/home/michael/local/go/src/net/http/server.go:2903 +0x1cf
+net/http.serverHandler.ServeHTTP({0x3fcd587b8040?}, {0xabe758?, 0x3fcd5865a0f0?}, 0x1?)
+	/home/michael/local/go/src/net/http/server.go:3413 +0x8e
+net/http.(*conn).serve(0x3fcd5878a360, {0xabea90, 0x3fcd58694120})
+	/home/michael/local/go/src/net/http/server.go:2137 +0x6dc
+created by net/http.(*Server).Serve in goroutine 23
+	/home/michael/local/go/src/net/http/server.go:3581 +0x4fd

@@ -1,0 +1,36 @@
+diff --git a/experiments/webkitgtk-spike/host_other.go b/experiments/webkitgtk-spike/host_other.go
+index fd1cbce..83e4912 100644
+--- a/experiments/webkitgtk-spike/host_other.go
++++ b/experiments/webkitgtk-spike/host_other.go
+@@ -5,3 +5,7 @@ package main
+ import "errors"
+ 
+ func runHost(config) error { return errors.New("this experiment's native host is Linux only") }
++
++func runSignalProbe(string, string, bool, string, int) error {
++	return errors.New("the signal probe is Linux only")
++}
+diff --git a/experiments/webkitgtk-spike/main.go b/experiments/webkitgtk-spike/main.go
+index 40cd863..4fa4aa7 100644
+--- a/experiments/webkitgtk-spike/main.go
++++ b/experiments/webkitgtk-spike/main.go
+@@ -39,7 +39,19 @@ func main() {
+ 	flag.IntVar(&c.width, "width", 1000, "window width")
+ 	flag.IntVar(&c.height, "height", 760, "window height")
+ 	flag.BoolVar(&c.windowClose, "window-close", false, "audition: timed exit through GTK delete-event")
++	signalProbe := flag.String("signal-probe", "", "feasibility pass A, one disposable process: baseline, configured, configured-onstack, configured-onstack-all, late, env, no-symbol or no-signal")
++	signalFault := flag.String("signal-fault", "", "with -signal-probe: after JSC initialization, recover a Go fault: segv or bus")
++	signalWebKit := flag.Bool("signal-webkit", false, "with -signal-probe: also bring up GTK and a WebKit view running a page")
++	signalOrder := flag.String("signal-order", "jsc-first", "with -signal-webkit: jsc-first (proposed) or webkit-first")
++	signalThreads := flag.Int("signal-js-threads", 1, "with -signal-probe: 2 also runs JavaScript on two more Go threads in one context group")
+ 	flag.Parse()
++	if *signalProbe != "" {
++		if err := runSignalProbe(*signalProbe, *signalFault, *signalWebKit, *signalOrder, *signalThreads); err != nil {
++			fmt.Fprintln(os.Stderr, err)
++			os.Exit(1)
++		}
++		return
++	}
+ 	if c.dockDevtools {
+ 		c.devtools = true
+ 	}

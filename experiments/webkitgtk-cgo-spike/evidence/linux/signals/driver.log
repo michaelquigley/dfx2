@@ -1,0 +1,21 @@
+{"check": "monitor resolved every required watch in the cgo host", "ok": true}
+{"check": "positive control: host VM, Go main thread registered, fault handlers installed", "ok": true}
+{"check": "monitored: VM-free (all VM, registration, suspension and fault-handler kinds 0)", "ok": true}
+{"check": "reserved-env-60: VM-free (all VM, registration, suspension and fault-handler kinds 0)", "ok": true}
+{"check": "monitored: faults recovered, endpoint alive, every Go-owned signal delivered, at every phase", "ok": true}
+{"check": "unmonitored: faults recovered, endpoint alive, every Go-owned signal delivered, at every phase", "ok": true}
+{"check": "reserved-env-60: faults recovered, endpoint alive, every Go-owned signal delivered, at every phase", "ok": true}
+{"check": "unmodified: after page load JSC owns SIGUSR1 and SIGXCPU, Go keeps SIGSEGV, SIGBUS, SIGHUP, SIGUSR2", "ok": true}
+{"check": "JSC_SIGNAL_FOR_GC=60: SIGUSR1 stays Go's, 60 is JSC's; SIGXCPU still JSC's", "ok": true}
+{"check": "stray-usr1-external: kills the process", "ok": true}
+{"check": "stray-usr1-self: kills the process", "ok": true}
+{"check": "stray-usr1-native: kills the process", "ok": true}
+{"check": "stray-xcpu-external: survives", "ok": true}
+{"check": "stray-xcpu-native: survives", "ok": true}
+{"check": "stray-60-reserved-external: kills the process", "ok": true}
+{"check": "stray-usr1-reserved-60-external: survives", "ok": true}
+{"check": "the stray SIGUSR1 faults inside JSC's suspend handler", "ok": true}
+{"check": "purego-stray-usr1: kills the process", "ok": true}
+{"check": "purego-stray-60-reserved: kills the process", "ok": true}
+{"check": "purego-stray-xcpu: survives", "ok": true}
+{"passed": true, "failed": []}

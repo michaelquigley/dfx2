@@ -1,0 +1,10 @@
+Thread 1 "dfx2-cgo-probe" received signal SIGSEGV, Segmentation fault.
+#0  signalHandlerSuspendResume () at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WTF/wtf/posix/ThreadingPOSIX.cpp:124
+#1  0x00007fffef845cb0 in <signal handler called> () at /usr/lib/x86_64-linux-gnu/libc.so.6
+#2  __syscall_cancel_arch () at ../sysdeps/unix/sysv/linux/x86_64/syscall_cancel.S:56
+#3  0x00007fffef8a039c in __internal_syscall_cancel (a1=<optimized out>, a2=<optimized out>, a3=<optimized out>, a4=<optimized out>, a5=8, a6=0, nr=271) at ./nptl/cancellation.c:49
+#4  __syscall_cancel (a1=<optimized out>, a2=<optimized out>, a3=<optimized out>, a4=<optimized out>, a5=a5@entry=8, a6=a6@entry=0, nr=271) at ./nptl/cancellation.c:75
+#5  0x00007fffef928136 in __GI_ppoll (fds=<optimized out>, nfds=<optimized out>, timeout=<optimized out>, sigmask=<optimized out>) at ../sysdeps/unix/sysv/linux/ppoll.c:42
+#6  0x00007ffff1b0a371 in ??? () at /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0
+#7  0x00007ffff1b0a5f7 in g_main_loop_run () at /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0
+rip            0x7ffff156b2f8      0x7ffff156b2f8 <signalHandlerSuspendResume()+40>

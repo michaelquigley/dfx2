@@ -1,0 +1,128 @@
+{"event":"filter-store","path":"/tmp/dfx2-feasibility/filters-2231063","t":"13:53:21.660"}
+{"cookie":true,"cookie_fail_injected":false,"csp":true,"event":"ready","filter":true,"pid":2231063,"t":"13:53:21.661"}
+{"credential":false,"ephemeral_session":true,"event":"opened","mode":"attach","origin":"http://127.0.0.1:33043","t":"13:53:21.773","window":"E"}
+{"event":"filter-installed","rules":"[{\"action\":{\"type\":\"block\"},\"trigger\":{\"url-filter\":\".*\"}},{\"action\":{\"type\":\"ignore-previous-rules\"},\"trigger\":{\"url-filter\":\"^http://127\\\\.0\\\\.0\\\\.1:33043/\"}},{\"action\":{\"type\":\"block\"},\"trigger\":{\"load-context\":[\"child-frame\"],\"resource-type\":[\"document\"],\"url-filter\":\".*\"}}]","t":"13:53:21.778","window":"E"}
+{"event":"navigate","t":"13:53:21.778","uri":"http://127.0.0.1:33043/","window":"E"}
+{"event":"navigation-allowed","method":"GET","redirect":false,"t":"13:53:21.867","uri":"http://127.0.0.1:33043/","window":"E"}
+{"event":"load","load_event":0,"t":"13:53:21.868","uri":"http://127.0.0.1:33043/","window":"E"}
+{"event":"load","load_event":2,"t":"13:53:21.869","uri":"http://127.0.0.1:33043/","window":"E"}
+{"event":"load","load_event":3,"t":"13:53:22.048","uri":"http://127.0.0.1:33043/","window":"E"}
+{"event":"navigation-allowed","method":"GET","redirect":false,"t":"13:53:22.375","uri":"http://127.0.0.1:33043/api/query?x=later","window":"E"}
+{"body":"location.href = 'api/query?x=later'; return 1","error":"","event":"js","result":1,"t":"13:53:22.381","window":"E"}
+{"event":"load","load_event":0,"t":"13:53:22.381","uri":"http://127.0.0.1:33043/","window":"E"}
+{"code":39,"domain":"g-io-error-quark","error_page":true,"event":"load-failed","from_post":false,"message":"Could not connect to 127.0.0.1: Connection refused","method":"GET","retry_offered":true,"t":"13:53:22.381","uri":"http://127.0.0.1:33043/api/query?x=later","window":"E"}
+{"event":"load","load_event":3,"t":"13:53:22.381","uri":"http://127.0.0.1:33043/","window":"E"}
+{"event":"load","load_event":0,"t":"13:53:22.382","uri":"http://127.0.0.1:33043/api/query?x=later","window":"E"}
+{"event":"load","load_event":2,"t":"13:53:22.383","uri":"http://127.0.0.1:33043/api/query?x=later","window":"E"}
+{"event":"load","load_event":3,"t":"13:53:22.401","uri":"http://127.0.0.1:33043/api/query?x=later","window":"E"}
+{"error":"","event":"snapshot","path":"evidence/linux/integration-feasibility/passes-b-d/error-pages/error-get.png","t":"13:53:22.415","window":"E"}
+{"body":"return {retry: !!document.getElementById('retry'), start: !!document.getElementById('start'), scripts: document.scripts.length, text: document.body.innerText}","error":"","event":"js","result":{"start":true,"scripts":0,"retry":true,"text":"This page did not load\n\nhttp://127.0.0.1:33043/api/query?x=later\n\nNothing was submitted.\n\nRetry Return to start"},"t":"13:53:22.416","window":"E"}
+{"event":"error-action-refused","t":"13:53:22.417","uri":"dfx2-error:retry/forged","window":"E"}
+{"body":"location.href = 'dfx2-error:retry/forged'; return 1","error":"","event":"js","result":1,"t":"13:53:22.417","window":"E"}
+{"action":"retry","event":"error-action","t":"13:53:22.418","uri":"http://127.0.0.1:33043/api/query?x=later","window":"E"}
+{"body":"document.getElementById('retry').click(); return 1","error":"","event":"js","result":1,"t":"13:53:22.418","window":"E"}
+{"event":"navigation-allowed","method":"GET","redirect":false,"t":"13:53:22.418","uri":"http://127.0.0.1:33043/api/query?x=later","window":"E"}
+{"event":"load","load_event":0,"t":"13:53:22.418","uri":"http://127.0.0.1:33043/api/query?x=later","window":"E"}
+{"event":"load","load_event":2,"t":"13:53:22.420","uri":"http://127.0.0.1:33043/api/query?x=later","window":"E"}
+{"event":"load","load_event":3,"t":"13:53:22.422","uri":"http://127.0.0.1:33043/api/query?x=later","window":"E"}
+{"event":"navigation-allowed","method":"GET","redirect":false,"t":"13:53:22.423","uri":"http://127.0.0.1:33043/","window":"E"}
+{"event":"load","load_event":0,"t":"13:53:22.423","uri":"http://127.0.0.1:33043/","window":"E"}
+{"event":"load","load_event":2,"t":"13:53:22.425","uri":"http://127.0.0.1:33043/","window":"E"}
+{"event":"load","load_event":3,"t":"13:53:22.428","uri":"http://127.0.0.1:33043/","window":"E"}
+{"event":"navigation-allowed","method":"POST","redirect":false,"t":"13:53:22.930","uri":"http://127.0.0.1:33043/api/form","window":"E"}
+{"body":"document.getElementById('edit').submit(); return 1","error":"","event":"js","result":1,"t":"13:53:22.931","window":"E"}
+{"event":"load","load_event":0,"t":"13:53:22.932","uri":"http://127.0.0.1:33043/","window":"E"}
+{"code":39,"domain":"g-io-error-quark","error_page":true,"event":"load-failed","from_post":true,"message":"Could not connect to 127.0.0.1: Connection refused","method":"POST","retry_offered":false,"t":"13:53:22.935","uri":"http://127.0.0.1:33043/api/form","window":"E"}
+{"event":"load","load_event":3,"t":"13:53:22.935","uri":"http://127.0.0.1:33043/","window":"E"}
+{"event":"load","load_event":0,"t":"13:53:22.936","uri":"http://127.0.0.1:33043/api/form","window":"E"}
+{"event":"load","load_event":2,"t":"13:53:22.939","uri":"http://127.0.0.1:33043/api/form","window":"E"}
+{"event":"load","load_event":3,"t":"13:53:22.941","uri":"http://127.0.0.1:33043/api/form","window":"E"}
+{"error":"","event":"snapshot","path":"evidence/linux/integration-feasibility/passes-b-d/error-pages/error-post.png","t":"13:53:22.956","window":"E"}
+{"body":"return {retry: !!document.getElementById('retry'), start: !!document.getElementById('start')}","error":"","event":"js","result":{"start":true,"retry":false},"t":"13:53:22.957","window":"E"}
+{"action":"start","event":"error-action","t":"13:53:22.958","uri":"http://127.0.0.1:33043/","window":"E"}
+{"body":"document.getElementById('start').click(); return 1","error":"","event":"js","result":1,"t":"13:53:22.958","window":"E"}
+{"event":"navigation-allowed","method":"GET","redirect":false,"t":"13:53:22.958","uri":"http://127.0.0.1:33043/","window":"E"}
+{"event":"load","load_event":0,"t":"13:53:22.958","uri":"http://127.0.0.1:33043/","window":"E"}
+{"event":"load","load_event":2,"t":"13:53:22.960","uri":"http://127.0.0.1:33043/","window":"E"}
+{"event":"load","load_event":3,"t":"13:53:22.964","uri":"http://127.0.0.1:33043/","window":"E"}
+{"event":"navigation-allowed","method":"POST","redirect":false,"t":"13:53:22.964","uri":"http://127.0.0.1:33043/post-303","window":"E"}
+{"body":"const f=document.getElementById('edit'); f.action='/post-303'; f.submit(); return 1","error":"","event":"js","result":1,"t":"13:53:22.964","window":"E"}
+{"event":"load","load_event":0,"t":"13:53:22.965","uri":"http://127.0.0.1:33043/","window":"E"}
+{"event":"navigation-allowed","method":"GET","redirect":true,"t":"13:53:22.966","uri":"http://127.0.0.1:33043/broken","window":"E"}
+{"event":"load","load_event":1,"t":"13:53:22.966","uri":"http://127.0.0.1:33043/broken","window":"E"}
+{"code":34,"domain":"g-io-error-quark","error_page":true,"event":"load-failed","from_post":true,"message":"Connection terminated unexpectedly","method":"GET","retry_offered":true,"t":"13:53:22.967","uri":"http://127.0.0.1:33043/broken","window":"E"}
+{"event":"load","load_event":3,"t":"13:53:22.967","uri":"http://127.0.0.1:33043/","window":"E"}
+{"event":"load","load_event":0,"t":"13:53:22.967","uri":"http://127.0.0.1:33043/broken","window":"E"}
+{"event":"load","load_event":2,"t":"13:53:22.968","uri":"http://127.0.0.1:33043/broken","window":"E"}
+{"event":"load","load_event":3,"t":"13:53:22.968","uri":"http://127.0.0.1:33043/broken","window":"E"}
+{"action":"retry","event":"error-action","t":"13:53:22.969","uri":"http://127.0.0.1:33043/broken","window":"E"}
+{"body":"document.getElementById('retry').click(); return 1","error":"","event":"js","result":1,"t":"13:53:22.969","window":"E"}
+{"event":"navigation-allowed","method":"GET","redirect":false,"t":"13:53:22.969","uri":"http://127.0.0.1:33043/broken","window":"E"}
+{"event":"load","load_event":0,"t":"13:53:22.969","uri":"http://127.0.0.1:33043/broken","window":"E"}
+{"code":34,"domain":"g-io-error-quark","error_page":true,"event":"load-failed","from_post":false,"message":"Connection terminated unexpectedly","method":"GET","retry_offered":true,"t":"13:53:22.970","uri":"http://127.0.0.1:33043/broken","window":"E"}
+{"event":"load","load_event":3,"t":"13:53:22.970","uri":"http://127.0.0.1:33043/broken","window":"E"}
+{"event":"load","load_event":0,"t":"13:53:22.970","uri":"http://127.0.0.1:33043/broken","window":"E"}
+{"event":"load","load_event":2,"t":"13:53:22.971","uri":"http://127.0.0.1:33043/broken","window":"E"}
+{"event":"load","load_event":3,"t":"13:53:22.971","uri":"http://127.0.0.1:33043/broken","window":"E"}
+{"action":"start","event":"error-action","t":"13:53:22.972","uri":"http://127.0.0.1:33043/","window":"E"}
+{"body":"document.getElementById('start').click(); return 1","error":"","event":"js","result":1,"t":"13:53:22.972","window":"E"}
+{"event":"navigation-allowed","method":"GET","redirect":false,"t":"13:53:22.972","uri":"http://127.0.0.1:33043/","window":"E"}
+{"event":"load","load_event":0,"t":"13:53:22.972","uri":"http://127.0.0.1:33043/","window":"E"}
+{"event":"load","load_event":2,"t":"13:53:22.974","uri":"http://127.0.0.1:33043/","window":"E"}
+{"event":"load","load_event":3,"t":"13:53:22.978","uri":"http://127.0.0.1:33043/","window":"E"}
+{"event":"navigation-allowed","method":"POST","redirect":false,"t":"13:53:22.980","uri":"http://127.0.0.1:33043/post-307","window":"E"}
+{"body":"const f=document.getElementById('edit'); f.action='/post-307'; f.submit(); return 1","error":"","event":"js","result":1,"t":"13:53:22.980","window":"E"}
+{"event":"load","load_event":0,"t":"13:53:22.981","uri":"http://127.0.0.1:33043/","window":"E"}
+{"event":"navigation-allowed","method":"POST","redirect":true,"t":"13:53:22.982","uri":"http://127.0.0.1:33043/broken-post","window":"E"}
+{"event":"load","load_event":1,"t":"13:53:22.982","uri":"http://127.0.0.1:33043/broken-post","window":"E"}
+{"code":34,"domain":"g-io-error-quark","error_page":true,"event":"load-failed","from_post":true,"message":"Connection terminated unexpectedly","method":"POST","retry_offered":false,"t":"13:53:22.983","uri":"http://127.0.0.1:33043/broken-post","window":"E"}
+{"event":"load","load_event":3,"t":"13:53:22.983","uri":"http://127.0.0.1:33043/","window":"E"}
+{"event":"load","load_event":0,"t":"13:53:22.983","uri":"http://127.0.0.1:33043/broken-post","window":"E"}
+{"event":"load","load_event":2,"t":"13:53:22.984","uri":"http://127.0.0.1:33043/broken-post","window":"E"}
+{"event":"load","load_event":3,"t":"13:53:22.985","uri":"http://127.0.0.1:33043/broken-post","window":"E"}
+{"body":"return {retry: !!document.getElementById('retry')}","error":"","event":"js","result":{"retry":false},"t":"13:53:22.985","window":"E"}
+{"action":"start","event":"error-action","t":"13:53:22.986","uri":"http://127.0.0.1:33043/","window":"E"}
+{"body":"document.getElementById('start').click(); return 1","error":"","event":"js","result":1,"t":"13:53:22.986","window":"E"}
+{"event":"navigation-allowed","method":"GET","redirect":false,"t":"13:53:22.986","uri":"http://127.0.0.1:33043/","window":"E"}
+{"event":"load","load_event":0,"t":"13:53:22.986","uri":"http://127.0.0.1:33043/","window":"E"}
+{"event":"load","load_event":2,"t":"13:53:22.987","uri":"http://127.0.0.1:33043/","window":"E"}
+{"event":"load","load_event":3,"t":"13:53:22.991","uri":"http://127.0.0.1:33043/","window":"E"}
+{"async":0,"event":"status","t":"13:53:22.991","windows":{"E":{"closing":false,"destroyed":false,"endpoint":{"admitted":0,"refused":{},"handled":0},"handler":{},"mode":"attach","native_async":0,"native_requests":0,"port":0}}}
+{"event":"navigation-allowed","method":"GET","redirect":false,"t":"13:53:22.991","uri":"http://127.0.0.1:33043/missing","window":"E"}
+{"event":"load","load_event":0,"t":"13:53:22.991","uri":"http://127.0.0.1:33043/missing","window":"E"}
+{"event":"load","load_event":2,"t":"13:53:22.993","uri":"http://127.0.0.1:33043/missing","window":"E"}
+{"event":"load","load_event":3,"t":"13:53:23.001","uri":"http://127.0.0.1:33043/missing","window":"E"}
+{"body":"return document.body.innerText","error":"","event":"js","result":"404 from the server","t":"13:53:23.001","window":"E"}
+{"event":"navigation-allowed","method":"GET","redirect":false,"t":"13:53:23.002","uri":"http://127.0.0.1:33043/e500","window":"E"}
+{"event":"load","load_event":0,"t":"13:53:23.002","uri":"http://127.0.0.1:33043/e500","window":"E"}
+{"event":"load","load_event":2,"t":"13:53:23.004","uri":"http://127.0.0.1:33043/e500","window":"E"}
+{"event":"load","load_event":3,"t":"13:53:23.004","uri":"http://127.0.0.1:33043/e500","window":"E"}
+{"body":"return document.body.innerText","error":"","event":"js","result":"500 from the server","t":"13:53:23.004","window":"E"}
+{"event":"navigation-allowed","method":"GET","redirect":false,"t":"13:53:23.005","uri":"http://127.0.0.1:33043/","window":"E"}
+{"event":"load","load_event":0,"t":"13:53:23.005","uri":"http://127.0.0.1:33043/","window":"E"}
+{"event":"load","load_event":2,"t":"13:53:23.007","uri":"http://127.0.0.1:33043/","window":"E"}
+{"event":"load","load_event":3,"t":"13:53:23.010","uri":"http://127.0.0.1:33043/","window":"E"}
+{"body":"return fetch('/broken').then(() =\u003e 'ok', e =\u003e 'rejected: ' + e.name)","error":"","event":"js","result":"rejected: TypeError","t":"13:53:23.011","window":"E"}
+{"body":"const i=document.createElement('img'); i.src='/broken'; document.body.appendChild(i); return 1","error":"","event":"js","result":1,"t":"13:53:23.012","window":"E"}
+{"body":"return location.pathname + ' ' + !!document.getElementById('edit')","error":"","event":"js","result":"/ true","t":"13:53:24.015","window":"E"}
+{"credential":false,"ephemeral_session":true,"event":"opened","mode":"attach","origin":"http://127.0.0.1:33043","t":"13:53:24.523","window":"F"}
+{"event":"filter-installed","rules":"[{\"action\":{\"type\":\"block\"},\"trigger\":{\"url-filter\":\".*\"}},{\"action\":{\"type\":\"ignore-previous-rules\"},\"trigger\":{\"url-filter\":\"^http://127\\\\.0\\\\.0\\\\.1:33043/\"}},{\"action\":{\"type\":\"block\"},\"trigger\":{\"load-context\":[\"child-frame\"],\"resource-type\":[\"document\"],\"url-filter\":\".*\"}}]","t":"13:53:24.524","window":"F"}
+{"event":"navigate","t":"13:53:24.524","uri":"http://127.0.0.1:33043/","window":"F"}
+{"event":"navigation-allowed","method":"GET","redirect":false,"t":"13:53:24.613","uri":"http://127.0.0.1:33043/","window":"F"}
+{"event":"load","load_event":0,"t":"13:53:24.614","uri":"http://127.0.0.1:33043/","window":"F"}
+{"code":39,"domain":"g-io-error-quark","error_page":true,"event":"load-failed","from_post":false,"message":"Could not connect to 127.0.0.1: Connection refused","method":"GET","retry_offered":true,"t":"13:53:24.614","uri":"http://127.0.0.1:33043/","window":"F"}
+{"event":"load","load_event":3,"t":"13:53:24.614","uri":"","window":"F"}
+{"event":"load","load_event":0,"t":"13:53:24.615","uri":"http://127.0.0.1:33043/","window":"F"}
+{"event":"load","load_event":2,"t":"13:53:24.615","uri":"http://127.0.0.1:33043/","window":"F"}
+{"event":"load","load_event":3,"t":"13:53:24.633","uri":"http://127.0.0.1:33043/","window":"F"}
+{"action":"retry","event":"error-action","t":"13:53:24.635","uri":"http://127.0.0.1:33043/","window":"F"}
+{"body":"document.getElementById('retry').click(); return 1","error":"","event":"js","result":1,"t":"13:53:24.635","window":"F"}
+{"event":"navigation-allowed","method":"GET","redirect":false,"t":"13:53:24.635","uri":"http://127.0.0.1:33043/","window":"F"}
+{"event":"load","load_event":0,"t":"13:53:24.635","uri":"http://127.0.0.1:33043/","window":"F"}
+{"event":"load","load_event":2,"t":"13:53:24.637","uri":"http://127.0.0.1:33043/","window":"F"}
+{"event":"load","load_event":3,"t":"13:53:24.680","uri":"http://127.0.0.1:33043/","window":"F"}
+{"event":"closing","native_async":0,"native_requests":0,"navigated":true,"t":"13:53:25.139","why":"quit","window":"E"}
+{"event":"closing","native_async":0,"native_requests":0,"navigated":true,"t":"13:53:25.144","why":"quit","window":"F"}
+{"endpoint":{"admitted":0,"refused":{},"handled":0},"event":"closed","handler":{},"handlers_drained":true,"native_async":0,"native_requests":0,"t":"13:53:25.145","window":"E"}
+{"endpoint":{"admitted":0,"refused":{},"handled":0},"event":"closed","handler":{},"handlers_drained":true,"native_async":0,"native_requests":0,"t":"13:53:25.145","window":"F"}
+{"error":"\u003cnil\u003e","event":"exit","filter_store_removal":{"path":"/tmp/dfx2-feasibility/filters-2231063","attempts":1,"elapsed_ns":74795,"removed":true},"t":"13:53:25.149"}

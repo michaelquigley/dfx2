@@ -1,0 +1,423 @@
+{
+ "reserve": 60,
+ "controls": [],
+ "scenarios": [
+  {
+   "scenario": "combined",
+   "flags": [
+    "-feas-vmfree",
+    "-signal-reserve",
+    "60"
+   ],
+   "checks": [
+    {
+     "check": "A: page, assets, query and POST",
+     "ok": true
+    },
+    {
+     "check": "I: page, assets, query and POST",
+     "ok": true
+    },
+    {
+     "check": "A closed with its request pending and drained, while I kept working",
+     "ok": true,
+     "closed": {
+      "endpoint": {
+       "admitted": 22,
+       "refused": {},
+       "handled": 22
+      },
+      "event": "closed",
+      "handler": {
+       "GET /": 4,
+       "GET /api/query": 1,
+       "GET /api/slow": 1,
+       "GET /logo.svg": 4,
+       "GET /probe.css": 4,
+       "GET /probe.js": 4,
+       "POST /api/echo": 1,
+       "POST /api/report": 3
+      },
+      "handlers_drained": true,
+      "native_async": 0,
+      "native_requests": 0,
+      "t": "12:50:07.978",
+      "window": "A"
+     },
+     "during": [
+      {
+       "x": "during0"
+      },
+      {
+       "x": "during1"
+      },
+      {
+       "x": "during2"
+      }
+     ]
+    },
+    {
+     "check": "reopened A: fresh session at a new endpoint",
+     "ok": true,
+     "fresh": {
+      "cookie": "",
+      "local": null,
+      "session": null
+     }
+    },
+    {
+     "check": "A2: clicked Retry repeats the failed GET once, nothing automatic",
+     "ok": true,
+     "retry_navigations": 1,
+     "handler_calls": {
+      "first navigation": 3,
+      "retry": 1
+     }
+    },
+    {
+     "check": "I: clicked Retry repeats the failed GET once, nothing automatic",
+     "ok": true,
+     "retry_navigations": 1,
+     "handler_calls": {
+      "first navigation": 0,
+      "retry": 0
+     }
+    },
+    {
+     "check": "I: final close with a request pending drains",
+     "ok": true,
+     "closed": {
+      "endpoint": {
+       "admitted": 0,
+       "refused": {},
+       "handled": 45
+      },
+      "event": "closed",
+      "handler": {
+       "GET /": 8,
+       "GET /api/query": 4,
+       "GET /api/slow": 2,
+       "GET /logo.svg": 8,
+       "GET /probe.css": 8,
+       "GET /probe.js": 8,
+       "POST /api/echo": 1,
+       "POST /api/report": 6
+      },
+      "handlers_drained": true,
+      "native_async": 0,
+      "native_requests": 0,
+      "t": "12:50:08.711",
+      "window": "I"
+     }
+    },
+    {
+     "check": "A2: final close with a request pending drains",
+     "ok": true,
+     "closed": {
+      "endpoint": {
+       "admitted": 23,
+       "refused": {},
+       "handled": 23
+      },
+      "event": "closed",
+      "handler": {
+       "GET /": 4,
+       "GET /api/abort": 4,
+       "GET /api/slow": 1,
+       "GET /logo.svg": 4,
+       "GET /probe.css": 4,
+       "GET /probe.js": 4,
+       "POST /api/report": 2
+      },
+      "handlers_drained": true,
+      "native_async": 0,
+      "native_requests": 0,
+      "t": "12:50:08.720",
+      "window": "A2"
+     }
+    },
+    {
+     "check": "SIGSEGV and SIGBUS still Go's at exit",
+     "ok": true,
+     "exit_signals": {
+      "SIGBUS": {
+       "signal": 7,
+       "owner": "go",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "SIGSEGV": {
+       "signal": 11,
+       "owner": "go",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "SIGUSR1": {
+       "signal": 10,
+       "owner": "go",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "SIGXCPU": {
+       "signal": 24,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "offset": "0x196d3f0",
+       "flags": [
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      },
+      "reserved 60": {
+       "signal": 60,
+       "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       "offset": "0x196b2d0",
+       "flags": [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      }
+     }
+    }
+   ],
+   "ok": true,
+   "detail": {},
+   "exit": {
+    "host_exit": 0,
+    "timed_out": false,
+    "children_pending": false,
+    "child_failure": false,
+    "fatal_log": false
+   },
+   "observed_processes": [
+    "WebKitNetworkPr",
+    "WebKitWebProces",
+    "bwrap",
+    "dfx2-wk-candida",
+    "glycin-svg",
+    "gst-plugin-scan"
+   ],
+   "signals": {
+    "start": {
+     "SIGBUS": {
+      "signal": 7,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGSEGV": {
+      "signal": 11,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGUSR1": {
+      "signal": 10,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGXCPU": {
+      "signal": 24,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "reserved 60": {
+      "signal": 60,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     }
+    },
+    "ready": {
+     "SIGBUS": {
+      "signal": 7,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGSEGV": {
+      "signal": 11,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGUSR1": {
+      "signal": 10,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGXCPU": {
+      "signal": 24,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "reserved 60": {
+      "signal": 60,
+      "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      "offset": "0x196b2d0",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     }
+    },
+    "exit": {
+     "SIGBUS": {
+      "signal": 7,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGSEGV": {
+      "signal": 11,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGUSR1": {
+      "signal": 10,
+      "owner": "go",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "SIGXCPU": {
+      "signal": 24,
+      "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      "offset": "0x196d3f0",
+      "flags": [
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     },
+     "reserved 60": {
+      "signal": 60,
+      "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      "offset": "0x196b2d0",
+      "flags": [
+       "SA_SIGINFO",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     }
+    }
+   },
+   "reservation": {
+    "checks": [
+     {
+      "check": "supplied",
+      "passed": true,
+      "detail": "an explicit reservation; the host infers nothing"
+     },
+     {
+      "check": "within libc's real-time range",
+      "passed": true,
+      "detail": "60 in [34, 64]",
+      "cannot_establish": "that no other library uses it"
+     },
+     {
+      "check": "kernel disposition is Go's handler",
+      "passed": true,
+      "detail": "owner go",
+      "cannot_establish": "that no Go subscriber exists: subscribed and unsubscribed signals look identical"
+     },
+     {
+      "check": "not blocked on the initializing thread",
+      "passed": true,
+      "cannot_establish": "the masks of threads created later"
+     },
+     {
+      "check": "not among the application's declared subscriptions",
+      "passed": true,
+      "cannot_establish": "subscriptions the application did not declare"
+     },
+     {
+      "check": "not ignored through os/signal",
+      "passed": true
+     },
+     {
+      "check": "JSC_SIGNAL_FOR_GC unset or equal",
+      "passed": true,
+      "detail": "JSC_SIGNAL_FOR_GC="
+     }
+    ],
+    "configured": true,
+    "signal": 60
+   },
+   "filter_store_removal": {
+    "path": "/tmp/dfx2-feasibility/filters-484982",
+    "attempts": 1,
+    "elapsed_ns": 346945,
+    "removed": true
+   },
+   "refused_js": 0,
+   "monitor": "not run: browser cases only (--no-monitor)",
+   "seconds": 3.8
+  }
+ ],
+ "passed": true
+}

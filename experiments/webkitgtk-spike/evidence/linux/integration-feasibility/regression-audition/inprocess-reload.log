@@ -1,0 +1,36 @@
+command: /tmp/dfx2-wk-feas -mode inprocess -autorun reload -quit-after 6s
+Overriding existing handler for signal 10. Set JSC_SIGNAL_FOR_GC if you want WebKit to use a different signal
+13:51:32.768900 WebKitGTK 2.52.6 mode=inprocess origin=dfx2://spike scale=1
+13:51:32.865463 load event=0 uri=dfx2://spike/?autorun=reload
+13:51:32.865710 req 1 start GET /?autorun=reload (0 B body, outstanding 1)
+13:51:32.865809 req 1 handler done 200 in 0s (outstanding 0)
+13:51:32.866667 load event=2 uri=dfx2://spike/?autorun=reload
+13:51:32.866872 req 2 start GET /app.css (0 B body, outstanding 1)
+13:51:32.866922 req 2 handler done 200 in 0s (outstanding 0)
+13:51:32.867092 req 3 start GET /app.js (0 B body, outstanding 1)
+13:51:32.867204 req 3 handler done 200 in 0s (outstanding 0)
+13:51:32.922949 req 4 start POST /api/report (67 B body, outstanding 1)
+13:51:32.923031 report: [inprocess] loaded /?autorun=reload (assets app.css ✓ app.js ✓)
+13:51:32.923056 req 4 handler done 204 in 0s (outstanding 0)
+13:51:32.943204 load event=3 uri=dfx2://spike/?autorun=reload
+13:51:32.946643 req 5 start GET /api/slow?tag=reload (0 B body, outstanding 1)
+13:51:32.946891 req 6 start POST /api/report (71 B body, outstanding 2)
+13:51:32.946934 report: [inprocess] reload: slow request tag=reload started; reloading in 500ms
+13:51:32.947009 req 6 handler done 204 in 0s (outstanding 1)
+13:51:32.948391 javascript: {"origin":"dfx2://spike","secure":true,"crypto":true,"storage":"yes"}
+13:51:33.449481 load event=0 uri=dfx2://spike/?autorun=reload
+13:51:33.450108 req 7 start GET /?autorun=reload (0 B body, outstanding 2)
+13:51:33.450549 req 7 handler done 200 in 0s (outstanding 1)
+13:51:33.457531 load event=2 uri=dfx2://spike/?autorun=reload
+13:51:33.457916 req 8 start GET /app.css (0 B body, outstanding 2)
+13:51:33.458043 req 8 handler done 200 in 0s (outstanding 1)
+13:51:33.458173 req 9 start GET /app.js (0 B body, outstanding 2)
+13:51:33.458233 req 9 handler done 200 in 0s (outstanding 1)
+13:51:33.462314 req 10 start POST /api/report (70 B body, outstanding 2)
+13:51:33.462415 load event=3 uri=dfx2://spike/?autorun=reload
+13:51:33.462432 report: [inprocess] reload: page reloaded 518ms after starting slow tag=reload
+13:51:33.462462 req 10 handler done 204 in 0s (outstanding 1)
+13:51:33.463026 javascript: {"origin":"dfx2://spike","secure":true,"crypto":true,"storage":"yes"}
+13:51:35.949108 req 5 handler done 200 in 3.002s (outstanding 0)
+13:51:38.772616 closing: timed exit; native requests=0 async=0 handlers=0
+13:51:38.783497 closed: requests=0 native-async=0 handlers=0 stats={Started:10 Finished:10 Canceled:0 Dropped:0 Refused:0}

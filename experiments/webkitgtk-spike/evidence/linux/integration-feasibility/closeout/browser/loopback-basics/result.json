@@ -1,0 +1,406 @@
+{
+ "scenario": "loopback-basics",
+ "flags": [
+  "-feas-vmfree",
+  "-signal-reserve",
+  "60"
+ ],
+ "checks": [
+  {
+   "check": "assets, query and POST through the credential",
+   "ok": true,
+   "checks": {
+    "origin": "http://127.0.0.1:41921",
+    "css": true,
+    "img": true,
+    "script": true,
+    "cookieVisible": false,
+    "query": "\u00e9&\u00fc",
+    "echoLength": 1005,
+    "echoSha": "a5903776f0c8d72f5b1e8689519fc8d9d6317785a20e31659786c8d8703a6b8c"
+   }
+  },
+  {
+   "check": "credential invisible to JavaScript",
+   "ok": true
+  },
+  {
+   "check": "native reload keeps authentication without reprovisioning",
+   "ok": true,
+   "installs": 1
+  },
+  {
+   "check": "same-origin redirect authenticated, no credential in the URL",
+   "ok": true,
+   "uri": "http://127.0.0.1:41921/api/query?x=redirected"
+  },
+  {
+   "check": "loopback stream: chunk 1 visible before the handler finished",
+   "ok": true,
+   "chunks": [
+    {
+     "text": "chunk-1\n",
+     "at": 6
+    },
+    {
+     "text": "chunk-2 after ack\n",
+     "at": 7
+    },
+    {
+     "text": "done\n",
+     "at": 7
+    }
+   ]
+  },
+  {
+   "check": "external clients without the right credential refused",
+   "ok": true,
+   "statuses": {
+    "none": 403,
+    "wrong credential": 403,
+    "wrong credential and Origin": 403
+   }
+  },
+  {
+   "check": "right credential: wrong Host or Origin refused; exact or absent Origin admitted",
+   "ok": true,
+   "selftest": {
+    "right credential": 200,
+    "right credential, exact Origin": 200,
+    "right credential, wrong Host": 403,
+    "right credential, wrong Origin": 403
+   }
+  },
+  {
+   "check": "refusals never reached the handler",
+   "ok": true,
+   "endpoint": {
+    "admitted": 29,
+    "refused": {
+     "host": 1,
+     "no-credential": 1,
+     "origin": 1,
+     "wrong-credential": 2
+    },
+    "handled": 29
+   }
+  },
+  {
+   "check": "the VM-free host refuses native JavaScript",
+   "ok": true
+  },
+  {
+   "check": "SIGSEGV and SIGBUS still Go's at exit",
+   "ok": true,
+   "exit_signals": {
+    "SIGBUS": {
+     "signal": 7,
+     "owner": "go",
+     "flags": [
+      "SA_SIGINFO",
+      "SA_ONSTACK",
+      "SA_RESTART",
+      "SA_RESTORER"
+     ]
+    },
+    "SIGSEGV": {
+     "signal": 11,
+     "owner": "go",
+     "flags": [
+      "SA_SIGINFO",
+      "SA_ONSTACK",
+      "SA_RESTART",
+      "SA_RESTORER"
+     ]
+    },
+    "SIGUSR1": {
+     "signal": 10,
+     "owner": "go",
+     "flags": [
+      "SA_SIGINFO",
+      "SA_ONSTACK",
+      "SA_RESTART",
+      "SA_RESTORER"
+     ]
+    },
+    "SIGXCPU": {
+     "signal": 24,
+     "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+     "offset": "0x196d3f0",
+     "flags": [
+      "SA_RESTART",
+      "SA_RESTORER"
+     ]
+    },
+    "reserved 60": {
+     "signal": 60,
+     "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+     "offset": "0x196b2d0",
+     "flags": [
+      "SA_SIGINFO",
+      "SA_RESTART",
+      "SA_RESTORER"
+     ]
+    }
+   }
+  }
+ ],
+ "ok": true,
+ "detail": {
+  "status": {
+   "closing": false,
+   "destroyed": false,
+   "endpoint": {
+    "admitted": 29,
+    "refused": {
+     "host": 1,
+     "no-credential": 1,
+     "origin": 1,
+     "wrong-credential": 2
+    },
+    "handled": 29
+   },
+   "handler": {
+    "GET /": 4,
+    "GET /api/query": 5,
+    "GET /api/redirect": 1,
+    "GET /api/stream": 1,
+    "GET /logo.svg": 4,
+    "GET /probe.css": 4,
+    "GET /probe.js": 4,
+    "POST /api/echo": 2,
+    "POST /api/report": 3,
+    "POST /api/stream-ack": 1
+   },
+   "mode": "loopback",
+   "native_async": 0,
+   "native_requests": 0,
+   "port": 41921,
+   "title": "dfx2 feasibility probe",
+   "uri": "http://127.0.0.1:41921/?run=stream&id=s"
+  }
+ },
+ "exit": {
+  "host_exit": 0,
+  "timed_out": false,
+  "children_pending": false,
+  "child_failure": false,
+  "fatal_log": false
+ },
+ "observed_processes": [
+  "WebKitNetworkPr",
+  "WebKitWebProces",
+  "bwrap",
+  "dfx2-wk-candida",
+  "glycin-svg",
+  "gst-plugin-scan"
+ ],
+ "signals": {
+  "start": {
+   "SIGBUS": {
+    "signal": 7,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "SIGSEGV": {
+    "signal": 11,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "SIGUSR1": {
+    "signal": 10,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "SIGXCPU": {
+    "signal": 24,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "reserved 60": {
+    "signal": 60,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   }
+  },
+  "ready": {
+   "SIGBUS": {
+    "signal": 7,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "SIGSEGV": {
+    "signal": 11,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "SIGUSR1": {
+    "signal": 10,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "SIGXCPU": {
+    "signal": 24,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "reserved 60": {
+    "signal": 60,
+    "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+    "offset": "0x196b2d0",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   }
+  },
+  "exit": {
+   "SIGBUS": {
+    "signal": 7,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "SIGSEGV": {
+    "signal": 11,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "SIGUSR1": {
+    "signal": 10,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "SIGXCPU": {
+    "signal": 24,
+    "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+    "offset": "0x196d3f0",
+    "flags": [
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "reserved 60": {
+    "signal": 60,
+    "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+    "offset": "0x196b2d0",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   }
+  }
+ },
+ "reservation": {
+  "checks": [
+   {
+    "check": "supplied",
+    "passed": true,
+    "detail": "an explicit reservation; the host infers nothing"
+   },
+   {
+    "check": "within libc's real-time range",
+    "passed": true,
+    "detail": "60 in [34, 64]",
+    "cannot_establish": "that no other library uses it"
+   },
+   {
+    "check": "kernel disposition is Go's handler",
+    "passed": true,
+    "detail": "owner go",
+    "cannot_establish": "that no Go subscriber exists: subscribed and unsubscribed signals look identical"
+   },
+   {
+    "check": "not blocked on the initializing thread",
+    "passed": true,
+    "cannot_establish": "the masks of threads created later"
+   },
+   {
+    "check": "not among the application's declared subscriptions",
+    "passed": true,
+    "cannot_establish": "subscriptions the application did not declare"
+   },
+   {
+    "check": "not ignored through os/signal",
+    "passed": true
+   },
+   {
+    "check": "JSC_SIGNAL_FOR_GC unset or equal",
+    "passed": true,
+    "detail": "JSC_SIGNAL_FOR_GC="
+   }
+  ],
+  "configured": true,
+  "signal": 60
+ },
+ "filter_store_removal": {
+  "path": "/tmp/dfx2-feasibility/filters-469543",
+  "attempts": 1,
+  "elapsed_ns": 96811,
+  "removed": true
+ },
+ "refused_js": 1,
+ "monitor": "not run: browser cases only (--no-monitor)",
+ "seconds": 1.7
+}

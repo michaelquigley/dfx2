@@ -1,0 +1,2512 @@
+{
+ "scenarios": [
+  {
+   "scenario": "loopback-basics",
+   "flags": [],
+   "checks": [
+    {
+     "check": "assets, query and POST through the credential",
+     "ok": true,
+     "checks": {
+      "css": true,
+      "echoLength": 1005,
+      "script": true,
+      "cookieVisible": false,
+      "origin": "http://127.0.0.1:35455",
+      "img": true,
+      "echoSha": "a5903776f0c8d72f5b1e8689519fc8d9d6317785a20e31659786c8d8703a6b8c",
+      "query": "\u00e9&\u00fc"
+     }
+    },
+    {
+     "check": "credential invisible to JavaScript",
+     "ok": true
+    },
+    {
+     "check": "reload keeps authentication without reprovisioning",
+     "ok": true,
+     "installs": 1
+    },
+    {
+     "check": "same-origin redirect authenticated, no credential in the URL",
+     "ok": true,
+     "redirected": {
+      "uri": "http://127.0.0.1:35455/api/query?x=redirected",
+      "body": "{\"x\":\"redirected\"}\n"
+     }
+    },
+    {
+     "check": "loopback stream: chunk 1 visible before the handler finished",
+     "ok": true,
+     "chunks": [
+      {
+       "text": "chunk-1\n",
+       "at": 5
+      },
+      {
+       "at": 6,
+       "text": "chunk-2 after ack\n"
+      },
+      {
+       "at": 6,
+       "text": "done\n"
+      }
+     ]
+    },
+    {
+     "check": "external clients without the right credential refused",
+     "ok": true,
+     "statuses": {
+      "none": 403,
+      "wrong credential": 403,
+      "wrong credential and Origin": 403
+     }
+    },
+    {
+     "check": "right credential: wrong Host or Origin refused; exact or absent Origin admitted",
+     "ok": true,
+     "selftest": {
+      "right credential": 200,
+      "right credential, exact Origin": 200,
+      "right credential, wrong Host": 403,
+      "right credential, wrong Origin": 403
+     }
+    },
+    {
+     "check": "refusals never reached the handler",
+     "ok": true,
+     "endpoint": {
+      "admitted": 22,
+      "refused": {
+       "host": 1,
+       "no-credential": 1,
+       "origin": 1,
+       "wrong-credential": 2
+      },
+      "handled": 22
+     }
+    }
+   ],
+   "ok": true,
+   "detail": {
+    "status": {
+     "closing": false,
+     "destroyed": false,
+     "endpoint": {
+      "admitted": 22,
+      "refused": {
+       "host": 1,
+       "no-credential": 1,
+       "origin": 1,
+       "wrong-credential": 2
+      },
+      "handled": 22
+     },
+     "handler": {
+      "GET /": 3,
+      "GET /api/query": 5,
+      "GET /api/redirect": 1,
+      "GET /api/stream": 1,
+      "GET /logo.svg": 3,
+      "GET /probe.css": 3,
+      "GET /probe.js": 3,
+      "POST /api/echo": 2,
+      "POST /api/stream-ack": 1
+     },
+     "mode": "loopback",
+     "native_async": 0,
+     "native_requests": 0,
+     "port": 35455
+    }
+   },
+   "exit": {
+    "host_exit": 0,
+    "timed_out": false,
+    "children_pending": false,
+    "child_failure": false,
+    "fatal_log": false
+   },
+   "adopted_exits": [
+    [
+     "bwrap",
+     0
+    ],
+    [
+     "bwrap",
+     -9
+    ],
+    [
+     "WebKitNetworkPr",
+     0
+    ],
+    [
+     "WebKitWebProces",
+     0
+    ],
+    [
+     "bwrap",
+     -9
+    ]
+   ],
+   "observed_processes": [
+    "WebKitNetworkPr",
+    "WebKitWebProces",
+    "bwrap",
+    "dfx2-wk-feas",
+    "glycin-svg",
+    "gst-plugin-scan"
+   ],
+   "filter_store_removal": {
+    "path": "/tmp/dfx2-feasibility/filters-2228297",
+    "attempts": 1,
+    "elapsed_ns": 54988,
+    "removed": true
+   },
+   "xdg_manifest": [
+    "cache/fontconfig/25ccf6dd56fd7585eff0dc50a0a881d4-le64.cache-9",
+    "cache/fontconfig/363ec821d90eaa905a460bbdd9de4669-le64.cache-9",
+    "cache/fontconfig/97123a202d96d9eee11f7b2e48a774ca-le64.cache-9",
+    "cache/fontconfig/CACHEDIR.TAG",
+    "cache/gstreamer-1.0/registry.x86_64.bin",
+    "cache/mesa_shader_cache/index",
+    "cache/mesa_shader_cache/marker",
+    "data/gvfs-metadata/root",
+    "data/gvfs-metadata/root-13279aaa.log"
+   ],
+   "seconds": 0.6
+  },
+  {
+   "scenario": "confinement-filter-csp",
+   "flags": [],
+   "checks": [
+    {
+     "check": "collector received nothing",
+     "ok": true,
+     "received": []
+    },
+    {
+     "check": "no credential reached the collector",
+     "ok": true,
+     "leaked": 0
+    },
+    {
+     "check": "A's page never invoked B's handler",
+     "ok": true,
+     "b_before": {
+      "GET /": 1,
+      "GET /logo.svg": 1,
+      "GET /probe.css": 1,
+      "GET /probe.js": 1
+     },
+     "b_after": {
+      "GET /": 1,
+      "GET /logo.svg": 1,
+      "GET /probe.css": 1,
+      "GET /probe.js": 1
+     }
+    },
+    {
+     "check": "top-level navigation, redirect, popup and form to another port never left the origin",
+     "ok": true,
+     "mechanism": {
+      "location": "navigation policy",
+      "redirect": "navigation policy",
+      "popup": "silent (window.open returned null)",
+      "form": "silent"
+     },
+     "final_uris": {
+      "location": "http://127.0.0.1:38345/#pinged",
+      "redirect": "http://127.0.0.1:38345/#pinged",
+      "popup": "http://127.0.0.1:38345/#pinged",
+      "form": "http://127.0.0.1:38345/#pinged"
+     }
+    }
+   ],
+   "ok": true,
+   "detail": {
+    "page_view": {
+     "other-endpoint": "threw TypeError",
+     "websocket": "threw SecurityError",
+     "beacon": "true",
+     "font": "added",
+     "fetch": "threw TypeError",
+     "ping": "clicked",
+     "redirect-fetch": "threw TypeError",
+     "redirect-img": "added",
+     "script": "added",
+     "iframe-same": "no load",
+     "eventsource": "threw SecurityError",
+     "prefetch": "added",
+     "xhr": "0",
+     "css": "added",
+     "iframe-cross": "added",
+     "img": "added"
+    },
+    "collector": [],
+    "mechanism": {
+     "location": "navigation policy",
+     "redirect": "navigation policy",
+     "popup": "silent (window.open returned null)",
+     "form": "silent"
+    },
+    "refusals": [
+     [
+      "navigation",
+      "COLLECTOR/nav"
+     ],
+     [
+      "navigation",
+      "COLLECTOR/redirect-nav"
+     ]
+    ]
+   },
+   "exit": {
+    "host_exit": 0,
+    "timed_out": false,
+    "children_pending": false,
+    "child_failure": false,
+    "fatal_log": false
+   },
+   "adopted_exits": [
+    [
+     "bwrap",
+     0
+    ],
+    [
+     "bwrap",
+     -9
+    ],
+    [
+     "bwrap",
+     -9
+    ],
+    [
+     "WebKitNetworkPr",
+     0
+    ],
+    [
+     "WebKitWebProces",
+     0
+    ],
+    [
+     "WebKitNetworkPr",
+     0
+    ],
+    [
+     "WebKitWebProces",
+     0
+    ]
+   ],
+   "observed_processes": [
+    "WebKitNetworkPr",
+    "WebKitWebProces",
+    "bwrap",
+    "dfx2-wk-feas",
+    "glycin-svg",
+    "gst-plugin-scan"
+   ],
+   "filter_store_removal": {
+    "path": "/tmp/dfx2-feasibility/filters-2228545",
+    "attempts": 1,
+    "elapsed_ns": 54253,
+    "removed": true
+   },
+   "xdg_manifest": [
+    "cache/event-sound-cache.tdb.7f8d5c37476f457cae8a599c576dd36f.x86_64-pc-linux-gnu",
+    "cache/fontconfig/25ccf6dd56fd7585eff0dc50a0a881d4-le64.cache-9",
+    "cache/fontconfig/363ec821d90eaa905a460bbdd9de4669-le64.cache-9",
+    "cache/fontconfig/97123a202d96d9eee11f7b2e48a774ca-le64.cache-9",
+    "cache/fontconfig/CACHEDIR.TAG",
+    "cache/gstreamer-1.0/registry.x86_64.bin",
+    "cache/mesa_shader_cache/index",
+    "cache/mesa_shader_cache/marker",
+    "config/pulse/cookie",
+    "data/gvfs-metadata/root",
+    "data/gvfs-metadata/root-6522e8cd.log"
+   ],
+   "seconds": 11.7
+  },
+  {
+   "scenario": "confinement-filter-only",
+   "flags": [
+    "-feas-csp=false"
+   ],
+   "checks": [
+    {
+     "check": "collector received nothing",
+     "ok": true,
+     "received": []
+    },
+    {
+     "check": "no credential reached the collector",
+     "ok": true,
+     "leaked": 0
+    },
+    {
+     "check": "A's page never invoked B's handler",
+     "ok": true,
+     "b_before": {
+      "GET /": 1,
+      "GET /logo.svg": 1,
+      "GET /probe.css": 1,
+      "GET /probe.js": 1
+     },
+     "b_after": {
+      "GET /": 1,
+      "GET /logo.svg": 1,
+      "GET /probe.css": 1,
+      "GET /probe.js": 1
+     }
+    },
+    {
+     "check": "top-level navigation, redirect, popup and form to another port never left the origin",
+     "ok": true,
+     "mechanism": {
+      "location": "navigation policy",
+      "redirect": "navigation policy",
+      "popup": "silent (window.open returned null)",
+      "form": "navigation policy"
+     },
+     "final_uris": {
+      "location": "http://127.0.0.1:45021/#pinged",
+      "redirect": "http://127.0.0.1:45021/#pinged",
+      "popup": "http://127.0.0.1:45021/#pinged",
+      "form": "http://127.0.0.1:45021/#pinged"
+     }
+    }
+   ],
+   "ok": true,
+   "detail": {
+    "page_view": {
+     "other-endpoint": "threw TypeError",
+     "websocket": "error",
+     "ping": "clicked",
+     "beacon": "false",
+     "fetch": "threw TypeError",
+     "iframe-same": "no load",
+     "xhr": "0",
+     "redirect-img": "added",
+     "font": "added",
+     "redirect-fetch": "threw TypeError",
+     "script": "added",
+     "eventsource": "error",
+     "prefetch": "added",
+     "css": "added",
+     "iframe-cross": "added",
+     "img": "added"
+    },
+    "collector": [],
+    "mechanism": {
+     "location": "navigation policy",
+     "redirect": "navigation policy",
+     "popup": "silent (window.open returned null)",
+     "form": "navigation policy"
+    },
+    "refusals": [
+     [
+      "navigation",
+      "COLLECTOR/iframe"
+     ],
+     [
+      "navigation",
+      "COLLECTOR/nav"
+     ],
+     [
+      "navigation",
+      "COLLECTOR/redirect-nav"
+     ],
+     [
+      "navigation",
+      "COLLECTOR/form"
+     ]
+    ]
+   },
+   "exit": {
+    "host_exit": 0,
+    "timed_out": false,
+    "children_pending": false,
+    "child_failure": false,
+    "fatal_log": false
+   },
+   "adopted_exits": [
+    [
+     "bwrap",
+     0
+    ],
+    [
+     "bwrap",
+     -9
+    ],
+    [
+     "bwrap",
+     -9
+    ],
+    [
+     "WebKitNetworkPr",
+     0
+    ],
+    [
+     "WebKitWebProces",
+     0
+    ],
+    [
+     "WebKitNetworkPr",
+     0
+    ],
+    [
+     "WebKitWebProces",
+     0
+    ]
+   ],
+   "observed_processes": [
+    "WebKitNetworkPr",
+    "WebKitWebProces",
+    "bwrap",
+    "dfx2-wk-feas",
+    "glycin-svg",
+    "gst-plugin-scan"
+   ],
+   "filter_store_removal": {
+    "path": "/tmp/dfx2-feasibility/filters-2228874",
+    "attempts": 1,
+    "elapsed_ns": 67708,
+    "removed": true
+   },
+   "xdg_manifest": [
+    "cache/event-sound-cache.tdb.7f8d5c37476f457cae8a599c576dd36f.x86_64-pc-linux-gnu",
+    "cache/fontconfig/25ccf6dd56fd7585eff0dc50a0a881d4-le64.cache-9",
+    "cache/fontconfig/363ec821d90eaa905a460bbdd9de4669-le64.cache-9",
+    "cache/fontconfig/97123a202d96d9eee11f7b2e48a774ca-le64.cache-9",
+    "cache/fontconfig/CACHEDIR.TAG",
+    "cache/gstreamer-1.0/registry.x86_64.bin",
+    "cache/mesa_shader_cache/index",
+    "cache/mesa_shader_cache/marker",
+    "config/pulse/cookie",
+    "data/gvfs-metadata/root",
+    "data/gvfs-metadata/root-b1b063e7.log"
+   ],
+   "seconds": 11.7
+  },
+  {
+   "scenario": "confinement-csp-only",
+   "flags": [
+    "-feas-filter=false"
+   ],
+   "checks": [
+    {
+     "check": "collector received nothing",
+     "ok": true,
+     "received": []
+    },
+    {
+     "check": "no credential reached the collector",
+     "ok": true,
+     "leaked": 0
+    },
+    {
+     "check": "A's page never invoked B's handler",
+     "ok": true,
+     "b_before": {
+      "GET /": 1,
+      "GET /logo.svg": 1,
+      "GET /probe.css": 1,
+      "GET /probe.js": 1
+     },
+     "b_after": {
+      "GET /": 1,
+      "GET /logo.svg": 1,
+      "GET /probe.css": 1,
+      "GET /probe.js": 1
+     }
+    },
+    {
+     "check": "top-level navigation, redirect, popup and form to another port never left the origin",
+     "ok": true,
+     "mechanism": {
+      "location": "navigation policy",
+      "redirect": "navigation policy",
+      "popup": "create signal",
+      "form": "silent"
+     },
+     "final_uris": {
+      "location": "http://127.0.0.1:43905/#pinged",
+      "redirect": "http://127.0.0.1:43905/#pinged",
+      "popup": "http://127.0.0.1:43905/#pinged",
+      "form": "http://127.0.0.1:43905/#pinged"
+     }
+    }
+   ],
+   "ok": true,
+   "detail": {
+    "page_view": {
+     "other-endpoint": "threw TypeError",
+     "websocket": "threw SecurityError",
+     "ping": "clicked",
+     "beacon": "true",
+     "fetch": "threw TypeError",
+     "iframe-same": "no load",
+     "xhr": "0",
+     "redirect-img": "added",
+     "font": "added",
+     "redirect-fetch": "threw TypeError",
+     "script": "added",
+     "eventsource": "threw SecurityError",
+     "prefetch": "added",
+     "css": "added",
+     "img": "added",
+     "iframe-cross": "added"
+    },
+    "collector": [],
+    "mechanism": {
+     "location": "navigation policy",
+     "redirect": "navigation policy",
+     "popup": "create signal",
+     "form": "silent"
+    },
+    "refusals": [
+     [
+      "navigation",
+      "COLLECTOR/nav"
+     ],
+     [
+      "navigation",
+      "COLLECTOR/redirect-nav"
+     ]
+    ]
+   },
+   "exit": {
+    "host_exit": 0,
+    "timed_out": false,
+    "children_pending": false,
+    "child_failure": false,
+    "fatal_log": false
+   },
+   "adopted_exits": [
+    [
+     "bwrap",
+     0
+    ],
+    [
+     "bwrap",
+     -9
+    ],
+    [
+     "WebKitNetworkPr",
+     0
+    ],
+    [
+     "WebKitWebProces",
+     0
+    ],
+    [
+     "WebKitNetworkPr",
+     0
+    ],
+    [
+     "WebKitWebProces",
+     0
+    ],
+    [
+     "bwrap",
+     -9
+    ]
+   ],
+   "observed_processes": [
+    "WebKitNetworkPr",
+    "WebKitWebProces",
+    "bwrap",
+    "dfx2-wk-feas",
+    "glycin-svg",
+    "gst-plugin-scan"
+   ],
+   "filter_store_removal": {
+    "path": "",
+    "attempts": 0,
+    "elapsed_ns": 0,
+    "removed": false
+   },
+   "xdg_manifest": [
+    "cache/event-sound-cache.tdb.7f8d5c37476f457cae8a599c576dd36f.x86_64-pc-linux-gnu",
+    "cache/fontconfig/25ccf6dd56fd7585eff0dc50a0a881d4-le64.cache-9",
+    "cache/fontconfig/363ec821d90eaa905a460bbdd9de4669-le64.cache-9",
+    "cache/fontconfig/97123a202d96d9eee11f7b2e48a774ca-le64.cache-9",
+    "cache/fontconfig/CACHEDIR.TAG",
+    "cache/gstreamer-1.0/registry.x86_64.bin",
+    "cache/mesa_shader_cache/index",
+    "cache/mesa_shader_cache/marker",
+    "config/pulse/cookie",
+    "data/gvfs-metadata/root",
+    "data/gvfs-metadata/root-05da32a4.log"
+   ],
+   "seconds": 11.7
+  },
+  {
+   "scenario": "confinement-control",
+   "flags": [
+    "-feas-filter=false",
+    "-feas-csp=false"
+   ],
+   "checks": [
+    {
+     "check": "control: collector receives requests",
+     "ok": true,
+     "received": [
+      [
+       "GET",
+       "/img",
+       true
+      ],
+      [
+       "GET",
+       "/script",
+       true
+      ],
+      [
+       "GET",
+       "/css",
+       true
+      ],
+      [
+       "GET",
+       "/fetch",
+       true
+      ],
+      [
+       "GET",
+       "/xhr",
+       true
+      ],
+      [
+       "GET",
+       "/font",
+       true
+      ],
+      [
+       "POST",
+       "/beacon",
+       true
+      ],
+      [
+       "GET",
+       "/ws",
+       true
+      ],
+      [
+       "GET",
+       "/sse",
+       false
+      ],
+      [
+       "GET",
+       "/redirect-fetch",
+       false
+      ],
+      [
+       "GET",
+       "/redirect-img",
+       true
+      ],
+      [
+       "POST",
+       "/ping",
+       true
+      ]
+     ]
+    },
+    {
+     "check": "control: credential leaks without enforcement",
+     "ok": true,
+     "leaked": 10
+    },
+    {
+     "check": "A's page never invoked B's handler",
+     "ok": true,
+     "b_before": {
+      "GET /": 1,
+      "GET /logo.svg": 1,
+      "GET /probe.css": 1,
+      "GET /probe.js": 1
+     },
+     "b_after": {
+      "GET /": 1,
+      "GET /logo.svg": 1,
+      "GET /probe.css": 1,
+      "GET /probe.js": 1
+     }
+    },
+    {
+     "check": "top-level navigation, redirect, popup and form to another port never left the origin",
+     "ok": true,
+     "mechanism": {
+      "location": "navigation policy",
+      "redirect": "navigation policy",
+      "popup": "create signal",
+      "form": "navigation policy"
+     },
+     "final_uris": {
+      "location": "http://127.0.0.1:39283/#pinged",
+      "redirect": "http://127.0.0.1:39283/#pinged",
+      "popup": "http://127.0.0.1:39283/#pinged",
+      "form": "http://127.0.0.1:39283/#pinged"
+     }
+    }
+   ],
+   "ok": true,
+   "detail": {
+    "page_view": {
+     "script": "added",
+     "prefetch": "added",
+     "xhr": "0",
+     "websocket": "error",
+     "redirect-fetch": "threw TypeError",
+     "img": "added",
+     "other-endpoint": "threw TypeError",
+     "ping": "clicked",
+     "eventsource": "error",
+     "font": "added",
+     "beacon": "true",
+     "iframe-cross": "added",
+     "iframe-same": "loaded 14",
+     "fetch": "opaque",
+     "redirect-img": "added",
+     "css": "added"
+    },
+    "collector": [
+     {
+      "method": "GET",
+      "path": "/img",
+      "credential": true,
+      "app_cookie": [],
+      "origin": null,
+      "upgrade": null,
+      "t": 1794423184.236
+     },
+     {
+      "method": "GET",
+      "path": "/script",
+      "credential": true,
+      "app_cookie": [],
+      "origin": null,
+      "upgrade": null,
+      "t": 1794423184.236
+     },
+     {
+      "method": "GET",
+      "path": "/css",
+      "credential": true,
+      "app_cookie": [],
+      "origin": null,
+      "upgrade": null,
+      "t": 1794423184.236
+     },
+     {
+      "method": "GET",
+      "path": "/fetch",
+      "credential": true,
+      "app_cookie": [],
+      "origin": null,
+      "upgrade": null,
+      "t": 1794423184.237
+     },
+     {
+      "method": "GET",
+      "path": "/xhr",
+      "credential": true,
+      "app_cookie": [],
+      "origin": "http://127.0.0.1:39283",
+      "upgrade": null,
+      "t": 1794423184.245
+     },
+     {
+      "method": "GET",
+      "path": "/font",
+      "credential": true,
+      "app_cookie": [],
+      "origin": null,
+      "upgrade": null,
+      "t": 1794423184.245
+     },
+     {
+      "method": "POST",
+      "path": "/beacon",
+      "credential": true,
+      "app_cookie": [],
+      "origin": "http://127.0.0.1:39283",
+      "upgrade": null,
+      "t": 1794423184.246
+     },
+     {
+      "method": "GET",
+      "path": "/ws",
+      "credential": true,
+      "app_cookie": [],
+      "origin": "http://127.0.0.1:39283",
+      "upgrade": "websocket",
+      "t": 1794423184.246
+     },
+     {
+      "method": "GET",
+      "path": "/sse",
+      "credential": false,
+      "app_cookie": [],
+      "origin": "http://127.0.0.1:39283",
+      "upgrade": null,
+      "t": 1794423184.347
+     },
+     {
+      "method": "GET",
+      "path": "/redirect-fetch",
+      "credential": false,
+      "app_cookie": [],
+      "origin": "http://127.0.0.1:39283",
+      "upgrade": null,
+      "t": 1794423184.379
+     },
+     {
+      "method": "GET",
+      "path": "/redirect-img",
+      "credential": true,
+      "app_cookie": [],
+      "origin": null,
+      "upgrade": null,
+      "t": 1794423184.38
+     },
+     {
+      "method": "POST",
+      "path": "/ping",
+      "credential": true,
+      "app_cookie": [],
+      "origin": "http://127.0.0.1:39283",
+      "upgrade": null,
+      "t": 1794423184.385
+     }
+    ],
+    "mechanism": {
+     "location": "navigation policy",
+     "redirect": "navigation policy",
+     "popup": "create signal",
+     "form": "navigation policy"
+    },
+    "refusals": [
+     [
+      "navigation",
+      "COLLECTOR/iframe"
+     ],
+     [
+      "navigation",
+      "COLLECTOR/nav"
+     ],
+     [
+      "navigation",
+      "COLLECTOR/redirect-nav"
+     ],
+     [
+      "navigation",
+      "COLLECTOR/form"
+     ]
+    ]
+   },
+   "exit": {
+    "host_exit": 0,
+    "timed_out": false,
+    "children_pending": false,
+    "child_failure": false,
+    "fatal_log": false
+   },
+   "adopted_exits": [
+    [
+     "bwrap",
+     0
+    ],
+    [
+     "bwrap",
+     -9
+    ],
+    [
+     "WebKitNetworkPr",
+     0
+    ],
+    [
+     "WebKitWebProces",
+     0
+    ],
+    [
+     "WebKitNetworkPr",
+     0
+    ],
+    [
+     "WebKitWebProces",
+     0
+    ],
+    [
+     "bwrap",
+     -9
+    ]
+   ],
+   "observed_processes": [
+    "WebKitNetworkPr",
+    "WebKitWebProces",
+    "bwrap",
+    "dfx2-wk-feas",
+    "glycin-svg",
+    "gst-plugin-scan"
+   ],
+   "filter_store_removal": {
+    "path": "",
+    "attempts": 0,
+    "elapsed_ns": 0,
+    "removed": false
+   },
+   "xdg_manifest": [
+    "cache/event-sound-cache.tdb.7f8d5c37476f457cae8a599c576dd36f.x86_64-pc-linux-gnu",
+    "cache/fontconfig/25ccf6dd56fd7585eff0dc50a0a881d4-le64.cache-9",
+    "cache/fontconfig/363ec821d90eaa905a460bbdd9de4669-le64.cache-9",
+    "cache/fontconfig/97123a202d96d9eee11f7b2e48a774ca-le64.cache-9",
+    "cache/fontconfig/CACHEDIR.TAG",
+    "cache/gstreamer-1.0/registry.x86_64.bin",
+    "cache/mesa_shader_cache/index",
+    "cache/mesa_shader_cache/marker",
+    "config/pulse/cookie",
+    "data/gvfs-metadata/root",
+    "data/gvfs-metadata/root-fb6f7111.log"
+   ],
+   "seconds": 10.4
+  },
+  {
+   "scenario": "inprocess-isolation",
+   "flags": [],
+   "checks": [
+    {
+     "check": "in-process page, assets, query and POST",
+     "ok": true,
+     "checks": {
+      "css": true,
+      "echoLength": 1005,
+      "script": true,
+      "cookieVisible": false,
+      "origin": "dfx2://spike",
+      "img": true,
+      "echoSha": "a5903776f0c8d72f5b1e8689519fc8d9d6317785a20e31659786c8d8703a6b8c",
+      "query": "\u00e9&\u00fc"
+     }
+    },
+    {
+     "check": "naming the shared origin reaches only the window's own handler",
+     "ok": true,
+     "i1": {
+      "GET /": 1,
+      "GET /api/count": 1,
+      "GET /api/query": 1,
+      "GET /logo.svg": 1,
+      "GET /probe.css": 1,
+      "GET /probe.js": 1,
+      "POST /api/echo": 1
+     },
+     "i2": {
+      "GET /": 1,
+      "GET /logo.svg": 1,
+      "GET /probe.css": 1,
+      "GET /probe.js": 1
+     }
+    },
+    {
+     "check": "an in-process page cannot reach the collector",
+     "ok": true,
+     "received": []
+    },
+    {
+     "check": "same in-process origin, separate sessions: I2 cannot read I1's storage",
+     "ok": true,
+     "i1": {
+      "session": "I1",
+      "local": "I1",
+      "cookie": ""
+     },
+     "i2": {
+      "session": null,
+      "cookie": "",
+      "local": null
+     }
+    }
+   ],
+   "ok": true,
+   "detail": {
+    "seen_count": {
+     "POST /api/echo": 1,
+     "GET /probe.css": 1,
+     "GET /probe.js": 1,
+     "GET /api/count": 1,
+     "GET /api/query": 1,
+     "GET /": 1,
+     "GET /logo.svg": 1
+    }
+   },
+   "exit": {
+    "host_exit": 0,
+    "timed_out": false,
+    "children_pending": false,
+    "child_failure": false,
+    "fatal_log": false
+   },
+   "adopted_exits": [
+    [
+     "bwrap",
+     0
+    ],
+    [
+     "bwrap",
+     -9
+    ],
+    [
+     "bwrap",
+     -9
+    ],
+    [
+     "WebKitNetworkPr",
+     0
+    ],
+    [
+     "WebKitWebProces",
+     0
+    ],
+    [
+     "WebKitNetworkPr",
+     0
+    ],
+    [
+     "WebKitWebProces",
+     0
+    ]
+   ],
+   "observed_processes": [
+    "WebKitNetworkPr",
+    "WebKitWebProces",
+    "bwrap",
+    "dfx2-wk-feas",
+    "glycin-svg",
+    "gst-plugin-scan"
+   ],
+   "filter_store_removal": {
+    "path": "/tmp/dfx2-feasibility/filters-2229881",
+    "attempts": 1,
+    "elapsed_ns": 68229,
+    "removed": true
+   },
+   "xdg_manifest": [
+    "cache/event-sound-cache.tdb.7f8d5c37476f457cae8a599c576dd36f.x86_64-pc-linux-gnu",
+    "cache/fontconfig/25ccf6dd56fd7585eff0dc50a0a881d4-le64.cache-9",
+    "cache/fontconfig/363ec821d90eaa905a460bbdd9de4669-le64.cache-9",
+    "cache/fontconfig/97123a202d96d9eee11f7b2e48a774ca-le64.cache-9",
+    "cache/fontconfig/CACHEDIR.TAG",
+    "cache/gstreamer-1.0/registry.x86_64.bin",
+    "cache/mesa_shader_cache/index",
+    "cache/mesa_shader_cache/marker",
+    "config/pulse/cookie",
+    "data/gvfs-metadata/root",
+    "data/gvfs-metadata/root-79042b32.log"
+   ],
+   "seconds": 5.7
+  },
+  {
+   "scenario": "cookie-close-race",
+   "flags": [],
+   "checks": [
+    {
+     "check": "close during installation: no navigation, ownership drained",
+     "ok": true,
+     "late": [
+      {
+       "event": "cookie-late",
+       "navigated": false,
+       "ok": false,
+       "t": "13:53:19.810",
+       "window": "A"
+      },
+      {
+       "event": "filter-late",
+       "t": "13:53:19.804",
+       "window": "A"
+      }
+     ],
+     "closed": {
+      "endpoint": {
+       "admitted": 0,
+       "refused": {},
+       "handled": 0
+      },
+      "event": "closed",
+      "handler": {},
+      "handlers_drained": true,
+      "native_async": 0,
+      "native_requests": 0,
+      "t": "13:53:19.811",
+      "window": "A"
+     }
+    }
+   ],
+   "ok": true,
+   "detail": {
+    "late": [
+     {
+      "event": "cookie-late",
+      "navigated": false,
+      "ok": false,
+      "t": "13:53:19.810",
+      "window": "A"
+     },
+     {
+      "event": "filter-late",
+      "t": "13:53:19.804",
+      "window": "A"
+     }
+    ]
+   },
+   "exit": {
+    "host_exit": 0,
+    "timed_out": false,
+    "children_pending": false,
+    "child_failure": false,
+    "fatal_log": false
+   },
+   "adopted_exits": [
+    [
+     "bwrap",
+     0
+    ],
+    [
+     "bwrap",
+     -9
+    ],
+    [
+     "bwrap",
+     -9
+    ],
+    [
+     "WebKitNetworkPr",
+     0
+    ]
+   ],
+   "observed_processes": [
+    "WebKitNetworkPr",
+    "bwrap",
+    "dfx2-wk-feas",
+    "glycin-svg"
+   ],
+   "filter_store_removal": {
+    "path": "/tmp/dfx2-feasibility/filters-2230231",
+    "attempts": 1,
+    "elapsed_ns": 59621,
+    "removed": true
+   },
+   "xdg_manifest": [
+    "cache/fontconfig/25ccf6dd56fd7585eff0dc50a0a881d4-le64.cache-9",
+    "cache/fontconfig/363ec821d90eaa905a460bbdd9de4669-le64.cache-9",
+    "cache/fontconfig/97123a202d96d9eee11f7b2e48a774ca-le64.cache-9",
+    "cache/fontconfig/CACHEDIR.TAG",
+    "cache/mesa_shader_cache/index",
+    "cache/mesa_shader_cache/marker",
+    "data/gvfs-metadata/root",
+    "data/gvfs-metadata/root-a5e4c6f3.log"
+   ],
+   "seconds": 0.3
+  },
+  {
+   "scenario": "cookie-failure-injected",
+   "flags": [
+    "-feas-cookie-fail"
+   ],
+   "checks": [
+    {
+     "check": "injected installation failure: visible, no navigation, drained",
+     "ok": true,
+     "failed": {
+      "error": "injected: cookie installation failure",
+      "event": "cookie-failed",
+      "t": "13:53:20.083",
+      "window": "A"
+     },
+     "closed": {
+      "endpoint": {
+       "admitted": 0,
+       "refused": {},
+       "handled": 0
+      },
+      "event": "closed",
+      "handler": {},
+      "handlers_drained": true,
+      "native_async": 0,
+      "native_requests": 0,
+      "t": "13:53:20.084",
+      "window": "A"
+     }
+    }
+   ],
+   "ok": true,
+   "detail": {},
+   "exit": {
+    "host_exit": 0,
+    "timed_out": false,
+    "children_pending": false,
+    "child_failure": false,
+    "fatal_log": false
+   },
+   "adopted_exits": [
+    [
+     "bwrap",
+     0
+    ],
+    [
+     "bwrap",
+     -9
+    ],
+    [
+     "WebKitNetworkPr",
+     0
+    ],
+    [
+     "bwrap",
+     -9
+    ]
+   ],
+   "observed_processes": [
+    "WebKitNetworkPr",
+    "bwrap",
+    "dfx2-wk-feas",
+    "glycin-svg"
+   ],
+   "filter_store_removal": {
+    "path": "/tmp/dfx2-feasibility/filters-2230447",
+    "attempts": 1,
+    "elapsed_ns": 59277,
+    "removed": true
+   },
+   "xdg_manifest": [
+    "cache/fontconfig/25ccf6dd56fd7585eff0dc50a0a881d4-le64.cache-9",
+    "cache/fontconfig/363ec821d90eaa905a460bbdd9de4669-le64.cache-9",
+    "cache/fontconfig/97123a202d96d9eee11f7b2e48a774ca-le64.cache-9",
+    "cache/fontconfig/CACHEDIR.TAG",
+    "cache/mesa_shader_cache/index",
+    "cache/mesa_shader_cache/marker",
+    "data/gvfs-metadata/root",
+    "data/gvfs-metadata/root-546d55dc.log"
+   ],
+   "seconds": 0.3
+  },
+  {
+   "scenario": "storage",
+   "flags": [],
+   "checks": [
+    {
+     "check": "B cannot read A's cookie, local or session storage",
+     "ok": true,
+     "a": {
+      "cookie": "vis=A",
+      "local": "A",
+      "session": "A"
+     },
+     "b": {
+      "cookie": "",
+      "local": null,
+      "session": null
+     }
+    },
+    {
+     "check": "B's request for A's cached resource reaches the server",
+     "ok": true,
+     "server_requests": {
+      "A fetch x2": 2,
+      "A image x2": 2,
+      "B image x2": 2
+     }
+    },
+    {
+     "check": "reload keeps A's session",
+     "ok": true,
+     "a": {
+      "local": "A",
+      "cookie": "vis=A",
+      "session": "A"
+     }
+    },
+    {
+     "check": "B kept working while A closed",
+     "ok": true,
+     "b_during": [
+      {
+       "x": "during"
+      },
+      {
+       "x": "during"
+      },
+      {
+       "x": "during"
+      }
+     ]
+    },
+    {
+     "check": "reopened A has a fresh session",
+     "ok": true,
+     "a2": {
+      "session": null,
+      "cookie": "",
+      "local": null
+     }
+    },
+    {
+     "check": "B is unchanged",
+     "ok": true,
+     "b": {
+      "session": "B",
+      "local": "B",
+      "cookie": "vis=B"
+     }
+    },
+    {
+     "check": "the attachment server outlives its browsers",
+     "ok": true,
+     "status": 200
+    }
+   ],
+   "ok": true,
+   "observations": {
+    "cache": {
+     "A fetch x2 reached server": 2,
+     "A image x2 reached server": 2,
+     "B image x2 reached server": 2
+    }
+   },
+   "detail": {
+    "processes": {
+     "two windows": [
+      "WebKitNetworkPr",
+      "WebKitNetworkPr",
+      "WebKitWebProces",
+      "WebKitWebProces",
+      "bwrap",
+      "bwrap",
+      "glycin-svg"
+     ],
+     "after closing A": [
+      "WebKitNetworkPr",
+      "WebKitWebProces",
+      "bwrap",
+      "bwrap",
+      "glycin-svg"
+     ],
+     "no windows": [
+      "WebKitNetworkPr",
+      "WebKitWebProces",
+      "WebKitWebProces",
+      "bwrap",
+      "bwrap",
+      "glycin-svg"
+     ]
+    },
+    "app_cookie_names_per_cached_request": [
+     [
+      "vis"
+     ],
+     [
+      "vis"
+     ],
+     [
+      "vis"
+     ],
+     [
+      "vis"
+     ],
+     [
+      "vis"
+     ],
+     [
+      "vis"
+     ]
+    ]
+   },
+   "exit": {
+    "host_exit": 0,
+    "timed_out": false,
+    "children_pending": false,
+    "child_failure": false,
+    "fatal_log": false
+   },
+   "adopted_exits": [
+    [
+     "bwrap",
+     0
+    ],
+    [
+     "bwrap",
+     -9
+    ],
+    [
+     "bwrap",
+     -9
+    ]
+   ],
+   "observed_processes": [
+    "WebKitNetworkPr",
+    "WebKitWebProces",
+    "bwrap",
+    "dfx2-wk-feas",
+    "glycin-svg",
+    "gst-plugin-scan"
+   ],
+   "filter_store_removal": {
+    "path": "/tmp/dfx2-feasibility/filters-2230660",
+    "attempts": 1,
+    "elapsed_ns": 423735,
+    "removed": true
+   },
+   "xdg_manifest": [
+    "cache/event-sound-cache.tdb.7f8d5c37476f457cae8a599c576dd36f.x86_64-pc-linux-gnu",
+    "cache/fontconfig/25ccf6dd56fd7585eff0dc50a0a881d4-le64.cache-9",
+    "cache/fontconfig/363ec821d90eaa905a460bbdd9de4669-le64.cache-9",
+    "cache/fontconfig/97123a202d96d9eee11f7b2e48a774ca-le64.cache-9",
+    "cache/fontconfig/CACHEDIR.TAG",
+    "cache/gstreamer-1.0/registry.x86_64.bin",
+    "cache/mesa_shader_cache/index",
+    "cache/mesa_shader_cache/marker",
+    "config/pulse/cookie",
+    "data/gvfs-metadata/root",
+    "data/gvfs-metadata/root-f1f72045.log"
+   ],
+   "seconds": 1.4
+  },
+  {
+   "scenario": "error-pages",
+   "flags": [],
+   "checks": [
+    {
+     "check": "failed GET: Retry and Return to start, no script",
+     "ok": true,
+     "failed": {
+      "code": 39,
+      "domain": "g-io-error-quark",
+      "error_page": true,
+      "event": "load-failed",
+      "from_post": false,
+      "message": "Could not connect to 127.0.0.1: Connection refused",
+      "method": "GET",
+      "retry_offered": true,
+      "t": "13:53:22.381",
+      "uri": "http://127.0.0.1:33043/api/query?x=later",
+      "window": "E"
+     },
+     "page": {
+      "start": true,
+      "scripts": 0,
+      "retry": true,
+      "text": "This page did not load\n\nhttp://127.0.0.1:33043/api/query?x=later\n\nNothing was submitted.\n\nRetry Return to start"
+     }
+    },
+    {
+     "check": "a forged action is refused",
+     "ok": true
+    },
+    {
+     "check": "explicit Retry repeats the failed GET once the service returns",
+     "ok": true
+    },
+    {
+     "check": "failed POST shows only Return to start",
+     "ok": true,
+     "failed": {
+      "code": 39,
+      "domain": "g-io-error-quark",
+      "error_page": true,
+      "event": "load-failed",
+      "from_post": true,
+      "message": "Could not connect to 127.0.0.1: Connection refused",
+      "method": "POST",
+      "retry_offered": false,
+      "t": "13:53:22.935",
+      "uri": "http://127.0.0.1:33043/api/form",
+      "window": "E"
+     }
+    },
+    {
+     "check": "Return to start is a GET and replays nothing",
+     "ok": true,
+     "posts": 0
+    },
+    {
+     "check": "a GET reached by 303 after a POST offers Retry of the GET",
+     "ok": true,
+     "failed": {
+      "code": 34,
+      "domain": "g-io-error-quark",
+      "error_page": true,
+      "event": "load-failed",
+      "from_post": true,
+      "message": "Connection terminated unexpectedly",
+      "method": "GET",
+      "retry_offered": true,
+      "t": "13:53:22.967",
+      "uri": "http://127.0.0.1:33043/broken",
+      "window": "E"
+     }
+    },
+    {
+     "check": "Retry after the 303 replays no POST",
+     "ok": true,
+     "post_303": 1,
+     "broken": 2
+    },
+    {
+     "check": "a POST preserved by 307 offers no Retry",
+     "ok": true,
+     "failed": {
+      "code": 34,
+      "domain": "g-io-error-quark",
+      "error_page": true,
+      "event": "load-failed",
+      "from_post": true,
+      "message": "Connection terminated unexpectedly",
+      "method": "POST",
+      "retry_offered": false,
+      "t": "13:53:22.983",
+      "uri": "http://127.0.0.1:33043/broken-post",
+      "window": "E"
+     }
+    },
+    {
+     "check": "404 and 500 display; a failed fetch or asset leaves the page",
+     "ok": true,
+     "missing": "404 from the server",
+     "e500": "500 from the server",
+     "fetched": "rejected: TypeError",
+     "still": "/ true"
+    },
+    {
+     "check": "initial-load failure, then explicit Retry",
+     "ok": true,
+     "initial": {
+      "code": 39,
+      "domain": "g-io-error-quark",
+      "error_page": true,
+      "event": "load-failed",
+      "from_post": false,
+      "message": "Could not connect to 127.0.0.1: Connection refused",
+      "method": "GET",
+      "retry_offered": true,
+      "t": "13:53:24.614",
+      "uri": "http://127.0.0.1:33043/",
+      "window": "F"
+     }
+    }
+   ],
+   "ok": true,
+   "detail": {
+    "posts": [
+     {
+      "method": "POST",
+      "path": "/post-303",
+      "credential": false,
+      "app_cookie": [],
+      "origin": "http://127.0.0.1:33043",
+      "upgrade": null,
+      "t": 1794423202.966
+     },
+     {
+      "method": "POST",
+      "path": "/post-307",
+      "credential": false,
+      "app_cookie": [],
+      "origin": "http://127.0.0.1:33043",
+      "upgrade": null,
+      "t": 1794423202.982
+     },
+     {
+      "method": "POST",
+      "path": "/broken-post",
+      "credential": false,
+      "app_cookie": [],
+      "origin": "http://127.0.0.1:33043",
+      "upgrade": null,
+      "t": 1794423202.983
+     }
+    ]
+   },
+   "exit": {
+    "host_exit": 0,
+    "timed_out": false,
+    "children_pending": false,
+    "child_failure": false,
+    "fatal_log": false
+   },
+   "adopted_exits": [
+    [
+     "bwrap",
+     0
+    ],
+    [
+     "bwrap",
+     -9
+    ],
+    [
+     "bwrap",
+     -9
+    ],
+    [
+     "WebKitNetworkPr",
+     0
+    ],
+    [
+     "WebKitWebProces",
+     0
+    ],
+    [
+     "WebKitNetworkPr",
+     0
+    ],
+    [
+     "WebKitWebProces",
+     0
+    ]
+   ],
+   "observed_processes": [
+    "WebKitNetworkPr",
+    "WebKitWebProces",
+    "bwrap",
+    "dfx2-wk-feas",
+    "glycin-svg",
+    "gst-plugin-scan"
+   ],
+   "filter_store_removal": {
+    "path": "/tmp/dfx2-feasibility/filters-2231063",
+    "attempts": 1,
+    "elapsed_ns": 74795,
+    "removed": true
+   },
+   "xdg_manifest": [
+    "cache/event-sound-cache.tdb.7f8d5c37476f457cae8a599c576dd36f.x86_64-pc-linux-gnu",
+    "cache/fontconfig/25ccf6dd56fd7585eff0dc50a0a881d4-le64.cache-9",
+    "cache/fontconfig/363ec821d90eaa905a460bbdd9de4669-le64.cache-9",
+    "cache/fontconfig/97123a202d96d9eee11f7b2e48a774ca-le64.cache-9",
+    "cache/fontconfig/CACHEDIR.TAG",
+    "cache/gstreamer-1.0/registry.x86_64.bin",
+    "cache/mesa_shader_cache/index",
+    "cache/mesa_shader_cache/marker",
+    "config/pulse/cookie",
+    "data/gvfs-metadata/root",
+    "data/gvfs-metadata/root-e6b343a2.log"
+   ],
+   "seconds": 3.6
+  },
+  {
+   "scenario": "owned-load-failure",
+   "flags": [],
+   "checks": [
+    {
+     "check": "loopback: native load failure shows the error page without exposing the credential",
+     "ok": true,
+     "failed": {
+      "code": 34,
+      "domain": "g-io-error-quark",
+      "error_page": true,
+      "event": "load-failed",
+      "from_post": false,
+      "message": "Connection terminated unexpectedly",
+      "method": "GET",
+      "retry_offered": true,
+      "t": "13:53:25.682",
+      "uri": "http://127.0.0.1:40781/api/abort",
+      "window": "L"
+     },
+     "page": {
+      "retry": true,
+      "cookie": ""
+     }
+    },
+    {
+     "check": "loopback: Return to start reloads the start page",
+     "ok": true
+    },
+    {
+     "check": "inprocess: native load failure shows the error page without exposing the credential",
+     "ok": true,
+     "failed": {
+      "code": 1,
+      "domain": "dfx2-spike",
+      "error_page": true,
+      "event": "load-failed",
+      "from_post": false,
+      "message": "injected transport failure: no response",
+      "method": "GET",
+      "retry_offered": true,
+      "t": "13:53:25.861",
+      "uri": "dfx2://spike/api/abort",
+      "window": "P"
+     },
+     "page": {
+      "retry": true,
+      "cookie": ""
+     }
+    },
+    {
+     "check": "inprocess: Return to start reloads the start page",
+     "ok": true
+    }
+   ],
+   "ok": true,
+   "detail": {},
+   "exit": {
+    "host_exit": 0,
+    "timed_out": false,
+    "children_pending": false,
+    "child_failure": false,
+    "fatal_log": false
+   },
+   "adopted_exits": [
+    [
+     "bwrap",
+     0
+    ],
+    [
+     "bwrap",
+     -9
+    ],
+    [
+     "bwrap",
+     -9
+    ],
+    [
+     "WebKitNetworkPr",
+     0
+    ],
+    [
+     "WebKitWebProces",
+     0
+    ],
+    [
+     "WebKitNetworkPr",
+     0
+    ],
+    [
+     "WebKitWebProces",
+     0
+    ]
+   ],
+   "observed_processes": [
+    "WebKitNetworkPr",
+    "WebKitWebProces",
+    "bwrap",
+    "dfx2-wk-feas",
+    "glycin-svg",
+    "gst-plugin-scan"
+   ],
+   "filter_store_removal": {
+    "path": "/tmp/dfx2-feasibility/filters-2231399",
+    "attempts": 1,
+    "elapsed_ns": 65171,
+    "removed": true
+   },
+   "xdg_manifest": [
+    "cache/event-sound-cache.tdb.7f8d5c37476f457cae8a599c576dd36f.x86_64-pc-linux-gnu",
+    "cache/fontconfig/25ccf6dd56fd7585eff0dc50a0a881d4-le64.cache-9",
+    "cache/fontconfig/363ec821d90eaa905a460bbdd9de4669-le64.cache-9",
+    "cache/fontconfig/97123a202d96d9eee11f7b2e48a774ca-le64.cache-9",
+    "cache/fontconfig/CACHEDIR.TAG",
+    "cache/gstreamer-1.0/registry.x86_64.bin",
+    "cache/mesa_shader_cache/index",
+    "cache/mesa_shader_cache/marker",
+    "config/pulse/cookie",
+    "data/gvfs-metadata/root",
+    "data/gvfs-metadata/root-a4876662.log"
+   ],
+   "seconds": 0.8
+  },
+  {
+   "scenario": "forced-crash",
+   "flags": [],
+   "checks": [
+    {
+     "check": "a killed host leaves its own filter store, named by its pid",
+     "ok": true,
+     "residue": [
+      "ContentRuleList-window-1"
+     ]
+    }
+   ],
+   "ok": false,
+   "exit_expected": "SIGKILL",
+   "failure": "FileNotFoundError: [Errno 2] No such file or directory: 'evidence/linux/integration-feasibility/passes-b-d/forced-crash/second/host.jsonl'",
+   "exit": {
+    "host_exit": -9,
+    "timed_out": false,
+    "children_pending": false,
+    "child_failure": true,
+    "fatal_log": false
+   },
+   "adopted_exits": [
+    [
+     "bwrap",
+     0
+    ],
+    [
+     "bwrap",
+     -9
+    ],
+    [
+     "WebKitNetworkPr",
+     -9
+    ],
+    [
+     "WebKitWebProces",
+     -9
+    ],
+    [
+     "bwrap",
+     -9
+    ]
+   ],
+   "observed_processes": [
+    "WebKitNetworkPr",
+    "WebKitWebProces",
+    "bwrap",
+    "dfx2-wk-feas",
+    "glycin-svg",
+    "gst-plugin-scan"
+   ],
+   "filter_store_removal": null,
+   "xdg_manifest": [
+    "cache/fontconfig/25ccf6dd56fd7585eff0dc50a0a881d4-le64.cache-9",
+    "cache/fontconfig/363ec821d90eaa905a460bbdd9de4669-le64.cache-9",
+    "cache/fontconfig/97123a202d96d9eee11f7b2e48a774ca-le64.cache-9",
+    "cache/fontconfig/CACHEDIR.TAG",
+    "cache/gstreamer-1.0/registry.x86_64.bin",
+    "cache/mesa_shader_cache/index",
+    "cache/mesa_shader_cache/marker",
+    "data/gvfs-metadata/root",
+    "data/gvfs-metadata/root-ed912b8d.log"
+   ],
+   "seconds": 0.5
+  },
+  {
+   "scenario": "shutdown-loopback-ordinary",
+   "flags": [],
+   "checks": [
+    {
+     "check": "ordinary close drains",
+     "ok": true,
+     "closed": {
+      "endpoint": {
+       "admitted": 4,
+       "refused": {},
+       "handled": 4
+      },
+      "event": "closed",
+      "handler": {
+       "GET /": 1,
+       "GET /logo.svg": 1,
+       "GET /probe.css": 1,
+       "GET /probe.js": 1
+      },
+      "handlers_drained": true,
+      "native_async": 0,
+      "native_requests": 0,
+      "t": "13:53:26.927",
+      "window": "S"
+     }
+    }
+   ],
+   "ok": true,
+   "detail": {},
+   "exit": {
+    "host_exit": 0,
+    "timed_out": false,
+    "children_pending": false,
+    "child_failure": false,
+    "fatal_log": false
+   },
+   "adopted_exits": [
+    [
+     "bwrap",
+     0
+    ],
+    [
+     "bwrap",
+     -9
+    ],
+    [
+     "WebKitNetworkPr",
+     0
+    ],
+    [
+     "WebKitWebProces",
+     0
+    ],
+    [
+     "bwrap",
+     -9
+    ]
+   ],
+   "observed_processes": [
+    "WebKitNetworkPr",
+    "WebKitWebProces",
+    "bwrap",
+    "dfx2-wk-feas",
+    "glycin-svg",
+    "gst-plugin-scan"
+   ],
+   "filter_store_removal": {
+    "path": "/tmp/dfx2-feasibility/filters-2231923",
+    "attempts": 1,
+    "elapsed_ns": 59578,
+    "removed": true
+   },
+   "xdg_manifest": [
+    "cache/fontconfig/25ccf6dd56fd7585eff0dc50a0a881d4-le64.cache-9",
+    "cache/fontconfig/363ec821d90eaa905a460bbdd9de4669-le64.cache-9",
+    "cache/fontconfig/97123a202d96d9eee11f7b2e48a774ca-le64.cache-9",
+    "cache/fontconfig/CACHEDIR.TAG",
+    "cache/gstreamer-1.0/registry.x86_64.bin",
+    "cache/mesa_shader_cache/index",
+    "cache/mesa_shader_cache/marker",
+    "data/gvfs-metadata/root",
+    "data/gvfs-metadata/root-bf2798e1.log"
+   ],
+   "seconds": 0.5
+  },
+  {
+   "scenario": "shutdown-loopback-pending",
+   "flags": [],
+   "checks": [
+    {
+     "check": "pending close drains",
+     "ok": true,
+     "closed": {
+      "endpoint": {
+       "admitted": 5,
+       "refused": {},
+       "handled": 5
+      },
+      "event": "closed",
+      "handler": {
+       "GET /": 1,
+       "GET /api/slow": 1,
+       "GET /logo.svg": 1,
+       "GET /probe.css": 1,
+       "GET /probe.js": 1
+      },
+      "handlers_drained": true,
+      "native_async": 0,
+      "native_requests": 0,
+      "t": "13:53:27.987",
+      "window": "S"
+     }
+    }
+   ],
+   "ok": true,
+   "detail": {},
+   "exit": {
+    "host_exit": 0,
+    "timed_out": false,
+    "children_pending": false,
+    "child_failure": false,
+    "fatal_log": false
+   },
+   "adopted_exits": [
+    [
+     "bwrap",
+     0
+    ],
+    [
+     "bwrap",
+     -9
+    ],
+    [
+     "WebKitNetworkPr",
+     0
+    ],
+    [
+     "WebKitWebProces",
+     0
+    ],
+    [
+     "bwrap",
+     -9
+    ]
+   ],
+   "observed_processes": [
+    "WebKitNetworkPr",
+    "WebKitWebProces",
+    "bwrap",
+    "dfx2-wk-feas",
+    "glycin-svg",
+    "gst-plugin-scan"
+   ],
+   "filter_store_removal": {
+    "path": "/tmp/dfx2-feasibility/filters-2232168",
+    "attempts": 1,
+    "elapsed_ns": 130341,
+    "removed": true
+   },
+   "xdg_manifest": [
+    "cache/fontconfig/25ccf6dd56fd7585eff0dc50a0a881d4-le64.cache-9",
+    "cache/fontconfig/363ec821d90eaa905a460bbdd9de4669-le64.cache-9",
+    "cache/fontconfig/97123a202d96d9eee11f7b2e48a774ca-le64.cache-9",
+    "cache/fontconfig/CACHEDIR.TAG",
+    "cache/gstreamer-1.0/registry.x86_64.bin",
+    "cache/mesa_shader_cache/index",
+    "cache/mesa_shader_cache/marker",
+    "data/gvfs-metadata/root",
+    "data/gvfs-metadata/root-98cee553.log"
+   ],
+   "seconds": 1.1
+  },
+  {
+   "scenario": "shutdown-loopback-inspector",
+   "flags": [],
+   "checks": [
+    {
+     "check": "inspector close drains",
+     "ok": true,
+     "closed": {
+      "endpoint": {
+       "admitted": 5,
+       "refused": {},
+       "handled": 5
+      },
+      "event": "closed",
+      "handler": {
+       "GET /": 1,
+       "GET /api/slow": 1,
+       "GET /logo.svg": 1,
+       "GET /probe.css": 1,
+       "GET /probe.js": 1
+      },
+      "handlers_drained": true,
+      "native_async": 0,
+      "native_requests": 0,
+      "t": "13:53:30.543",
+      "window": "S"
+     }
+    }
+   ],
+   "ok": true,
+   "detail": {},
+   "exit": {
+    "host_exit": 0,
+    "timed_out": false,
+    "children_pending": false,
+    "child_failure": false,
+    "fatal_log": false
+   },
+   "adopted_exits": [
+    [
+     "bwrap",
+     0
+    ],
+    [
+     "bwrap",
+     -9
+    ],
+    [
+     "WebKitNetworkPr",
+     0
+    ],
+    [
+     "WebKitWebProces",
+     0
+    ],
+    [
+     "WebKitWebProces",
+     0
+    ],
+    [
+     "WebKitNetworkPr",
+     0
+    ],
+    [
+     "bwrap",
+     -9
+    ]
+   ],
+   "observed_processes": [
+    "WebKitNetworkPr",
+    "WebKitWebProces",
+    "bwrap",
+    "dfx2-wk-feas",
+    "glycin-svg",
+    "gst-plugin-scan"
+   ],
+   "filter_store_removal": {
+    "path": "/tmp/dfx2-feasibility/filters-2232416",
+    "attempts": 1,
+    "elapsed_ns": 47365,
+    "removed": true
+   },
+   "xdg_manifest": [
+    "cache/fontconfig/25ccf6dd56fd7585eff0dc50a0a881d4-le64.cache-9",
+    "cache/fontconfig/363ec821d90eaa905a460bbdd9de4669-le64.cache-9",
+    "cache/fontconfig/97123a202d96d9eee11f7b2e48a774ca-le64.cache-9",
+    "cache/fontconfig/CACHEDIR.TAG",
+    "cache/gstreamer-1.0/registry.x86_64.bin",
+    "cache/mesa_shader_cache/08/660d0b9efd25c1aecedbddaf7b8a5a4cf3887f0a55bfb3a781573ab3e56565",
+    "cache/mesa_shader_cache/19/8d69320c1cb0d87164e1afc634d4baec0e5c23abfed1bcdcf5b435395f2cf7",
+    "cache/mesa_shader_cache/1e/d471c8c0c59075b71a398004aea1502685e902e9994acd6603aac55ce47600",
+    "cache/mesa_shader_cache/20/18f4a37bd1383794ce5749f6a497e20641c6fc39f7374715d0c9ca10dee8d8",
+    "cache/mesa_shader_cache/26/6849b96c234c416abbc4306e22816dbe2cbf76f8ab3eb79e000cc067b2127b",
+    "cache/mesa_shader_cache/2a/ee64dc3304e4c25498d18d60eb0803cf1daaa719565e6ff9098b8131932225",
+    "cache/mesa_shader_cache/33/a9f4cd56dbb8a6f2a4d1217c8ea7c80ca686c402d903c95c5ea7e8e5cc3208",
+    "cache/mesa_shader_cache/38/d2a3845dcb398c1971373e48511cb70b493868241c91f4c82fd03e93ee3fad",
+    "cache/mesa_shader_cache/3d/71fb93b10a8589a231f1219e16af1683fc2d89158401f19af6738b4607cf36",
+    "cache/mesa_shader_cache/3f/dda4aaee9f00549a2987212d6ea1b9aeed62c571f3457561ace63adf788b13",
+    "cache/mesa_shader_cache/41/7cd3c0fdebcd4678c2652bc9f0a02a3789848df8fb06d5914d2126bb253d3c",
+    "cache/mesa_shader_cache/4d/a77013fe2fe963d0189da14b4617866d87cc2ad932797739dbfee150094760",
+    "cache/mesa_shader_cache/4e/9f558e76a517f20f5cf5f02233439850cc4127c0d601de3612f7c42988e5c3",
+    "cache/mesa_shader_cache/59/86bc12e216eaaec73f061b7691e14aab3de96da686c7b0b8c9b9014b7d0b61",
+    "cache/mesa_shader_cache/62/584d8371e3491c69574dc532fdeb3cf12ea15a3d41359aac92fbac546272da",
+    "cache/mesa_shader_cache/64/23bf218ccc5579d4b69f45be543d8c6f1dc98acee009ca623f5329fb2f056e",
+    "cache/mesa_shader_cache/6e/259e8a82cdbd364e7a70422a21b5a7d499f1bfd2a1d86626fe203608d45cc9",
+    "cache/mesa_shader_cache/70/0f29787a7074c918808007c7aee9dd05fca79a0433a42cb47006ddaca87b08",
+    "cache/mesa_shader_cache/72/7198e0a07d5b7050d0a8cb358c17699444049affdef16bfcda9bf74bab9de0",
+    "cache/mesa_shader_cache/72/b5f5f75097292372cea659de57df30eba017f524733490a2eb0ef36696eabb",
+    "cache/mesa_shader_cache/92/b377f6b015136c475e9f26b5276f38b70c5ed2ccd5bf7978bb36c4545acd61",
+    "cache/mesa_shader_cache/94/a756c1cba7375612e1d894373c87b6ad147e9c416d5f8b1c53ec00921ca934",
+    "cache/mesa_shader_cache/98/73644e276ae067bf3d7e68134b3aa84a1e78a9448b431ab2827ee1f0cdd89c",
+    "cache/mesa_shader_cache/99/b53e2a82bee5a0c427362b787a334fa774d60c430111fee558e63e68ae48c5",
+    "cache/mesa_shader_cache/9a/5d1bbefda52270f2812559df13a7dc5f26d85d0903825652213b287c24fb1f",
+    "cache/mesa_shader_cache/9b/85aecfef51bfe70db6d125ac477435ce48f56b86d68bf062753f2372f4569a",
+    "cache/mesa_shader_cache/a0/c6d4d06a3bff0a9c2aca6b8962559baf1aed14372a7622892372e63fb27d74",
+    "cache/mesa_shader_cache/ab/d76d88f975e8c87831190ecfdc44b68813d4601c835ea61dec8675b3e1f8b1",
+    "cache/mesa_shader_cache/ae/57f504126b05ff51e358890a3f46121be623d1ed98281057cd15e6794c344f",
+    "cache/mesa_shader_cache/b1/960bc4a9892c50c69d23805dcd6b64b116bdf9d38c54081f3111cf2f6d93f3",
+    "cache/mesa_shader_cache/c3/e986a750f77b93b823bab02d28360970f5a60ecd7425cd02c34eadb0c83820",
+    "cache/mesa_shader_cache/c6/3628be94bc2d899d12d6b1799de65911b4bbce51abaf1809c8aa22d8c1d636",
+    "cache/mesa_shader_cache/ce/1f6f0671b0518aff7d0b94136c8f8a965d663245e9d178e03bcb9baca43322",
+    "cache/mesa_shader_cache/df/14afac5fe1ef3318c5e818a033eede9218615d0ef2036f4180d767e7fc6239",
+    "cache/mesa_shader_cache/e8/825ecfb1a46e9e238ebc438c0d955e886271128dcda52f177490e5235abaa1",
+    "cache/mesa_shader_cache/ef/9d270460853fa94c6ab5522e2c95a6756c42d4b7f5d5089f47185f89cc9f15",
+    "cache/mesa_shader_cache/index",
+    "cache/mesa_shader_cache/marker",
+    "cache/webkitgtk-4.1/WebInspector/CacheStorage/salt",
+    "cache/webkitgtk-4.1/WebInspector/WebKitCache/Version 17/salt",
+    "cache/webkitgtk-4.1/WebInspector/hsts-storage.sqlite",
+    "data/gvfs-metadata/root",
+    "data/gvfs-metadata/root-68e35d6b.log",
+    "data/webkitgtk-4.1/WebInspector/databases/indexeddb/v1/resource__0/E8DA97436ECABD6F2D341BB04999E49A9BF1E628A1CA8A34DF87F160078240E2/IndexedDB.sqlite3",
+    "data/webkitgtk-4.1/WebInspector/localstorage/resource__0.localstorage",
+    "data/webkitgtk-4.1/WebInspector/mediakeys/v1/salt",
+    "data/webkitgtk-4.1/WebInspector/storage/eQqmuwqCADsZ9DAoCgwq6cWd30yUm45oUBdF0daox38/eQqmuwqCADsZ9DAoCgwq6cWd30yUm45oUBdF0daox38/origin",
+    "data/webkitgtk-4.1/WebInspector/storage/salt"
+   ],
+   "seconds": 2.6
+  },
+  {
+   "scenario": "shutdown-inprocess-ordinary",
+   "flags": [],
+   "checks": [
+    {
+     "check": "ordinary close drains",
+     "ok": true,
+     "closed": {
+      "endpoint": {
+       "admitted": 0,
+       "refused": {},
+       "handled": 4
+      },
+      "event": "closed",
+      "handler": {
+       "GET /": 1,
+       "GET /logo.svg": 1,
+       "GET /probe.css": 1,
+       "GET /probe.js": 1
+      },
+      "handlers_drained": true,
+      "native_async": 0,
+      "native_requests": 0,
+      "t": "13:53:31.076",
+      "window": "S"
+     }
+    }
+   ],
+   "ok": true,
+   "detail": {},
+   "exit": {
+    "host_exit": 0,
+    "timed_out": false,
+    "children_pending": false,
+    "child_failure": false,
+    "fatal_log": false
+   },
+   "adopted_exits": [
+    [
+     "bwrap",
+     0
+    ],
+    [
+     "bwrap",
+     -9
+    ],
+    [
+     "WebKitNetworkPr",
+     0
+    ],
+    [
+     "WebKitWebProces",
+     0
+    ],
+    [
+     "bwrap",
+     -9
+    ]
+   ],
+   "observed_processes": [
+    "WebKitNetworkPr",
+    "WebKitWebProces",
+    "bwrap",
+    "dfx2-wk-feas",
+    "glycin-svg",
+    "gst-plugin-scan"
+   ],
+   "filter_store_removal": {
+    "path": "/tmp/dfx2-feasibility/filters-2232743",
+    "attempts": 1,
+    "elapsed_ns": 56797,
+    "removed": true
+   },
+   "xdg_manifest": [
+    "cache/fontconfig/25ccf6dd56fd7585eff0dc50a0a881d4-le64.cache-9",
+    "cache/fontconfig/363ec821d90eaa905a460bbdd9de4669-le64.cache-9",
+    "cache/fontconfig/97123a202d96d9eee11f7b2e48a774ca-le64.cache-9",
+    "cache/fontconfig/CACHEDIR.TAG",
+    "cache/gstreamer-1.0/registry.x86_64.bin",
+    "cache/mesa_shader_cache/index",
+    "cache/mesa_shader_cache/marker",
+    "data/gvfs-metadata/root",
+    "data/gvfs-metadata/root-c656d24e.log"
+   ],
+   "seconds": 0.5
+  },
+  {
+   "scenario": "shutdown-inprocess-pending",
+   "flags": [],
+   "checks": [
+    {
+     "check": "pending close drains",
+     "ok": true,
+     "closed": {
+      "endpoint": {
+       "admitted": 0,
+       "refused": {},
+       "handled": 5
+      },
+      "event": "closed",
+      "handler": {
+       "GET /": 1,
+       "GET /api/slow": 1,
+       "GET /logo.svg": 1,
+       "GET /probe.css": 1,
+       "GET /probe.js": 1
+      },
+      "handlers_drained": true,
+      "native_async": 0,
+      "native_requests": 0,
+      "t": "13:53:32.117",
+      "window": "S"
+     }
+    }
+   ],
+   "ok": true,
+   "detail": {},
+   "exit": {
+    "host_exit": 0,
+    "timed_out": false,
+    "children_pending": false,
+    "child_failure": false,
+    "fatal_log": false
+   },
+   "adopted_exits": [
+    [
+     "bwrap",
+     0
+    ],
+    [
+     "bwrap",
+     -9
+    ],
+    [
+     "bwrap",
+     -9
+    ],
+    [
+     "WebKitNetworkPr",
+     0
+    ],
+    [
+     "WebKitWebProces",
+     0
+    ]
+   ],
+   "observed_processes": [
+    "WebKitNetworkPr",
+    "WebKitWebProces",
+    "bwrap",
+    "dfx2-wk-feas",
+    "glycin-svg",
+    "gst-plugin-scan"
+   ],
+   "filter_store_removal": {
+    "path": "/tmp/dfx2-feasibility/filters-2232986",
+    "attempts": 1,
+    "elapsed_ns": 71546,
+    "removed": true
+   },
+   "xdg_manifest": [
+    "cache/fontconfig/25ccf6dd56fd7585eff0dc50a0a881d4-le64.cache-9",
+    "cache/fontconfig/363ec821d90eaa905a460bbdd9de4669-le64.cache-9",
+    "cache/fontconfig/97123a202d96d9eee11f7b2e48a774ca-le64.cache-9",
+    "cache/fontconfig/CACHEDIR.TAG",
+    "cache/gstreamer-1.0/registry.x86_64.bin",
+    "cache/mesa_shader_cache/index",
+    "cache/mesa_shader_cache/marker",
+    "data/gvfs-metadata/root",
+    "data/gvfs-metadata/root-63ac4741.log"
+   ],
+   "seconds": 1.0
+  },
+  {
+   "scenario": "shutdown-inprocess-inspector",
+   "flags": [],
+   "checks": [
+    {
+     "check": "inspector close drains",
+     "ok": true,
+     "closed": {
+      "endpoint": {
+       "admitted": 0,
+       "refused": {},
+       "handled": 5
+      },
+      "event": "closed",
+      "handler": {
+       "GET /": 1,
+       "GET /api/slow": 1,
+       "GET /logo.svg": 1,
+       "GET /probe.css": 1,
+       "GET /probe.js": 1
+      },
+      "handlers_drained": true,
+      "native_async": 0,
+      "native_requests": 0,
+      "t": "13:53:34.665",
+      "window": "S"
+     }
+    }
+   ],
+   "ok": true,
+   "detail": {},
+   "exit": {
+    "host_exit": 0,
+    "timed_out": false,
+    "children_pending": false,
+    "child_failure": false,
+    "fatal_log": false
+   },
+   "adopted_exits": [
+    [
+     "bwrap",
+     0
+    ],
+    [
+     "WebKitNetworkPr",
+     0
+    ],
+    [
+     "WebKitWebProces",
+     0
+    ],
+    [
+     "WebKitWebProces",
+     0
+    ],
+    [
+     "WebKitNetworkPr",
+     0
+    ],
+    [
+     "bwrap",
+     -9
+    ],
+    [
+     "bwrap",
+     -9
+    ]
+   ],
+   "observed_processes": [
+    "WebKitNetworkPr",
+    "WebKitWebProces",
+    "bwrap",
+    "dfx2-wk-feas",
+    "glycin-svg",
+    "gst-plugin-scan"
+   ],
+   "filter_store_removal": {
+    "path": "/tmp/dfx2-feasibility/filters-2233230",
+    "attempts": 1,
+    "elapsed_ns": 54910,
+    "removed": true
+   },
+   "xdg_manifest": [
+    "cache/fontconfig/25ccf6dd56fd7585eff0dc50a0a881d4-le64.cache-9",
+    "cache/fontconfig/363ec821d90eaa905a460bbdd9de4669-le64.cache-9",
+    "cache/fontconfig/97123a202d96d9eee11f7b2e48a774ca-le64.cache-9",
+    "cache/fontconfig/CACHEDIR.TAG",
+    "cache/gstreamer-1.0/registry.x86_64.bin",
+    "cache/mesa_shader_cache/08/660d0b9efd25c1aecedbddaf7b8a5a4cf3887f0a55bfb3a781573ab3e56565",
+    "cache/mesa_shader_cache/19/8d69320c1cb0d87164e1afc634d4baec0e5c23abfed1bcdcf5b435395f2cf7",
+    "cache/mesa_shader_cache/1e/d471c8c0c59075b71a398004aea1502685e902e9994acd6603aac55ce47600",
+    "cache/mesa_shader_cache/20/18f4a37bd1383794ce5749f6a497e20641c6fc39f7374715d0c9ca10dee8d8",
+    "cache/mesa_shader_cache/26/6849b96c234c416abbc4306e22816dbe2cbf76f8ab3eb79e000cc067b2127b",
+    "cache/mesa_shader_cache/2a/ee64dc3304e4c25498d18d60eb0803cf1daaa719565e6ff9098b8131932225",
+    "cache/mesa_shader_cache/33/a9f4cd56dbb8a6f2a4d1217c8ea7c80ca686c402d903c95c5ea7e8e5cc3208",
+    "cache/mesa_shader_cache/38/d2a3845dcb398c1971373e48511cb70b493868241c91f4c82fd03e93ee3fad",
+    "cache/mesa_shader_cache/3d/71fb93b10a8589a231f1219e16af1683fc2d89158401f19af6738b4607cf36",
+    "cache/mesa_shader_cache/3f/dda4aaee9f00549a2987212d6ea1b9aeed62c571f3457561ace63adf788b13",
+    "cache/mesa_shader_cache/41/7cd3c0fdebcd4678c2652bc9f0a02a3789848df8fb06d5914d2126bb253d3c",
+    "cache/mesa_shader_cache/4d/a77013fe2fe963d0189da14b4617866d87cc2ad932797739dbfee150094760",
+    "cache/mesa_shader_cache/4e/9f558e76a517f20f5cf5f02233439850cc4127c0d601de3612f7c42988e5c3",
+    "cache/mesa_shader_cache/59/86bc12e216eaaec73f061b7691e14aab3de96da686c7b0b8c9b9014b7d0b61",
+    "cache/mesa_shader_cache/62/584d8371e3491c69574dc532fdeb3cf12ea15a3d41359aac92fbac546272da",
+    "cache/mesa_shader_cache/64/23bf218ccc5579d4b69f45be543d8c6f1dc98acee009ca623f5329fb2f056e",
+    "cache/mesa_shader_cache/6e/259e8a82cdbd364e7a70422a21b5a7d499f1bfd2a1d86626fe203608d45cc9",
+    "cache/mesa_shader_cache/70/0f29787a7074c918808007c7aee9dd05fca79a0433a42cb47006ddaca87b08",
+    "cache/mesa_shader_cache/72/7198e0a07d5b7050d0a8cb358c17699444049affdef16bfcda9bf74bab9de0",
+    "cache/mesa_shader_cache/72/b5f5f75097292372cea659de57df30eba017f524733490a2eb0ef36696eabb",
+    "cache/mesa_shader_cache/92/b377f6b015136c475e9f26b5276f38b70c5ed2ccd5bf7978bb36c4545acd61",
+    "cache/mesa_shader_cache/94/a756c1cba7375612e1d894373c87b6ad147e9c416d5f8b1c53ec00921ca934",
+    "cache/mesa_shader_cache/98/73644e276ae067bf3d7e68134b3aa84a1e78a9448b431ab2827ee1f0cdd89c",
+    "cache/mesa_shader_cache/99/b53e2a82bee5a0c427362b787a334fa774d60c430111fee558e63e68ae48c5",
+    "cache/mesa_shader_cache/9a/5d1bbefda52270f2812559df13a7dc5f26d85d0903825652213b287c24fb1f",
+    "cache/mesa_shader_cache/9b/85aecfef51bfe70db6d125ac477435ce48f56b86d68bf062753f2372f4569a",
+    "cache/mesa_shader_cache/a0/c6d4d06a3bff0a9c2aca6b8962559baf1aed14372a7622892372e63fb27d74",
+    "cache/mesa_shader_cache/ab/d76d88f975e8c87831190ecfdc44b68813d4601c835ea61dec8675b3e1f8b1",
+    "cache/mesa_shader_cache/ae/57f504126b05ff51e358890a3f46121be623d1ed98281057cd15e6794c344f",
+    "cache/mesa_shader_cache/b1/960bc4a9892c50c69d23805dcd6b64b116bdf9d38c54081f3111cf2f6d93f3",
+    "cache/mesa_shader_cache/c3/e986a750f77b93b823bab02d28360970f5a60ecd7425cd02c34eadb0c83820",
+    "cache/mesa_shader_cache/c6/3628be94bc2d899d12d6b1799de65911b4bbce51abaf1809c8aa22d8c1d636",
+    "cache/mesa_shader_cache/ce/1f6f0671b0518aff7d0b94136c8f8a965d663245e9d178e03bcb9baca43322",
+    "cache/mesa_shader_cache/df/14afac5fe1ef3318c5e818a033eede9218615d0ef2036f4180d767e7fc6239",
+    "cache/mesa_shader_cache/e8/825ecfb1a46e9e238ebc438c0d955e886271128dcda52f177490e5235abaa1",
+    "cache/mesa_shader_cache/ef/9d270460853fa94c6ab5522e2c95a6756c42d4b7f5d5089f47185f89cc9f15",
+    "cache/mesa_shader_cache/index",
+    "cache/mesa_shader_cache/marker",
+    "cache/webkitgtk-4.1/WebInspector/CacheStorage/salt",
+    "cache/webkitgtk-4.1/WebInspector/WebKitCache/Version 17/salt",
+    "cache/webkitgtk-4.1/WebInspector/hsts-storage.sqlite",
+    "data/gvfs-metadata/root",
+    "data/gvfs-metadata/root-2c747a99.log",
+    "data/webkitgtk-4.1/WebInspector/databases/indexeddb/v1/resource__0/E8DA97436ECABD6F2D341BB04999E49A9BF1E628A1CA8A34DF87F160078240E2/IndexedDB.sqlite3",
+    "data/webkitgtk-4.1/WebInspector/localstorage/resource__0.localstorage",
+    "data/webkitgtk-4.1/WebInspector/mediakeys/v1/salt",
+    "data/webkitgtk-4.1/WebInspector/storage/salt",
+    "data/webkitgtk-4.1/WebInspector/storage/t-qkkkIaxU6JZWn16Sd_1TrciXbDsmUh9_Cy8Z40ozo/t-qkkkIaxU6JZWn16Sd_1TrciXbDsmUh9_Cy8Z40ozo/origin"
+   ],
+   "seconds": 2.6
+  }
+ ],
+ "passed": false
+}

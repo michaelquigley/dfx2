@@ -1,0 +1,46 @@
+{"event":"filter-store","path":"/tmp/dfx2-feasibility/filters-2220012","t":"13:50:28.243"}
+{"cookie":true,"cookie_fail_injected":false,"csp":false,"event":"ready","filter":true,"pid":2220012,"t":"13:50:28.244"}
+{"credential":true,"ephemeral_session":true,"event":"opened","mode":"loopback","origin":"http://127.0.0.1:38989","t":"13:50:28.351","window":"A"}
+{"event":"filter-installed","rules":"[{\"action\":{\"type\":\"block\"},\"trigger\":{\"url-filter\":\".*\"}},{\"action\":{\"type\":\"ignore-previous-rules\"},\"trigger\":{\"url-filter\":\"^http://127\\\\.0\\\\.0\\\\.1:38989/\"}},{\"action\":{\"type\":\"block\"},\"trigger\":{\"load-context\":[\"child-frame\"],\"resource-type\":[\"document\"],\"url-filter\":\".*\"}}]","t":"13:50:28.357","window":"A"}
+{"event":"cookie-installed","http_only":true,"same_site":"strict","t":"13:50:28.359","window":"A"}
+{"event":"navigate","t":"13:50:28.359","uri":"http://127.0.0.1:38989/","window":"A"}
+{"event":"navigation-allowed","method":"GET","redirect":false,"t":"13:50:28.458","uri":"http://127.0.0.1:38989/","window":"A"}
+{"event":"load","load_event":0,"t":"13:50:28.459","uri":"http://127.0.0.1:38989/","window":"A"}
+{"event":"load","load_event":2,"t":"13:50:28.460","uri":"http://127.0.0.1:38989/","window":"A"}
+{"event":"load","load_event":3,"t":"13:50:28.639","uri":"http://127.0.0.1:38989/","window":"A"}
+{"credential":true,"ephemeral_session":true,"event":"opened","mode":"loopback","origin":"http://127.0.0.1:34703","t":"13:50:28.642","window":"B"}
+{"event":"filter-installed","rules":"[{\"action\":{\"type\":\"block\"},\"trigger\":{\"url-filter\":\".*\"}},{\"action\":{\"type\":\"ignore-previous-rules\"},\"trigger\":{\"url-filter\":\"^http://127\\\\.0\\\\.0\\\\.1:34703/\"}},{\"action\":{\"type\":\"block\"},\"trigger\":{\"load-context\":[\"child-frame\"],\"resource-type\":[\"document\"],\"url-filter\":\".*\"}}]","t":"13:50:28.643","window":"B"}
+{"event":"cookie-installed","http_only":true,"same_site":"strict","t":"13:50:28.665","window":"B"}
+{"event":"navigate","t":"13:50:28.665","uri":"http://127.0.0.1:34703/","window":"B"}
+{"event":"navigation-allowed","method":"GET","redirect":false,"t":"13:50:28.752","uri":"http://127.0.0.1:34703/","window":"B"}
+{"event":"load","load_event":0,"t":"13:50:28.752","uri":"http://127.0.0.1:34703/","window":"B"}
+{"event":"load","load_event":2,"t":"13:50:28.754","uri":"http://127.0.0.1:34703/","window":"B"}
+{"event":"load","load_event":3,"t":"13:50:28.799","uri":"http://127.0.0.1:34703/","window":"B"}
+{"async":0,"event":"status","t":"13:50:28.799","windows":{"A":{"closing":false,"destroyed":false,"endpoint":{"admitted":4,"refused":{},"handled":4},"handler":{"GET /":1,"GET /logo.svg":1,"GET /probe.css":1,"GET /probe.js":1},"mode":"loopback","native_async":0,"native_requests":0,"port":38989},"B":{"closing":false,"destroyed":false,"endpoint":{"admitted":4,"refused":{},"handled":4},"handler":{"GET /":1,"GET /logo.svg":1,"GET /probe.css":1,"GET /probe.js":1},"mode":"loopback","native_async":0,"native_requests":0,"port":34703}}}
+{"async":0,"event":"status","t":"13:50:28.799","windows":{"A":{"closing":false,"destroyed":false,"endpoint":{"admitted":4,"refused":{},"handled":4},"handler":{"GET /":1,"GET /logo.svg":1,"GET /probe.css":1,"GET /probe.js":1},"mode":"loopback","native_async":0,"native_requests":0,"port":38989},"B":{"closing":false,"destroyed":false,"endpoint":{"admitted":4,"refused":{},"handled":4},"handler":{"GET /":1,"GET /logo.svg":1,"GET /probe.css":1,"GET /probe.js":1},"mode":"loopback","native_async":0,"native_requests":0,"port":34703}}}
+{"async":0,"event":"status","t":"13:50:28.799","windows":{"A":{"closing":false,"destroyed":false,"endpoint":{"admitted":4,"refused":{},"handled":4},"handler":{"GET /":1,"GET /logo.svg":1,"GET /probe.css":1,"GET /probe.js":1},"mode":"loopback","native_async":0,"native_requests":0,"port":38989},"B":{"closing":false,"destroyed":false,"endpoint":{"admitted":4,"refused":{},"handled":4},"handler":{"GET /":1,"GET /logo.svg":1,"GET /probe.css":1,"GET /probe.js":1},"mode":"loopback","native_async":0,"native_requests":0,"port":34703}}}
+{"event":"navigation-refused","kind":"navigation","method":"GET","redirect":false,"t":"13:50:28.817","uri":"http://127.0.0.1:34393/iframe","window":"A"}
+{"event":"navigation-allowed","method":"GET","redirect":false,"t":"13:50:28.817","uri":"http://127.0.0.1:38989/api/query?x=frame","window":"A"}
+{"event":"navigation-allowed","method":"GET","redirect":false,"t":"13:50:30.326","uri":"http://127.0.0.1:38989/#pinged","window":"A"}
+{"body":"return probe.attacks('http://127.0.0.1:34393', 'http://127.0.0.1:34703')","error":"","event":"js","result":{"other-endpoint":"threw TypeError","websocket":"error","beacon":"false","xhr":"0","iframe-same":"no load","ping":"clicked","redirect-fetch":"threw TypeError","redirect-img":"added","font":"added","script":"added","fetch":"threw TypeError","eventsource":"error","prefetch":"added","css":"added","iframe-cross":"added","img":"added"},"t":"13:50:32.334","window":"A"}
+{"event":"navigation-refused","kind":"navigation","method":"GET","redirect":false,"t":"13:50:32.335","uri":"http://127.0.0.1:34393/nav","window":"A"}
+{"body":"return probe.navigate('location', 'http://127.0.0.1:34393')","error":"","event":"js","result":"location","t":"13:50:32.335","window":"A"}
+{"body":"return location.href","error":"","event":"js","result":"http://127.0.0.1:38989/#pinged","t":"13:50:33.835","window":"A"}
+{"event":"navigation-allowed","method":"GET","redirect":false,"t":"13:50:33.836","uri":"http://127.0.0.1:38989/api/redirect-out?to=http%3A%2F%2F127.0.0.1%3A34393%2Fredirect-nav","window":"A"}
+{"body":"return probe.navigate('redirect', 'http://127.0.0.1:34393')","error":"","event":"js","result":"redirect","t":"13:50:33.836","window":"A"}
+{"event":"load","load_event":0,"t":"13:50:33.837","uri":"http://127.0.0.1:38989/#pinged","window":"A"}
+{"event":"navigation-refused","kind":"navigation","method":"GET","redirect":true,"t":"13:50:33.837","uri":"http://127.0.0.1:34393/redirect-nav","window":"A"}
+{"code":102,"domain":"WebKitPolicyError","error_page":false,"event":"load-failed","from_post":false,"message":"Frame load interrupted","method":"GET","t":"13:50:33.838","uri":"http://127.0.0.1:34393/redirect-nav","window":"A"}
+{"event":"load","load_event":3,"t":"13:50:33.838","uri":"http://127.0.0.1:38989/#pinged","window":"A"}
+{"body":"return location.href","error":"","event":"js","result":"http://127.0.0.1:38989/#pinged","t":"13:50:35.338","window":"A"}
+{"body":"return probe.navigate('popup', 'http://127.0.0.1:34393')","error":"","event":"js","result":"null","t":"13:50:35.341","window":"A"}
+{"body":"return location.href","error":"","event":"js","result":"http://127.0.0.1:38989/#pinged","t":"13:50:36.841","window":"A"}
+{"event":"navigation-refused","kind":"navigation","method":"POST","redirect":false,"t":"13:50:36.844","uri":"http://127.0.0.1:34393/form","window":"A"}
+{"body":"return probe.navigate('form', 'http://127.0.0.1:34393')","error":"","event":"js","result":"form","t":"13:50:36.845","window":"A"}
+{"body":"return location.href","error":"","event":"js","result":"http://127.0.0.1:38989/#pinged","t":"13:50:38.344","window":"A"}
+{"async":0,"event":"status","t":"13:50:39.346","windows":{"A":{"closing":false,"destroyed":false,"endpoint":{"admitted":7,"refused":{},"handled":7},"handler":{"GET /":1,"GET /api/redirect-out":3,"GET /logo.svg":1,"GET /probe.css":1,"GET /probe.js":1},"mode":"loopback","native_async":0,"native_requests":0,"port":38989},"B":{"closing":false,"destroyed":false,"endpoint":{"admitted":4,"refused":{},"handled":4},"handler":{"GET /":1,"GET /logo.svg":1,"GET /probe.css":1,"GET /probe.js":1},"mode":"loopback","native_async":0,"native_requests":0,"port":34703}}}
+{"event":"closing","native_async":0,"native_requests":0,"navigated":true,"t":"13:50:39.759","why":"quit","window":"A"}
+{"event":"closing","native_async":0,"native_requests":0,"navigated":true,"t":"13:50:39.765","why":"quit","window":"B"}
+{"endpoint":{"admitted":7,"refused":{},"handled":7},"event":"closed","handler":{"GET /":1,"GET /api/redirect-out":3,"GET /logo.svg":1,"GET /probe.css":1,"GET /probe.js":1},"handlers_drained":true,"native_async":0,"native_requests":0,"t":"13:50:39.766","window":"A"}
+{"endpoint":{"admitted":4,"refused":{},"handled":4},"event":"closed","handler":{"GET /":1,"GET /logo.svg":1,"GET /probe.css":1,"GET /probe.js":1},"handlers_drained":true,"native_async":0,"native_requests":0,"t":"13:50:39.766","window":"B"}
+{"error":"\u003cnil\u003e","event":"exit","filter_store_removal":{"path":"/tmp/dfx2-feasibility/filters-2220012","attempts":1,"elapsed_ns":48801,"removed":true},"t":"13:50:39.773"}

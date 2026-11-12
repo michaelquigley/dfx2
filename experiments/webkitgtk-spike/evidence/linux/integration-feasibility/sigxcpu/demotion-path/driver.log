@@ -1,0 +1,3 @@
+{"static_sigxcpu_sites": {"2.52.6 (installed) libjavascriptcoregtk-4.1.so.0": 1, "2.52.6 (installed) libwebkit2gtk-4.1.so.0": 0}, "rtkit": {"MakeThreadRealtimeWithPID": "Call failed: Access denied", "MakeThreadHighPriorityWithPID": "Call failed: Access denied"}}
+{"scenario": "control-2.52.6", "ok": true, "failure": null, "failed_checks": [], "exit": {"host_exit": 0, "timed_out": false, "children_pending": false, "child_failure": false, "fatal_log": false}, "vm_hits": {"jsc-initialize": 1298, "realtime-threads-created": 1, "realtime-thread-registered": 11, "realtime-promote": 11, "realtime-rtkit": 7, "realtime-sigxcpu-callback": 10, "realtime-demote-all": 10, "sched-setscheduler": 36, "libc-sigaction": 8}}
+{"passed": true, "failed": []}

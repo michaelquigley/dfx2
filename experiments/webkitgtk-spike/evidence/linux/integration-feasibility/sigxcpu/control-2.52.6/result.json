@@ -1,0 +1,1055 @@
+{
+ "scenario": "control-2.52.6",
+ "flags": [
+  "-feas-vmfree",
+  "-signal-reserve",
+  "60",
+  "-feas-xcpu"
+ ],
+ "checks": [
+  {
+   "check": "control: WebKit replaces Go's SIGXCPU handler and the Go subscriber hears nothing",
+   "ok": true,
+   "owners": [
+    "native:libjavascriptcoregtk-4.1.so.0.10.14",
+    "native:libjavascriptcoregtk-4.1.so.0.10.14",
+    "native:libjavascriptcoregtk-4.1.so.0.10.14",
+    "native:libjavascriptcoregtk-4.1.so.0.10.14",
+    "native:libjavascriptcoregtk-4.1.so.0.10.14"
+   ],
+   "delivered": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  {
+   "check": "monitor: every watched function resolved in the host",
+   "ok": true,
+   "unresolved": [],
+   "optional_unresolved": [
+    "highpriority-threads-created",
+    "highpriority-thread-registered",
+    "scheduling-attributes",
+    "highpriority-rtkit"
+   ]
+  },
+  {
+   "check": "monitor: no host VM, JSLock, GC thread registration, suspension or fault-handler finalization",
+   "ok": true,
+   "nonzero": {}
+  },
+  {
+   "check": "monitor: WebKit initialized JSC in the host",
+   "ok": true
+  },
+  {
+   "check": "SIGSEGV and SIGBUS still Go's at exit",
+   "ok": true,
+   "exit_signals": {
+    "SIGBUS": {
+     "signal": 7,
+     "owner": "go",
+     "flags": [
+      "SA_SIGINFO",
+      "SA_ONSTACK",
+      "SA_RESTART",
+      "SA_RESTORER"
+     ]
+    },
+    "SIGSEGV": {
+     "signal": 11,
+     "owner": "go",
+     "flags": [
+      "SA_SIGINFO",
+      "SA_ONSTACK",
+      "SA_RESTART",
+      "SA_RESTORER"
+     ]
+    },
+    "SIGUSR1": {
+     "signal": 10,
+     "owner": "go",
+     "flags": [
+      "SA_SIGINFO",
+      "SA_ONSTACK",
+      "SA_RESTART",
+      "SA_RESTORER"
+     ]
+    },
+    "SIGXCPU": {
+     "signal": 24,
+     "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+     "offset": "0x196d3f0",
+     "flags": [
+      "SA_RESTART",
+      "SA_RESTORER"
+     ]
+    },
+    "reserved 60": {
+     "signal": 60,
+     "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+     "offset": "0x196b2d0",
+     "flags": [
+      "SA_SIGINFO",
+      "SA_RESTART",
+      "SA_RESTORER"
+     ]
+    }
+   }
+  },
+  {
+   "check": "monitor: one native SIGXCPU installation, from RealTimeThreads",
+   "ok": true,
+   "installs": 1
+  }
+ ],
+ "ok": true,
+ "host_libraries": [
+  "/usr/lib/x86_64-linux-gnu/libjavascriptcoregtk-4.1.so.0.10.14",
+  "/usr/lib/x86_64-linux-gnu/libwebkit2gtk-4.1.so.0.21.10"
+ ],
+ "stages": [
+  {
+   "stage": "first window (loopback)",
+   "sigxcpu": {
+    "signal": 24,
+    "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+    "offset": "0x196d3f0",
+    "flags": [
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "record": {
+    "at": "10:19:31.187",
+    "limits": {
+     "Max cpu time": "unlimited unlimited seconds",
+     "Max nice priority": "0 0",
+     "Max realtime priority": "0 0",
+     "Max realtime timeout": "200000 200000 us"
+    },
+    "sched": {
+     "not_default": [
+      {
+       "tid": 263305,
+       "name": "dfx2-wk:disk$0",
+       "policy": "BATCH",
+       "nice": 19
+      },
+      {
+       "tid": 263545,
+       "name": "dfx2-w:traceq0",
+       "policy": "BATCH",
+       "nice": 19
+      },
+      {
+       "tid": 263547,
+       "name": "dfx2-w:traceq0",
+       "policy": "BATCH",
+       "nice": 19
+      }
+     ],
+     "threads": 36
+    }
+   },
+   "delivery": {
+    "native": {
+     "received_by_go": false,
+     "target": "[pango] fontcon",
+     "rr_before": [],
+     "rr_after": []
+    },
+    "external": {
+     "received_by_go": false,
+     "target": "",
+     "rr_before": [],
+     "rr_after": []
+    }
+   }
+  },
+  {
+   "stage": "second window (in-process), pages run",
+   "sigxcpu": {
+    "signal": 24,
+    "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+    "offset": "0x196d3f0",
+    "flags": [
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "record": {
+    "at": "10:19:37.006",
+    "limits": {
+     "Max cpu time": "unlimited unlimited seconds",
+     "Max nice priority": "0 0",
+     "Max realtime priority": "0 0",
+     "Max realtime timeout": "200000 200000 us"
+    },
+    "sched": {
+     "not_default": [
+      {
+       "tid": 263305,
+       "name": "dfx2-wk:disk$0",
+       "policy": "BATCH",
+       "nice": 19
+      },
+      {
+       "tid": 263545,
+       "name": "dfx2-w:traceq0",
+       "policy": "BATCH",
+       "nice": 19
+      },
+      {
+       "tid": 263547,
+       "name": "dfx2-w:traceq0",
+       "policy": "BATCH",
+       "nice": 19
+      },
+      {
+       "tid": 264189,
+       "name": "dfx2-w:traceq0",
+       "policy": "BATCH",
+       "nice": 19
+      },
+      {
+       "tid": 264191,
+       "name": "dfx2-w:traceq0",
+       "policy": "BATCH",
+       "nice": 19
+      }
+     ],
+     "threads": 46
+    }
+   },
+   "delivery": {
+    "native": {
+     "received_by_go": false,
+     "target": "[pango] fontcon",
+     "rr_before": [],
+     "rr_after": []
+    },
+    "external": {
+     "received_by_go": false,
+     "target": "",
+     "rr_before": [],
+     "rr_after": []
+    }
+   }
+  },
+  {
+   "stage": "inspector docked",
+   "sigxcpu": {
+    "signal": 24,
+    "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+    "offset": "0x196d3f0",
+    "flags": [
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "record": {
+    "at": "10:19:43.669",
+    "limits": {
+     "Max cpu time": "unlimited unlimited seconds",
+     "Max nice priority": "0 0",
+     "Max realtime priority": "0 0",
+     "Max realtime timeout": "200000 200000 us"
+    },
+    "sched": {
+     "not_default": [
+      {
+       "tid": 263305,
+       "name": "dfx2-wk:disk$0",
+       "policy": "BATCH",
+       "nice": 19
+      },
+      {
+       "tid": 263545,
+       "name": "dfx2-w:traceq0",
+       "policy": "BATCH",
+       "nice": 19
+      },
+      {
+       "tid": 263547,
+       "name": "dfx2-w:traceq0",
+       "policy": "BATCH",
+       "nice": 19
+      },
+      {
+       "tid": 264189,
+       "name": "dfx2-w:traceq0",
+       "policy": "BATCH",
+       "nice": 19
+      },
+      {
+       "tid": 264191,
+       "name": "dfx2-w:traceq0",
+       "policy": "BATCH",
+       "nice": 19
+      },
+      {
+       "tid": 264842,
+       "name": "dfx2-w:traceq0",
+       "policy": "BATCH",
+       "nice": 19
+      }
+     ],
+     "threads": 52
+    }
+   },
+   "delivery": {
+    "native": {
+     "received_by_go": false,
+     "target": "[pango] fontcon",
+     "rr_before": [],
+     "rr_after": []
+    },
+    "external": {
+     "received_by_go": false,
+     "target": "",
+     "rr_before": [],
+     "rr_after": []
+    }
+   }
+  },
+  {
+   "stage": "no windows",
+   "sigxcpu": {
+    "signal": 24,
+    "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+    "offset": "0x196d3f0",
+    "flags": [
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "record": {
+    "at": "10:19:48.714",
+    "limits": {
+     "Max cpu time": "unlimited unlimited seconds",
+     "Max nice priority": "0 0",
+     "Max realtime priority": "0 0",
+     "Max realtime timeout": "200000 200000 us"
+    },
+    "sched": {
+     "not_default": [
+      {
+       "tid": 263305,
+       "name": "dfx2-wk:disk$0",
+       "policy": "BATCH",
+       "nice": 19
+      },
+      {
+       "tid": 264842,
+       "name": "dfx2-w:traceq0",
+       "policy": "BATCH",
+       "nice": 19
+      }
+     ],
+     "threads": 37
+    }
+   },
+   "delivery": {
+    "native": {
+     "received_by_go": false,
+     "target": "[pango] fontcon",
+     "rr_before": [],
+     "rr_after": []
+    },
+    "external": {
+     "received_by_go": false,
+     "target": "",
+     "rr_before": [],
+     "rr_after": []
+    }
+   }
+  },
+  {
+   "stage": "reopened",
+   "sigxcpu": {
+    "signal": 24,
+    "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+    "offset": "0x196d3f0",
+    "flags": [
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "record": {
+    "at": "10:19:54.537",
+    "limits": {
+     "Max cpu time": "unlimited unlimited seconds",
+     "Max nice priority": "0 0",
+     "Max realtime priority": "0 0",
+     "Max realtime timeout": "200000 200000 us"
+    },
+    "sched": {
+     "not_default": [
+      {
+       "tid": 263305,
+       "name": "dfx2-wk:disk$0",
+       "policy": "BATCH",
+       "nice": 19
+      },
+      {
+       "tid": 264842,
+       "name": "dfx2-w:traceq0",
+       "policy": "BATCH",
+       "nice": 19
+      },
+      {
+       "tid": 264995,
+       "name": "dfx2-w:traceq0",
+       "policy": "BATCH",
+       "nice": 19
+      },
+      {
+       "tid": 264997,
+       "name": "dfx2-w:traceq0",
+       "policy": "BATCH",
+       "nice": 19
+      }
+     ],
+     "threads": 44
+    }
+   },
+   "delivery": {
+    "native": {
+     "received_by_go": false,
+     "target": "[pango] fontcon",
+     "rr_before": [],
+     "rr_after": []
+    },
+    "external": {
+     "received_by_go": false,
+     "target": "",
+     "rr_before": [],
+     "rr_after": []
+    }
+   }
+  }
+ ],
+ "start": {
+  "sigxcpu": {
+   "signal": 24,
+   "owner": "go",
+   "flags": [
+    "SA_SIGINFO",
+    "SA_ONSTACK",
+    "SA_RESTART",
+    "SA_RESTORER"
+   ]
+  },
+  "record": {
+   "at": "10:19:16.641",
+   "limits": {
+    "Max cpu time": "unlimited unlimited seconds",
+    "Max nice priority": "0 0",
+    "Max realtime priority": "0 0",
+    "Max realtime timeout": "200000 200000 us"
+   },
+   "sched": {
+    "not_default": null,
+    "threads": 7
+   }
+  }
+ },
+ "detail": {},
+ "exit": {
+  "host_exit": 0,
+  "timed_out": false,
+  "children_pending": false,
+  "child_failure": false,
+  "fatal_log": false
+ },
+ "observed_processes": [
+  "WebKitNetworkPr",
+  "WebKitWebProces",
+  "bwrap",
+  "dfx2-wk-feas",
+  "gdb",
+  "glycin-svg",
+  "gst-plugin-scan"
+ ],
+ "signals": {
+  "start": {
+   "SIGBUS": {
+    "signal": 7,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "SIGSEGV": {
+    "signal": 11,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "SIGUSR1": {
+    "signal": 10,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "SIGXCPU": {
+    "signal": 24,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "reserved 60": {
+    "signal": 60,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   }
+  },
+  "ready": {
+   "SIGBUS": {
+    "signal": 7,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "SIGSEGV": {
+    "signal": 11,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "SIGUSR1": {
+    "signal": 10,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "SIGXCPU": {
+    "signal": 24,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "reserved 60": {
+    "signal": 60,
+    "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+    "offset": "0x196b2d0",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   }
+  },
+  "exit": {
+   "SIGBUS": {
+    "signal": 7,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "SIGSEGV": {
+    "signal": 11,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "SIGUSR1": {
+    "signal": 10,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "SIGXCPU": {
+    "signal": 24,
+    "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+    "offset": "0x196d3f0",
+    "flags": [
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "reserved 60": {
+    "signal": 60,
+    "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+    "offset": "0x196b2d0",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   }
+  }
+ },
+ "reservation": {
+  "checks": [
+   {
+    "check": "supplied",
+    "passed": true,
+    "detail": "an explicit reservation; the host infers nothing"
+   },
+   {
+    "check": "within libc's real-time range",
+    "passed": true,
+    "detail": "60 in [34, 64]",
+    "cannot_establish": "that no other library uses it"
+   },
+   {
+    "check": "kernel disposition is Go's handler",
+    "passed": true,
+    "detail": "owner go",
+    "cannot_establish": "that no Go subscriber exists: subscribed and unsubscribed signals look identical"
+   },
+   {
+    "check": "not blocked on the initializing thread",
+    "passed": true,
+    "cannot_establish": "the masks of threads created later"
+   },
+   {
+    "check": "not among the application's declared subscriptions",
+    "passed": true,
+    "cannot_establish": "subscriptions the application did not declare"
+   },
+   {
+    "check": "not ignored through os/signal",
+    "passed": true
+   },
+   {
+    "check": "JSC_SIGNAL_FOR_GC unset or equal",
+    "passed": true,
+    "detail": "JSC_SIGNAL_FOR_GC="
+   }
+  ],
+  "configured": true,
+  "signal": 60
+ },
+ "filter_store_removal": {
+  "path": "/tmp/dfx2-feasibility/filters-263252",
+  "attempts": 1,
+  "elapsed_ns": 100008,
+  "removed": true
+ },
+ "refused_js": 0,
+ "monitor": {
+  "totals": {
+   "jsc-initialize": {
+    "hits": 1324,
+    "threads": 1,
+    "locations": 1,
+    "pending": false,
+    "optional": false
+   },
+   "vm-constructed": {
+    "hits": 0,
+    "threads": 0,
+    "locations": 1,
+    "pending": false,
+    "optional": false
+   },
+   "heap-constructed": {
+    "hits": 0,
+    "threads": 0,
+    "locations": 1,
+    "pending": false,
+    "optional": false
+   },
+   "global-context-create": {
+    "hits": 0,
+    "threads": 0,
+    "locations": 1,
+    "pending": false,
+    "optional": false
+   },
+   "global-context-create-in-group": {
+    "hits": 0,
+    "threads": 0,
+    "locations": 1,
+    "pending": false,
+    "optional": false
+   },
+   "context-group-create": {
+    "hits": 0,
+    "threads": 0,
+    "locations": 1,
+    "pending": false,
+    "optional": false
+   },
+   "jsc-context-new": {
+    "hits": 0,
+    "threads": 0,
+    "locations": 1,
+    "pending": false,
+    "optional": false
+   },
+   "jsc-virtual-machine-new": {
+    "hits": 0,
+    "threads": 0,
+    "locations": 2,
+    "pending": false,
+    "optional": false
+   },
+   "jslock-acquired": {
+    "hits": 0,
+    "threads": 0,
+    "locations": 1,
+    "pending": false,
+    "optional": false
+   },
+   "thread-registered-for-gc": {
+    "hits": 0,
+    "threads": 0,
+    "locations": 1,
+    "pending": false,
+    "optional": false
+   },
+   "thread-group-add": {
+    "hits": 0,
+    "threads": 0,
+    "locations": 1,
+    "pending": false,
+    "optional": false
+   },
+   "thread-suspend": {
+    "hits": 0,
+    "threads": 0,
+    "locations": 1,
+    "pending": false,
+    "optional": false
+   },
+   "suspend-handler-ran": {
+    "hits": 0,
+    "threads": 0,
+    "locations": 1,
+    "pending": false,
+    "optional": false
+   },
+   "fault-handlers-finalized": {
+    "hits": 0,
+    "threads": 0,
+    "locations": 1,
+    "pending": false,
+    "optional": false
+   },
+   "realtime-threads-created": {
+    "hits": 1,
+    "threads": 1,
+    "locations": 1,
+    "pending": false,
+    "optional": true
+   },
+   "realtime-thread-registered": {
+    "hits": 11,
+    "threads": 1,
+    "locations": 1,
+    "pending": false,
+    "optional": true
+   },
+   "highpriority-threads-created": {
+    "hits": 0,
+    "threads": 0,
+    "locations": 0,
+    "pending": true,
+    "optional": true
+   },
+   "highpriority-thread-registered": {
+    "hits": 0,
+    "threads": 0,
+    "locations": 0,
+    "pending": true,
+    "optional": true
+   },
+   "realtime-promote": {
+    "hits": 11,
+    "threads": 1,
+    "locations": 1,
+    "pending": false,
+    "optional": true
+   },
+   "realtime-rtkit": {
+    "hits": 7,
+    "threads": 1,
+    "locations": 1,
+    "pending": false,
+    "optional": true
+   },
+   "scheduling-attributes": {
+    "hits": 0,
+    "threads": 0,
+    "locations": 0,
+    "pending": true,
+    "optional": true
+   },
+   "highpriority-rtkit": {
+    "hits": 0,
+    "threads": 0,
+    "locations": 0,
+    "pending": true,
+    "optional": true
+   },
+   "sched-setscheduler": {
+    "hits": 35,
+    "threads": 1,
+    "locations": 1,
+    "pending": false,
+    "optional": false
+   },
+   "libc-sigaction": {
+    "hits": 8,
+    "threads": 2,
+    "locations": 1,
+    "pending": false,
+    "optional": false
+   }
+  },
+  "first_hits": {
+   "libc-sigaction": {
+    "main_thread": true,
+    "thread_name": "dfx2-wk-feas",
+    "go_frames": [
+     "runtime.asmcgocall @ exe (/home/michael/local/go/src/runtime/asm_amd64.s:970)",
+     "runtime.systemstack @ exe (/home/michael/local/go/src/runtime/asm_amd64.s:531)",
+     "runtime.newproc @ exe (./<autogenerated>:1)",
+     "runtime.mstart @ exe (/home/michael/local/go/src/runtime/asm_amd64.s:393)"
+    ],
+    "frames": [
+     "__GI___sigaction @ libc.so.6 (./signal/sigaction.c:27)",
+     "__bsd_signal @ libc.so.6 (../sysdeps/posix/signal.c:45)",
+     "?? @ libgtk-3.so.0",
+     "g_option_context_parse @ libglib-2.0.so.0",
+     "gtk_parse_args @ libgtk-3.so.0",
+     "gtk_init_check @ libgtk-3.so.0",
+     "syscallX @ exe (/home/michael/go/pkg/mod/github.com/ebitengine/purego@v0.11.1/sys_amd64.s:117)",
+     "runtime.asmcgocall @ exe (/home/michael/local/go/src/runtime/asm_amd64.s:970)",
+     "?? @ exe",
+     "runtime.systemstack @ exe (/home/michael/local/go/src/runtime/asm_amd64.s:531)"
+    ],
+    "signal": 13
+   },
+   "jsc-initialize": {
+    "main_thread": true,
+    "thread_name": "dfx2-wk-feas",
+    "go_frames": [],
+    "frames": [
+     "ScopedLambda @ libjavascriptcoregtk-4.1.so.0 (WTF/Headers/wtf/ScopedLambda.h:50)",
+     "ScopedLambdaFunctor<const (lambda at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/JavaScriptCore/runtime/InitializeThreading.cpp:81:16) &> @ libjavascriptcoregtk-4.1.so.0 (WTF/Headers/wtf/ScopedLambda.h:72)",
+     "scopedLambda<void (), (lambda at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/JavaScriptCore/runtime/InitializeThreading.cpp:81:16)> @ libjavascriptcoregtk-4.1.so.0 (WTF/Headers/wtf/ScopedLambda.h:122)",
+     "initialize<(lambda at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/JavaScriptCore/runtime/InitializeThreading.cpp:81:16)> @ libjavascriptcoregtk-4.1.so.0 (JavaScriptCore/PrivateHeaders/JavaScriptCore/InitializeThreading.h:42)",
+     "initialize @ libjavascriptcoregtk-4.1.so.0 (JavaScriptCore/runtime/InitializeThreading.cpp:81)",
+     "WebKit::InitializeWebKit2() @ libwebkit2gtk-4.1.so.0 (WebKit/Shared/WebKit2Initialize.cpp:42)",
+     "operator() @ libwebkit2gtk-4.1.so.0 (WebKit/UIProcess/API/glib/WebKitInitialize.cpp:117)",
+     "__invoke_impl<void, (lambda at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WebKit/UIProcess/API/glib/WebKitInitialize.cpp:113:30)> @ libwebkit2gtk-4.1.so.0 (/usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/bits/invoke.h:63)",
+     "__invoke<(lambda at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WebKit/UIProcess/API/glib/WebKitInitialize.cpp:113:30)> @ libwebkit2gtk-4.1.so.0 (/usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/bits/invoke.h:98)",
+     "operator() @ libwebkit2gtk-4.1.so.0 (/usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/mutex:911)"
+    ]
+   },
+   "sched-setscheduler": {
+    "main_thread": true,
+    "thread_name": "dfx2-wk-feas",
+    "go_frames": [],
+    "frames": [
+     "__GI_sched_setscheduler @ libc.so.6 (../sysdeps/unix/syscall-template.S:120)",
+     "__pthread_setschedparam @ libc.so.6 (./nptl/pthread_setschedparam.c:55)",
+     "establishHandle @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/posix/ThreadingPOSIX.cpp:332)",
+     "create @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/Threading.cpp:273)",
+     "create @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/RunLoop.cpp:108)",
+     "platformInitialize @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/generic/WorkQueueGeneric.cpp:45)",
+     "WorkQueueBase @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/WorkQueue.cpp:45)",
+     "WorkQueue @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/WorkQueue.cpp:186)",
+     "create @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/WorkQueue.cpp:182)",
+     "operator() @ libwebkit2gtk-4.1.so.0 (WebKit/UIProcess/API/APIContentRuleListStore.cpp:73)"
+    ]
+   },
+   "realtime-threads-created": {
+    "main_thread": true,
+    "thread_name": "dfx2-wk-feas",
+    "go_frames": [],
+    "frames": [
+     "RefPtr @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/RefPtr.h:48)",
+     "WeakPtrFactory @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/WeakPtrFactory.h:52)",
+     "CanMakeWeakPtrBase @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/CanMakeWeakPtr.h:50)",
+     "RealTimeThreads @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/linux/RealTimeThreads.cpp:67)",
+     "__pthread_once_slow @ libc.so.6 (./nptl/pthread_once.c:116)",
+     "___pthread_once @ libc.so.6 (./nptl/pthread_once.c:143)",
+     "__gthread_once @ libjavascriptcoregtk-4.1.so.0 (/usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/x86_64-linux-gnu/c++/15/bits/gthr-default.h:746)",
+     "call_once<(lambda at /usr/src/webkit2gtk-2.52.6-0ubuntu0.26.04.1/Source/WTF/wtf/linux/RealTimeThreads.cpp:61:30)> @ libjavascriptcoregtk-4.1.so.0 (/usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/mutex:918)",
+     "singleton @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/linux/RealTimeThreads.cpp:61)",
+     "establishHandle @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/posix/ThreadingPOSIX.cpp:329)"
+    ]
+   },
+   "realtime-thread-registered": {
+    "main_thread": true,
+    "thread_name": "dfx2-wk-feas",
+    "go_frames": [],
+    "frames": [
+     "unwrap @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/RawPtrTraits.h:44)",
+     "operator-> @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/Ref.h:143)",
+     "registerThread @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/linux/RealTimeThreads.cpp:86)",
+     "establishHandle @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/posix/ThreadingPOSIX.cpp:329)",
+     "create @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/Threading.cpp:273)",
+     "create @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/RunLoop.cpp:108)",
+     "platformInitialize @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/generic/WorkQueueGeneric.cpp:45)",
+     "WorkQueueBase @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/WorkQueue.cpp:45)",
+     "WorkQueue @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/WorkQueue.cpp:186)",
+     "create @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/WorkQueue.cpp:182)"
+    ]
+   },
+   "realtime-promote": {
+    "main_thread": true,
+    "thread_name": "dfx2-wk-feas",
+    "go_frames": [
+     "runtime.asmcgocall @ exe (/home/michael/local/go/src/runtime/asm_amd64.s:970)"
+    ],
+    "frames": [
+     "promoteThreadToRealTime @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/linux/RealTimeThreads.cpp:121)",
+     "operator() @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/Function.h:103)",
+     "performWork @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/RunLoop.cpp:145)",
+     "operator() @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/glib/RunLoopGLib.cpp:153)",
+     "__invoke @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/glib/RunLoopGLib.cpp:152)",
+     "operator() @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/glib/RunLoopGLib.cpp:116)",
+     "__invoke @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/glib/RunLoopGLib.cpp:89)",
+     "?? @ libglib-2.0.so.0",
+     "?? @ libglib-2.0.so.0",
+     "g_main_loop_run @ libglib-2.0.so.0"
+    ]
+   },
+   "realtime-rtkit": {
+    "main_thread": true,
+    "thread_name": "dfx2-wk-feas",
+    "go_frames": [
+     "runtime.asmcgocall @ exe (/home/michael/local/go/src/runtime/asm_amd64.s:970)"
+    ],
+    "frames": [
+     "realTimeKitMakeThreadRealTime @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/linux/RealTimeThreads.cpp:243)",
+     "promoteThreadToRealTime @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/linux/RealTimeThreads.cpp:128)",
+     "operator() @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/Function.h:103)",
+     "performWork @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/RunLoop.cpp:145)",
+     "operator() @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/glib/RunLoopGLib.cpp:153)",
+     "__invoke @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/glib/RunLoopGLib.cpp:152)",
+     "operator() @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/glib/RunLoopGLib.cpp:116)",
+     "__invoke @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/glib/RunLoopGLib.cpp:89)",
+     "?? @ libglib-2.0.so.0",
+     "?? @ libglib-2.0.so.0"
+    ]
+   }
+  },
+  "native_sigaction_installs": [
+   [
+    13,
+    "dfx2-wk-feas",
+    "?? @ libgio-2.0.so.0"
+   ],
+   [
+    13,
+    "dfx2-wk-feas",
+    "?? @ libgtk-3.so.0"
+   ],
+   [
+    13,
+    "dfx2-wk-feas",
+    "?? @ libgvfsdbus.so"
+   ],
+   [
+    24,
+    "dfx2-wk-feas",
+    "setupSignalHandler @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/linux/RealTimeThreads.cpp:191)"
+   ],
+   [
+    60,
+    "dfx2-wk-feas",
+    "operator() @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/posix/ThreadingPOSIX.cpp:217)"
+   ]
+  ],
+  "inferior_exit": {
+   "kind": "inferior-exit",
+   "exit_code": 0,
+   "exit_signal": null,
+   "t": 1794496798.607
+  },
+  "sigxcpu_installs": [
+   {
+    "thread": "dfx2-wk-feas",
+    "frames": [
+     "__GI___sigaction @ libc.so.6 (./signal/sigaction.c:27)",
+     "setupSignalHandler @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/linux/RealTimeThreads.cpp:191)",
+     "operator() @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/linux/RealTimeThreads.cpp:77)",
+     "call @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/Function.h:59)",
+     "operator() @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/Function.h:103)",
+     "performWork @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/RunLoop.cpp:145)"
+    ]
+   }
+  ],
+  "thread_priority": {
+   "realtime-threads-created": 1,
+   "realtime-thread-registered": 11,
+   "highpriority-threads-created": 0,
+   "highpriority-thread-registered": 0
+  }
+ },
+ "limits_changed": [],
+ "exit_sigxcpu": {
+  "signal": 24,
+  "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+  "offset": "0x196d3f0",
+  "flags": [
+   "SA_RESTART",
+   "SA_RESTORER"
+  ]
+ },
+ "seconds": 45.2
+}

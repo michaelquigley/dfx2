@@ -1,0 +1,62 @@
+{
+ "scenarios": [
+  {
+   "scenario": "forced-crash",
+   "flags": [],
+   "checks": [
+    {
+     "check": "a killed host leaves its own filter store, named by its pid",
+     "ok": true,
+     "residue": [
+      "ContentRuleList-window-1"
+     ]
+    },
+    {
+     "check": "the next host starts with its own fresh store",
+     "ok": true
+    },
+    {
+     "check": "the next host removed only its own store; the residue remains",
+     "ok": true,
+     "second_exit": 0
+    }
+   ],
+   "ok": true,
+   "exit_expected": "SIGKILL",
+   "detail": {
+    "residue_store": "/tmp/dfx2-feasibility/filters-2233634",
+    "fresh_store": "/tmp/dfx2-feasibility/filters-2233876"
+   },
+   "exit": {
+    "host_exit": -9,
+    "timed_out": false,
+    "children_pending": false,
+    "child_failure": false,
+    "fatal_log": false
+   },
+   "adopted_exits": [],
+   "observed_processes": [
+    "WebKitNetworkPr",
+    "WebKitWebProces",
+    "bwrap",
+    "dfx2-wk-feas",
+    "glycin-svg",
+    "gst-plugin-scan"
+   ],
+   "filter_store_removal": null,
+   "xdg_manifest": [
+    "cache/fontconfig/25ccf6dd56fd7585eff0dc50a0a881d4-le64.cache-9",
+    "cache/fontconfig/363ec821d90eaa905a460bbdd9de4669-le64.cache-9",
+    "cache/fontconfig/97123a202d96d9eee11f7b2e48a774ca-le64.cache-9",
+    "cache/fontconfig/CACHEDIR.TAG",
+    "cache/gstreamer-1.0/registry.x86_64.bin",
+    "cache/mesa_shader_cache/index",
+    "cache/mesa_shader_cache/marker",
+    "data/gvfs-metadata/root",
+    "data/gvfs-metadata/root-27ac8758.log"
+   ],
+   "seconds": 1.0
+  }
+ ],
+ "passed": true
+}

@@ -1,0 +1,43 @@
+ERROR: invalid option: JSC_SIGNAL_FOR_GC=60
+ERROR: invalid option: JSC_SIGNAL_FOR_GC=60
+ERROR: invalid option: JSC_SIGNAL_FOR_GC=60
+2026/11/12 11:12:27 http: panic serving 127.0.0.1:47826: runtime error: invalid memory address or nil pointer dereference
+goroutine 82 [running]:
+net/http.(*conn).serve.func1()
+	/home/michael/local/go/src/net/http/server.go:1939 +0xbb
+panic({0xa775c8?, 0xac3f40?})
+	/home/michael/local/go/src/runtime/panic.go:859 +0x125
+main.busFault({0x3d1532a1c00b?, 0x0?})
+	/home/michael/Repos/q/products/dfx2/experiments/webkitgtk-cgo-spike/probe_linux.go:267 +0x12b
+main.main.func2({0xabe758, 0x3d1532a26000}, 0x0?)
+	/home/michael/Repos/q/products/dfx2/experiments/webkitgtk-cgo-spike/main_linux.go:96 +0x52
+net/http.HandlerFunc.ServeHTTP(0x3d153282a000?, {0xabe758?, 0x3d1532a26000?}, 0x6a90da?)
+	/home/michael/local/go/src/net/http/server.go:2338 +0x29
+net/http.(*ServeMux).ServeHTTP(0x485d19?, {0xabe758, 0x3d1532a26000}, 0x3d15328dc140)
+	/home/michael/local/go/src/net/http/server.go:2903 +0x1cf
+net/http.serverHandler.ServeHTTP({0x3d15328a0a80?}, {0xabe758?, 0x3d1532a26000?}, 0x1?)
+	/home/michael/local/go/src/net/http/server.go:3413 +0x8e
+net/http.(*conn).serve(0x3d15327c8240, {0xabea90, 0x3d153279d110})
+	/home/michael/local/go/src/net/http/server.go:2137 +0x6dc
+created by net/http.(*Server).Serve in goroutine 20
+	/home/michael/local/go/src/net/http/server.go:3581 +0x4fd
+2026/11/12 11:12:27 http: panic serving 127.0.0.1:47840: runtime error: invalid memory address or nil pointer dereference
+goroutine 83 [running]:
+net/http.(*conn).serve.func1()
+	/home/michael/local/go/src/net/http/server.go:1939 +0xbb
+panic({0xa9cfb8?, 0x3d1532b240d8?})
+	/home/michael/local/go/src/runtime/panic.go:859 +0x125
+main.busFault({0x3d15326f233b?, 0x0?})
+	/home/michael/Repos/q/products/dfx2/experiments/webkitgtk-cgo-spike/probe_linux.go:281 +0x10a
+main.main.func2({0xabe758, 0x3d153293e000}, 0x0?)
+	/home/michael/Repos/q/products/dfx2/experiments/webkitgtk-cgo-spike/main_linux.go:96 +0x52
+net/http.HandlerFunc.ServeHTTP(0x3d153282a000?, {0xabe758?, 0x3d153293e000?}, 0x6a90da?)
+	/home/michael/local/go/src/net/http/server.go:2338 +0x29
+net/http.(*ServeMux).ServeHTTP(0x485d19?, {0xabe758, 0x3d153293e000}, 0x3d15328dc3c0)
+	/home/michael/local/go/src/net/http/server.go:2903 +0x1cf
+net/http.serverHandler.ServeHTTP({0x3d15328a0b80?}, {0xabe758?, 0x3d153293e000?}, 0x1?)
+	/home/michael/local/go/src/net/http/server.go:3413 +0x8e
+net/http.(*conn).serve(0x3d15327c82d0, {0xabea90, 0x3d153279d110})
+	/home/michael/local/go/src/net/http/server.go:2137 +0x6dc
+created by net/http.(*Server).Serve in goroutine 20
+	/home/michael/local/go/src/net/http/server.go:3581 +0x4fd

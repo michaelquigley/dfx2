@@ -23,7 +23,7 @@ dfx2 is the planned successor to dfx (immediate-mode UI on Dear ImGui) and dfw (
 
 ## Constraints decided so far
 
-- **No cgo.** Call native code through purego (Linux) or `syscall`/COM (Windows), never `import "C"`. Experiments build with `CGO_ENABLED=0`.
+- **No cgo in the built framework.** Call native code through purego (Linux) or `syscall`/COM (Windows). Existing experiments build with `CGO_ENABLED=0`. The sole authorized exception is the isolated [Linux cgo webview comparison](docs/future/webview-cgo-spike.md); it does not authorize changing the root module or production backend. Immediate-mode-only applications must remain buildable without cgo.
 - **purego callbacks are never freed.** Create one per signature at startup and route by user data, never one per window or call.
 - **The platform layer lives in dfx2.** Platform packages never import UI packages.
 

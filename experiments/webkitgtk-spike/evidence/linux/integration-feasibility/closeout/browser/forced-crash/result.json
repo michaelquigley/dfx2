@@ -1,0 +1,75 @@
+{
+ "scenario": "forced-crash",
+ "flags": [
+  "-feas-vmfree",
+  "-signal-reserve",
+  "60"
+ ],
+ "checks": [
+  {
+   "check": "a killed host leaves its own filter store, named by its pid",
+   "ok": true,
+   "residue": [
+    "ContentRuleList-window-1"
+   ]
+  },
+  {
+   "check": "the next host starts with its own fresh store",
+   "ok": true
+  },
+  {
+   "check": "the next host removed only its own store; the residue remains",
+   "ok": true,
+   "second_exit": 0
+  }
+ ],
+ "ok": true,
+ "exit_expected": "SIGKILL",
+ "detail": {
+  "residue_store": "/tmp/dfx2-feasibility/filters-484338",
+  "fresh_store": "/tmp/dfx2-feasibility/filters-484592"
+ },
+ "exit": {
+  "host_exit": -9,
+  "timed_out": false,
+  "children_pending": false,
+  "child_failure": false,
+  "fatal_log": false
+ },
+ "adopted_exits": [],
+ "observed_processes": [
+  "WebKitNetworkPr",
+  "WebKitWebProces",
+  "bwrap",
+  "dfx2-wk-candida",
+  "glycin-svg",
+  "gst-plugin-scan"
+ ],
+ "filter_store_removal": null,
+ "xdg_manifest": [
+  "cache/fontconfig/25ccf6dd56fd7585eff0dc50a0a881d4-le64.cache-9",
+  "cache/fontconfig/363ec821d90eaa905a460bbdd9de4669-le64.cache-9",
+  "cache/fontconfig/97123a202d96d9eee11f7b2e48a774ca-le64.cache-9",
+  "cache/fontconfig/CACHEDIR.TAG",
+  "cache/gstreamer-1.0/registry.x86_64.bin",
+  "cache/mesa_shader_cache/08/660d0b9efd25c1aecedbddaf7b8a5a4cf3887f0a55bfb3a781573ab3e56565",
+  "cache/mesa_shader_cache/0c/6cbaa5fb56a43ec79ef1338d604f4d246065ab524dea0119d4eb0519e8c59d",
+  "cache/mesa_shader_cache/19/8d69320c1cb0d87164e1afc634d4baec0e5c23abfed1bcdcf5b435395f2cf7",
+  "cache/mesa_shader_cache/3d/71fb93b10a8589a231f1219e16af1683fc2d89158401f19af6738b4607cf36",
+  "cache/mesa_shader_cache/4d/a77013fe2fe963d0189da14b4617866d87cc2ad932797739dbfee150094760",
+  "cache/mesa_shader_cache/52/29e698c5a78c9a7aa829ac4902a37746ec40662b5111cd4c478c14a3e75f02",
+  "cache/mesa_shader_cache/59/63b50f8a8fdc9a7bac2a49d0e0bd6dbd918511641d933731df1df507ca1856",
+  "cache/mesa_shader_cache/59/86bc12e216eaaec73f061b7691e14aab3de96da686c7b0b8c9b9014b7d0b61",
+  "cache/mesa_shader_cache/64/23bf218ccc5579d4b69f45be543d8c6f1dc98acee009ca623f5329fb2f056e",
+  "cache/mesa_shader_cache/67/6785125cbfbf75100bcf965a340e204558b00a75e611592b69a2111e2ddbc1",
+  "cache/mesa_shader_cache/6a/15c5e105241e2b0ef97b74273ece42c68f38074479583be1728dae5b548702",
+  "cache/mesa_shader_cache/94/a756c1cba7375612e1d894373c87b6ad147e9c416d5f8b1c53ec00921ca934",
+  "cache/mesa_shader_cache/b1/960bc4a9892c50c69d23805dcd6b64b116bdf9d38c54081f3111cf2f6d93f3",
+  "cache/mesa_shader_cache/ef/9d270460853fa94c6ab5522e2c95a6756c42d4b7f5d5089f47185f89cc9f15",
+  "cache/mesa_shader_cache/index",
+  "cache/mesa_shader_cache/marker",
+  "data/gvfs-metadata/root",
+  "data/gvfs-metadata/root-750292d9.log"
+ ],
+ "seconds": 3.1
+}

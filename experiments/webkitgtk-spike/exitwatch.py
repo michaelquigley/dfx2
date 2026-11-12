@@ -51,8 +51,9 @@ def descendants(root, seen):
             pass
 
 
-def observe(proc, timeout=120, child_timeout=15):
-    seen = {}
+def observe(proc, timeout=120, child_timeout=15, seen=None):
+    """seen may carry identities a caller sampled while the host ran."""
+    seen = {} if seen is None else seen
     started = time.monotonic()
     deadline = started + timeout
     timed_out = False
@@ -71,10 +72,20 @@ def observe(proc, timeout=120, child_timeout=15):
     while True:
         descendants(os.getpid(), seen)
         try:
-            pid, status = os.waitpid(-1, os.WNOHANG)
+            # Peek first: an adopted child that exited unsampled is still a
+            # zombie, and its comm can name it before it is reaped.
+            info = os.waitid(os.P_ALL, 0, os.WEXITED | os.WNOHANG | os.WNOWAIT)
         except ChildProcessError:
             break
+        pid = info.si_pid if info else 0
+        if pid and pid not in seen:
+            try:
+                name = Path(f"/proc/{pid}/comm").read_text().strip()
+                seen[pid] = {"pid": pid, "name": name, "command": "", "libraries": [], "identified_from": "zombie comm"}
+            except (FileNotFoundError, ProcessLookupError, PermissionError):
+                pass
         if pid:
+            _, status = os.waitpid(pid, 0)
             exits.append({**seen.get(pid, {"pid": pid, "name": "unobserved"}),
                           "exit": os.waitstatus_to_exitcode(status),
                           "core_dumped": os.WCOREDUMP(status)})

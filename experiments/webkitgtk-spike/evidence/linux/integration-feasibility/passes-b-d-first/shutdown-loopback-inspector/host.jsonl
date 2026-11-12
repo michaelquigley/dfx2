@@ -1,0 +1,15 @@
+{"event":"filter-store","path":"/tmp/dfx2-feasibility/filters-2223383","t":"13:51:15.609"}
+{"cookie":true,"cookie_fail_injected":false,"csp":true,"event":"ready","filter":true,"pid":2223383,"t":"13:51:15.609"}
+{"credential":true,"ephemeral_session":true,"event":"opened","mode":"loopback","origin":"http://127.0.0.1:33787","t":"13:51:15.719","window":"S"}
+{"event":"filter-installed","rules":"[{\"action\":{\"type\":\"block\"},\"trigger\":{\"url-filter\":\".*\"}},{\"action\":{\"type\":\"ignore-previous-rules\"},\"trigger\":{\"url-filter\":\"^http://127\\\\.0\\\\.0\\\\.1:33787/\"}},{\"action\":{\"type\":\"block\"},\"trigger\":{\"load-context\":[\"child-frame\"],\"resource-type\":[\"document\"],\"url-filter\":\".*\"}}]","t":"13:51:15.720","window":"S"}
+{"event":"cookie-installed","http_only":true,"same_site":"strict","t":"13:51:15.726","window":"S"}
+{"event":"navigate","t":"13:51:15.726","uri":"http://127.0.0.1:33787/","window":"S"}
+{"event":"navigation-allowed","method":"GET","redirect":false,"t":"13:51:15.813","uri":"http://127.0.0.1:33787/","window":"S"}
+{"event":"load","load_event":0,"t":"13:51:15.814","uri":"http://127.0.0.1:33787/","window":"S"}
+{"event":"load","load_event":2,"t":"13:51:15.816","uri":"http://127.0.0.1:33787/","window":"S"}
+{"event":"load","load_event":3,"t":"13:51:15.990","uri":"http://127.0.0.1:33787/","window":"S"}
+{"attached":true,"event":"inspector","t":"13:51:17.493","window":"S"}
+{"body":"fetch('api/slow'); return 1","error":"","event":"js","result":1,"t":"13:51:17.502","window":"S"}
+{"event":"closing","native_async":0,"native_requests":0,"navigated":true,"t":"13:51:17.993","why":"command","window":"S"}
+{"endpoint":{"admitted":5,"refused":{},"handled":5},"event":"closed","handler":{"GET /":1,"GET /api/slow":1,"GET /logo.svg":1,"GET /probe.css":1,"GET /probe.js":1},"handlers_drained":true,"native_async":0,"native_requests":0,"t":"13:51:17.998","window":"S"}
+{"error":"\u003cnil\u003e","event":"exit","filter_store_removal":{"path":"/tmp/dfx2-feasibility/filters-2223383","attempts":1,"elapsed_ns":237502,"removed":true},"t":"13:51:18.019"}

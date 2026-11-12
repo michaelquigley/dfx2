@@ -1,0 +1,8 @@
+{"event":"filter-store","path":"/tmp/dfx2-feasibility/filters-2230447","t":"13:53:19.965"}
+{"cookie":true,"cookie_fail_injected":true,"csp":true,"event":"ready","filter":true,"pid":2230447,"t":"13:53:19.966"}
+{"credential":true,"ephemeral_session":true,"event":"opened","mode":"loopback","origin":"http://127.0.0.1:33359","t":"13:53:20.076","window":"A"}
+{"event":"filter-installed","rules":"[{\"action\":{\"type\":\"block\"},\"trigger\":{\"url-filter\":\".*\"}},{\"action\":{\"type\":\"ignore-previous-rules\"},\"trigger\":{\"url-filter\":\"^http://127\\\\.0\\\\.0\\\\.1:33359/\"}},{\"action\":{\"type\":\"block\"},\"trigger\":{\"load-context\":[\"child-frame\"],\"resource-type\":[\"document\"],\"url-filter\":\".*\"}}]","t":"13:53:20.081","window":"A"}
+{"error":"injected: cookie installation failure","event":"cookie-failed","t":"13:53:20.083","window":"A"}
+{"event":"closing","native_async":0,"native_requests":0,"navigated":false,"t":"13:53:20.083","why":"cookie installation failed","window":"A"}
+{"endpoint":{"admitted":0,"refused":{},"handled":0},"event":"closed","handler":{},"handlers_drained":true,"native_async":0,"native_requests":0,"t":"13:53:20.084","window":"A"}
+{"error":"\u003cnil\u003e","event":"exit","filter_store_removal":{"path":"/tmp/dfx2-feasibility/filters-2230447","attempts":1,"elapsed_ns":59277,"removed":true},"t":"13:53:20.086"}

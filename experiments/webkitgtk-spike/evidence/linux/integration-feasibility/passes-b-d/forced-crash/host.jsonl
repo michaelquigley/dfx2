@@ -1,0 +1,10 @@
+{"event":"filter-store","path":"/tmp/dfx2-feasibility/filters-2231683","t":"13:53:26.063"}
+{"cookie":true,"cookie_fail_injected":false,"csp":true,"event":"ready","filter":true,"pid":2231683,"t":"13:53:26.063"}
+{"credential":true,"ephemeral_session":true,"event":"opened","mode":"loopback","origin":"http://127.0.0.1:40513","t":"13:53:26.177","window":"A"}
+{"event":"filter-installed","rules":"[{\"action\":{\"type\":\"block\"},\"trigger\":{\"url-filter\":\".*\"}},{\"action\":{\"type\":\"ignore-previous-rules\"},\"trigger\":{\"url-filter\":\"^http://127\\\\.0\\\\.0\\\\.1:40513/\"}},{\"action\":{\"type\":\"block\"},\"trigger\":{\"load-context\":[\"child-frame\"],\"resource-type\":[\"document\"],\"url-filter\":\".*\"}}]","t":"13:53:26.183","window":"A"}
+{"event":"cookie-installed","http_only":true,"same_site":"strict","t":"13:53:26.185","window":"A"}
+{"event":"navigate","t":"13:53:26.185","uri":"http://127.0.0.1:40513/","window":"A"}
+{"event":"navigation-allowed","method":"GET","redirect":false,"t":"13:53:26.272","uri":"http://127.0.0.1:40513/","window":"A"}
+{"event":"load","load_event":0,"t":"13:53:26.273","uri":"http://127.0.0.1:40513/","window":"A"}
+{"event":"load","load_event":2,"t":"13:53:26.274","uri":"http://127.0.0.1:40513/","window":"A"}
+{"event":"load","load_event":3,"t":"13:53:26.450","uri":"http://127.0.0.1:40513/","window":"A"}

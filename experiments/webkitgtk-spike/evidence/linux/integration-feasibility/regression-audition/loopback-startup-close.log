@@ -1,0 +1,5 @@
+command: /tmp/dfx2-wk-feas -mode loopback -quit-after 1ms
+Overriding existing handler for signal 10. Set JSC_SIGNAL_FOR_GC if you want WebKit to use a different signal
+13:52:00.666992 WebKitGTK 2.52.6 mode=loopback origin=http://127.0.0.1:41427 scale=1
+13:52:00.669699 closing: timed exit; native requests=0 async=0 handlers=0
+13:52:00.674891 closed: requests=0 native-async=0 handlers=0 stats={Started:0 Finished:0 Canceled:0 Dropped:0 Refused:0}

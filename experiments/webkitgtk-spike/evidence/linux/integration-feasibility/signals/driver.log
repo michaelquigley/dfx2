@@ -1,0 +1,25 @@
+{"case": "baseline", "ok": true, "detail": "JSC takes SIGUSR1 with a warning; the application's SIGUSR1 is lost"}
+{"case": "baseline-repeat", "ok": true, "detail": {"exits": {"2": 7, "0": 3}, "note": "external SIGUSR1 reaches JSC's suspend handler"}}
+{"case": "baseline-segv", "ok": true, "detail": "a recovered Go nil dereference is fatal"}
+{"case": "configured", "ok": true, "detail": "signal 64 released and configured; Go keeps SIGUSR1/SIGUSR2/SIGHUP; no JSC warning"}
+{"case": "configured-segv", "ok": true, "detail": "still fatal: JSC's fault handlers, not the GC signal, cause it"}
+{"case": "configured-bus", "ok": true, "detail": "still fatal: JSC's fault handlers, not the GC signal, cause it"}
+{"case": "configured-onstack", "ok": true, "detail": {"exits": {"0": 10}}}
+{"case": "configured-onstack-segv", "ok": true, "detail": "recovered"}
+{"case": "configured-onstack-webkit-segv", "ok": true, "detail": "recovered with WebKit up"}
+{"case": "configured-onstack-bus", "ok": true, "detail": "recovered"}
+{"case": "configured-onstack-webkit-bus", "ok": true, "detail": "recovered with WebKit up"}
+{"case": "configured-onstack-webkit", "ok": true, "detail": {"non_go": [[7, "native:libjavascriptcoregtk-4.1.so.0.10.14", ["SA_SIGINFO", "SA_ONSTACK", "SA_RESTORER"]], [11, "native:libjavascriptcoregtk-4.1.so.0.10.14", ["SA_SIGINFO", "SA_ONSTACK", "SA_RESTORER"]], [13, "ignore", null], [33, "native:libc.so.6", ["SA_SIGINFO", "SA_ONSTACK", "SA_RESTART", "SA_RESTORER"]], [64, "native:libjavascriptcoregtk-4.1.so.0.10.14", ["SA_SIGINFO", "SA_RESTART", "SA_RESTORER"]]]}}
+{"case": "webkit-first", "ok": true, "detail": {"non_go": [[7, "native:libjavascriptcoregtk-4.1.so.0.10.14", ["SA_SIGINFO", "SA_RESTORER"]], [11, "native:libjavascriptcoregtk-4.1.so.0.10.14", ["SA_SIGINFO", "SA_RESTORER"]], [13, "ignore", null], [24, "native:libjavascriptcoregtk-4.1.so.0.10.14", ["SA_RESTART", "SA_RESTORER"]], [33, "native:libc.so.6", ["SA_SIGINFO", "SA_ONSTACK", "SA_RESTART", "SA_RESTORER"]], [64, "native:libjavascriptcoregtk-4.1.so.0.10.14", ["SA_SIGINFO", "SA_RESTART", "SA_RESTORER"]]], "note": "observation: WebKit initializes JSC itself"}}
+{"case": "configured-onstack-all", "ok": true, "detail": {"exits": {"hang": 3, "0": 7}, "note": "SA_ONSTACK on the suspend signal: hazard probe"}}
+{"case": "late", "ok": true, "detail": "refused after initialization; the collision remains and readiness is false"}
+{"case": "env", "ok": true, "detail": "operator's signal released and used"}
+{"case": "env-invalid", "ok": true, "detail": "refused"}
+{"case": "no-symbol", "ok": true, "detail": "injected: refused before JSC initialization"}
+{"case": "no-signal", "ok": true, "detail": "injected: refused before JSC initialization"}
+{"case": "strace-one-thread", "ok": true, "detail": {"delivered": {"SIGHUP@main": 1, "SIGURG@main": 18, "SIGURG@other": 24268, "SIGUSR1@main": 1, "SIGUSR2@main": 1}}}
+{"case": "strace-two-threads", "ok": true, "detail": {"delivered": {"SIGHUP@main": 1, "SIGRT_32@main": 1612, "SIGRT_32@other": 1608, "SIGURG@main": 13, "SIGURG@other": 24150, "SIGUSR1@main": 1, "SIGUSR2@main": 1}, "second_thread": {"rounds": [116, 117]}}}
+{"case": "two-threads", "ok": true, "detail": {"exits": {"0": 10}}}
+{"case": "comparison-baseline-segv", "ok": true, "detail": "comparison libraries: same fatal fault"}
+{"case": "comparison-configured-onstack-webkit-segv", "ok": true, "detail": "comparison libraries: recovered"}
+{"passed": true, "failed": []}

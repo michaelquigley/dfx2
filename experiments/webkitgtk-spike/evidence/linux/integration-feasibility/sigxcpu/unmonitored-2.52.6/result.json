@@ -1,0 +1,196 @@
+{
+ "scenario": "unmonitored-2.52.6",
+ "checks": [
+  {
+   "check": "control: the Go subscriber does not hear SIGXCPU",
+   "ok": true,
+   "received": false
+  }
+ ],
+ "ok": true,
+ "env": {},
+ "host_libraries": [
+  "/usr/lib/x86_64-linux-gnu/libjavascriptcoregtk-4.1.so.0.10.14",
+  "/usr/lib/x86_64-linux-gnu/libwebkit2gtk-4.1.so.0.21.10"
+ ],
+ "settled": {
+  "sigxcpu": {
+   "signal": 24,
+   "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+   "offset": "0x196d3f0",
+   "flags": [
+    "SA_RESTART",
+    "SA_RESTORER"
+   ]
+  },
+  "record": {
+   "at": "10:20:04.399",
+   "limits": {
+    "Max cpu time": "unlimited unlimited seconds",
+    "Max nice priority": "0 0",
+    "Max realtime priority": "0 0",
+    "Max realtime timeout": "200000 200000 us"
+   },
+   "sched": {
+    "not_default": [
+     {
+      "tid": 265504,
+      "name": "dfx2-wk:disk$0",
+      "policy": "BATCH",
+      "nice": 19
+     },
+     {
+      "tid": 265724,
+      "name": "dfx2-w:traceq0",
+      "policy": "BATCH",
+      "nice": 19
+     },
+     {
+      "tid": 265726,
+      "name": "dfx2-w:traceq0",
+      "policy": "BATCH",
+      "nice": 19
+     },
+     {
+      "tid": 265749,
+      "name": "dfx2-wk:disk$1",
+      "policy": "BATCH",
+      "nice": 19
+     },
+     {
+      "tid": 265834,
+      "name": "dfx2-w:traceq0",
+      "policy": "BATCH",
+      "nice": 19
+     },
+     {
+      "tid": 265836,
+      "name": "dfx2-w:traceq0",
+      "policy": "BATCH",
+      "nice": 19
+     }
+    ],
+    "threads": 45
+   }
+  }
+ },
+ "native_probe": {
+  "after": {
+   "disposition": {
+    "signal": 24,
+    "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+    "offset": "0x196d3f0",
+    "flags": [
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "sched": {
+    "not_default": [
+     {
+      "tid": 265504,
+      "name": "dfx2-wk:disk$0",
+      "policy": "BATCH",
+      "nice": 19
+     },
+     {
+      "tid": 265724,
+      "name": "dfx2-w:traceq0",
+      "policy": "BATCH",
+      "nice": 19
+     },
+     {
+      "tid": 265726,
+      "name": "dfx2-w:traceq0",
+      "policy": "BATCH",
+      "nice": 19
+     },
+     {
+      "tid": 265749,
+      "name": "dfx2-wk:disk$1",
+      "policy": "BATCH",
+      "nice": 19
+     },
+     {
+      "tid": 265834,
+      "name": "dfx2-w:traceq0",
+      "policy": "BATCH",
+      "nice": 19
+     },
+     {
+      "tid": 265836,
+      "name": "dfx2-w:traceq0",
+      "policy": "BATCH",
+      "nice": 19
+     }
+    ],
+    "threads": 46
+   }
+  },
+  "before": {
+   "disposition": {
+    "signal": 24,
+    "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+    "offset": "0x196d3f0",
+    "flags": [
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "sched": {
+    "not_default": [
+     {
+      "tid": 265504,
+      "name": "dfx2-wk:disk$0",
+      "policy": "BATCH",
+      "nice": 19
+     },
+     {
+      "tid": 265724,
+      "name": "dfx2-w:traceq0",
+      "policy": "BATCH",
+      "nice": 19
+     },
+     {
+      "tid": 265726,
+      "name": "dfx2-w:traceq0",
+      "policy": "BATCH",
+      "nice": 19
+     },
+     {
+      "tid": 265749,
+      "name": "dfx2-wk:disk$1",
+      "policy": "BATCH",
+      "nice": 19
+     },
+     {
+      "tid": 265834,
+      "name": "dfx2-w:traceq0",
+      "policy": "BATCH",
+      "nice": 19
+     },
+     {
+      "tid": 265836,
+      "name": "dfx2-w:traceq0",
+      "policy": "BATCH",
+      "nice": 19
+     }
+    ],
+    "threads": 45
+   }
+  },
+  "event": "xcpu",
+  "mode": "native",
+  "received_by_go": false,
+  "t": "10:20:06.422",
+  "target_name": "[pango] fontcon",
+  "target_tid": 265485
+ },
+ "exit": {
+  "host_exit": 0,
+  "timed_out": false,
+  "children_pending": false,
+  "child_failure": false,
+  "fatal_log": false
+ }
+}

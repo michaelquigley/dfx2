@@ -1,0 +1,123 @@
+{
+ "2.52.6 (installed) libjavascriptcoregtk-4.1.so.0": {
+  "path": "/usr/lib/x86_64-linux-gnu/libjavascriptcoregtk-4.1.so.0.10.14",
+  "sites": [
+   {
+    "call": "sigaction",
+    "signal": 4,
+    "address": "1961cf9",
+    "near": "_ZN3WTF16addSignalHandlerENS_6SignalEONS_8FunctionIFNS_12SignalActionES0_RNS_7SigInfoERNS_17PlatformRegistersEEEE@@Base"
+   },
+   {
+    "call": "sigaction",
+    "signal": 11,
+    "address": "1961dbb",
+    "near": "_ZN3WTF16addSignalHandlerENS_6SignalEONS_8FunctionIFNS_12SignalActionES0_RNS_7SigInfoERNS_17PlatformRegistersEEEE@@Base"
+   },
+   {
+    "call": "sigaction",
+    "signal": 7,
+    "address": "1961ddc",
+    "near": "_ZN3WTF16addSignalHandlerENS_6SignalEONS_8FunctionIFNS_12SignalActionES0_RNS_7SigInfoERNS_17PlatformRegistersEEEE@@Base"
+   },
+   {
+    "call": "sigaction",
+    "signal": null,
+    "address": "19620f1",
+    "near": "_ZN3WTF16addSignalHandlerENS_6SignalEONS_8FunctionIFNS_12SignalActionES0_RNS_7SigInfoERNS_17PlatformRegistersEEEE@@Base"
+   },
+   {
+    "call": "sigaction",
+    "signal": null,
+    "address": "196b4a3",
+    "near": "_ZN3WTF6ThreadD1Ev@@Base"
+   },
+   {
+    "call": "sigaction",
+    "signal": null,
+    "address": "196b4d1",
+    "near": "_ZN3WTF6ThreadD1Ev@@Base"
+   },
+   {
+    "call": "sigaction",
+    "signal": 24,
+    "address": "196d66b",
+    "near": "_ZN3WTF15RealTimeThreads10setEnabledEb@@Base"
+   }
+  ],
+  "sigxcpu_sites": [
+   {
+    "call": "sigaction",
+    "signal": 24,
+    "address": "196d66b",
+    "near": "_ZN3WTF15RealTimeThreads10setEnabledEb@@Base"
+   }
+  ]
+ },
+ "2.52.6 (installed) libwebkit2gtk-4.1.so.0": {
+  "path": "/usr/lib/x86_64-linux-gnu/libwebkit2gtk-4.1.so.0.21.10",
+  "sites": [
+   {
+    "call": "sigaction",
+    "signal": 13,
+    "address": "d6628a",
+    "near": "webkit_user_message_send_reply@@Base"
+   }
+  ],
+  "sigxcpu_sites": []
+ },
+ "2.54.2 (isolated) libjavascriptcoregtk-4.1.so.0": {
+  "path": "/tmp/dfx2-webkit-runtime/root/usr/lib/x86_64-linux-gnu/libjavascriptcoregtk-4.1.so.0.11.9",
+  "sites": [
+   {
+    "call": "sigaction",
+    "signal": 4,
+    "address": "1aa9f45",
+    "near": "_ZN3WTF16addSignalHandlerENS_6SignalEONS_8FunctionIFNS_12SignalActionES0_RNS_7SigInfoERNS_17PlatformRegistersEEEE@@Base"
+   },
+   {
+    "call": "sigaction",
+    "signal": 11,
+    "address": "1aaa007",
+    "near": "_ZN3WTF16addSignalHandlerENS_6SignalEONS_8FunctionIFNS_12SignalActionES0_RNS_7SigInfoERNS_17PlatformRegistersEEEE@@Base"
+   },
+   {
+    "call": "sigaction",
+    "signal": 7,
+    "address": "1aaa021",
+    "near": "_ZN3WTF16addSignalHandlerENS_6SignalEONS_8FunctionIFNS_12SignalActionES0_RNS_7SigInfoERNS_17PlatformRegistersEEEE@@Base"
+   },
+   {
+    "call": "sigaction",
+    "signal": null,
+    "address": "1aaa2ed",
+    "near": "_ZN3WTF16addSignalHandlerENS_6SignalEONS_8FunctionIFNS_12SignalActionES0_RNS_7SigInfoERNS_17PlatformRegistersEEEE@@Base"
+   },
+   {
+    "call": "sigaction",
+    "signal": null,
+    "address": "1ab3a58",
+    "near": "_ZN3WTF6ThreadD1Ev@@Base"
+   },
+   {
+    "call": "sigaction",
+    "signal": null,
+    "address": "1ab3a84",
+    "near": "_ZN3WTF6ThreadD1Ev@@Base"
+   }
+  ],
+  "sigxcpu_sites": []
+ },
+ "2.54.2 (isolated) libwebkit2gtk-4.1.so.0": {
+  "path": "/tmp/dfx2-webkit-runtime/root/usr/lib/x86_64-linux-gnu/libwebkit2gtk-4.1.so.0.24.5",
+  "sites": [
+   {
+    "call": "sigaction",
+    "signal": 13,
+    "address": "1467f8a",
+    "near": "webkit_form_submission_step_get_type@@Base"
+   }
+  ],
+  "sigxcpu_sites": []
+ }
+}

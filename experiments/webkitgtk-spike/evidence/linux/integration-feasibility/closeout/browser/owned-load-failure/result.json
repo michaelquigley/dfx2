@@ -1,0 +1,334 @@
+{
+ "scenario": "owned-load-failure",
+ "flags": [
+  "-feas-vmfree",
+  "-signal-reserve",
+  "60"
+ ],
+ "checks": [
+  {
+   "check": "loopback: native load failure shows the error page",
+   "ok": true,
+   "failed": {
+    "code": 34,
+    "domain": "g-io-error-quark",
+    "error_page": true,
+    "event": "load-failed",
+    "from_post": false,
+    "message": "Connection terminated unexpectedly",
+    "method": "GET",
+    "retry_offered": true,
+    "t": "12:49:14.696",
+    "uri": "http://127.0.0.1:40961/api/abort",
+    "window": "L"
+   }
+  },
+  {
+   "check": "loopback: clicked Return to start reloads the start page",
+   "ok": true,
+   "uri": "http://127.0.0.1:40961/"
+  },
+  {
+   "check": "inprocess: native load failure shows the error page",
+   "ok": true,
+   "failed": {
+    "code": 1,
+    "domain": "dfx2-spike",
+    "error_page": true,
+    "event": "load-failed",
+    "from_post": false,
+    "message": "injected transport failure: no response",
+    "method": "GET",
+    "retry_offered": true,
+    "t": "12:49:15.875",
+    "uri": "dfx2://spike/api/abort",
+    "window": "P"
+   }
+  },
+  {
+   "check": "inprocess: clicked Return to start reloads the start page",
+   "ok": true,
+   "uri": "dfx2://spike/"
+  },
+  {
+   "check": "SIGSEGV and SIGBUS still Go's at exit",
+   "ok": true,
+   "exit_signals": {
+    "SIGBUS": {
+     "signal": 7,
+     "owner": "go",
+     "flags": [
+      "SA_SIGINFO",
+      "SA_ONSTACK",
+      "SA_RESTART",
+      "SA_RESTORER"
+     ]
+    },
+    "SIGSEGV": {
+     "signal": 11,
+     "owner": "go",
+     "flags": [
+      "SA_SIGINFO",
+      "SA_ONSTACK",
+      "SA_RESTART",
+      "SA_RESTORER"
+     ]
+    },
+    "SIGUSR1": {
+     "signal": 10,
+     "owner": "go",
+     "flags": [
+      "SA_SIGINFO",
+      "SA_ONSTACK",
+      "SA_RESTART",
+      "SA_RESTORER"
+     ]
+    },
+    "SIGXCPU": {
+     "signal": 24,
+     "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+     "offset": "0x196d3f0",
+     "flags": [
+      "SA_RESTART",
+      "SA_RESTORER"
+     ]
+    },
+    "reserved 60": {
+     "signal": 60,
+     "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+     "offset": "0x196b2d0",
+     "flags": [
+      "SA_SIGINFO",
+      "SA_RESTART",
+      "SA_RESTORER"
+     ]
+    }
+   }
+  }
+ ],
+ "ok": true,
+ "detail": {},
+ "exit": {
+  "host_exit": 0,
+  "timed_out": false,
+  "children_pending": false,
+  "child_failure": false,
+  "fatal_log": false
+ },
+ "observed_processes": [
+  "WebKitNetworkPr",
+  "WebKitWebProces",
+  "bwrap",
+  "dfx2-wk-candida",
+  "glycin-svg",
+  "gst-plugin-scan"
+ ],
+ "signals": {
+  "start": {
+   "SIGBUS": {
+    "signal": 7,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "SIGSEGV": {
+    "signal": 11,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "SIGUSR1": {
+    "signal": 10,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "SIGXCPU": {
+    "signal": 24,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "reserved 60": {
+    "signal": 60,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   }
+  },
+  "ready": {
+   "SIGBUS": {
+    "signal": 7,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "SIGSEGV": {
+    "signal": 11,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "SIGUSR1": {
+    "signal": 10,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "SIGXCPU": {
+    "signal": 24,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "reserved 60": {
+    "signal": 60,
+    "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+    "offset": "0x196b2d0",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   }
+  },
+  "exit": {
+   "SIGBUS": {
+    "signal": 7,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "SIGSEGV": {
+    "signal": 11,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "SIGUSR1": {
+    "signal": 10,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "SIGXCPU": {
+    "signal": 24,
+    "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+    "offset": "0x196d3f0",
+    "flags": [
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "reserved 60": {
+    "signal": 60,
+    "owner": "native:libjavascriptcoregtk-4.1.so.0.10.14",
+    "offset": "0x196b2d0",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   }
+  }
+ },
+ "reservation": {
+  "checks": [
+   {
+    "check": "supplied",
+    "passed": true,
+    "detail": "an explicit reservation; the host infers nothing"
+   },
+   {
+    "check": "within libc's real-time range",
+    "passed": true,
+    "detail": "60 in [34, 64]",
+    "cannot_establish": "that no other library uses it"
+   },
+   {
+    "check": "kernel disposition is Go's handler",
+    "passed": true,
+    "detail": "owner go",
+    "cannot_establish": "that no Go subscriber exists: subscribed and unsubscribed signals look identical"
+   },
+   {
+    "check": "not blocked on the initializing thread",
+    "passed": true,
+    "cannot_establish": "the masks of threads created later"
+   },
+   {
+    "check": "not among the application's declared subscriptions",
+    "passed": true,
+    "cannot_establish": "subscriptions the application did not declare"
+   },
+   {
+    "check": "not ignored through os/signal",
+    "passed": true
+   },
+   {
+    "check": "JSC_SIGNAL_FOR_GC unset or equal",
+    "passed": true,
+    "detail": "JSC_SIGNAL_FOR_GC="
+   }
+  ],
+  "configured": true,
+  "signal": 60
+ },
+ "filter_store_removal": {
+  "path": "/tmp/dfx2-feasibility/filters-479814",
+  "attempts": 1,
+  "elapsed_ns": 86183,
+  "removed": true
+ },
+ "refused_js": 0,
+ "monitor": "not run: browser cases only (--no-monitor)",
+ "seconds": 2.9
+}

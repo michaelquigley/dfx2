@@ -1,0 +1,48 @@
+{"event":"filter-store","path":"/tmp/dfx2-feasibility/filters-2230660","t":"13:53:20.246"}
+{"cookie":true,"cookie_fail_injected":false,"csp":true,"event":"ready","filter":true,"pid":2230660,"t":"13:53:20.247"}
+{"credential":false,"ephemeral_session":true,"event":"opened","mode":"attach","origin":"http://127.0.0.1:41913","t":"13:53:20.363","window":"A"}
+{"event":"filter-installed","rules":"[{\"action\":{\"type\":\"block\"},\"trigger\":{\"url-filter\":\".*\"}},{\"action\":{\"type\":\"ignore-previous-rules\"},\"trigger\":{\"url-filter\":\"^http://127\\\\.0\\\\.0\\\\.1:41913/\"}},{\"action\":{\"type\":\"block\"},\"trigger\":{\"load-context\":[\"child-frame\"],\"resource-type\":[\"document\"],\"url-filter\":\".*\"}}]","t":"13:53:20.368","window":"A"}
+{"event":"navigate","t":"13:53:20.368","uri":"http://127.0.0.1:41913/","window":"A"}
+{"event":"navigation-allowed","method":"GET","redirect":false,"t":"13:53:20.456","uri":"http://127.0.0.1:41913/","window":"A"}
+{"event":"load","load_event":0,"t":"13:53:20.457","uri":"http://127.0.0.1:41913/","window":"A"}
+{"event":"load","load_event":2,"t":"13:53:20.458","uri":"http://127.0.0.1:41913/","window":"A"}
+{"event":"load","load_event":3,"t":"13:53:20.638","uri":"http://127.0.0.1:41913/","window":"A"}
+{"credential":false,"ephemeral_session":true,"event":"opened","mode":"attach","origin":"http://127.0.0.1:41913","t":"13:53:20.641","window":"B"}
+{"event":"filter-installed","rules":"[{\"action\":{\"type\":\"block\"},\"trigger\":{\"url-filter\":\".*\"}},{\"action\":{\"type\":\"ignore-previous-rules\"},\"trigger\":{\"url-filter\":\"^http://127\\\\.0\\\\.0\\\\.1:41913/\"}},{\"action\":{\"type\":\"block\"},\"trigger\":{\"load-context\":[\"child-frame\"],\"resource-type\":[\"document\"],\"url-filter\":\".*\"}}]","t":"13:53:20.647","window":"B"}
+{"event":"navigate","t":"13:53:20.647","uri":"http://127.0.0.1:41913/","window":"B"}
+{"event":"navigation-allowed","method":"GET","redirect":false,"t":"13:53:20.735","uri":"http://127.0.0.1:41913/","window":"B"}
+{"event":"load","load_event":0,"t":"13:53:20.736","uri":"http://127.0.0.1:41913/","window":"B"}
+{"event":"load","load_event":2,"t":"13:53:20.738","uri":"http://127.0.0.1:41913/","window":"B"}
+{"event":"load","load_event":3,"t":"13:53:20.783","uri":"http://127.0.0.1:41913/","window":"B"}
+{"body":"return probe.storageSet('A')","error":"","event":"js","result":{"cookie":"vis=A","local":"A","session":"A"},"t":"13:53:20.792","window":"A"}
+{"body":"return probe.storageRead()","error":"","event":"js","result":{"cookie":"","local":null,"session":null},"t":"13:53:20.794","window":"B"}
+{"body":"return probe.storageSet('B')","error":"","event":"js","result":{"session":"B","cookie":"vis=B","local":"B"},"t":"13:53:20.794","window":"B"}
+{"body":"return probe.cached()","error":"","event":"js","result":{"body":"cached 1","count":"1"},"t":"13:53:20.796","window":"A"}
+{"body":"return probe.cached()","error":"","event":"js","result":{"count":"2","body":"cached 2"},"t":"13:53:20.797","window":"A"}
+{"body":"return probe.cachedImage()","error":"","event":"js","result":"loaded twice","t":"13:53:20.800","window":"A"}
+{"body":"return probe.cachedImage()","error":"","event":"js","result":"loaded twice","t":"13:53:20.802","window":"B"}
+{"event":"navigation-allowed","method":"GET","redirect":false,"t":"13:53:20.802","uri":"http://127.0.0.1:41913/","window":"A"}
+{"body":"location.reload(); return 1","error":"","event":"js","result":1,"t":"13:53:20.802","window":"A"}
+{"event":"load","load_event":0,"t":"13:53:20.803","uri":"http://127.0.0.1:41913/","window":"A"}
+{"event":"load","load_event":2,"t":"13:53:20.805","uri":"http://127.0.0.1:41913/","window":"A"}
+{"event":"load","load_event":3,"t":"13:53:20.808","uri":"http://127.0.0.1:41913/","window":"A"}
+{"body":"return probe.storageRead()","error":"","event":"js","result":{"local":"A","cookie":"vis=A","session":"A"},"t":"13:53:20.808","window":"A"}
+{"event":"closing","native_async":0,"native_requests":0,"navigated":true,"t":"13:53:20.809","why":"command","window":"A"}
+{"endpoint":{"admitted":0,"refused":{},"handled":0},"event":"closed","handler":{},"handlers_drained":true,"native_async":0,"native_requests":0,"t":"13:53:20.810","window":"A"}
+{"body":"return fetch('api/query?x=during').then(r =\u003e r.json())","error":"","event":"js","result":{"x":"during"},"t":"13:53:20.811","window":"B"}
+{"body":"return fetch('api/query?x=during').then(r =\u003e r.json())","error":"","event":"js","result":{"x":"during"},"t":"13:53:20.812","window":"B"}
+{"body":"return fetch('api/query?x=during').then(r =\u003e r.json())","error":"","event":"js","result":{"x":"during"},"t":"13:53:20.827","window":"B"}
+{"credential":false,"ephemeral_session":true,"event":"opened","mode":"attach","origin":"http://127.0.0.1:41913","t":"13:53:20.837","window":"A2"}
+{"event":"filter-installed","rules":"[{\"action\":{\"type\":\"block\"},\"trigger\":{\"url-filter\":\".*\"}},{\"action\":{\"type\":\"ignore-previous-rules\"},\"trigger\":{\"url-filter\":\"^http://127\\\\.0\\\\.0\\\\.1:41913/\"}},{\"action\":{\"type\":\"block\"},\"trigger\":{\"load-context\":[\"child-frame\"],\"resource-type\":[\"document\"],\"url-filter\":\".*\"}}]","t":"13:53:20.838","window":"A2"}
+{"event":"navigate","t":"13:53:20.838","uri":"http://127.0.0.1:41913/","window":"A2"}
+{"event":"navigation-allowed","method":"GET","redirect":false,"t":"13:53:20.934","uri":"http://127.0.0.1:41913/","window":"A2"}
+{"event":"load","load_event":0,"t":"13:53:20.935","uri":"http://127.0.0.1:41913/","window":"A2"}
+{"event":"load","load_event":2,"t":"13:53:20.937","uri":"http://127.0.0.1:41913/","window":"A2"}
+{"event":"load","load_event":3,"t":"13:53:20.984","uri":"http://127.0.0.1:41913/","window":"A2"}
+{"body":"return probe.storageRead()","error":"","event":"js","result":{"session":null,"cookie":"","local":null},"t":"13:53:20.985","window":"A2"}
+{"body":"return probe.storageRead()","error":"","event":"js","result":{"session":"B","local":"B","cookie":"vis=B"},"t":"13:53:20.985","window":"B"}
+{"event":"closing","native_async":0,"native_requests":0,"navigated":true,"t":"13:53:20.985","why":"command","window":"B"}
+{"endpoint":{"admitted":0,"refused":{},"handled":0},"event":"closed","handler":{},"handlers_drained":true,"native_async":0,"native_requests":0,"t":"13:53:20.986","window":"B"}
+{"event":"closing","native_async":0,"native_requests":0,"navigated":true,"t":"13:53:20.986","why":"command","window":"A2"}
+{"endpoint":{"admitted":0,"refused":{},"handled":0},"event":"closed","handler":{},"handlers_drained":true,"native_async":0,"native_requests":0,"t":"13:53:20.987","window":"A2"}
+{"error":"\u003cnil\u003e","event":"exit","filter_store_removal":{"path":"/tmp/dfx2-feasibility/filters-2230660","attempts":1,"elapsed_ns":423735,"removed":true},"t":"13:53:21.496"}

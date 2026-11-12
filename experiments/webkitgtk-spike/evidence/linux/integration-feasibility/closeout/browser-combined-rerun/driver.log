@@ -1,0 +1,2 @@
+{"scenario": "combined", "ok": true, "failure": null, "failed_checks": [], "exit": {"host_exit": 0, "timed_out": false, "children_pending": false, "child_failure": false, "fatal_log": false}, "vm_hits": {}}
+{"passed": true, "failed": []}

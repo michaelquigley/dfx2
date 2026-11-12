@@ -1,0 +1,139 @@
+{
+ "scenario": "shutdown-loopback-inspector",
+ "flags": [],
+ "checks": [
+  {
+   "check": "inspector close drains",
+   "ok": true,
+   "closed": {
+    "endpoint": {
+     "admitted": 5,
+     "refused": {},
+     "handled": 5
+    },
+    "event": "closed",
+    "handler": {
+     "GET /": 1,
+     "GET /api/slow": 1,
+     "GET /logo.svg": 1,
+     "GET /probe.css": 1,
+     "GET /probe.js": 1
+    },
+    "handlers_drained": true,
+    "native_async": 0,
+    "native_requests": 0,
+    "t": "13:53:30.543",
+    "window": "S"
+   }
+  }
+ ],
+ "ok": true,
+ "detail": {},
+ "exit": {
+  "host_exit": 0,
+  "timed_out": false,
+  "children_pending": false,
+  "child_failure": false,
+  "fatal_log": false
+ },
+ "adopted_exits": [
+  [
+   "bwrap",
+   0
+  ],
+  [
+   "bwrap",
+   -9
+  ],
+  [
+   "WebKitNetworkPr",
+   0
+  ],
+  [
+   "WebKitWebProces",
+   0
+  ],
+  [
+   "WebKitWebProces",
+   0
+  ],
+  [
+   "WebKitNetworkPr",
+   0
+  ],
+  [
+   "bwrap",
+   -9
+  ]
+ ],
+ "observed_processes": [
+  "WebKitNetworkPr",
+  "WebKitWebProces",
+  "bwrap",
+  "dfx2-wk-feas",
+  "glycin-svg",
+  "gst-plugin-scan"
+ ],
+ "filter_store_removal": {
+  "path": "/tmp/dfx2-feasibility/filters-2232416",
+  "attempts": 1,
+  "elapsed_ns": 47365,
+  "removed": true
+ },
+ "xdg_manifest": [
+  "cache/fontconfig/25ccf6dd56fd7585eff0dc50a0a881d4-le64.cache-9",
+  "cache/fontconfig/363ec821d90eaa905a460bbdd9de4669-le64.cache-9",
+  "cache/fontconfig/97123a202d96d9eee11f7b2e48a774ca-le64.cache-9",
+  "cache/fontconfig/CACHEDIR.TAG",
+  "cache/gstreamer-1.0/registry.x86_64.bin",
+  "cache/mesa_shader_cache/08/660d0b9efd25c1aecedbddaf7b8a5a4cf3887f0a55bfb3a781573ab3e56565",
+  "cache/mesa_shader_cache/19/8d69320c1cb0d87164e1afc634d4baec0e5c23abfed1bcdcf5b435395f2cf7",
+  "cache/mesa_shader_cache/1e/d471c8c0c59075b71a398004aea1502685e902e9994acd6603aac55ce47600",
+  "cache/mesa_shader_cache/20/18f4a37bd1383794ce5749f6a497e20641c6fc39f7374715d0c9ca10dee8d8",
+  "cache/mesa_shader_cache/26/6849b96c234c416abbc4306e22816dbe2cbf76f8ab3eb79e000cc067b2127b",
+  "cache/mesa_shader_cache/2a/ee64dc3304e4c25498d18d60eb0803cf1daaa719565e6ff9098b8131932225",
+  "cache/mesa_shader_cache/33/a9f4cd56dbb8a6f2a4d1217c8ea7c80ca686c402d903c95c5ea7e8e5cc3208",
+  "cache/mesa_shader_cache/38/d2a3845dcb398c1971373e48511cb70b493868241c91f4c82fd03e93ee3fad",
+  "cache/mesa_shader_cache/3d/71fb93b10a8589a231f1219e16af1683fc2d89158401f19af6738b4607cf36",
+  "cache/mesa_shader_cache/3f/dda4aaee9f00549a2987212d6ea1b9aeed62c571f3457561ace63adf788b13",
+  "cache/mesa_shader_cache/41/7cd3c0fdebcd4678c2652bc9f0a02a3789848df8fb06d5914d2126bb253d3c",
+  "cache/mesa_shader_cache/4d/a77013fe2fe963d0189da14b4617866d87cc2ad932797739dbfee150094760",
+  "cache/mesa_shader_cache/4e/9f558e76a517f20f5cf5f02233439850cc4127c0d601de3612f7c42988e5c3",
+  "cache/mesa_shader_cache/59/86bc12e216eaaec73f061b7691e14aab3de96da686c7b0b8c9b9014b7d0b61",
+  "cache/mesa_shader_cache/62/584d8371e3491c69574dc532fdeb3cf12ea15a3d41359aac92fbac546272da",
+  "cache/mesa_shader_cache/64/23bf218ccc5579d4b69f45be543d8c6f1dc98acee009ca623f5329fb2f056e",
+  "cache/mesa_shader_cache/6e/259e8a82cdbd364e7a70422a21b5a7d499f1bfd2a1d86626fe203608d45cc9",
+  "cache/mesa_shader_cache/70/0f29787a7074c918808007c7aee9dd05fca79a0433a42cb47006ddaca87b08",
+  "cache/mesa_shader_cache/72/7198e0a07d5b7050d0a8cb358c17699444049affdef16bfcda9bf74bab9de0",
+  "cache/mesa_shader_cache/72/b5f5f75097292372cea659de57df30eba017f524733490a2eb0ef36696eabb",
+  "cache/mesa_shader_cache/92/b377f6b015136c475e9f26b5276f38b70c5ed2ccd5bf7978bb36c4545acd61",
+  "cache/mesa_shader_cache/94/a756c1cba7375612e1d894373c87b6ad147e9c416d5f8b1c53ec00921ca934",
+  "cache/mesa_shader_cache/98/73644e276ae067bf3d7e68134b3aa84a1e78a9448b431ab2827ee1f0cdd89c",
+  "cache/mesa_shader_cache/99/b53e2a82bee5a0c427362b787a334fa774d60c430111fee558e63e68ae48c5",
+  "cache/mesa_shader_cache/9a/5d1bbefda52270f2812559df13a7dc5f26d85d0903825652213b287c24fb1f",
+  "cache/mesa_shader_cache/9b/85aecfef51bfe70db6d125ac477435ce48f56b86d68bf062753f2372f4569a",
+  "cache/mesa_shader_cache/a0/c6d4d06a3bff0a9c2aca6b8962559baf1aed14372a7622892372e63fb27d74",
+  "cache/mesa_shader_cache/ab/d76d88f975e8c87831190ecfdc44b68813d4601c835ea61dec8675b3e1f8b1",
+  "cache/mesa_shader_cache/ae/57f504126b05ff51e358890a3f46121be623d1ed98281057cd15e6794c344f",
+  "cache/mesa_shader_cache/b1/960bc4a9892c50c69d23805dcd6b64b116bdf9d38c54081f3111cf2f6d93f3",
+  "cache/mesa_shader_cache/c3/e986a750f77b93b823bab02d28360970f5a60ecd7425cd02c34eadb0c83820",
+  "cache/mesa_shader_cache/c6/3628be94bc2d899d12d6b1799de65911b4bbce51abaf1809c8aa22d8c1d636",
+  "cache/mesa_shader_cache/ce/1f6f0671b0518aff7d0b94136c8f8a965d663245e9d178e03bcb9baca43322",
+  "cache/mesa_shader_cache/df/14afac5fe1ef3318c5e818a033eede9218615d0ef2036f4180d767e7fc6239",
+  "cache/mesa_shader_cache/e8/825ecfb1a46e9e238ebc438c0d955e886271128dcda52f177490e5235abaa1",
+  "cache/mesa_shader_cache/ef/9d270460853fa94c6ab5522e2c95a6756c42d4b7f5d5089f47185f89cc9f15",
+  "cache/mesa_shader_cache/index",
+  "cache/mesa_shader_cache/marker",
+  "cache/webkitgtk-4.1/WebInspector/CacheStorage/salt",
+  "cache/webkitgtk-4.1/WebInspector/WebKitCache/Version 17/salt",
+  "cache/webkitgtk-4.1/WebInspector/hsts-storage.sqlite",
+  "data/gvfs-metadata/root",
+  "data/gvfs-metadata/root-68e35d6b.log",
+  "data/webkitgtk-4.1/WebInspector/databases/indexeddb/v1/resource__0/E8DA97436ECABD6F2D341BB04999E49A9BF1E628A1CA8A34DF87F160078240E2/IndexedDB.sqlite3",
+  "data/webkitgtk-4.1/WebInspector/localstorage/resource__0.localstorage",
+  "data/webkitgtk-4.1/WebInspector/mediakeys/v1/salt",
+  "data/webkitgtk-4.1/WebInspector/storage/eQqmuwqCADsZ9DAoCgwq6cWd30yUm45oUBdF0daox38/eQqmuwqCADsZ9DAoCgwq6cWd30yUm45oUBdF0daox38/origin",
+  "data/webkitgtk-4.1/WebInspector/storage/salt"
+ ],
+ "seconds": 2.6
+}

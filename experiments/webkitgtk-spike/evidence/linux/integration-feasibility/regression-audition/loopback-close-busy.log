@@ -1,0 +1,24 @@
+command: /tmp/dfx2-wk-feas -mode loopback -autorun slow -close-busy 300ms -quit-after 10s
+Overriding existing handler for signal 10. Set JSC_SIGNAL_FOR_GC if you want WebKit to use a different signal
+13:51:59.500206 WebKitGTK 2.52.6 mode=loopback origin=http://127.0.0.1:42829 scale=1
+13:51:59.590986 load event=0 uri=http://127.0.0.1:42829/?autorun=slow
+13:51:59.591354 req 1 start GET /?autorun=slow from 127.0.0.1:56490 (0 B body, outstanding 1)
+13:51:59.591420 req 1 handler done 200 in 0s (outstanding 0)
+13:51:59.592580 load event=2 uri=http://127.0.0.1:42829/?autorun=slow
+13:51:59.593020 req 2 start GET /app.css from 127.0.0.1:56490 (0 B body, outstanding 1)
+13:51:59.593046 req 2 handler done 200 in 0s (outstanding 0)
+13:51:59.593436 req 3 start GET /app.js from 127.0.0.1:56494 (0 B body, outstanding 1)
+13:51:59.593516 req 3 handler done 200 in 0s (outstanding 0)
+13:51:59.646506 req 4 start POST /api/report from 127.0.0.1:56496 (64 B body, outstanding 1)
+13:51:59.646554 report: [loopback] loaded /?autorun=slow (assets app.css ✓ app.js ✓)
+13:51:59.646560 req 4 handler done 204 in 0s (outstanding 0)
+13:51:59.667563 load event=3 uri=http://127.0.0.1:42829/?autorun=slow
+13:51:59.670993 req 5 start GET /api/slow?tag=busy from 127.0.0.1:56494 (0 B body, outstanding 1)
+13:51:59.671255 req 6 start POST /api/report from 127.0.0.1:56504 (33 B body, outstanding 2)
+13:51:59.671291 report: [loopback] slow: started tag=busy
+13:51:59.671300 req 6 handler done 204 in 0s (outstanding 1)
+13:51:59.672595 javascript: {"origin":"http://127.0.0.1:42829","secure":true,"crypto":true,"storage":"yes"}
+13:51:59.972072 closing: close while busy; native requests=0 async=0 handlers=0
+13:51:59.972148 fixture: /api/slow tag="busy" saw cancellation: context canceled
+13:51:59.972544 req 5 handler canceled (context canceled), returned 503 in 302ms (outstanding 0)
+13:51:59.976683 closed: requests=0 native-async=0 handlers=0 stats={Started:0 Finished:0 Canceled:0 Dropped:0 Refused:0}

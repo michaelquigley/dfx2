@@ -103,3 +103,8 @@ Scenarios: `checks`, `resize`, `close-idle`, `close-busy`, `reload`, `close-init
 - In-process, repeated response headers reach the page joined (`one, two`), and devtools shows them as one joined value. The adapter passes WebView2 separate lines; WebView2 merges them. Loopback keeps two lines on the wire.
 - One window, top-level documents only (no iframe navigation checks), no cookies, redirects, service workers or custom schemes.
 - windows/amd64 only. On arm64, `put_Bounds` passes its 16-byte RECT differently.
+
+## Integration feasibility
+
+The shared package [`feasibility`](feasibility/) holds the portable pieces of the [webview feasibility spike](../../docs/future/webview-feasibility-spike.md): the owned endpoint's access guard, the probe page and handler, and bounded deletion after native release. The Linux host uses it now. The Windows probes have not been written or run; the [Windows handoff](evidence/windows/integration-feasibility/README.md) lists what landed, what remains and how to run it.
+

@@ -1,0 +1,123 @@
+{
+ "scenario": "owned-load-failure",
+ "flags": [],
+ "checks": [
+  {
+   "check": "loopback: native load failure shows the error page without exposing the credential",
+   "ok": true,
+   "failed": {
+    "code": 34,
+    "domain": "g-io-error-quark",
+    "error_page": true,
+    "event": "load-failed",
+    "from_post": false,
+    "message": "Connection terminated unexpectedly",
+    "method": "GET",
+    "retry_offered": true,
+    "t": "13:51:13.663",
+    "uri": "http://127.0.0.1:39881/api/abort",
+    "window": "L"
+   },
+   "page": {
+    "retry": true,
+    "cookie": ""
+   }
+  },
+  {
+   "check": "loopback: Return to start reloads the start page",
+   "ok": true
+  },
+  {
+   "check": "inprocess: native load failure shows the error page without exposing the credential",
+   "ok": true,
+   "failed": {
+    "code": 1,
+    "domain": "dfx2-spike",
+    "error_page": true,
+    "event": "load-failed",
+    "from_post": false,
+    "message": "injected transport failure: no response",
+    "method": "GET",
+    "retry_offered": true,
+    "t": "13:51:13.841",
+    "uri": "dfx2://spike/api/abort",
+    "window": "P"
+   },
+   "page": {
+    "retry": true,
+    "cookie": ""
+   }
+  },
+  {
+   "check": "inprocess: Return to start reloads the start page",
+   "ok": true
+  }
+ ],
+ "ok": true,
+ "detail": {},
+ "exit": {
+  "host_exit": 0,
+  "timed_out": false,
+  "children_pending": false,
+  "child_failure": false,
+  "fatal_log": false
+ },
+ "adopted_exits": [
+  [
+   "unobserved",
+   0
+  ],
+  [
+   "bwrap",
+   -9
+  ],
+  [
+   "WebKitNetworkPr",
+   0
+  ],
+  [
+   "WebKitWebProces",
+   0
+  ],
+  [
+   "WebKitNetworkPr",
+   0
+  ],
+  [
+   "WebKitWebProces",
+   0
+  ],
+  [
+   "bwrap",
+   -9
+  ]
+ ],
+ "observed_processes": [
+  "WebKitNetworkPr",
+  "WebKitWebProces",
+  "bwrap",
+  "dfx2-wk-feas",
+  "glycin-svg",
+  "gst-plugin-scan"
+ ],
+ "filter_store_removal": {
+  "path": "/tmp/dfx2-feasibility/filters-2222541",
+  "attempts": 1,
+  "elapsed_ns": 52666,
+  "removed": true
+ },
+ "xdg_manifest": [
+  "cache/event-sound-cache.tdb.7f8d5c37476f457cae8a599c576dd36f.x86_64-pc-linux-gnu",
+  "cache/fontconfig/25ccf6dd56fd7585eff0dc50a0a881d4-le64.cache-9",
+  "cache/fontconfig/363ec821d90eaa905a460bbdd9de4669-le64.cache-9",
+  "cache/fontconfig/97123a202d96d9eee11f7b2e48a774ca-le64.cache-9",
+  "cache/fontconfig/CACHEDIR.TAG",
+  "cache/gstreamer-1.0/registry.x86_64.bin",
+  "cache/mesa_shader_cache/index",
+  "cache/mesa_shader_cache/marker",
+  "config/pulse/cookie",
+  "data/gvfs-metadata/root",
+  "data/gvfs-metadata/root-17f67332.log"
+ ],
+ "seconds": 0.8
+}

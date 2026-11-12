@@ -1,0 +1,6 @@
+{"manual": "STEP 1 of 2", "do": "In the window titled 'dfx2 feasibility M', click Retry.", "failed_uri": "http://127.0.0.1:46859/api/query?x=manual", "retry_offered": true}
+{"manual": "STEP 1 recorded", "error_page": {"uri": "http://127.0.0.1:46859/api/query?x=manual", "method": "GET", "retry_offered": true}, "clicked": "retry", "loaded": "http://127.0.0.1:46859/api/query?x=manual", "server": {"GET /api/query before": 0, "after": 1, "edits": []}, "ok": true}
+{"manual": "STEP 2 of 2", "do": "Click Return to start. (There should be no Retry button.)", "failed_uri": "http://127.0.0.1:46859/api/form", "method": "POST", "retry_offered": false}
+{"manual": "STEP 2 recorded", "error_page": {"uri": "http://127.0.0.1:46859/api/form", "method": "POST", "retry_offered": false}, "clicked": "start", "loaded": "http://127.0.0.1:46859/", "server": {"GET / before": 4, "after": 5, "edits": []}, "ok": true}
+{"manual": "done", "do": "Report what you saw; the window closes now."}
+exit=0

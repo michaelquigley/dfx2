@@ -1,0 +1,153 @@
+{
+ "scenario": "confinement-csp-only",
+ "flags": [
+  "-feas-filter=false"
+ ],
+ "checks": [
+  {
+   "check": "collector received nothing",
+   "ok": true,
+   "received": []
+  },
+  {
+   "check": "no credential reached the collector",
+   "ok": true,
+   "leaked": 0
+  },
+  {
+   "check": "A's page never invoked B's handler",
+   "ok": true,
+   "b_before": {
+    "GET /": 1,
+    "GET /logo.svg": 1,
+    "GET /probe.css": 1,
+    "GET /probe.js": 1
+   },
+   "b_after": {
+    "GET /": 1,
+    "GET /logo.svg": 1,
+    "GET /probe.css": 1,
+    "GET /probe.js": 1
+   }
+  },
+  {
+   "check": "top-level navigation, redirect, popup and form to another port never left the origin",
+   "ok": true,
+   "mechanism": {
+    "location": "navigation policy",
+    "redirect": "navigation policy",
+    "popup": "create signal",
+    "form": "silent"
+   },
+   "final_uris": {
+    "location": "http://127.0.0.1:46575/#pinged",
+    "redirect": "http://127.0.0.1:46575/#pinged",
+    "popup": "http://127.0.0.1:46575/#pinged",
+    "form": "http://127.0.0.1:46575/#pinged"
+   }
+  }
+ ],
+ "ok": true,
+ "detail": {
+  "page_view": {
+   "iframe-same": "no load",
+   "img": "added",
+   "prefetch": "added",
+   "eventsource": "threw SecurityError",
+   "websocket": "threw SecurityError",
+   "font": "added",
+   "beacon": "true",
+   "iframe-cross": "added",
+   "xhr": "0",
+   "script": "added",
+   "ping": "clicked",
+   "other-endpoint": "threw TypeError",
+   "fetch": "threw TypeError",
+   "redirect-img": "added",
+   "redirect-fetch": "threw TypeError",
+   "css": "added"
+  },
+  "collector": [],
+  "mechanism": {
+   "location": "navigation policy",
+   "redirect": "navigation policy",
+   "popup": "create signal",
+   "form": "silent"
+  },
+  "refusals": [
+   [
+    "navigation",
+    "COLLECTOR/nav"
+   ],
+   [
+    "navigation",
+    "COLLECTOR/redirect-nav"
+   ]
+  ]
+ },
+ "exit": {
+  "host_exit": 0,
+  "timed_out": false,
+  "children_pending": false,
+  "child_failure": false,
+  "fatal_log": false
+ },
+ "adopted_exits": [
+  [
+   "unobserved",
+   0
+  ],
+  [
+   "WebKitNetworkPr",
+   0
+  ],
+  [
+   "WebKitWebProces",
+   0
+  ],
+  [
+   "WebKitNetworkPr",
+   0
+  ],
+  [
+   "WebKitWebProces",
+   0
+  ],
+  [
+   "bwrap",
+   -9
+  ],
+  [
+   "bwrap",
+   -9
+  ]
+ ],
+ "observed_processes": [
+  "WebKitNetworkPr",
+  "WebKitWebProces",
+  "bwrap",
+  "dfx2-wk-feas",
+  "glycin-svg",
+  "gst-plugin-scan"
+ ],
+ "filter_store_removal": {
+  "path": "",
+  "attempts": 0,
+  "elapsed_ns": 0,
+  "removed": false
+ },
+ "xdg_manifest": [
+  "cache/event-sound-cache.tdb.7f8d5c37476f457cae8a599c576dd36f.x86_64-pc-linux-gnu",
+  "cache/fontconfig/25ccf6dd56fd7585eff0dc50a0a881d4-le64.cache-9",
+  "cache/fontconfig/363ec821d90eaa905a460bbdd9de4669-le64.cache-9",
+  "cache/fontconfig/97123a202d96d9eee11f7b2e48a774ca-le64.cache-9",
+  "cache/fontconfig/CACHEDIR.TAG",
+  "cache/gstreamer-1.0/registry.x86_64.bin",
+  "cache/mesa_shader_cache/index",
+  "cache/mesa_shader_cache/marker",
+  "config/pulse/cookie",
+  "data/gvfs-metadata/root",
+  "data/gvfs-metadata/root-73495044.log"
+ ],
+ "seconds": 11.7
+}

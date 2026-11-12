@@ -1,0 +1,45 @@
+To enable execution of this file add
+	add-auto-load-safe-path /home/michael/local/go/src/runtime/runtime-gdb.py
+line to your configuration file "/tmp/dfx2-feasibility/xdg-cookie-failure-injected-107515/config/gdb/gdbinit".
+To completely disable this security protection add
+	set auto-load safe-path /
+line to your configuration file "/tmp/dfx2-feasibility/xdg-cookie-failure-injected-107515/config/gdb/gdbinit".
+For more information about this security protection see the
+"Auto-loading safe path" section in the GDB manual.  E.g., run from the shell:
+	info "(gdb)Auto-loading safe path"
+Breakpoint 1 (JSC::initialize()) pending.
+Breakpoint 2 (JSC::VM::VM(JSC::VM::VMType, JSC::HeapType, WTF::RunLoop*, bool*)) pending.
+Breakpoint 3 (JSC::Heap::Heap(JSC::VM&, JSC::HeapType)) pending.
+Breakpoint 4 (JSGlobalContextCreate) pending.
+Breakpoint 5 (JSGlobalContextCreateInGroup) pending.
+Breakpoint 6 (JSContextGroupCreate) pending.
+Breakpoint 7 (jsc_context_new) pending.
+Breakpoint 8 (jsc_virtual_machine_new) pending.
+Breakpoint 9 (JSC::JSLock::didAcquireLock()) pending.
+Breakpoint 10 (JSC::MachineThreads::addCurrentThread()) pending.
+Breakpoint 11 (WTF::ThreadGroup::addCurrentThread()) pending.
+Breakpoint 12 (WTF::Thread::suspend(WTF::ThreadSuspendLocker const&)) pending.
+Breakpoint 13 (WTF::Thread::signalHandlerSuspendResume(int, siginfo_t*, void*)) pending.
+Breakpoint 14 (WTF::SignalHandlers::finalize()) pending.
+Breakpoint 15 (WTF::RealTimeThreads::RealTimeThreads()) pending.
+Breakpoint 16 (WTF::RealTimeThreads::registerThread(WTF::Thread&)) pending.
+Breakpoint 17 (sigaction) pending.
+
+This GDB supports auto-downloading debuginfo from the following URLs:
+  <https://debuginfod.ubuntu.com>
+Debuginfod has been disabled.
+To make this setting permanent, add 'set debuginfod enabled off' to .gdbinit.
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/usr/lib/x86_64-linux-gnu/libthread_db.so.1".
+{"dispositions":{"SIGBUS":{"signal":7,"owner":"go","flags":["SA_SIGINFO","SA_ONSTACK","SA_RESTART","SA_RESTORER"]},"SIGSEGV":{"signal":11,"owner":"go","flags":["SA_SIGINFO","SA_ONSTACK","SA_RESTART","SA_RESTORER"]},"SIGUSR1":{"signal":10,"owner":"go","flags":["SA_SIGINFO","SA_ONSTACK","SA_RESTART","SA_RESTORER"]},"SIGXCPU":{"signal":24,"owner":"go","flags":["SA_SIGINFO","SA_ONSTACK","SA_RESTART","SA_RESTORER"]},"reserved 60":{"signal":60,"owner":"go","flags":["SA_SIGINFO","SA_ONSTACK","SA_RESTART","SA_RESTORER"]}},"event":"signals","stage":"start","t":"23:38:23.061"}
+{"event":"filter-store","path":"/tmp/dfx2-feasibility/filters-111426","t":"23:38:23.634"}
+{"cookie":true,"cookie_fail_injected":true,"csp":true,"event":"ready","filter":true,"pid":111426,"reservation":{"checks":[{"check":"supplied","passed":true,"detail":"an explicit reservation; the host infers nothing"},{"check":"within libc's real-time range","passed":true,"detail":"60 in [34, 64]","cannot_establish":"that no other library uses it"},{"check":"kernel disposition is Go's handler","passed":true,"detail":"owner go","cannot_establish":"that no Go subscriber exists: subscribed and unsubscribed signals look identical"},{"check":"not blocked on the initializing thread","passed":true,"cannot_establish":"the masks of threads created later"},{"check":"not among the application's declared subscriptions","passed":true,"cannot_establish":"subscriptions the application did not declare"},{"check":"not ignored through os/signal","passed":true},{"check":"JSC_SIGNAL_FOR_GC unset or equal","passed":true,"detail":"JSC_SIGNAL_FOR_GC="}],"configured":true,"signal":60},"t":"23:38:23.635","vmfree":true}
+{"dispositions":{"SIGBUS":{"signal":7,"owner":"go","flags":["SA_SIGINFO","SA_ONSTACK","SA_RESTART","SA_RESTORER"]},"SIGSEGV":{"signal":11,"owner":"go","flags":["SA_SIGINFO","SA_ONSTACK","SA_RESTART","SA_RESTORER"]},"SIGUSR1":{"signal":10,"owner":"go","flags":["SA_SIGINFO","SA_ONSTACK","SA_RESTART","SA_RESTORER"]},"SIGXCPU":{"signal":24,"owner":"go","flags":["SA_SIGINFO","SA_ONSTACK","SA_RESTART","SA_RESTORER"]},"reserved 60":{"signal":60,"owner":"native:libjavascriptcoregtk-4.1.so.0.10.14","offset":"0x196b2d0","flags":["SA_SIGINFO","SA_RESTART","SA_RESTORER"]}},"event":"signals","stage":"ready","t":"23:38:23.636"}
+{"credential":true,"ephemeral_session":true,"event":"opened","mode":"loopback","origin":"http://127.0.0.1:39135","t":"23:38:29.038","window":"A"}
+{"event":"filter-installed","rules":"[{\"action\":{\"type\":\"block\"},\"trigger\":{\"url-filter\":\".*\"}},{\"action\":{\"type\":\"ignore-previous-rules\"},\"trigger\":{\"url-filter\":\"^http://127\\\\.0\\\\.0\\\\.1:39135/\"}},{\"action\":{\"type\":\"block\"},\"trigger\":{\"load-context\":[\"child-frame\"],\"resource-type\":[\"document\"],\"url-filter\":\".*\"}}]","t":"23:38:29.086","window":"A"}
+{"error":"injected: cookie installation failure","event":"cookie-failed","t":"23:38:29.512","window":"A"}
+{"event":"closing","native_async":0,"native_requests":0,"navigated":false,"t":"23:38:29.512","why":"cookie installation failed","window":"A"}
+{"endpoint":{"admitted":0,"refused":{},"handled":0},"event":"closed","handler":{},"handlers_drained":true,"native_async":0,"native_requests":0,"t":"23:38:29.514","window":"A"}
+{"dispositions":{"SIGBUS":{"signal":7,"owner":"go","flags":["SA_SIGINFO","SA_ONSTACK","SA_RESTART","SA_RESTORER"]},"SIGSEGV":{"signal":11,"owner":"go","flags":["SA_SIGINFO","SA_ONSTACK","SA_RESTART","SA_RESTORER"]},"SIGUSR1":{"signal":10,"owner":"go","flags":["SA_SIGINFO","SA_ONSTACK","SA_RESTART","SA_RESTORER"]},"SIGXCPU":{"signal":24,"owner":"native:libjavascriptcoregtk-4.1.so.0.10.14","offset":"0x196d3f0","flags":["SA_RESTART","SA_RESTORER"]},"reserved 60":{"signal":60,"owner":"native:libjavascriptcoregtk-4.1.so.0.10.14","offset":"0x196b2d0","flags":["SA_SIGINFO","SA_RESTART","SA_RESTORER"]}},"event":"signals","stage":"exit","t":"23:38:29.518"}
+{"error":"\u003cnil\u003e","event":"exit","filter_store_removal":{"path":"/tmp/dfx2-feasibility/filters-111426","attempts":1,"elapsed_ns":93981,"removed":true},"t":"23:38:29.518"}
+[Inferior 1 (process 111426) exited normally]

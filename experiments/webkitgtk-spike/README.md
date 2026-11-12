@@ -21,7 +21,7 @@ CGO_ENABLED=0 go build -o /tmp/dfx2-webkitgtk-spike .
 
 The page has the Windows experiment's controls: run all checks, slow/fast, abort, reload during slow, body limits, new windows, outside navigation, and editable fields. Close the window, Ctrl+C, or SIGTERM for normal teardown. Profiles are ephemeral. New windows and navigation outside the selected origin are refused; this is not a general sandbox for untrusted pages or external subresources.
 
-The runtime prints JavaScriptCore's warning about replacing Go's SIGUSR1 handler on this host. This experiment leaves that collision visible. dfw's optional `JSConfigureSignalForGC` integration is a lead for subsequent no-cgo work, not something validated or ported here. Do not fix it by hard-coding a real-time signal or suppressing stderr.
+The ordinary host still prints JavaScriptCore's warning about replacing Go's SIGUSR1 handler, and leaves the collision visible. The integration feasibility probes below examine it: JSC also replaces Go's SIGSEGV and SIGBUS handlers, so the GC signal is not the whole problem. Do not fix either by hard-coding a signal or suppressing stderr.
 
 ## Checks and evidence
 
@@ -56,3 +56,41 @@ Close cancels the window context, closes the dispatcher and poster, cancels Gio 
 Request-body streams are owned references. Response headers transfer full ownership to `WebKitURISchemeResponse`. `g_bytes_new` copies Go response bytes; native streams never retain Go memory. The declarations were checked against the installed WebKit2-4.1 GIR and GTK/Gio/Soup headers. See WebKit's [URI-scheme registration documentation](https://webkitgtk.org/reference/webkit2gtk/stable/method.WebContext.register_uri_scheme.html) for the asynchronous request retention contract.
 
 The experiment follows the Windows fixture's standard-library logging, so the evidence format remains comparable. This is not a production logging choice for dfx2.
+
+## Integration feasibility probes
+
+The Linux half of [the feasibility spike](../../docs/future/webview-feasibility-spike.md), added beside the ordinary host and inactive unless asked for. The [result](evidence/linux/integration-feasibility/README.md) records what was demonstrated, how, and what remains untested.
+
+```sh
+CGO_ENABLED=0 go build -o /tmp/dfx2-wk-feas .
+python3 -B signal_probe.py /tmp/dfx2-wk-feas OUT/signals [--runtime-lib DIR]
+python3 -B feasibility.py /tmp/dfx2-wk-feas OUT/passes-b-d [--only SCENARIO ...]
+python3 -B vmfree.py /tmp/dfx2-wk-feas OUT/vm-free --debug-dir DIR --reserve N [--only NAME ...]
+python3 -B xcpu.py /tmp/dfx2-wk-feas OUT/sigxcpu --reserve N --debug-dir DIR [--runtime ROOT --runtime-debug-dir DIR2]
+python3 -B vmfree.py /tmp/dfx2-wk-feas OUT/browser --no-monitor --reserve N   # closeout: browser cases only, no gdb
+python3 -B manual_check.py /tmp/dfx2-wk-feas OUT/manual-check --reserve N     # waits for a person to click
+```
+
+The closeout candidate and its results are in the record's [status](evidence/linux/integration-feasibility/README.md#status-2026-11-12-linux-closeout). `manual_check.py` sets up a failed GET and a failed POST in one attached window, and waits for a person to click Retry, then Return to start. It records the server's counts, never clicks (except under `--self-test`, which checks the script and is not the manual result).
+
+| Flag | Meaning |
+| --- | --- |
+| `-signal-probe VARIANT` | One disposable pass-A process: `baseline`, `configured`, `configured-onstack` (the proposed order), `configured-onstack-all` (a hazard probe), `late`, `env` (honours `JSC_SIGNAL_FOR_GC`), `no-symbol` or `no-signal` (injected discovery results). |
+| `-signal-fault segv\|bus` | After JSC initialization, recover a Go fault on a goroutine. |
+| `-signal-webkit`, `-signal-order jsc-first\|webkit-first` | Also bring up GTK and a WebKit page, after or before JSC's forced initialization. |
+| `-signal-js-threads 2` | Also run JavaScript on two Go threads in one context group. |
+| `-signal-probe hidden-subscriber\|hidden-subscriber-jsc` | The inferred selector's flaw: an undeclared `signal.Notify` subscriber on the signal it picks. |
+| `-signal-probe suspension-transition -signal-reserve N` | Handler safety: JavaScript, pure Go and C phases on one locked thread, to see where JSC's GC suspension lands. |
+| `-signal-probe narrow\|narrow-foreign -signal-reserve N` | The narrow, identity-verified SIGSEGV/SIGBUS adjustment (and an injected identity failure); with `-signal-webkit`, it also records SIGXCPU and real-time threads. Run everything with `handler_safety.py BINARY OUT --reserve N [--debug-file JSC_DEBUG]`. |
+| `-signal-probe reserved… -signal-reserve N` | The explicit-reservation prototype (`reserved`, `reserved-violate-before`, `reserved-violate-after`, injected `reserved-foreign`). Run them all with `signal_probe.py … --set reservation`. |
+| `-feasibility` | Passes B–D: a multi-window host driven by console commands from `feasibility.py` (`open LABEL loopback\|inprocess\|attach [URL]`, `js`, `load`, `close`, `snapshot`, `selftest`, `inspect`, `status`, `quit`); JSON events on stdout. |
+| `-feas-filter=false`, `-feas-csp=false`, `-feas-cookie=false` | Switch off the native content filter, the endpoint CSP or the credential, to attribute enforcement and run the no-enforcement control. |
+| `-feas-cookie-fail` | Injected credential-installation failure. |
+| `-feas-root DIR` | Experiment-owned directory for compiled content filters (default `$TMPDIR/dfx2-feasibility`). |
+| `-feas-vmfree [-signal-reserve N]` | The no-host-VM path: binds no JavaScript evaluation or result conversion and refuses `js`. Adds `reload`, `click LABEL X Y` (synthesized GTK pointer events) and signal records. With `-signal-reserve`, it validates the application's reservation and configures JSC's GC signal before WebKit initializes JSC. Automation is page-driven: `load LABEL URL?run=NAME&id=ID`, with the page posting results to its own handler's `/api/report`. |
+| `-feas-xcpu` | With `-feas-vmfree`: subscribes to SIGXCPU through `os/signal` before WebKit starts, records thread scheduling (policy, nice, `uclamp.min`) and limits, and adds `xcpu-native` (`tgkill` to a native thread) and `xcpu-wait` (arm for a process-directed signal from outside), each reporting whether the Go subscriber received it. `xcpu.py` drives it against the installed runtime and, optionally, an isolated one. |
+
+`vmfree.py` runs every host under gdb with [`vmwatch_gdb.py`](vmwatch_gdb.py). The monitor logs JSC VM construction, context creation, JSLock acquisition, GC thread registration, thread suspension, fault-handler finalization, real-time thread registration and native `sigaction` calls, in the Go host only. It needs a directory of `.build-id` links to Ubuntu's debuginfod files for the installed `libjavascriptcoregtk` (and, for readable frames, `libwebkit2gtk`), kept outside git. Two positive controls run first, each in its own process.
+
+Each feasibility window has its own ephemeral WebKit context. Owned loopback windows receive a random endpoint credential through the native cookie manager before their first navigation, and their endpoint admits only requests carrying it ([`dfx2webview2spike/feasibility`](../webview2-spike/feasibility/)). A failed top-level load shows a host-local page whose Retry and Return to start links are intercepted natively. `feasibility.py` runs its own collector and stoppable attachment server, isolates each host's XDG data, cache and config directories, and observes browser children with `exitwatch.py`, which now also names children it adopted unsampled.
+

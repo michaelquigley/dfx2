@@ -1,0 +1,5151 @@
+{
+ "binary": "/tmp/dfx2-wk-feas",
+ "cases": [
+  {
+   "case": "baseline",
+   "flags": [
+    "baseline"
+   ],
+   "env": {},
+   "repeat": 1,
+   "ok": true,
+   "detail": "JSC takes SIGUSR1 with a warning; the application's SIGUSR1 is lost",
+   "runs": [
+    {
+     "name": "baseline",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "baseline"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "before-sigusr1",
+      "signal-probe"
+     ],
+     "stderr_lines": [
+      "Overriding existing handler for signal 10. Set JSC_SIGNAL_FOR_GC if you want WebKit to use a different signal"
+     ],
+     "ready": false,
+     "reason": "baseline: no configuration attempted",
+     "selected": 0,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": false,
+       "signal": 10
+      }
+     ],
+     "onstack_added": null,
+     "onstack_added_after_webkit": null,
+     "unprotected": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14"
+      ],
+      [
+       10,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14"
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14"
+      ]
+     ],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       10,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 8255488000,
+      "go_collections": 8062,
+      "go_numgc": 8062,
+      "js_collections_requested": 27,
+      "js_result": 600000,
+      "js_rounds": 112,
+      "tight_loop_rounds": 8258
+     },
+     "second_thread": null,
+     "configure_result": null,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present"
+    }
+   ]
+  },
+  {
+   "case": "baseline-repeat",
+   "flags": [
+    "baseline"
+   ],
+   "env": {},
+   "repeat": 10,
+   "ok": true,
+   "detail": {
+    "exits": {
+     "2": 7,
+     "0": 3
+    },
+    "note": "external SIGUSR1 reaches JSC's suspend handler"
+   },
+   "runs": [
+    {
+     "name": "baseline-repeat-1",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "baseline"
+     ],
+     "env": {},
+     "exit": 2,
+     "events": [
+      "before-sigusr1"
+     ],
+     "stderr_lines": [
+      "Overriding existing handler for signal 10. Set JSC_SIGNAL_FOR_GC if you want WebKit to use a different signal",
+      "signal 11 received but handler not on signal stack",
+      "mp.gsignal stack [0x240e27b2a000 0x240e27b32000], mp.g0 stack [0x7ffc33a114d8 0x7ffc34210530], sp=0x240e27c84830",
+      "fatal error: non-Go code set up signal handler without SA_ONSTACK flag",
+      "",
+      "runtime stack:"
+     ]
+    },
+    {
+     "name": "baseline-repeat-2",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "baseline"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "before-sigusr1",
+      "signal-probe"
+     ],
+     "stderr_lines": [
+      "Overriding existing handler for signal 10. Set JSC_SIGNAL_FOR_GC if you want WebKit to use a different signal"
+     ],
+     "ready": false,
+     "reason": "baseline: no configuration attempted",
+     "selected": 0,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": false,
+       "signal": 10
+      }
+     ],
+     "onstack_added": null,
+     "onstack_added_after_webkit": null,
+     "unprotected": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14"
+      ],
+      [
+       10,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14"
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14"
+      ]
+     ],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       10,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 8235008000,
+      "go_collections": 8042,
+      "go_numgc": 8042,
+      "js_collections_requested": 27,
+      "js_result": 600000,
+      "js_rounds": 111,
+      "tight_loop_rounds": 8080
+     },
+     "second_thread": null,
+     "configure_result": null,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present"
+    },
+    {
+     "name": "baseline-repeat-3",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "baseline"
+     ],
+     "env": {},
+     "exit": 2,
+     "events": [
+      "before-sigusr1"
+     ],
+     "stderr_lines": [
+      "Overriding existing handler for signal 10. Set JSC_SIGNAL_FOR_GC if you want WebKit to use a different signal",
+      "signal 11 received but handler not on signal stack",
+      "mp.gsignal stack [0x32dafc232000 0x32dafc23a000], mp.g0 stack [0x7fff6cc43d88 0x7fff6d442de0], sp=0x32dafc33e830",
+      "fatal error: non-Go code set up signal handler without SA_ONSTACK flag",
+      "",
+      "runtime stack:"
+     ]
+    },
+    {
+     "name": "baseline-repeat-4",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "baseline"
+     ],
+     "env": {},
+     "exit": 2,
+     "events": [
+      "before-sigusr1"
+     ],
+     "stderr_lines": [
+      "Overriding existing handler for signal 10. Set JSC_SIGNAL_FOR_GC if you want WebKit to use a different signal",
+      "signal 11 received but handler not on signal stack",
+      "mp.gsignal stack [0x3a1e09e82000 0x3a1e09e8a000], mp.g0 stack [0x7ffdce2db168 0x7ffdceada1c0], sp=0x3a1e09fbe830",
+      "fatal error: non-Go code set up signal handler without SA_ONSTACK flag",
+      "",
+      "runtime stack:"
+     ]
+    },
+    {
+     "name": "baseline-repeat-5",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "baseline"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "before-sigusr1",
+      "signal-probe"
+     ],
+     "stderr_lines": [
+      "Overriding existing handler for signal 10. Set JSC_SIGNAL_FOR_GC if you want WebKit to use a different signal"
+     ],
+     "ready": false,
+     "reason": "baseline: no configuration attempted",
+     "selected": 0,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": false,
+       "signal": 10
+      }
+     ],
+     "onstack_added": null,
+     "onstack_added_after_webkit": null,
+     "unprotected": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14"
+      ],
+      [
+       10,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14"
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14"
+      ]
+     ],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       10,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 8251392000,
+      "go_collections": 8058,
+      "go_numgc": 8058,
+      "js_collections_requested": 27,
+      "js_result": 600000,
+      "js_rounds": 110,
+      "tight_loop_rounds": 8214
+     },
+     "second_thread": null,
+     "configure_result": null,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present"
+    },
+    {
+     "name": "baseline-repeat-6",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "baseline"
+     ],
+     "env": {},
+     "exit": 2,
+     "events": [
+      "before-sigusr1"
+     ],
+     "stderr_lines": [
+      "Overriding existing handler for signal 10. Set JSC_SIGNAL_FOR_GC if you want WebKit to use a different signal",
+      "signal 11 received but handler not on signal stack",
+      "mp.gsignal stack [0x1d14c01d0000 0x1d14c01d8000], mp.g0 stack [0x7ffeaa12d578 0x7ffeaa92c5d0], sp=0x1d14c02c6830",
+      "fatal error: non-Go code set up signal handler without SA_ONSTACK flag",
+      "",
+      "runtime stack:"
+     ]
+    },
+    {
+     "name": "baseline-repeat-7",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "baseline"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "before-sigusr1",
+      "signal-probe"
+     ],
+     "stderr_lines": [
+      "Overriding existing handler for signal 10. Set JSC_SIGNAL_FOR_GC if you want WebKit to use a different signal"
+     ],
+     "ready": false,
+     "reason": "baseline: no configuration attempted",
+     "selected": 0,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": false,
+       "signal": 10
+      }
+     ],
+     "onstack_added": null,
+     "onstack_added_after_webkit": null,
+     "unprotected": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14"
+      ],
+      [
+       10,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14"
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14"
+      ]
+     ],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       10,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 8262656000,
+      "go_collections": 8069,
+      "go_numgc": 8069,
+      "js_collections_requested": 27,
+      "js_result": 600000,
+      "js_rounds": 113,
+      "tight_loop_rounds": 8325
+     },
+     "second_thread": null,
+     "configure_result": null,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present"
+    },
+    {
+     "name": "baseline-repeat-8",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "baseline"
+     ],
+     "env": {},
+     "exit": 2,
+     "events": [
+      "before-sigusr1"
+     ],
+     "stderr_lines": [
+      "Overriding existing handler for signal 10. Set JSC_SIGNAL_FOR_GC if you want WebKit to use a different signal",
+      "signal 11 received but handler not on signal stack",
+      "mp.gsignal stack [0x3944a1080000 0x3944a1088000], mp.g0 stack [0x7ffcfff26e28 0x7ffd00725e80], sp=0x3944a122a830",
+      "fatal error: non-Go code set up signal handler without SA_ONSTACK flag",
+      "",
+      "runtime stack:"
+     ]
+    },
+    {
+     "name": "baseline-repeat-9",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "baseline"
+     ],
+     "env": {},
+     "exit": 2,
+     "events": [
+      "before-sigusr1"
+     ],
+     "stderr_lines": [
+      "Overriding existing handler for signal 10. Set JSC_SIGNAL_FOR_GC if you want WebKit to use a different signal",
+      "signal 11 received but handler not on signal stack",
+      "mp.gsignal stack [0x30412c608000 0x30412c610000], mp.g0 stack [0x7ffdbbf3c8d8 0x7ffdbc73b930], sp=0x30412c73e830",
+      "fatal error: non-Go code set up signal handler without SA_ONSTACK flag",
+      "",
+      "runtime stack:"
+     ]
+    },
+    {
+     "name": "baseline-repeat-10",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "baseline"
+     ],
+     "env": {},
+     "exit": 2,
+     "events": [
+      "before-sigusr1"
+     ],
+     "stderr_lines": [
+      "Overriding existing handler for signal 10. Set JSC_SIGNAL_FOR_GC if you want WebKit to use a different signal",
+      "signal 11 received but handler not on signal stack",
+      "mp.gsignal stack [0x18fa28472000 0x18fa2847a000], mp.g0 stack [0x7ffc68795488 0x7ffc68f944e0], sp=0x18fa2853a830",
+      "fatal error: non-Go code set up signal handler without SA_ONSTACK flag",
+      "",
+      "runtime stack:"
+     ]
+    }
+   ]
+  },
+  {
+   "case": "baseline-segv",
+   "flags": [
+    "baseline",
+    "-signal-fault",
+    "segv"
+   ],
+   "env": {},
+   "repeat": 1,
+   "ok": true,
+   "detail": "a recovered Go nil dereference is fatal",
+   "runs": [
+    {
+     "name": "baseline-segv",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "baseline",
+      "-signal-fault",
+      "segv"
+     ],
+     "env": {},
+     "exit": 2,
+     "events": [
+      "before-fault"
+     ],
+     "stderr_lines": [
+      "Overriding existing handler for signal 10. Set JSC_SIGNAL_FOR_GC if you want WebKit to use a different signal",
+      "signal 11 received but handler not on signal stack",
+      "mp.gsignal stack [0x13246f466000 0x13246f46e000], mp.g0 stack [0x790d99ffc150 0x790d9a7fbd50], sp=0x13246f603ef0",
+      "fatal error: non-Go code set up signal handler without SA_ONSTACK flag",
+      "",
+      "runtime stack:"
+     ]
+    }
+   ]
+  },
+  {
+   "case": "configured",
+   "flags": [
+    "configured"
+   ],
+   "env": {},
+   "repeat": 1,
+   "ok": true,
+   "detail": "signal 64 released and configured; Go keeps SIGUSR1/SIGUSR2/SIGHUP; no JSC warning",
+   "runs": [
+    {
+     "name": "configured",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "configured"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "before-sigusr1",
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": true,
+     "reason": "",
+     "selected": 64,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": null,
+     "onstack_added_after_webkit": null,
+     "unprotected": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14"
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14"
+      ],
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14"
+      ]
+     ],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 8207360000,
+      "go_collections": 8015,
+      "go_numgc": 8015,
+      "js_collections_requested": 27,
+      "js_result": 600000,
+      "js_rounds": 111,
+      "tight_loop_rounds": 8092
+     },
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present"
+    }
+   ]
+  },
+  {
+   "case": "configured-segv",
+   "flags": [
+    "configured",
+    "-signal-fault",
+    "segv"
+   ],
+   "env": {},
+   "repeat": 1,
+   "ok": true,
+   "detail": "still fatal: JSC's fault handlers, not the GC signal, cause it",
+   "runs": [
+    {
+     "name": "configured-segv",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "configured",
+      "-signal-fault",
+      "segv"
+     ],
+     "env": {},
+     "exit": 2,
+     "events": [
+      "before-fault"
+     ],
+     "stderr_lines": [
+      "signal 11 received but handler not on signal stack",
+      "mp.gsignal stack [0x3b99f4906000 0x3b99f490e000], mp.g0 stack [0x7c9fc2ffe150 0x7c9fc37fdd50], sp=0x3b99f47bbef0",
+      "fatal error: non-Go code set up signal handler without SA_ONSTACK flag",
+      "",
+      "runtime stack:",
+      "runtime.throw({0x7346cd?, 0x0?})"
+     ]
+    }
+   ]
+  },
+  {
+   "case": "configured-bus",
+   "flags": [
+    "configured",
+    "-signal-fault",
+    "bus"
+   ],
+   "env": {},
+   "repeat": 1,
+   "ok": true,
+   "detail": "still fatal: JSC's fault handlers, not the GC signal, cause it",
+   "runs": [
+    {
+     "name": "configured-bus",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "configured",
+      "-signal-fault",
+      "bus"
+     ],
+     "env": {},
+     "exit": 2,
+     "events": [
+      "before-fault"
+     ],
+     "stderr_lines": [
+      "signal 7 received but handler not on signal stack",
+      "mp.gsignal stack [0x39d736d86000 0x39d736d8e000], mp.g0 stack [0x7375ea09a150 0x7375ea899d50], sp=0x39d736c53ef0",
+      "fatal error: non-Go code set up signal handler without SA_ONSTACK flag",
+      "",
+      "runtime stack:",
+      "runtime.throw({0x7346cd?, 0x0?})"
+     ]
+    }
+   ]
+  },
+  {
+   "case": "configured-onstack",
+   "flags": [
+    "configured-onstack"
+   ],
+   "env": {},
+   "repeat": 10,
+   "ok": true,
+   "detail": {
+    "exits": {
+     "0": 10
+    }
+   },
+   "runs": [
+    {
+     "name": "configured-onstack-1",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "configured-onstack"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "before-sigusr1",
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": true,
+     "reason": "",
+     "selected": 64,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": [
+      7,
+      11
+     ],
+     "onstack_added_after_webkit": null,
+     "unprotected": [
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14"
+      ]
+     ],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 8262656000,
+      "go_collections": 8069,
+      "go_numgc": 8069,
+      "js_collections_requested": 27,
+      "js_result": 600000,
+      "js_rounds": 113,
+      "tight_loop_rounds": 8200
+     },
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present"
+    },
+    {
+     "name": "configured-onstack-2",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "configured-onstack"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "before-sigusr1",
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": true,
+     "reason": "",
+     "selected": 64,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": [
+      7,
+      11
+     ],
+     "onstack_added_after_webkit": null,
+     "unprotected": [
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14"
+      ]
+     ],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 8248320000,
+      "go_collections": 8055,
+      "go_numgc": 8055,
+      "js_collections_requested": 28,
+      "js_result": 600000,
+      "js_rounds": 117,
+      "tight_loop_rounds": 8265
+     },
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present"
+    },
+    {
+     "name": "configured-onstack-3",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "configured-onstack"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "before-sigusr1",
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": true,
+     "reason": "",
+     "selected": 64,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": [
+      7,
+      11
+     ],
+     "onstack_added_after_webkit": null,
+     "unprotected": [
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14"
+      ]
+     ],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 8195072000,
+      "go_collections": 8003,
+      "go_numgc": 8003,
+      "js_collections_requested": 27,
+      "js_result": 600000,
+      "js_rounds": 113,
+      "tight_loop_rounds": 8196
+     },
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present"
+    },
+    {
+     "name": "configured-onstack-4",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "configured-onstack"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "before-sigusr1",
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": true,
+     "reason": "",
+     "selected": 64,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": [
+      7,
+      11
+     ],
+     "onstack_added_after_webkit": null,
+     "unprotected": [
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14"
+      ]
+     ],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 8274944000,
+      "go_collections": 8081,
+      "go_numgc": 8081,
+      "js_collections_requested": 27,
+      "js_result": 600000,
+      "js_rounds": 113,
+      "tight_loop_rounds": 8183
+     },
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present"
+    },
+    {
+     "name": "configured-onstack-5",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "configured-onstack"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "before-sigusr1",
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": true,
+     "reason": "",
+     "selected": 64,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": [
+      7,
+      11
+     ],
+     "onstack_added_after_webkit": null,
+     "unprotected": [
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14"
+      ]
+     ],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 8264704000,
+      "go_collections": 8071,
+      "go_numgc": 8071,
+      "js_collections_requested": 28,
+      "js_result": 600000,
+      "js_rounds": 115,
+      "tight_loop_rounds": 8193
+     },
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present"
+    },
+    {
+     "name": "configured-onstack-6",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "configured-onstack"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "before-sigusr1",
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": true,
+     "reason": "",
+     "selected": 64,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": [
+      7,
+      11
+     ],
+     "onstack_added_after_webkit": null,
+     "unprotected": [
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14"
+      ]
+     ],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 8154112000,
+      "go_collections": 7963,
+      "go_numgc": 7963,
+      "js_collections_requested": 27,
+      "js_result": 600000,
+      "js_rounds": 112,
+      "tight_loop_rounds": 8306
+     },
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present"
+    },
+    {
+     "name": "configured-onstack-7",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "configured-onstack"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "before-sigusr1",
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": true,
+     "reason": "",
+     "selected": 64,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": [
+      7,
+      11
+     ],
+     "onstack_added_after_webkit": null,
+     "unprotected": [
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14"
+      ]
+     ],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 8114176000,
+      "go_collections": 7924,
+      "go_numgc": 7924,
+      "js_collections_requested": 27,
+      "js_result": 600000,
+      "js_rounds": 111,
+      "tight_loop_rounds": 8286
+     },
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present"
+    },
+    {
+     "name": "configured-onstack-8",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "configured-onstack"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "before-sigusr1",
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": true,
+     "reason": "",
+     "selected": 64,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": [
+      7,
+      11
+     ],
+     "onstack_added_after_webkit": null,
+     "unprotected": [
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14"
+      ]
+     ],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 8177664000,
+      "go_collections": 7986,
+      "go_numgc": 7986,
+      "js_collections_requested": 28,
+      "js_result": 600000,
+      "js_rounds": 115,
+      "tight_loop_rounds": 8244
+     },
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present"
+    },
+    {
+     "name": "configured-onstack-9",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "configured-onstack"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "before-sigusr1",
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": true,
+     "reason": "",
+     "selected": 64,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": [
+      7,
+      11
+     ],
+     "onstack_added_after_webkit": null,
+     "unprotected": [
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14"
+      ]
+     ],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 8414208000,
+      "go_collections": 8217,
+      "go_numgc": 8217,
+      "js_collections_requested": 27,
+      "js_result": 600000,
+      "js_rounds": 113,
+      "tight_loop_rounds": 8276
+     },
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present"
+    },
+    {
+     "name": "configured-onstack-10",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "configured-onstack"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "before-sigusr1",
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": true,
+     "reason": "",
+     "selected": 64,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": [
+      7,
+      11
+     ],
+     "onstack_added_after_webkit": null,
+     "unprotected": [
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14"
+      ]
+     ],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 8196096000,
+      "go_collections": 8004,
+      "go_numgc": 8004,
+      "js_collections_requested": 27,
+      "js_result": 600000,
+      "js_rounds": 111,
+      "tight_loop_rounds": 8274
+     },
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present"
+    }
+   ]
+  },
+  {
+   "case": "configured-onstack-segv",
+   "flags": [
+    "configured-onstack",
+    "-signal-fault",
+    "segv"
+   ],
+   "env": {},
+   "repeat": 1,
+   "ok": true,
+   "detail": "recovered",
+   "runs": [
+    {
+     "name": "configured-onstack-segv",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "configured-onstack",
+      "-signal-fault",
+      "segv"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "before-fault",
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": true,
+     "reason": "",
+     "selected": 64,
+     "fault": {
+      "kind": "segv",
+      "recovered": "runtime error: invalid memory address or nil pointer dereference"
+     },
+     "delivery": null,
+     "onstack_added": [
+      7,
+      11
+     ],
+     "onstack_added_after_webkit": null,
+     "unprotected": [
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14"
+      ]
+     ],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": null,
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present"
+    }
+   ]
+  },
+  {
+   "case": "configured-onstack-webkit-segv",
+   "flags": [
+    "configured-onstack",
+    "-signal-webkit",
+    "-signal-fault",
+    "segv"
+   ],
+   "env": {},
+   "repeat": 1,
+   "ok": true,
+   "detail": "recovered with WebKit up",
+   "runs": [
+    {
+     "name": "configured-onstack-webkit-segv",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "configured-onstack",
+      "-signal-webkit",
+      "-signal-fault",
+      "segv"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "before-fault",
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": true,
+     "reason": "",
+     "selected": 64,
+     "fault": {
+      "kind": "segv",
+      "recovered": "runtime error: invalid memory address or nil pointer dereference"
+     },
+     "delivery": null,
+     "onstack_added": [
+      7,
+      11
+     ],
+     "onstack_added_after_webkit": null,
+     "unprotected": [
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14"
+      ]
+     ],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       13,
+       "ignore",
+       null
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": null,
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present"
+    }
+   ]
+  },
+  {
+   "case": "configured-onstack-bus",
+   "flags": [
+    "configured-onstack",
+    "-signal-fault",
+    "bus"
+   ],
+   "env": {},
+   "repeat": 1,
+   "ok": true,
+   "detail": "recovered",
+   "runs": [
+    {
+     "name": "configured-onstack-bus",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "configured-onstack",
+      "-signal-fault",
+      "bus"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "before-fault",
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": true,
+     "reason": "",
+     "selected": 64,
+     "fault": {
+      "kind": "bus",
+      "recovered": "runtime error: invalid memory address or nil pointer dereference"
+     },
+     "delivery": null,
+     "onstack_added": [
+      7,
+      11
+     ],
+     "onstack_added_after_webkit": null,
+     "unprotected": [
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14"
+      ]
+     ],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": null,
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present"
+    }
+   ]
+  },
+  {
+   "case": "configured-onstack-webkit-bus",
+   "flags": [
+    "configured-onstack",
+    "-signal-webkit",
+    "-signal-fault",
+    "bus"
+   ],
+   "env": {},
+   "repeat": 1,
+   "ok": true,
+   "detail": "recovered with WebKit up",
+   "runs": [
+    {
+     "name": "configured-onstack-webkit-bus",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "configured-onstack",
+      "-signal-webkit",
+      "-signal-fault",
+      "bus"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "before-fault",
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": true,
+     "reason": "",
+     "selected": 64,
+     "fault": {
+      "kind": "bus",
+      "recovered": "runtime error: invalid memory address or nil pointer dereference"
+     },
+     "delivery": null,
+     "onstack_added": [
+      7,
+      11
+     ],
+     "onstack_added_after_webkit": null,
+     "unprotected": [
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14"
+      ]
+     ],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       13,
+       "ignore",
+       null
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": null,
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present"
+    }
+   ]
+  },
+  {
+   "case": "configured-onstack-webkit",
+   "flags": [
+    "configured-onstack",
+    "-signal-webkit"
+   ],
+   "env": {},
+   "repeat": 1,
+   "ok": true,
+   "detail": {
+    "non_go": [
+     [
+      7,
+      "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTORER"
+      ]
+     ],
+     [
+      11,
+      "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTORER"
+      ]
+     ],
+     [
+      13,
+      "ignore",
+      null
+     ],
+     [
+      33,
+      "native:libc.so.6",
+      [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     ],
+     [
+      64,
+      "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      [
+       "SA_SIGINFO",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     ]
+    ]
+   },
+   "runs": [
+    {
+     "name": "configured-onstack-webkit",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "configured-onstack",
+      "-signal-webkit"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "before-sigusr1",
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": true,
+     "reason": "",
+     "selected": 64,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": [
+      7,
+      11
+     ],
+     "onstack_added_after_webkit": null,
+     "unprotected": [
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14"
+      ]
+     ],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       13,
+       "ignore",
+       null
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 7576576000,
+      "go_collections": 7399,
+      "go_numgc": 7400,
+      "js_collections_requested": 27,
+      "js_result": 600000,
+      "js_rounds": 113,
+      "tight_loop_rounds": 8312
+     },
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present"
+    }
+   ]
+  },
+  {
+   "case": "webkit-first",
+   "flags": [
+    "configured",
+    "-signal-webkit",
+    "-signal-order",
+    "webkit-first"
+   ],
+   "env": {},
+   "repeat": 1,
+   "ok": true,
+   "detail": {
+    "non_go": [
+     [
+      7,
+      "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      [
+       "SA_SIGINFO",
+       "SA_RESTORER"
+      ]
+     ],
+     [
+      11,
+      "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      [
+       "SA_SIGINFO",
+       "SA_RESTORER"
+      ]
+     ],
+     [
+      13,
+      "ignore",
+      null
+     ],
+     [
+      24,
+      "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      [
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     ],
+     [
+      33,
+      "native:libc.so.6",
+      [
+       "SA_SIGINFO",
+       "SA_ONSTACK",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     ],
+     [
+      64,
+      "native:libjavascriptcoregtk-4.1.so.0.10.14",
+      [
+       "SA_SIGINFO",
+       "SA_RESTART",
+       "SA_RESTORER"
+      ]
+     ]
+    ],
+    "note": "observation: WebKit initializes JSC itself"
+   },
+   "runs": [
+    {
+     "name": "webkit-first",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "configured",
+      "-signal-webkit",
+      "-signal-order",
+      "webkit-first"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "before-sigusr1",
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": true,
+     "reason": "",
+     "selected": 64,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": null,
+     "onstack_added_after_webkit": null,
+     "unprotected": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14"
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14"
+      ],
+      [
+       24,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14"
+      ],
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14"
+      ]
+     ],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       13,
+       "ignore",
+       null
+      ],
+      [
+       24,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 7709696000,
+      "go_collections": 7529,
+      "go_numgc": 7530,
+      "js_collections_requested": 27,
+      "js_result": 600000,
+      "js_rounds": 110,
+      "tight_loop_rounds": 8318
+     },
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present"
+    }
+   ]
+  },
+  {
+   "case": "configured-onstack-all",
+   "flags": [
+    "configured-onstack-all"
+   ],
+   "env": {},
+   "repeat": 10,
+   "ok": true,
+   "detail": {
+    "exits": {
+     "hang": 3,
+     "0": 7
+    },
+    "note": "SA_ONSTACK on the suspend signal: hazard probe"
+   },
+   "runs": [
+    {
+     "name": "configured-onstack-all-1",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "configured-onstack-all"
+     ],
+     "env": {},
+     "exit": "hang",
+     "events": [],
+     "stderr_lines": []
+    },
+    {
+     "name": "configured-onstack-all-2",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "configured-onstack-all"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "before-sigusr1",
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": true,
+     "reason": "",
+     "selected": 64,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": [
+      7,
+      11,
+      64
+     ],
+     "onstack_added_after_webkit": null,
+     "unprotected": [],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 8190976000,
+      "go_collections": 7999,
+      "go_numgc": 7999,
+      "js_collections_requested": 27,
+      "js_result": 600000,
+      "js_rounds": 114,
+      "tight_loop_rounds": 8254
+     },
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present"
+    },
+    {
+     "name": "configured-onstack-all-3",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "configured-onstack-all"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "before-sigusr1",
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": true,
+     "reason": "",
+     "selected": 64,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": [
+      7,
+      11,
+      64
+     ],
+     "onstack_added_after_webkit": null,
+     "unprotected": [],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 8175616000,
+      "go_collections": 7984,
+      "go_numgc": 7984,
+      "js_collections_requested": 27,
+      "js_result": 600000,
+      "js_rounds": 114,
+      "tight_loop_rounds": 8258
+     },
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present"
+    },
+    {
+     "name": "configured-onstack-all-4",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "configured-onstack-all"
+     ],
+     "env": {},
+     "exit": "hang",
+     "events": [],
+     "stderr_lines": []
+    },
+    {
+     "name": "configured-onstack-all-5",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "configured-onstack-all"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "before-sigusr1",
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": true,
+     "reason": "",
+     "selected": 64,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": [
+      7,
+      11,
+      64
+     ],
+     "onstack_added_after_webkit": null,
+     "unprotected": [],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 8337408000,
+      "go_collections": 8142,
+      "go_numgc": 8142,
+      "js_collections_requested": 27,
+      "js_result": 600000,
+      "js_rounds": 113,
+      "tight_loop_rounds": 8170
+     },
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present"
+    },
+    {
+     "name": "configured-onstack-all-6",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "configured-onstack-all"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "before-sigusr1",
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": true,
+     "reason": "",
+     "selected": 64,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": [
+      7,
+      11,
+      64
+     ],
+     "onstack_added_after_webkit": null,
+     "unprotected": [],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 8330240000,
+      "go_collections": 8135,
+      "go_numgc": 8135,
+      "js_collections_requested": 27,
+      "js_result": 600000,
+      "js_rounds": 112,
+      "tight_loop_rounds": 8218
+     },
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present"
+    },
+    {
+     "name": "configured-onstack-all-7",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "configured-onstack-all"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "before-sigusr1",
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": true,
+     "reason": "",
+     "selected": 64,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": [
+      7,
+      11,
+      64
+     ],
+     "onstack_added_after_webkit": null,
+     "unprotected": [],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 8056832000,
+      "go_collections": 7868,
+      "go_numgc": 7868,
+      "js_collections_requested": 27,
+      "js_result": 600000,
+      "js_rounds": 113,
+      "tight_loop_rounds": 8299
+     },
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present"
+    },
+    {
+     "name": "configured-onstack-all-8",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "configured-onstack-all"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "before-sigusr1",
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": true,
+     "reason": "",
+     "selected": 64,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": [
+      7,
+      11,
+      64
+     ],
+     "onstack_added_after_webkit": null,
+     "unprotected": [],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 8147968000,
+      "go_collections": 7957,
+      "go_numgc": 7957,
+      "js_collections_requested": 27,
+      "js_result": 600000,
+      "js_rounds": 112,
+      "tight_loop_rounds": 8299
+     },
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present"
+    },
+    {
+     "name": "configured-onstack-all-9",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "configured-onstack-all"
+     ],
+     "env": {},
+     "exit": "hang",
+     "events": [],
+     "stderr_lines": []
+    },
+    {
+     "name": "configured-onstack-all-10",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "configured-onstack-all"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "before-sigusr1",
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": true,
+     "reason": "",
+     "selected": 64,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": [
+      7,
+      11,
+      64
+     ],
+     "onstack_added_after_webkit": null,
+     "unprotected": [],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 8168448000,
+      "go_collections": 7977,
+      "go_numgc": 7977,
+      "js_collections_requested": 28,
+      "js_result": 600000,
+      "js_rounds": 116,
+      "tight_loop_rounds": 8324
+     },
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present"
+    }
+   ]
+  },
+  {
+   "case": "late",
+   "flags": [
+    "late"
+   ],
+   "env": {},
+   "repeat": 1,
+   "ok": true,
+   "detail": "refused after initialization; the collision remains and readiness is false",
+   "runs": [
+    {
+     "name": "late",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "late"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "signal-probe"
+     ],
+     "stderr_lines": [
+      "Overriding existing handler for signal 10. Set JSC_SIGNAL_FOR_GC if you want WebKit to use a different signal"
+     ],
+     "ready": false,
+     "reason": "JSConfigureSignalForGC refused after initialization; the default collision remains",
+     "selected": 0,
+     "fault": null,
+     "delivery": null,
+     "onstack_added": null,
+     "onstack_added_after_webkit": null,
+     "unprotected": [],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       10,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": null,
+     "second_thread": null,
+     "configure_result": null,
+     "configure_after_init": false,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present"
+    }
+   ]
+  },
+  {
+   "case": "env",
+   "flags": [
+    "env"
+   ],
+   "env": {
+    "JSC_SIGNAL_FOR_GC": "63"
+   },
+   "repeat": 1,
+   "ok": true,
+   "detail": "operator's signal released and used",
+   "runs": [
+    {
+     "name": "env",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "env"
+     ],
+     "env": {
+      "JSC_SIGNAL_FOR_GC": "63"
+     },
+     "exit": 0,
+     "events": [
+      "before-sigusr1",
+      "signal-probe"
+     ],
+     "stderr_lines": [
+      "ERROR: invalid option: JSC_SIGNAL_FOR_GC=63"
+     ],
+     "ready": true,
+     "reason": "operator-selected JSC_SIGNAL_FOR_GC released from Go; JSC configures itself",
+     "selected": 63,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": null,
+     "onstack_added_after_webkit": null,
+     "unprotected": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14"
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14"
+      ],
+      [
+       63,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14"
+      ]
+     ],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       63,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 8266752000,
+      "go_collections": 8073,
+      "go_numgc": 8073,
+      "js_collections_requested": 27,
+      "js_result": 600000,
+      "js_rounds": 114,
+      "tight_loop_rounds": 8335
+     },
+     "second_thread": null,
+     "configure_result": null,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present"
+    }
+   ]
+  },
+  {
+   "case": "env-invalid",
+   "flags": [
+    "env"
+   ],
+   "env": {
+    "JSC_SIGNAL_FOR_GC": "10"
+   },
+   "repeat": 1,
+   "ok": true,
+   "detail": "refused",
+   "runs": [
+    {
+     "name": "env-invalid",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "env"
+     ],
+     "env": {
+      "JSC_SIGNAL_FOR_GC": "10"
+     },
+     "exit": 0,
+     "events": [
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": false,
+     "reason": "JSC_SIGNAL_FOR_GC is not a real-time signal in libc's usable range; refusing",
+     "selected": 0,
+     "fault": null,
+     "delivery": null,
+     "onstack_added": null,
+     "onstack_added_after_webkit": null,
+     "unprotected": [],
+     "non_go": [
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": null,
+     "second_thread": null,
+     "configure_result": null,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present"
+    }
+   ]
+  },
+  {
+   "case": "no-symbol",
+   "flags": [
+    "no-symbol"
+   ],
+   "env": {},
+   "repeat": 1,
+   "ok": true,
+   "detail": "injected: refused before JSC initialization",
+   "runs": [
+    {
+     "name": "no-symbol",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "no-symbol"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": false,
+     "reason": "configuration entry point unavailable; refusing to start a browser with the default collision",
+     "selected": 0,
+     "fault": null,
+     "delivery": null,
+     "onstack_added": null,
+     "onstack_added_after_webkit": null,
+     "unprotected": [],
+     "non_go": [
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": null,
+     "second_thread": null,
+     "configure_result": null,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "absent (injected)"
+    }
+   ]
+  },
+  {
+   "case": "no-signal",
+   "flags": [
+    "no-signal"
+   ],
+   "env": {},
+   "repeat": 1,
+   "ok": true,
+   "detail": "injected: refused before JSC initialization",
+   "runs": [
+    {
+     "name": "no-signal",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "no-signal"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": false,
+     "reason": "no usable signal; refusing to start a browser with the default collision",
+     "selected": 0,
+     "fault": null,
+     "delivery": null,
+     "onstack_added": null,
+     "onstack_added_after_webkit": null,
+     "unprotected": [],
+     "non_go": [
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": null,
+     "second_thread": null,
+     "configure_result": null,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present"
+    }
+   ]
+  },
+  {
+   "case": "strace-one-thread",
+   "flags": [
+    "configured-onstack"
+   ],
+   "env": {},
+   "repeat": 1,
+   "ok": true,
+   "detail": {
+    "delivered": {
+     "SIGHUP@main": 1,
+     "SIGURG@main": 18,
+     "SIGURG@other": 24268,
+     "SIGUSR1@main": 1,
+     "SIGUSR2@main": 1
+    }
+   },
+   "runs": [
+    {
+     "name": "strace-one-thread",
+     "command": [
+      "strace",
+      "-f",
+      "-qq",
+      "-e",
+      "trace=none",
+      "-e",
+      "signal=all",
+      "-o",
+      "evidence/linux/integration-feasibility/signals/strace-one-thread.strace",
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "configured-onstack"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "before-sigusr1",
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": true,
+     "reason": "",
+     "selected": 64,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": [
+      7,
+      11
+     ],
+     "onstack_added_after_webkit": null,
+     "unprotected": [
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14"
+      ]
+     ],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 2735104000,
+      "go_collections": 2671,
+      "go_numgc": 2671,
+      "js_collections_requested": 17,
+      "js_result": 600000,
+      "js_rounds": 71,
+      "tight_loop_rounds": 5694
+     },
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present",
+     "delivered": {
+      "SIGHUP@main": 1,
+      "SIGURG@main": 18,
+      "SIGURG@other": 24268,
+      "SIGUSR1@main": 1,
+      "SIGUSR2@main": 1
+     }
+    }
+   ]
+  },
+  {
+   "case": "strace-two-threads",
+   "flags": [
+    "configured-onstack",
+    "-signal-js-threads",
+    "2"
+   ],
+   "env": {},
+   "repeat": 1,
+   "ok": true,
+   "detail": {
+    "delivered": {
+     "SIGHUP@main": 1,
+     "SIGRT_32@main": 1612,
+     "SIGRT_32@other": 1608,
+     "SIGURG@main": 13,
+     "SIGURG@other": 24150,
+     "SIGUSR1@main": 1,
+     "SIGUSR2@main": 1
+    },
+    "second_thread": {
+     "rounds": [
+      116,
+      117
+     ]
+    }
+   },
+   "runs": [
+    {
+     "name": "strace-two-threads",
+     "command": [
+      "strace",
+      "-f",
+      "-qq",
+      "-e",
+      "trace=none",
+      "-e",
+      "signal=all",
+      "-o",
+      "evidence/linux/integration-feasibility/signals/strace-two-threads.strace",
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "configured-onstack",
+      "-signal-js-threads",
+      "2"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "before-sigusr1",
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": true,
+     "reason": "",
+     "selected": 64,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": [
+      7,
+      11
+     ],
+     "onstack_added_after_webkit": null,
+     "unprotected": [
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14"
+      ]
+     ],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 2712576000,
+      "go_collections": 2649,
+      "go_numgc": 2649,
+      "js_collections_requested": 17,
+      "js_result": 600000,
+      "js_rounds": 70,
+      "tight_loop_rounds": 5648
+     },
+     "second_thread": {
+      "rounds": [
+       116,
+       117
+      ]
+     },
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present",
+     "delivered": {
+      "SIGHUP@main": 1,
+      "SIGRT_32@main": 1612,
+      "SIGRT_32@other": 1608,
+      "SIGURG@main": 13,
+      "SIGURG@other": 24150,
+      "SIGUSR1@main": 1,
+      "SIGUSR2@main": 1
+     }
+    }
+   ]
+  },
+  {
+   "case": "two-threads",
+   "flags": [
+    "configured-onstack",
+    "-signal-js-threads",
+    "2"
+   ],
+   "env": {},
+   "repeat": 10,
+   "ok": true,
+   "detail": {
+    "exits": {
+     "0": 10
+    }
+   },
+   "runs": [
+    {
+     "name": "two-threads-1",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "configured-onstack",
+      "-signal-js-threads",
+      "2"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "before-sigusr1",
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": true,
+     "reason": "",
+     "selected": 64,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": [
+      7,
+      11
+     ],
+     "onstack_added_after_webkit": null,
+     "unprotected": [
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14"
+      ]
+     ],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 8130560000,
+      "go_collections": 7940,
+      "go_numgc": 7940,
+      "js_collections_requested": 26,
+      "js_result": 600000,
+      "js_rounds": 109,
+      "tight_loop_rounds": 8240
+     },
+     "second_thread": {
+      "rounds": [
+       182,
+       182
+      ]
+     },
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present"
+    },
+    {
+     "name": "two-threads-2",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "configured-onstack",
+      "-signal-js-threads",
+      "2"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "before-sigusr1",
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": true,
+     "reason": "",
+     "selected": 64,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": [
+      7,
+      11
+     ],
+     "onstack_added_after_webkit": null,
+     "unprotected": [
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14"
+      ]
+     ],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 8084480000,
+      "go_collections": 7895,
+      "go_numgc": 7895,
+      "js_collections_requested": 27,
+      "js_result": 600000,
+      "js_rounds": 111,
+      "tight_loop_rounds": 8233
+     },
+     "second_thread": {
+      "rounds": [
+       182,
+       182
+      ]
+     },
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present"
+    },
+    {
+     "name": "two-threads-3",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "configured-onstack",
+      "-signal-js-threads",
+      "2"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "before-sigusr1",
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": true,
+     "reason": "",
+     "selected": 64,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": [
+      7,
+      11
+     ],
+     "onstack_added_after_webkit": null,
+     "unprotected": [
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14"
+      ]
+     ],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 8037376000,
+      "go_collections": 7849,
+      "go_numgc": 7849,
+      "js_collections_requested": 27,
+      "js_result": 600000,
+      "js_rounds": 112,
+      "tight_loop_rounds": 8263
+     },
+     "second_thread": {
+      "rounds": [
+       183,
+       183
+      ]
+     },
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present"
+    },
+    {
+     "name": "two-threads-4",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "configured-onstack",
+      "-signal-js-threads",
+      "2"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "before-sigusr1",
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": true,
+     "reason": "",
+     "selected": 64,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": [
+      7,
+      11
+     ],
+     "onstack_added_after_webkit": null,
+     "unprotected": [
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14"
+      ]
+     ],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 8155136000,
+      "go_collections": 7964,
+      "go_numgc": 7964,
+      "js_collections_requested": 27,
+      "js_result": 600000,
+      "js_rounds": 110,
+      "tight_loop_rounds": 8172
+     },
+     "second_thread": {
+      "rounds": [
+       184,
+       184
+      ]
+     },
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present"
+    },
+    {
+     "name": "two-threads-5",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "configured-onstack",
+      "-signal-js-threads",
+      "2"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "before-sigusr1",
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": true,
+     "reason": "",
+     "selected": 64,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": [
+      7,
+      11
+     ],
+     "onstack_added_after_webkit": null,
+     "unprotected": [
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14"
+      ]
+     ],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 8228864000,
+      "go_collections": 8036,
+      "go_numgc": 8036,
+      "js_collections_requested": 27,
+      "js_result": 600000,
+      "js_rounds": 111,
+      "tight_loop_rounds": 8149
+     },
+     "second_thread": {
+      "rounds": [
+       183,
+       183
+      ]
+     },
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present"
+    },
+    {
+     "name": "two-threads-6",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "configured-onstack",
+      "-signal-js-threads",
+      "2"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "before-sigusr1",
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": true,
+     "reason": "",
+     "selected": 64,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": [
+      7,
+      11
+     ],
+     "onstack_added_after_webkit": null,
+     "unprotected": [
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14"
+      ]
+     ],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 8186880000,
+      "go_collections": 7995,
+      "go_numgc": 7995,
+      "js_collections_requested": 27,
+      "js_result": 600000,
+      "js_rounds": 111,
+      "tight_loop_rounds": 8152
+     },
+     "second_thread": {
+      "rounds": [
+       185,
+       186
+      ]
+     },
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present"
+    },
+    {
+     "name": "two-threads-7",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "configured-onstack",
+      "-signal-js-threads",
+      "2"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "before-sigusr1",
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": true,
+     "reason": "",
+     "selected": 64,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": [
+      7,
+      11
+     ],
+     "onstack_added_after_webkit": null,
+     "unprotected": [
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14"
+      ]
+     ],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 8182784000,
+      "go_collections": 7991,
+      "go_numgc": 7991,
+      "js_collections_requested": 26,
+      "js_result": 600000,
+      "js_rounds": 109,
+      "tight_loop_rounds": 8147
+     },
+     "second_thread": {
+      "rounds": [
+       183,
+       182
+      ]
+     },
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present"
+    },
+    {
+     "name": "two-threads-8",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "configured-onstack",
+      "-signal-js-threads",
+      "2"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "before-sigusr1",
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": true,
+     "reason": "",
+     "selected": 64,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": [
+      7,
+      11
+     ],
+     "onstack_added_after_webkit": null,
+     "unprotected": [
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14"
+      ]
+     ],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 8292352000,
+      "go_collections": 8098,
+      "go_numgc": 8098,
+      "js_collections_requested": 27,
+      "js_result": 600000,
+      "js_rounds": 114,
+      "tight_loop_rounds": 8226
+     },
+     "second_thread": {
+      "rounds": [
+       181,
+       181
+      ]
+     },
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present"
+    },
+    {
+     "name": "two-threads-9",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "configured-onstack",
+      "-signal-js-threads",
+      "2"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "before-sigusr1",
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": true,
+     "reason": "",
+     "selected": 64,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": [
+      7,
+      11
+     ],
+     "onstack_added_after_webkit": null,
+     "unprotected": [
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14"
+      ]
+     ],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 8066048000,
+      "go_collections": 7877,
+      "go_numgc": 7877,
+      "js_collections_requested": 27,
+      "js_result": 600000,
+      "js_rounds": 111,
+      "tight_loop_rounds": 8249
+     },
+     "second_thread": {
+      "rounds": [
+       187,
+       188
+      ]
+     },
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present"
+    },
+    {
+     "name": "two-threads-10",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "configured-onstack",
+      "-signal-js-threads",
+      "2"
+     ],
+     "env": {},
+     "exit": 0,
+     "events": [
+      "before-sigusr1",
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": true,
+     "reason": "",
+     "selected": 64,
+     "fault": null,
+     "delivery": [
+      {
+       "received_by_go": true,
+       "signal": 12
+      },
+      {
+       "received_by_go": true,
+       "signal": 1
+      },
+      {
+       "received_by_go": true,
+       "signal": 10
+      }
+     ],
+     "onstack_added": [
+      7,
+      11
+     ],
+     "onstack_added_after_webkit": null,
+     "unprotected": [
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14"
+      ]
+     ],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.10.14",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": {
+      "go_bytes_allocated": 8042496000,
+      "go_collections": 7854,
+      "go_numgc": 7854,
+      "js_collections_requested": 27,
+      "js_result": 600000,
+      "js_rounds": 113,
+      "tight_loop_rounds": 8257
+     },
+     "second_thread": {
+      "rounds": [
+       178,
+       184
+      ]
+     },
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present"
+    }
+   ]
+  },
+  {
+   "case": "comparison-baseline-segv",
+   "flags": [
+    "baseline",
+    "-signal-fault",
+    "segv"
+   ],
+   "env": {
+    "LD_LIBRARY_PATH": "/tmp/dfx2-webkit-runtime/root/usr/lib/x86_64-linux-gnu",
+    "WEBKIT_INJECTED_BUNDLE_PATH": "/tmp/dfx2-webkit-runtime/root/usr/lib/x86_64-linux-gnu/webkit2gtk-4.1/injected-bundle"
+   },
+   "repeat": 1,
+   "ok": true,
+   "detail": "comparison libraries: same fatal fault",
+   "runs": [
+    {
+     "name": "comparison-baseline-segv",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "baseline",
+      "-signal-fault",
+      "segv"
+     ],
+     "env": {
+      "LD_LIBRARY_PATH": "/tmp/dfx2-webkit-runtime/root/usr/lib/x86_64-linux-gnu",
+      "WEBKIT_INJECTED_BUNDLE_PATH": "/tmp/dfx2-webkit-runtime/root/usr/lib/x86_64-linux-gnu/webkit2gtk-4.1/injected-bundle"
+     },
+     "exit": 2,
+     "events": [
+      "before-fault"
+     ],
+     "stderr_lines": [
+      "Overriding existing handler for signal 10. Set JSC_SIGNAL_FOR_GC if you want WebKit to use a different signal",
+      "signal 11 received but handler not on signal stack",
+      "mp.gsignal stack [0x3e75126ac000 0x3e75126b4000], mp.g0 stack [0x7f480149e150 0x7f4801c9dd50], sp=0x3e7512689ef0",
+      "fatal error: non-Go code set up signal handler without SA_ONSTACK flag",
+      "",
+      "runtime stack:"
+     ]
+    }
+   ]
+  },
+  {
+   "case": "comparison-configured-onstack-webkit-segv",
+   "flags": [
+    "configured-onstack",
+    "-signal-webkit",
+    "-signal-fault",
+    "segv"
+   ],
+   "env": {
+    "LD_LIBRARY_PATH": "/tmp/dfx2-webkit-runtime/root/usr/lib/x86_64-linux-gnu",
+    "WEBKIT_INJECTED_BUNDLE_PATH": "/tmp/dfx2-webkit-runtime/root/usr/lib/x86_64-linux-gnu/webkit2gtk-4.1/injected-bundle"
+   },
+   "repeat": 1,
+   "ok": true,
+   "detail": "comparison libraries: recovered",
+   "runs": [
+    {
+     "name": "comparison-configured-onstack-webkit-segv",
+     "command": [
+      "/tmp/dfx2-wk-feas",
+      "-signal-probe",
+      "configured-onstack",
+      "-signal-webkit",
+      "-signal-fault",
+      "segv"
+     ],
+     "env": {
+      "LD_LIBRARY_PATH": "/tmp/dfx2-webkit-runtime/root/usr/lib/x86_64-linux-gnu",
+      "WEBKIT_INJECTED_BUNDLE_PATH": "/tmp/dfx2-webkit-runtime/root/usr/lib/x86_64-linux-gnu/webkit2gtk-4.1/injected-bundle"
+     },
+     "exit": 0,
+     "events": [
+      "before-fault",
+      "signal-probe"
+     ],
+     "stderr_lines": [],
+     "ready": true,
+     "reason": "",
+     "selected": 64,
+     "fault": {
+      "kind": "segv",
+      "recovered": "runtime error: invalid memory address or nil pointer dereference"
+     },
+     "delivery": null,
+     "onstack_added": [
+      7,
+      11
+     ],
+     "onstack_added_after_webkit": null,
+     "unprotected": [
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.11.9"
+      ]
+     ],
+     "non_go": [
+      [
+       7,
+       "native:libjavascriptcoregtk-4.1.so.0.11.9",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       11,
+       "native:libjavascriptcoregtk-4.1.so.0.11.9",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       13,
+       "ignore",
+       null
+      ],
+      [
+       33,
+       "native:libc.so.6",
+       [
+        "SA_SIGINFO",
+        "SA_ONSTACK",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ],
+      [
+       64,
+       "native:libjavascriptcoregtk-4.1.so.0.11.9",
+       [
+        "SA_SIGINFO",
+        "SA_RESTART",
+        "SA_RESTORER"
+       ]
+      ]
+     ],
+     "workload": null,
+     "second_thread": null,
+     "configure_result": true,
+     "configure_after_init": null,
+     "rtmin": 34,
+     "rtmax": 64,
+     "symbol": "present"
+    }
+   ]
+  }
+ ],
+ "passed": true
+}

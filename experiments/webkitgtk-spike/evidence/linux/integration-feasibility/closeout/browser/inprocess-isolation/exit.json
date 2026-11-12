@@ -1,0 +1,159 @@
+{
+ "host_pid": 476460,
+ "host_exit": 0,
+ "host_seconds": 0.073,
+ "timed_out": false,
+ "children_pending": false,
+ "adopted_exits": [
+  {
+   "pid": 476507,
+   "name": "bwrap",
+   "command": "",
+   "libraries": [],
+   "identified_from": "zombie comm",
+   "exit": 0,
+   "core_dumped": false
+  },
+  {
+   "pid": 476483,
+   "command": "/usr/lib/x86_64-linux-gnu/webkit2gtk-4.1/WebKitNetworkProcess 1 19",
+   "libraries": [
+    "/usr/lib/x86_64-linux-gnu/libjavascriptcoregtk-4.1.so.0.10.14",
+    "/usr/lib/x86_64-linux-gnu/libwebkit2gtk-4.1.so.0.21.10"
+   ],
+   "name": "WebKitNetworkPr",
+   "exit": 0,
+   "core_dumped": false
+  },
+  {
+   "pid": 476709,
+   "command": "/usr/lib/x86_64-linux-gnu/webkit2gtk-4.1/WebKitNetworkProcess 5 42",
+   "libraries": [
+    "/usr/lib/x86_64-linux-gnu/libjavascriptcoregtk-4.1.so.0.10.14",
+    "/usr/lib/x86_64-linux-gnu/libwebkit2gtk-4.1.so.0.21.10"
+   ],
+   "name": "WebKitNetworkPr",
+   "exit": 0,
+   "core_dumped": false
+  },
+  {
+   "pid": 476671,
+   "command": "/usr/lib/x86_64-linux-gnu/webkit2gtk-4.1/WebKitWebProcess 4 35",
+   "libraries": [
+    "/usr/lib/x86_64-linux-gnu/libjavascriptcoregtk-4.1.so.0.10.14",
+    "/usr/lib/x86_64-linux-gnu/libwebkit2gtk-4.1.so.0.21.10"
+   ],
+   "name": "WebKitWebProces",
+   "exit": 0,
+   "core_dumped": false
+  },
+  {
+   "pid": 476717,
+   "command": "/usr/lib/x86_64-linux-gnu/webkit2gtk-4.1/WebKitWebProcess 7 45",
+   "libraries": [
+    "/usr/lib/x86_64-linux-gnu/libjavascriptcoregtk-4.1.so.0.10.14",
+    "/usr/lib/x86_64-linux-gnu/libwebkit2gtk-4.1.so.0.21.10"
+   ],
+   "name": "WebKitWebProces",
+   "exit": 0,
+   "core_dumped": false
+  },
+  {
+   "pid": 476511,
+   "command": "bwrap --unshare-all --die-with-parent --chdir / --ro-bind /usr /usr --dev /dev --ro-bind-try /etc/ld.so.cache /etc/ld.so.cache --ro-bind-try /nix/store /nix/store --tmpfs /tmp-home --tmpfs /tmp-run --clearenv --setenv HOME /tmp-home --setenv XDG_RUNTIME_DIR /tmp-run --setenv XDG_RUNTIME_DIR /run/user/1000 --symlink /usr/lib64 /lib64 --symlink /usr/lib /lib --ro-bind-try /etc/fonts/conf.d /etc/fonts/conf.d --ro-bind-try /etc/fonts/fonts.conf /etc/fonts/fonts.conf --ro-bind-try /home/michael/.fonts /home/michael/.fonts --ro-bind-try /tmp/dfx2-feasibility/xdg-inprocess-isolation-469507/cache/fontconfig /tmp/dfx2-feasibility/xdg-inprocess-isolation-469507/cache/fontconfig --ro-bind-try /var/cache/fontconfig /var/cache/fontconfig --bind-try /tmp/dfx2-feasibility/xdg-inprocess-isolation-469507/cache/glycin/usr/libexec/glycin-loaders/2+/glycin-svg /tmp/dfx2-feasibility/xdg-inprocess-isolation-469507/cache/glycin/usr/libexec/glycin-loaders/2+/glycin-svg --setenv XDG_CACHE_HOME /tmp/dfx2-feasibility/xdg-inprocess-isolation-469507/cache/glycin/usr/libexec/glycin-loaders/2+/glycin-svg --seccomp 33 /usr/libexec/glycin-loaders/2+/glycin-svg --dbus-fd 32",
+   "libraries": [],
+   "name": "bwrap",
+   "exit": -9,
+   "core_dumped": false
+  },
+  {
+   "pid": 476510,
+   "command": "bwrap --unshare-all --die-with-parent --chdir / --ro-bind /usr /usr --dev /dev --ro-bind-try /etc/ld.so.cache /etc/ld.so.cache --ro-bind-try /nix/store /nix/store --tmpfs /tmp-home --tmpfs /tmp-run --clearenv --setenv HOME /tmp-home --setenv XDG_RUNTIME_DIR /tmp-run --setenv XDG_RUNTIME_DIR /run/user/1000 --symlink /usr/lib64 /lib64 --symlink /usr/lib /lib --ro-bind-try /etc/fonts/conf.d /etc/fonts/conf.d --ro-bind-try /etc/fonts/fonts.conf /etc/fonts/fonts.conf --ro-bind-try /home/michael/.fonts /home/michael/.fonts --ro-bind-try /tmp/dfx2-feasibility/xdg-inprocess-isolation-469507/cache/fontconfig /tmp/dfx2-feasibility/xdg-inprocess-isolation-469507/cache/fontconfig --ro-bind-try /var/cache/fontconfig /var/cache/fontconfig --bind-try /tmp/dfx2-feasibility/xdg-inprocess-isolation-469507/cache/glycin/usr/libexec/glycin-loaders/2+/glycin-svg /tmp/dfx2-feasibility/xdg-inprocess-isolation-469507/cache/glycin/usr/libexec/glycin-loaders/2+/glycin-svg --setenv XDG_CACHE_HOME /tmp/dfx2-feasibility/xdg-inprocess-isolation-469507/cache/glycin/usr/libexec/glycin-loaders/2+/glycin-svg --seccomp 33 /usr/libexec/glycin-loaders/2+/glycin-svg --dbus-fd 32",
+   "libraries": [],
+   "name": "bwrap",
+   "exit": -9,
+   "core_dumped": false
+  }
+ ],
+ "observed_processes": [
+  {
+   "pid": 476460,
+   "command": "/tmp/dfx2-wk-candidate -feasibility -feas-root /tmp/dfx2-feasibility -feas-vmfree -signal-reserve 60",
+   "libraries": [
+    "/usr/lib/x86_64-linux-gnu/libjavascriptcoregtk-4.1.so.0.10.14",
+    "/usr/lib/x86_64-linux-gnu/libwebkit2gtk-4.1.so.0.21.10"
+   ],
+   "name": "dfx2-wk-candida"
+  },
+  {
+   "pid": 476483,
+   "command": "/usr/lib/x86_64-linux-gnu/webkit2gtk-4.1/WebKitNetworkProcess 1 19",
+   "libraries": [
+    "/usr/lib/x86_64-linux-gnu/libjavascriptcoregtk-4.1.so.0.10.14",
+    "/usr/lib/x86_64-linux-gnu/libwebkit2gtk-4.1.so.0.21.10"
+   ],
+   "name": "WebKitNetworkPr"
+  },
+  {
+   "pid": 476510,
+   "command": "bwrap --unshare-all --die-with-parent --chdir / --ro-bind /usr /usr --dev /dev --ro-bind-try /etc/ld.so.cache /etc/ld.so.cache --ro-bind-try /nix/store /nix/store --tmpfs /tmp-home --tmpfs /tmp-run --clearenv --setenv HOME /tmp-home --setenv XDG_RUNTIME_DIR /tmp-run --setenv XDG_RUNTIME_DIR /run/user/1000 --symlink /usr/lib64 /lib64 --symlink /usr/lib /lib --ro-bind-try /etc/fonts/conf.d /etc/fonts/conf.d --ro-bind-try /etc/fonts/fonts.conf /etc/fonts/fonts.conf --ro-bind-try /home/michael/.fonts /home/michael/.fonts --ro-bind-try /tmp/dfx2-feasibility/xdg-inprocess-isolation-469507/cache/fontconfig /tmp/dfx2-feasibility/xdg-inprocess-isolation-469507/cache/fontconfig --ro-bind-try /var/cache/fontconfig /var/cache/fontconfig --bind-try /tmp/dfx2-feasibility/xdg-inprocess-isolation-469507/cache/glycin/usr/libexec/glycin-loaders/2+/glycin-svg /tmp/dfx2-feasibility/xdg-inprocess-isolation-469507/cache/glycin/usr/libexec/glycin-loaders/2+/glycin-svg --setenv XDG_CACHE_HOME /tmp/dfx2-feasibility/xdg-inprocess-isolation-469507/cache/glycin/usr/libexec/glycin-loaders/2+/glycin-svg --seccomp 33 /usr/libexec/glycin-loaders/2+/glycin-svg --dbus-fd 32",
+   "libraries": [],
+   "name": "bwrap"
+  },
+  {
+   "pid": 476511,
+   "command": "bwrap --unshare-all --die-with-parent --chdir / --ro-bind /usr /usr --dev /dev --ro-bind-try /etc/ld.so.cache /etc/ld.so.cache --ro-bind-try /nix/store /nix/store --tmpfs /tmp-home --tmpfs /tmp-run --clearenv --setenv HOME /tmp-home --setenv XDG_RUNTIME_DIR /tmp-run --setenv XDG_RUNTIME_DIR /run/user/1000 --symlink /usr/lib64 /lib64 --symlink /usr/lib /lib --ro-bind-try /etc/fonts/conf.d /etc/fonts/conf.d --ro-bind-try /etc/fonts/fonts.conf /etc/fonts/fonts.conf --ro-bind-try /home/michael/.fonts /home/michael/.fonts --ro-bind-try /tmp/dfx2-feasibility/xdg-inprocess-isolation-469507/cache/fontconfig /tmp/dfx2-feasibility/xdg-inprocess-isolation-469507/cache/fontconfig --ro-bind-try /var/cache/fontconfig /var/cache/fontconfig --bind-try /tmp/dfx2-feasibility/xdg-inprocess-isolation-469507/cache/glycin/usr/libexec/glycin-loaders/2+/glycin-svg /tmp/dfx2-feasibility/xdg-inprocess-isolation-469507/cache/glycin/usr/libexec/glycin-loaders/2+/glycin-svg --setenv XDG_CACHE_HOME /tmp/dfx2-feasibility/xdg-inprocess-isolation-469507/cache/glycin/usr/libexec/glycin-loaders/2+/glycin-svg --seccomp 33 /usr/libexec/glycin-loaders/2+/glycin-svg --dbus-fd 32",
+   "libraries": [],
+   "name": "bwrap"
+  },
+  {
+   "pid": 476512,
+   "command": "/usr/libexec/glycin-loaders/2+/glycin-svg --dbus-fd 32",
+   "libraries": [],
+   "name": "glycin-svg"
+  },
+  {
+   "pid": 476671,
+   "command": "/usr/lib/x86_64-linux-gnu/webkit2gtk-4.1/WebKitWebProcess 4 35",
+   "libraries": [
+    "/usr/lib/x86_64-linux-gnu/libjavascriptcoregtk-4.1.so.0.10.14",
+    "/usr/lib/x86_64-linux-gnu/libwebkit2gtk-4.1.so.0.21.10"
+   ],
+   "name": "WebKitWebProces"
+  },
+  {
+   "pid": 476702,
+   "command": "/usr/lib/x86_64-linux-gnu/../../lib/x86_64-linux-gnu/gstreamer1.0/gstreamer-1.0/gst-plugin-scanner -l /usr/lib/x86_64-linux-gnu/webkit2gtk-4.1/WebKitWebProcess",
+   "libraries": [],
+   "name": "gst-plugin-scan"
+  },
+  {
+   "pid": 476717,
+   "command": "/usr/lib/x86_64-linux-gnu/webkit2gtk-4.1/WebKitWebProcess 7 45",
+   "libraries": [
+    "/usr/lib/x86_64-linux-gnu/libjavascriptcoregtk-4.1.so.0.10.14",
+    "/usr/lib/x86_64-linux-gnu/libwebkit2gtk-4.1.so.0.21.10"
+   ],
+   "name": "WebKitWebProces"
+  },
+  {
+   "pid": 476709,
+   "command": "/usr/lib/x86_64-linux-gnu/webkit2gtk-4.1/WebKitNetworkProcess 5 42",
+   "libraries": [
+    "/usr/lib/x86_64-linux-gnu/libjavascriptcoregtk-4.1.so.0.10.14",
+    "/usr/lib/x86_64-linux-gnu/libwebkit2gtk-4.1.so.0.21.10"
+   ],
+   "name": "WebKitNetworkPr"
+  },
+  {
+   "pid": 476507,
+   "name": "bwrap",
+   "command": "",
+   "libraries": [],
+   "identified_from": "zombie comm"
+  }
+ ],
+ "child_failure": false,
+ "seconds": 0.076,
+ "fatal_log": false
+}

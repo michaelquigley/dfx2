@@ -1,0 +1,38 @@
+{"event":"filter-store","path":"/tmp/dfx2-feasibility/filters-2219449","t":"13:50:15.941"}
+{"cookie":true,"cookie_fail_injected":false,"csp":true,"event":"ready","filter":true,"pid":2219449,"t":"13:50:15.942"}
+{"credential":true,"ephemeral_session":true,"event":"opened","mode":"loopback","origin":"http://127.0.0.1:37621","t":"13:50:16.066","window":"A"}
+{"event":"filter-installed","rules":"[{\"action\":{\"type\":\"block\"},\"trigger\":{\"url-filter\":\".*\"}},{\"action\":{\"type\":\"ignore-previous-rules\"},\"trigger\":{\"url-filter\":\"^http://127\\\\.0\\\\.0\\\\.1:37621/\"}},{\"action\":{\"type\":\"block\"},\"trigger\":{\"load-context\":[\"child-frame\"],\"resource-type\":[\"document\"],\"url-filter\":\".*\"}}]","t":"13:50:16.067","window":"A"}
+{"event":"cookie-installed","http_only":true,"same_site":"strict","t":"13:50:16.073","window":"A"}
+{"event":"navigate","t":"13:50:16.073","uri":"http://127.0.0.1:37621/","window":"A"}
+{"event":"navigation-allowed","method":"GET","redirect":false,"t":"13:50:16.161","uri":"http://127.0.0.1:37621/","window":"A"}
+{"event":"load","load_event":0,"t":"13:50:16.161","uri":"http://127.0.0.1:37621/","window":"A"}
+{"event":"load","load_event":2,"t":"13:50:16.163","uri":"http://127.0.0.1:37621/","window":"A"}
+{"event":"load","load_event":3,"t":"13:50:16.339","uri":"http://127.0.0.1:37621/","window":"A"}
+{"body":"return probe.checks()","error":"","event":"js","result":{"query":"é\u0026ü","img":true,"echoSha":"a5903776f0c8d72f5b1e8689519fc8d9d6317785a20e31659786c8d8703a6b8c","cookieVisible":false,"css":true,"echoLength":1005,"script":true,"origin":"http://127.0.0.1:37621"},"t":"13:50:16.343","window":"A"}
+{"event":"navigation-allowed","method":"GET","redirect":false,"t":"13:50:16.344","uri":"http://127.0.0.1:37621/","window":"A"}
+{"body":"location.reload(); return 1","error":"","event":"js","result":1,"t":"13:50:16.344","window":"A"}
+{"event":"load","load_event":0,"t":"13:50:16.344","uri":"http://127.0.0.1:37621/","window":"A"}
+{"event":"load","load_event":2,"t":"13:50:16.346","uri":"http://127.0.0.1:37621/","window":"A"}
+{"event":"load","load_event":3,"t":"13:50:16.349","uri":"http://127.0.0.1:37621/","window":"A"}
+{"body":"return probe.checks()","error":"","event":"js","result":{"echoSha":"a5903776f0c8d72f5b1e8689519fc8d9d6317785a20e31659786c8d8703a6b8c","css":true,"script":true,"query":"é\u0026ü","origin":"http://127.0.0.1:37621","echoLength":1005,"img":true,"cookieVisible":false},"t":"13:50:16.351","window":"A"}
+{"event":"navigation-allowed","method":"GET","redirect":false,"t":"13:50:16.351","uri":"http://127.0.0.1:37621/api/redirect","window":"A"}
+{"body":"location.href = 'api/redirect'; return 1","error":"","event":"js","result":1,"t":"13:50:16.351","window":"A"}
+{"event":"load","load_event":0,"t":"13:50:16.352","uri":"http://127.0.0.1:37621/","window":"A"}
+{"event":"navigation-allowed","method":"GET","redirect":true,"t":"13:50:16.352","uri":"http://127.0.0.1:37621/api/query?x=redirected","window":"A"}
+{"event":"load","load_event":1,"t":"13:50:16.353","uri":"http://127.0.0.1:37621/api/query?x=redirected","window":"A"}
+{"event":"load","load_event":2,"t":"13:50:16.354","uri":"http://127.0.0.1:37621/api/query?x=redirected","window":"A"}
+{"event":"load","load_event":3,"t":"13:50:16.356","uri":"http://127.0.0.1:37621/api/query?x=redirected","window":"A"}
+{"body":"return {uri: location.href, body: document.body.textContent}","error":"","event":"js","result":{"uri":"http://127.0.0.1:37621/api/query?x=redirected","body":"{\"x\":\"redirected\"}\n"},"t":"13:50:16.357","window":"A"}
+{"event":"navigation-allowed","method":"GET","redirect":false,"t":"13:50:16.357","uri":"http://127.0.0.1:37621/","window":"A"}
+{"body":"location.href = '/'; return 1","error":"","event":"js","result":1,"t":"13:50:16.357","window":"A"}
+{"event":"load","load_event":0,"t":"13:50:16.358","uri":"http://127.0.0.1:37621/api/query?x=redirected","window":"A"}
+{"event":"load","load_event":2,"t":"13:50:16.359","uri":"http://127.0.0.1:37621/","window":"A"}
+{"event":"load","load_event":3,"t":"13:50:16.362","uri":"http://127.0.0.1:37621/","window":"A"}
+{"body":"return probe.stream()","error":"","event":"js","result":[{"at":6,"text":"chunk-1\n"},{"at":7,"text":"chunk-2 after ack\n"},{"text":"done\n","at":7}],"t":"13:50:16.365","window":"A"}
+{"async":0,"event":"status","t":"13:50:16.365","windows":{"A":{"closing":false,"destroyed":false,"endpoint":{"admitted":20,"refused":{},"handled":20},"handler":{"GET /":3,"GET /api/query":3,"GET /api/redirect":1,"GET /api/stream":1,"GET /logo.svg":3,"GET /probe.css":3,"GET /probe.js":3,"POST /api/echo":2,"POST /api/stream-ack":1},"mode":"loopback","native_async":0,"native_requests":0,"port":37621}}}
+{"event":"selftest","statuses":{"right credential":200,"right credential, exact Origin":200,"right credential, wrong Host":403,"right credential, wrong Origin":403},"t":"13:50:16.368","window":"A"}
+{"async":0,"event":"status","t":"13:50:16.368","windows":{"A":{"closing":false,"destroyed":false,"endpoint":{"admitted":22,"refused":{"host":1,"no-credential":1,"origin":1,"wrong-credential":2},"handled":22},"handler":{"GET /":3,"GET /api/query":5,"GET /api/redirect":1,"GET /api/stream":1,"GET /logo.svg":3,"GET /probe.css":3,"GET /probe.js":3,"POST /api/echo":2,"POST /api/stream-ack":1},"mode":"loopback","native_async":0,"native_requests":0,"port":37621}}}
+{"error":"","event":"snapshot","path":"evidence/linux/integration-feasibility/passes-b-d/loopback-basics/loopback-page.png","t":"13:50:16.383","window":"A"}
+{"event":"closing","native_async":0,"native_requests":0,"navigated":true,"t":"13:50:16.383","why":"quit","window":"A"}
+{"endpoint":{"admitted":22,"refused":{"host":1,"no-credential":1,"origin":1,"wrong-credential":2},"handled":22},"event":"closed","handler":{"GET /":3,"GET /api/query":5,"GET /api/redirect":1,"GET /api/stream":1,"GET /logo.svg":3,"GET /probe.css":3,"GET /probe.js":3,"POST /api/echo":2,"POST /api/stream-ack":1},"handlers_drained":true,"native_async":0,"native_requests":0,"t":"13:50:16.386","window":"A"}
+{"error":"\u003cnil\u003e","event":"exit","filter_store_removal":{"path":"/tmp/dfx2-feasibility/filters-2219449","attempts":1,"elapsed_ns":144480,"removed":true},"t":"13:50:16.388"}

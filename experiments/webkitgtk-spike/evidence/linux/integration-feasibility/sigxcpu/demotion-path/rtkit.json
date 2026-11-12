@@ -1,0 +1,31 @@
+{
+ "before": {
+  "policy": 0,
+  "rt_priority": 0,
+  "nice": 0
+ },
+ "MakeThreadRealtimeWithPID": {
+  "exit": 1,
+  "message": "Call failed: Access denied",
+  "after": {
+   "policy": 0,
+   "rt_priority": 0,
+   "nice": 0
+  }
+ },
+ "MakeThreadHighPriorityWithPID": {
+  "exit": 1,
+  "message": "Call failed: Access denied",
+  "after": {
+   "policy": 0,
+   "rt_priority": 0,
+   "nice": 0
+  }
+ },
+ "properties": {
+  "RTTimeUSecMax": "x 200000",
+  "MaxRealtimePriority": "i 20",
+  "MinNiceLevel": "i -15"
+ },
+ "cgroup": "0::/user.slice/user-1000.slice/user@1000.service/app.slice/app-gnome-com.michaelquigley.mega-76914.scope"
+}

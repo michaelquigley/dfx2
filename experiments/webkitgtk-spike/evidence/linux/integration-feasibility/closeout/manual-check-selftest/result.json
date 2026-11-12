@@ -1,0 +1,49 @@
+{
+ "binary": "/tmp/dfx2-wk-candidate",
+ "flags": [
+  "-feas-vmfree",
+  "-signal-reserve",
+  "60"
+ ],
+ "steps": {
+  "1 failed GET, Retry": {
+   "error_page": {
+    "uri": "http://127.0.0.1:37639/api/query?x=manual",
+    "method": "GET",
+    "retry_offered": true
+   },
+   "clicked": "retry",
+   "loaded": "http://127.0.0.1:37639/api/query?x=manual",
+   "server": {
+    "GET /api/query before": 0,
+    "after": 1,
+    "edits": []
+   },
+   "ok": true
+  },
+  "2 failed POST, Return to start": {
+   "error_page": {
+    "uri": "http://127.0.0.1:37639/api/form",
+    "method": "POST",
+    "retry_offered": false
+   },
+   "clicked": "start",
+   "loaded": "http://127.0.0.1:37639/",
+   "server": {
+    "GET / before": 4,
+    "after": 5,
+    "edits": []
+   },
+   "ok": true
+  }
+ },
+ "manual_observation": "not applicable: self-test, the driver clicked",
+ "self_test": true,
+ "exit": {
+  "host_exit": 0,
+  "timed_out": false,
+  "children_pending": false,
+  "child_failure": false,
+  "fatal_log": false
+ }
+}

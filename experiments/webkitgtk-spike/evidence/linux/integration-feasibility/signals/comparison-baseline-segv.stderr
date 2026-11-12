@@ -1,0 +1,145 @@
+Overriding existing handler for signal 10. Set JSC_SIGNAL_FOR_GC if you want WebKit to use a different signal
+signal 11 received but handler not on signal stack
+mp.gsignal stack [0x3e75126ac000 0x3e75126b4000], mp.g0 stack [0x7f480149e150 0x7f4801c9dd50], sp=0x3e7512689ef0
+fatal error: non-Go code set up signal handler without SA_ONSTACK flag
+
+runtime stack:
+runtime.throw({0x7346cd?, 0x0?})
+	/home/michael/local/go/src/runtime/panic.go:1243 +0x48 fp=0x3e7512689e18 sp=0x3e7512689de8 pc=0x486cc8
+runtime.sigNotOnStack(0xb, 0x3e7512689ef0, 0x3e751268f008)
+	/home/michael/local/go/src/runtime/signal_unix.go:1124 +0x145 fp=0x3e7512689e48 sp=0x3e7512689e18 pc=0x466005
+runtime.adjustSignalStack2(0xb, 0x3e7512689ef0, 0x3e751268f008, 0x0)
+	/home/michael/local/go/src/runtime/signal_unix.go:607 +0x5b fp=0x3e7512689e78 sp=0x3e7512689e48 pc=0x46513b
+runtime.adjustSignalStack(0xb, 0x3e751268f008, 0x3e7512689f18)
+	/home/michael/local/go/src/runtime/signal_unix.go:594 +0x20d fp=0x3e7512689ef0 sp=0x3e7512689e78 pc=0x4650cd
+runtime.sigtrampgo(0xb, 0x3e751268a1f0, 0x3e751268a0c0)
+	/home/michael/local/go/src/runtime/signal_unix.go:481 +0xcc fp=0x3e7512689f70 sp=0x3e7512689ef0 pc=0x464bcc
+runtime.sigtramp()
+	/home/michael/local/go/src/runtime/sys_linux_amd64.s:364 +0x46 fp=0x3e7512689fc0 sp=0x3e7512689f70 pc=0x48f486
+
+goroutine 17 gp=0x3e751260a780 m=1 mp=0x3e751268e008 [syscall, locked to thread]:
+runtime.goexit({})
+	/home/michael/local/go/src/runtime/asm_amd64.s:1264 +0x1 fp=0x3e751269cfe8 sp=0x3e751269cfe0 pc=0x48dbe1
+
+goroutine 1 gp=0x3e751260a1e0 m=nil [select, locked to thread]:
+runtime.gopark(0x3e7512741910?, 0x2?, 0xca?, 0x1c?, 0x3e75127418f4?)
+	/home/michael/local/go/src/runtime/proc.go:474 +0xca fp=0x3e7512741780 sp=0x3e7512741760 pc=0x486dea
+runtime.selectgo(0x3e7512741910, 0x3e75127418f0, 0xaad000?, 0x0, 0x484a0f?, 0x1)
+	/home/michael/local/go/src/runtime/select.go:351 +0xa97 fp=0x3e75127418c0 sp=0x3e7512741780 pc=0x462177
+main.faultAndRecover({0x7ffe643379a5, 0x4})
+	/home/michael/Repos/q/products/dfx2/experiments/webkitgtk-spike/signals_linux.go:587 +0x105 fp=0x3e7512741940 sp=0x3e75127418c0 pc=0x6b10a5
+main.runSignalProbe({0x7ffe6433798e, 0x8}, {0x7ffe643379a5, 0x4}, 0x0, {0x71e24c, 0x9}, 0x1)
+	/home/michael/Repos/q/products/dfx2/experiments/webkitgtk-spike/signals_linux.go:512 +0x1766 fp=0x3e7512741d70 sp=0x3e7512741940 pc=0x6afde6
+main.main()
+	/home/michael/Repos/q/products/dfx2/experiments/webkitgtk-spike/main.go:49 +0x885 fp=0x3e7512741eb8 sp=0x3e7512741d70 pc=0x6a9be5
+runtime.main()
+	/home/michael/local/go/src/runtime/proc.go:302 +0x427 fp=0x3e7512741fe0 sp=0x3e7512741eb8 pc=0x44ff67
+runtime.goexit({})
+	/home/michael/local/go/src/runtime/asm_amd64.s:1264 +0x1 fp=0x3e7512741fe8 sp=0x3e7512741fe0 pc=0x48dbe1
+
+goroutine 2 gp=0x3e751260ad20 m=nil [force gc (idle)]:
+runtime.gopark(0x0?, 0x0?, 0x0?, 0x0?, 0x0?)
+	/home/michael/local/go/src/runtime/proc.go:474 +0xca fp=0x3e751268afa8 sp=0x3e751268af88 pc=0x486dea
+runtime.goparkunlock(...)
+	/home/michael/local/go/src/runtime/proc.go:480
+runtime.forcegchelper()
+	/home/michael/local/go/src/runtime/proc.go:387 +0xb3 fp=0x3e751268afe0 sp=0x3e751268afa8 pc=0x450233
+runtime.goexit({})
+	/home/michael/local/go/src/runtime/asm_amd64.s:1264 +0x1 fp=0x3e751268afe8 sp=0x3e751268afe0 pc=0x48dbe1
+created by runtime.init.7 in goroutine 1
+	/home/michael/local/go/src/runtime/proc.go:375 +0x1a
+
+goroutine 3 gp=0x3e751260b2c0 m=nil [GC sweep wait]:
+runtime.gopark(0x0?, 0x0?, 0x0?, 0x0?, 0x0?)
+	/home/michael/local/go/src/runtime/proc.go:474 +0xca fp=0x3e751268b788 sp=0x3e751268b768 pc=0x486dea
+runtime.goparkunlock(...)
+	/home/michael/local/go/src/runtime/proc.go:480
+runtime.bgsweep(0x3e751262a180)
+	/home/michael/local/go/src/runtime/mgcsweep.go:279 +0x94 fp=0x3e751268b7c8 sp=0x3e751268b788 pc=0x43ac74
+runtime.gcenable.gowrap1()
+	/home/michael/local/go/src/runtime/mgc.go:214 +0x17 fp=0x3e751268b7e0 sp=0x3e751268b7c8 pc=0x47db77
+runtime.goexit({})
+	/home/michael/local/go/src/runtime/asm_amd64.s:1264 +0x1 fp=0x3e751268b7e8 sp=0x3e751268b7e0 pc=0x48dbe1
+created by runtime.gcenable in goroutine 1
+	/home/michael/local/go/src/runtime/mgc.go:214 +0x66
+
+goroutine 4 gp=0x3e751260b4a0 m=nil [GC scavenge wait]:
+runtime.gopark(0x3e751262a180?, 0x743c20?, 0x1?, 0x0?, 0x3e751260b4a0?)
+	/home/michael/local/go/src/runtime/proc.go:474 +0xca fp=0x3e751268bf78 sp=0x3e751268bf58 pc=0x486dea
+runtime.goparkunlock(...)
+	/home/michael/local/go/src/runtime/proc.go:480
+runtime.(*scavengerState).park(0xaab8c0)
+	/home/michael/local/go/src/runtime/mgcscavenge.go:425 +0x49 fp=0x3e751268bfa8 sp=0x3e751268bf78 pc=0x438849
+runtime.bgscavenge(0x3e751262a180)
+	/home/michael/local/go/src/runtime/mgcscavenge.go:653 +0x3c fp=0x3e751268bfc8 sp=0x3e751268bfa8 pc=0x438d9c
+runtime.gcenable.gowrap2()
+	/home/michael/local/go/src/runtime/mgc.go:215 +0x17 fp=0x3e751268bfe0 sp=0x3e751268bfc8 pc=0x47db37
+runtime.goexit({})
+	/home/michael/local/go/src/runtime/asm_amd64.s:1264 +0x1 fp=0x3e751268bfe8 sp=0x3e751268bfe0 pc=0x48dbe1
+created by runtime.gcenable in goroutine 1
+	/home/michael/local/go/src/runtime/mgc.go:215 +0xa5
+
+goroutine 18 gp=0x3e75127043c0 m=nil [GOMAXPROCS updater (idle)]:
+runtime.gopark(0x0?, 0x0?, 0x0?, 0x0?, 0x0?)
+	/home/michael/local/go/src/runtime/proc.go:474 +0xca fp=0x3e7512686788 sp=0x3e7512686768 pc=0x486dea
+runtime.goparkunlock(...)
+	/home/michael/local/go/src/runtime/proc.go:480
+runtime.updateMaxProcsGoroutine()
+	/home/michael/local/go/src/runtime/proc.go:7146 +0xe7 fp=0x3e75126867e0 sp=0x3e7512686788 pc=0x45d727
+runtime.goexit({})
+	/home/michael/local/go/src/runtime/asm_amd64.s:1264 +0x1 fp=0x3e75126867e8 sp=0x3e75126867e0 pc=0x48dbe1
+created by runtime.defaultGOMAXPROCSUpdateEnable in goroutine 1
+	/home/michael/local/go/src/runtime/proc.go:7134 +0x37
+
+goroutine 19 gp=0x3e7512704960 m=nil [finalizer wait]:
+runtime.gopark(0x0?, 0x0?, 0x0?, 0x0?, 0x0?)
+	/home/michael/local/go/src/runtime/proc.go:474 +0xca fp=0x3e7512686e20 sp=0x3e7512686e00 pc=0x486dea
+runtime.runFinalizers()
+	/home/michael/local/go/src/runtime/mfinal.go:210 +0x107 fp=0x3e7512686fe0 sp=0x3e7512686e20 pc=0x42bda7
+runtime.goexit({})
+	/home/michael/local/go/src/runtime/asm_amd64.s:1264 +0x1 fp=0x3e7512686fe8 sp=0x3e7512686fe0 pc=0x48dbe1
+created by runtime.createfing in goroutine 1
+	/home/michael/local/go/src/runtime/mfinal.go:172 +0x3d
+
+goroutine 20 gp=0x3e7512704b40 m=nil [cleanup wait]:
+runtime.gopark(0x0?, 0x0?, 0x0?, 0x0?, 0x0?)
+	/home/michael/local/go/src/runtime/proc.go:474 +0xca fp=0x3e7512687768 sp=0x3e7512687748 pc=0x486dea
+runtime.goparkunlock(...)
+	/home/michael/local/go/src/runtime/proc.go:480
+runtime.(*cleanupQueue).dequeue(0xaabac0)
+	/home/michael/local/go/src/runtime/mcleanup.go:522 +0xd3 fp=0x3e75126877a0 sp=0x3e7512687768 pc=0x428ad3
+runtime.runCleanups()
+	/home/michael/local/go/src/runtime/mcleanup.go:718 +0x45 fp=0x3e75126877e0 sp=0x3e75126877a0 pc=0x429145
+runtime.goexit({})
+	/home/michael/local/go/src/runtime/asm_amd64.s:1264 +0x1 fp=0x3e75126877e8 sp=0x3e75126877e0 pc=0x48dbe1
+created by runtime.(*cleanupQueue).createGs in goroutine 1
+	/home/michael/local/go/src/runtime/mcleanup.go:672 +0xa5
+
+goroutine 21 gp=0x3e7512704d20 m=nil [select, locked to thread]:
+runtime.gopark(0x3e7512687fa8?, 0x2?, 0x68?, 0x0?, 0x3e7512687f94?)
+	/home/michael/local/go/src/runtime/proc.go:474 +0xca fp=0x3e7512687e18 sp=0x3e7512687df8 pc=0x486dea
+runtime.selectgo(0x3e7512687fa8, 0x3e7512687f90, 0x0?, 0x0, 0x0?, 0x1)
+	/home/michael/local/go/src/runtime/select.go:351 +0xa97 fp=0x3e7512687f58 sp=0x3e7512687e18 pc=0x462177
+runtime.ensureSigM.func1()
+	/home/michael/local/go/src/runtime/signal_unix.go:1093 +0x188 fp=0x3e7512687fe0 sp=0x3e7512687f58 pc=0x481c28
+runtime.goexit({})
+	/home/michael/local/go/src/runtime/asm_amd64.s:1264 +0x1 fp=0x3e7512687fe8 sp=0x3e7512687fe0 pc=0x48dbe1
+created by runtime.ensureSigM in goroutine 1
+	/home/michael/local/go/src/runtime/signal_unix.go:1076 +0xc5
+
+goroutine 22 gp=0x3e7512704f00 m=7 mp=0x3e7512782008 [syscall]:
+runtime.notetsleepg(0xad8d00, 0xffffffffffffffff)
+	/home/michael/local/go/src/runtime/lock_futex.go:123 +0x29 fp=0x3e75126887a0 sp=0x3e7512688778 pc=0x41e469
+os/signal.signal_recv()
+	/home/michael/local/go/src/runtime/sigqueue.go:152 +0x98 fp=0x3e75126887c0 sp=0x3e75126887a0 pc=0x488ed8
+os/signal.loop()
+	/home/michael/local/go/src/os/signal/signal_unix.go:23 +0x13 fp=0x3e75126887e0 sp=0x3e75126887c0 pc=0x698cb3
+runtime.goexit({})
+	/home/michael/local/go/src/runtime/asm_amd64.s:1264 +0x1 fp=0x3e75126887e8 sp=0x3e75126887e0 pc=0x48dbe1
+created by os/signal.Notify.func2.1 in goroutine 1
+	/home/michael/local/go/src/os/signal/signal.go:164 +0x1f
+
+goroutine 5 gp=0x3e75128b0000 m=3 mp=0x3e751268f008 [running]:
+	goroutine running on other thread; stack unavailable
+created by main.faultAndRecover in goroutine 1
+	/home/michael/Repos/q/products/dfx2/experiments/webkitgtk-spike/signals_linux.go:562 +0xa5

@@ -1,0 +1,1328 @@
+{
+ "scenario": "runtime-2.54.2",
+ "flags": [
+  "-feas-vmfree",
+  "-signal-reserve",
+  "60",
+  "-feas-xcpu"
+ ],
+ "checks": [
+  {
+   "check": "SIGXCPU stays Go's at every stage and the Go subscriber receives every delivery",
+   "ok": true,
+   "owners": [
+    "go",
+    "go",
+    "go",
+    "go",
+    "go"
+   ],
+   "delivered": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "check": "monitor: every watched function resolved in the host",
+   "ok": true,
+   "unresolved": [],
+   "optional_unresolved": [
+    "realtime-threads-created",
+    "realtime-thread-registered",
+    "realtime-promote",
+    "realtime-rtkit"
+   ]
+  },
+  {
+   "check": "monitor: no host VM, JSLock, GC thread registration, suspension or fault-handler finalization",
+   "ok": true,
+   "nonzero": {}
+  },
+  {
+   "check": "monitor: WebKit initialized JSC in the host",
+   "ok": true
+  },
+  {
+   "check": "SIGSEGV and SIGBUS still Go's at exit",
+   "ok": true,
+   "exit_signals": {
+    "SIGBUS": {
+     "signal": 7,
+     "owner": "go",
+     "flags": [
+      "SA_SIGINFO",
+      "SA_ONSTACK",
+      "SA_RESTART",
+      "SA_RESTORER"
+     ]
+    },
+    "SIGSEGV": {
+     "signal": 11,
+     "owner": "go",
+     "flags": [
+      "SA_SIGINFO",
+      "SA_ONSTACK",
+      "SA_RESTART",
+      "SA_RESTORER"
+     ]
+    },
+    "SIGUSR1": {
+     "signal": 10,
+     "owner": "go",
+     "flags": [
+      "SA_SIGINFO",
+      "SA_ONSTACK",
+      "SA_RESTART",
+      "SA_RESTORER"
+     ]
+    },
+    "SIGXCPU": {
+     "signal": 24,
+     "owner": "go",
+     "flags": [
+      "SA_SIGINFO",
+      "SA_ONSTACK",
+      "SA_RESTART",
+      "SA_RESTORER"
+     ]
+    },
+    "reserved 60": {
+     "signal": 60,
+     "owner": "native:libjavascriptcoregtk-4.1.so.0.11.9",
+     "offset": "0x1ab3880",
+     "flags": [
+      "SA_SIGINFO",
+      "SA_RESTART",
+      "SA_RESTORER"
+     ]
+    }
+   }
+  },
+  {
+   "check": "monitor: no native SIGXCPU installation and no RealTimeThreads",
+   "ok": true,
+   "installs": 0,
+   "thread_priority": {
+    "realtime-threads-created": 0,
+    "realtime-thread-registered": 0,
+    "highpriority-threads-created": 1,
+    "highpriority-thread-registered": 11
+   }
+  }
+ ],
+ "ok": true,
+ "host_libraries": [
+  "/tmp/dfx2-webkit-runtime/root/usr/lib/x86_64-linux-gnu/libjavascriptcoregtk-4.1.so.0.11.9",
+  "/tmp/dfx2-webkit-runtime/root/usr/lib/x86_64-linux-gnu/libwebkit2gtk-4.1.so.0.24.5"
+ ],
+ "stages": [
+  {
+   "stage": "first window (loopback)",
+   "sigxcpu": {
+    "signal": 24,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "record": {
+    "at": "10:20:21.736",
+    "limits": {
+     "Max cpu time": "unlimited unlimited seconds",
+     "Max nice priority": "0 0",
+     "Max realtime priority": "0 0",
+     "Max realtime timeout": "200000 200000 us"
+    },
+    "sched": {
+     "not_default": [
+      {
+       "tid": 266483,
+       "name": "ListStore Queue",
+       "policy": "OTHER",
+       "uclamp_min": 204
+      },
+      {
+       "tid": 266485,
+       "name": "ebsiteDataStore",
+       "policy": "OTHER",
+       "uclamp_min": 204
+      },
+      {
+       "tid": 266498,
+       "name": "dfx2-wk:disk$0",
+       "policy": "BATCH",
+       "nice": 19
+      },
+      {
+       "tid": 266520,
+       "name": "PressureMonitor",
+       "policy": "OTHER",
+       "uclamp_min": 1024
+      },
+      {
+       "tid": 266692,
+       "name": "ReceiveQueue",
+       "policy": "OTHER",
+       "uclamp_min": 1024
+      },
+      {
+       "tid": 266704,
+       "name": "ReceiveQueue",
+       "policy": "OTHER",
+       "uclamp_min": 1024
+      },
+      {
+       "tid": 266729,
+       "name": "VBlankMonitor",
+       "policy": "OTHER",
+       "uclamp_min": 204
+      },
+      {
+       "tid": 266735,
+       "name": "dfx2-w:traceq0",
+       "policy": "BATCH",
+       "nice": 19
+      },
+      {
+       "tid": 266737,
+       "name": "dfx2-w:traceq0",
+       "policy": "BATCH",
+       "nice": 19
+      }
+     ],
+     "threads": 35
+    }
+   },
+   "delivery": {
+    "native": {
+     "received_by_go": true,
+     "target": "[pango] fontcon",
+     "rr_before": [],
+     "rr_after": []
+    },
+    "external": {
+     "received_by_go": true,
+     "target": "",
+     "rr_before": [],
+     "rr_after": []
+    }
+   }
+  },
+  {
+   "stage": "second window (in-process), pages run",
+   "sigxcpu": {
+    "signal": 24,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "record": {
+    "at": "10:20:22.843",
+    "limits": {
+     "Max cpu time": "unlimited unlimited seconds",
+     "Max nice priority": "0 0",
+     "Max realtime priority": "0 0",
+     "Max realtime timeout": "200000 200000 us"
+    },
+    "sched": {
+     "not_default": [
+      {
+       "tid": 266483,
+       "name": "ListStore Queue",
+       "policy": "OTHER",
+       "uclamp_min": 204
+      },
+      {
+       "tid": 266485,
+       "name": "ebsiteDataStore",
+       "policy": "OTHER",
+       "uclamp_min": 204
+      },
+      {
+       "tid": 266498,
+       "name": "dfx2-wk:disk$0",
+       "policy": "BATCH",
+       "nice": 19
+      },
+      {
+       "tid": 266520,
+       "name": "PressureMonitor",
+       "policy": "OTHER",
+       "uclamp_min": 1024
+      },
+      {
+       "tid": 266692,
+       "name": "ReceiveQueue",
+       "policy": "OTHER",
+       "uclamp_min": 1024
+      },
+      {
+       "tid": 266704,
+       "name": "ReceiveQueue",
+       "policy": "OTHER",
+       "uclamp_min": 1024
+      },
+      {
+       "tid": 266729,
+       "name": "VBlankMonitor",
+       "policy": "OTHER",
+       "uclamp_min": 204
+      },
+      {
+       "tid": 266735,
+       "name": "dfx2-w:traceq0",
+       "policy": "BATCH",
+       "nice": 19
+      },
+      {
+       "tid": 266737,
+       "name": "dfx2-w:traceq0",
+       "policy": "BATCH",
+       "nice": 19
+      },
+      {
+       "tid": 267318,
+       "name": "ebsiteDataStore",
+       "policy": "OTHER",
+       "uclamp_min": 204
+      },
+      {
+       "tid": 267321,
+       "name": "ReceiveQueue",
+       "policy": "OTHER",
+       "uclamp_min": 1024
+      },
+      {
+       "tid": 267329,
+       "name": "ReceiveQueue",
+       "policy": "OTHER",
+       "uclamp_min": 1024
+      },
+      {
+       "tid": 267365,
+       "name": "VBlankMonitor",
+       "policy": "OTHER",
+       "uclamp_min": 204
+      },
+      {
+       "tid": 267371,
+       "name": "dfx2-w:traceq0",
+       "policy": "BATCH",
+       "nice": 19
+      },
+      {
+       "tid": 267373,
+       "name": "dfx2-w:traceq0",
+       "policy": "BATCH",
+       "nice": 19
+      }
+     ],
+     "threads": 45
+    }
+   },
+   "delivery": {
+    "native": {
+     "received_by_go": true,
+     "target": "[pango] fontcon",
+     "rr_before": [],
+     "rr_after": []
+    },
+    "external": {
+     "received_by_go": true,
+     "target": "",
+     "rr_before": [],
+     "rr_after": []
+    }
+   }
+  },
+  {
+   "stage": "inspector docked",
+   "sigxcpu": {
+    "signal": 24,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "record": {
+    "at": "10:20:25.446",
+    "limits": {
+     "Max cpu time": "unlimited unlimited seconds",
+     "Max nice priority": "0 0",
+     "Max realtime priority": "0 0",
+     "Max realtime timeout": "200000 200000 us"
+    },
+    "sched": {
+     "not_default": [
+      {
+       "tid": 266483,
+       "name": "ListStore Queue",
+       "policy": "OTHER",
+       "uclamp_min": 204
+      },
+      {
+       "tid": 266485,
+       "name": "ebsiteDataStore",
+       "policy": "OTHER",
+       "uclamp_min": 204
+      },
+      {
+       "tid": 266498,
+       "name": "dfx2-wk:disk$0",
+       "policy": "BATCH",
+       "nice": 19
+      },
+      {
+       "tid": 266520,
+       "name": "PressureMonitor",
+       "policy": "OTHER",
+       "uclamp_min": 1024
+      },
+      {
+       "tid": 266692,
+       "name": "ReceiveQueue",
+       "policy": "OTHER",
+       "uclamp_min": 1024
+      },
+      {
+       "tid": 266704,
+       "name": "ReceiveQueue",
+       "policy": "OTHER",
+       "uclamp_min": 1024
+      },
+      {
+       "tid": 266729,
+       "name": "VBlankMonitor",
+       "policy": "OTHER",
+       "uclamp_min": 204
+      },
+      {
+       "tid": 266735,
+       "name": "dfx2-w:traceq0",
+       "policy": "BATCH",
+       "nice": 19
+      },
+      {
+       "tid": 266737,
+       "name": "dfx2-w:traceq0",
+       "policy": "BATCH",
+       "nice": 19
+      },
+      {
+       "tid": 267318,
+       "name": "ebsiteDataStore",
+       "policy": "OTHER",
+       "uclamp_min": 204
+      },
+      {
+       "tid": 267321,
+       "name": "ReceiveQueue",
+       "policy": "OTHER",
+       "uclamp_min": 1024
+      },
+      {
+       "tid": 267329,
+       "name": "ReceiveQueue",
+       "policy": "OTHER",
+       "uclamp_min": 1024
+      },
+      {
+       "tid": 267365,
+       "name": "VBlankMonitor",
+       "policy": "OTHER",
+       "uclamp_min": 204
+      },
+      {
+       "tid": 267371,
+       "name": "dfx2-w:traceq0",
+       "policy": "BATCH",
+       "nice": 19
+      },
+      {
+       "tid": 267373,
+       "name": "dfx2-w:traceq0",
+       "policy": "BATCH",
+       "nice": 19
+      },
+      {
+       "tid": 267377,
+       "name": "ebsiteDataStore",
+       "policy": "OTHER",
+       "uclamp_min": 204
+      },
+      {
+       "tid": 267381,
+       "name": "ReceiveQueue",
+       "policy": "OTHER",
+       "uclamp_min": 1024
+      },
+      {
+       "tid": 267383,
+       "name": "ReceiveQueue",
+       "policy": "OTHER",
+       "uclamp_min": 1024
+      },
+      {
+       "tid": 267417,
+       "name": "VBlankMonitor",
+       "policy": "OTHER",
+       "uclamp_min": 204
+      },
+      {
+       "tid": 267419,
+       "name": "VBlankMonitor",
+       "policy": "OTHER",
+       "uclamp_min": 204
+      },
+      {
+       "tid": 267442,
+       "name": "dfx2-w:traceq0",
+       "policy": "BATCH",
+       "nice": 19
+      }
+     ],
+     "threads": 54
+    }
+   },
+   "delivery": {
+    "native": {
+     "received_by_go": true,
+     "target": "[pango] fontcon",
+     "rr_before": [],
+     "rr_after": []
+    },
+    "external": {
+     "received_by_go": true,
+     "target": "",
+     "rr_before": [],
+     "rr_after": []
+    }
+   }
+  },
+  {
+   "stage": "no windows",
+   "sigxcpu": {
+    "signal": 24,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "record": {
+    "at": "10:20:26.485",
+    "limits": {
+     "Max cpu time": "unlimited unlimited seconds",
+     "Max nice priority": "0 0",
+     "Max realtime priority": "0 0",
+     "Max realtime timeout": "200000 200000 us"
+    },
+    "sched": {
+     "not_default": [
+      {
+       "tid": 266483,
+       "name": "ListStore Queue",
+       "policy": "OTHER",
+       "uclamp_min": 204
+      },
+      {
+       "tid": 266498,
+       "name": "dfx2-wk:disk$0",
+       "policy": "BATCH",
+       "nice": 19
+      },
+      {
+       "tid": 266520,
+       "name": "PressureMonitor",
+       "policy": "OTHER",
+       "uclamp_min": 1024
+      },
+      {
+       "tid": 267377,
+       "name": "ebsiteDataStore",
+       "policy": "OTHER",
+       "uclamp_min": 204
+      },
+      {
+       "tid": 267381,
+       "name": "ReceiveQueue",
+       "policy": "OTHER",
+       "uclamp_min": 1024
+      },
+      {
+       "tid": 267383,
+       "name": "ReceiveQueue",
+       "policy": "OTHER",
+       "uclamp_min": 1024
+      },
+      {
+       "tid": 267417,
+       "name": "VBlankMonitor",
+       "policy": "OTHER",
+       "uclamp_min": 204
+      },
+      {
+       "tid": 267419,
+       "name": "VBlankMonitor",
+       "policy": "OTHER",
+       "uclamp_min": 204
+      },
+      {
+       "tid": 267442,
+       "name": "dfx2-w:traceq0",
+       "policy": "BATCH",
+       "nice": 19
+      }
+     ],
+     "threads": 38
+    }
+   },
+   "delivery": {
+    "native": {
+     "received_by_go": true,
+     "target": "[pango] fontcon",
+     "rr_before": [],
+     "rr_after": []
+    },
+    "external": {
+     "received_by_go": true,
+     "target": "",
+     "rr_before": [],
+     "rr_after": []
+    }
+   }
+  },
+  {
+   "stage": "reopened",
+   "sigxcpu": {
+    "signal": 24,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "record": {
+    "at": "10:20:27.813",
+    "limits": {
+     "Max cpu time": "unlimited unlimited seconds",
+     "Max nice priority": "0 0",
+     "Max realtime priority": "0 0",
+     "Max realtime timeout": "200000 200000 us"
+    },
+    "sched": {
+     "not_default": [
+      {
+       "tid": 266483,
+       "name": "ListStore Queue",
+       "policy": "OTHER",
+       "uclamp_min": 204
+      },
+      {
+       "tid": 266498,
+       "name": "dfx2-wk:disk$0",
+       "policy": "BATCH",
+       "nice": 19
+      },
+      {
+       "tid": 266520,
+       "name": "PressureMonitor",
+       "policy": "OTHER",
+       "uclamp_min": 1024
+      },
+      {
+       "tid": 267377,
+       "name": "ebsiteDataStore",
+       "policy": "OTHER",
+       "uclamp_min": 204
+      },
+      {
+       "tid": 267381,
+       "name": "ReceiveQueue",
+       "policy": "OTHER",
+       "uclamp_min": 1024
+      },
+      {
+       "tid": 267383,
+       "name": "ReceiveQueue",
+       "policy": "OTHER",
+       "uclamp_min": 1024
+      },
+      {
+       "tid": 267417,
+       "name": "VBlankMonitor",
+       "policy": "OTHER",
+       "uclamp_min": 204
+      },
+      {
+       "tid": 267419,
+       "name": "VBlankMonitor",
+       "policy": "OTHER",
+       "uclamp_min": 204
+      },
+      {
+       "tid": 267442,
+       "name": "dfx2-w:traceq0",
+       "policy": "BATCH",
+       "nice": 19
+      },
+      {
+       "tid": 267506,
+       "name": "ebsiteDataStore",
+       "policy": "OTHER",
+       "uclamp_min": 204
+      },
+      {
+       "tid": 267510,
+       "name": "ReceiveQueue",
+       "policy": "OTHER",
+       "uclamp_min": 1024
+      },
+      {
+       "tid": 267588,
+       "name": "VBlankMonitor",
+       "policy": "OTHER",
+       "uclamp_min": 204
+      },
+      {
+       "tid": 267594,
+       "name": "dfx2-w:traceq0",
+       "policy": "BATCH",
+       "nice": 19
+      },
+      {
+       "tid": 267596,
+       "name": "dfx2-w:traceq0",
+       "policy": "BATCH",
+       "nice": 19
+      }
+     ],
+     "threads": 45
+    }
+   },
+   "delivery": {
+    "native": {
+     "received_by_go": true,
+     "target": "[pango] fontcon",
+     "rr_before": [],
+     "rr_after": []
+    },
+    "external": {
+     "received_by_go": true,
+     "target": "",
+     "rr_before": [],
+     "rr_after": []
+    }
+   }
+  }
+ ],
+ "start": {
+  "sigxcpu": {
+   "signal": 24,
+   "owner": "go",
+   "flags": [
+    "SA_SIGINFO",
+    "SA_ONSTACK",
+    "SA_RESTART",
+    "SA_RESTORER"
+   ]
+  },
+  "record": {
+   "at": "10:20:09.678",
+   "limits": {
+    "Max cpu time": "unlimited unlimited seconds",
+    "Max nice priority": "0 0",
+    "Max realtime priority": "0 0",
+    "Max realtime timeout": "200000 200000 us"
+   },
+   "sched": {
+    "not_default": null,
+    "threads": 7
+   }
+  }
+ },
+ "detail": {},
+ "exit": {
+  "host_exit": 0,
+  "timed_out": false,
+  "children_pending": false,
+  "child_failure": false,
+  "fatal_log": false
+ },
+ "observed_processes": [
+  "WebKitNetworkPr",
+  "WebKitWebProces",
+  "bwrap",
+  "dfx2-wk-feas",
+  "gdb",
+  "glycin-svg"
+ ],
+ "signals": {
+  "start": {
+   "SIGBUS": {
+    "signal": 7,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "SIGSEGV": {
+    "signal": 11,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "SIGUSR1": {
+    "signal": 10,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "SIGXCPU": {
+    "signal": 24,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "reserved 60": {
+    "signal": 60,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   }
+  },
+  "ready": {
+   "SIGBUS": {
+    "signal": 7,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "SIGSEGV": {
+    "signal": 11,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "SIGUSR1": {
+    "signal": 10,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "SIGXCPU": {
+    "signal": 24,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "reserved 60": {
+    "signal": 60,
+    "owner": "native:libjavascriptcoregtk-4.1.so.0.11.9",
+    "offset": "0x1ab3880",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   }
+  },
+  "exit": {
+   "SIGBUS": {
+    "signal": 7,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "SIGSEGV": {
+    "signal": 11,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "SIGUSR1": {
+    "signal": 10,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "SIGXCPU": {
+    "signal": 24,
+    "owner": "go",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_ONSTACK",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   },
+   "reserved 60": {
+    "signal": 60,
+    "owner": "native:libjavascriptcoregtk-4.1.so.0.11.9",
+    "offset": "0x1ab3880",
+    "flags": [
+     "SA_SIGINFO",
+     "SA_RESTART",
+     "SA_RESTORER"
+    ]
+   }
+  }
+ },
+ "reservation": {
+  "checks": [
+   {
+    "check": "supplied",
+    "passed": true,
+    "detail": "an explicit reservation; the host infers nothing"
+   },
+   {
+    "check": "within libc's real-time range",
+    "passed": true,
+    "detail": "60 in [34, 64]",
+    "cannot_establish": "that no other library uses it"
+   },
+   {
+    "check": "kernel disposition is Go's handler",
+    "passed": true,
+    "detail": "owner go",
+    "cannot_establish": "that no Go subscriber exists: subscribed and unsubscribed signals look identical"
+   },
+   {
+    "check": "not blocked on the initializing thread",
+    "passed": true,
+    "cannot_establish": "the masks of threads created later"
+   },
+   {
+    "check": "not among the application's declared subscriptions",
+    "passed": true,
+    "cannot_establish": "subscriptions the application did not declare"
+   },
+   {
+    "check": "not ignored through os/signal",
+    "passed": true
+   },
+   {
+    "check": "JSC_SIGNAL_FOR_GC unset or equal",
+    "passed": true,
+    "detail": "JSC_SIGNAL_FOR_GC="
+   }
+  ],
+  "configured": true,
+  "signal": 60
+ },
+ "filter_store_removal": {
+  "path": "/tmp/dfx2-feasibility/filters-266443",
+  "attempts": 1,
+  "elapsed_ns": 144736,
+  "removed": true
+ },
+ "refused_js": 0,
+ "monitor": {
+  "totals": {
+   "jsc-initialize": {
+    "hits": 2433,
+    "threads": 1,
+    "locations": 1,
+    "pending": false,
+    "optional": false
+   },
+   "vm-constructed": {
+    "hits": 0,
+    "threads": 0,
+    "locations": 1,
+    "pending": false,
+    "optional": false
+   },
+   "heap-constructed": {
+    "hits": 0,
+    "threads": 0,
+    "locations": 1,
+    "pending": false,
+    "optional": false
+   },
+   "global-context-create": {
+    "hits": 0,
+    "threads": 0,
+    "locations": 1,
+    "pending": false,
+    "optional": false
+   },
+   "global-context-create-in-group": {
+    "hits": 0,
+    "threads": 0,
+    "locations": 1,
+    "pending": false,
+    "optional": false
+   },
+   "context-group-create": {
+    "hits": 0,
+    "threads": 0,
+    "locations": 1,
+    "pending": false,
+    "optional": false
+   },
+   "jsc-context-new": {
+    "hits": 0,
+    "threads": 0,
+    "locations": 1,
+    "pending": false,
+    "optional": false
+   },
+   "jsc-virtual-machine-new": {
+    "hits": 0,
+    "threads": 0,
+    "locations": 2,
+    "pending": false,
+    "optional": false
+   },
+   "jslock-acquired": {
+    "hits": 0,
+    "threads": 0,
+    "locations": 1,
+    "pending": false,
+    "optional": false
+   },
+   "thread-registered-for-gc": {
+    "hits": 0,
+    "threads": 0,
+    "locations": 1,
+    "pending": false,
+    "optional": false
+   },
+   "thread-group-add": {
+    "hits": 0,
+    "threads": 0,
+    "locations": 1,
+    "pending": false,
+    "optional": false
+   },
+   "thread-suspend": {
+    "hits": 0,
+    "threads": 0,
+    "locations": 1,
+    "pending": false,
+    "optional": false
+   },
+   "suspend-handler-ran": {
+    "hits": 0,
+    "threads": 0,
+    "locations": 1,
+    "pending": false,
+    "optional": false
+   },
+   "fault-handlers-finalized": {
+    "hits": 0,
+    "threads": 0,
+    "locations": 1,
+    "pending": false,
+    "optional": false
+   },
+   "realtime-threads-created": {
+    "hits": 0,
+    "threads": 0,
+    "locations": 0,
+    "pending": true,
+    "optional": true
+   },
+   "realtime-thread-registered": {
+    "hits": 0,
+    "threads": 0,
+    "locations": 0,
+    "pending": true,
+    "optional": true
+   },
+   "highpriority-threads-created": {
+    "hits": 1,
+    "threads": 1,
+    "locations": 1,
+    "pending": false,
+    "optional": true
+   },
+   "highpriority-thread-registered": {
+    "hits": 11,
+    "threads": 11,
+    "locations": 1,
+    "pending": false,
+    "optional": true
+   },
+   "realtime-promote": {
+    "hits": 0,
+    "threads": 0,
+    "locations": 0,
+    "pending": true,
+    "optional": true
+   },
+   "realtime-rtkit": {
+    "hits": 0,
+    "threads": 0,
+    "locations": 0,
+    "pending": true,
+    "optional": true
+   },
+   "scheduling-attributes": {
+    "hits": 33,
+    "threads": 23,
+    "locations": 1,
+    "pending": false,
+    "optional": true
+   },
+   "highpriority-rtkit": {
+    "hits": 11,
+    "threads": 1,
+    "locations": 1,
+    "pending": false,
+    "optional": true
+   },
+   "sched-setscheduler": {
+    "hits": 13,
+    "threads": 1,
+    "locations": 1,
+    "pending": false,
+    "optional": false
+   },
+   "libc-sigaction": {
+    "hits": 7,
+    "threads": 2,
+    "locations": 1,
+    "pending": false,
+    "optional": false
+   }
+  },
+  "first_hits": {
+   "libc-sigaction": {
+    "main_thread": true,
+    "thread_name": "dfx2-wk-feas",
+    "go_frames": [
+     "runtime.asmcgocall @ exe (/home/michael/local/go/src/runtime/asm_amd64.s:970)",
+     "runtime.systemstack @ exe (/home/michael/local/go/src/runtime/asm_amd64.s:531)",
+     "runtime.newproc @ exe (./<autogenerated>:1)",
+     "runtime.mstart @ exe (/home/michael/local/go/src/runtime/asm_amd64.s:393)"
+    ],
+    "frames": [
+     "__GI___sigaction @ libc.so.6 (./signal/sigaction.c:27)",
+     "__bsd_signal @ libc.so.6 (../sysdeps/posix/signal.c:45)",
+     "?? @ libgtk-3.so.0",
+     "g_option_context_parse @ libglib-2.0.so.0",
+     "gtk_parse_args @ libgtk-3.so.0",
+     "gtk_init_check @ libgtk-3.so.0",
+     "syscallX @ exe (/home/michael/go/pkg/mod/github.com/ebitengine/purego@v0.11.1/sys_amd64.s:117)",
+     "runtime.asmcgocall @ exe (/home/michael/local/go/src/runtime/asm_amd64.s:970)",
+     "?? @ exe",
+     "runtime.systemstack @ exe (/home/michael/local/go/src/runtime/asm_amd64.s:531)"
+    ],
+    "signal": 13
+   },
+   "jsc-initialize": {
+    "main_thread": true,
+    "thread_name": "dfx2-wk-feas",
+    "go_frames": [],
+    "frames": [
+     "initialize @ libjavascriptcoregtk-4.1.so.0 (JavaScriptCore/runtime/InitializeThreading.cpp:80)",
+     "WebKit::InitializeWebKit2() @ libwebkit2gtk-4.1.so.0 (WebKit/Shared/WebKit2Initialize.cpp:42)",
+     "operator() @ libwebkit2gtk-4.1.so.0 (WebKit/UIProcess/API/glib/WebKitInitialize.cpp:111)",
+     "__invoke_impl<void, (lambda at ./Source/WebKit/UIProcess/API/glib/WebKitInitialize.cpp:107:30)> @ libwebkit2gtk-4.1.so.0 (/usr/lib/gcc/x86_64-linux-gnu/16/../../../../include/c++/16/bits/invoke.h:63)",
+     "__invoke<(lambda at ./Source/WebKit/UIProcess/API/glib/WebKitInitialize.cpp:107:30)> @ libwebkit2gtk-4.1.so.0 (/usr/lib/gcc/x86_64-linux-gnu/16/../../../../include/c++/16/bits/invoke.h:98)",
+     "operator() @ libwebkit2gtk-4.1.so.0 (/usr/lib/gcc/x86_64-linux-gnu/16/../../../../include/c++/16/mutex:916)",
+     "operator() @ libwebkit2gtk-4.1.so.0 (/usr/lib/gcc/x86_64-linux-gnu/16/../../../../include/c++/16/mutex:849)",
+     "__invoke @ libwebkit2gtk-4.1.so.0 (/usr/lib/gcc/x86_64-linux-gnu/16/../../../../include/c++/16/mutex:849)",
+     "__pthread_once_slow @ libc.so.6 (./nptl/pthread_once.c:116)",
+     "___pthread_once @ libc.so.6 (./nptl/pthread_once.c:143)"
+    ]
+   },
+   "scheduling-attributes": {
+    "main_thread": false,
+    "thread_name": "ListStore Queue",
+    "go_frames": [],
+    "frames": [
+     "updateSchedulingAttributes @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/posix/ThreadingPOSIX.cpp:404)",
+     "WTF::Thread::initializeSchedulingAttributes() @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/posix/ThreadingPOSIX.cpp:455)",
+     "entryPoint @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/Threading.cpp:250)",
+     "WTF::wtfThreadEntryPoint(void*) @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/posix/ThreadingPOSIX.cpp:261)",
+     "start_thread @ libc.so.6 (./nptl/pthread_create.c:454)",
+     "__GI___clone3 @ libc.so.6 (../sysdeps/unix/sysv/linux/x86_64/clone3.S:78)"
+    ]
+   },
+   "highpriority-threads-created": {
+    "main_thread": false,
+    "thread_name": "olveDirectories",
+    "go_frames": [],
+    "frames": [
+     "HighPriorityThreads @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/linux/HighPriorityThreads.cpp:62)",
+     "__pthread_once_slow @ libc.so.6 (./nptl/pthread_once.c:116)",
+     "___pthread_once @ libc.so.6 (./nptl/pthread_once.c:143)",
+     "__gthread_once @ libjavascriptcoregtk-4.1.so.0 (/usr/lib/gcc/x86_64-linux-gnu/16/../../../../include/x86_64-linux-gnu/c++/16/bits/gthr-default.h:746)",
+     "call_once<(lambda at ./Source/WTF/wtf/linux/HighPriorityThreads.cpp:51:30)> @ libjavascriptcoregtk-4.1.so.0 (/usr/lib/gcc/x86_64-linux-gnu/16/../../../../include/c++/16/mutex:923)",
+     "singleton @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/linux/HighPriorityThreads.cpp:51)",
+     "WTF::Thread::initializeSchedulingAttributes() @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/posix/ThreadingPOSIX.cpp:459)",
+     "entryPoint @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/Threading.cpp:250)",
+     "WTF::wtfThreadEntryPoint(void*) @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/posix/ThreadingPOSIX.cpp:261)",
+     "start_thread @ libc.so.6 (./nptl/pthread_create.c:454)"
+    ]
+   },
+   "highpriority-thread-registered": {
+    "main_thread": false,
+    "thread_name": "olveDirectories",
+    "go_frames": [],
+    "frames": [
+     "registerThread @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/linux/HighPriorityThreads.cpp:70)",
+     "entryPoint @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/Threading.cpp:250)",
+     "WTF::wtfThreadEntryPoint(void*) @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/posix/ThreadingPOSIX.cpp:261)",
+     "start_thread @ libc.so.6 (./nptl/pthread_create.c:454)",
+     "__GI___clone3 @ libc.so.6 (../sysdeps/unix/sysv/linux/x86_64/clone3.S:78)"
+    ]
+   },
+   "sched-setscheduler": {
+    "main_thread": true,
+    "thread_name": "dfx2-wk-feas",
+    "go_frames": [],
+    "frames": [
+     "__GI_sched_setscheduler @ libc.so.6 (../sysdeps/unix/syscall-template.S:120)",
+     "__pthread_setschedparam @ libc.so.6 (./nptl/pthread_setschedparam.c:55)",
+     "?? @ libgallium-26.0.8-1ubuntu0.3.so",
+     "?? @ libgallium-26.0.8-1ubuntu0.3.so",
+     "?? @ libgallium-26.0.8-1ubuntu0.3.so",
+     "?? @ libgallium-26.0.8-1ubuntu0.3.so",
+     "?? @ libgallium-26.0.8-1ubuntu0.3.so",
+     "?? @ libgallium-26.0.8-1ubuntu0.3.so",
+     "?? @ libgallium-26.0.8-1ubuntu0.3.so",
+     "?? @ libgallium-26.0.8-1ubuntu0.3.so"
+    ]
+   },
+   "highpriority-rtkit": {
+    "main_thread": true,
+    "thread_name": "dfx2-wk-feas",
+    "go_frames": [
+     "runtime.asmcgocall @ exe (/home/michael/local/go/src/runtime/asm_amd64.s:970)"
+    ],
+    "frames": [
+     "realTimeKitMakeThreadHighPriority @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/linux/HighPriorityThreads.cpp:136)",
+     "operator() @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/Function.h:103)",
+     "performWork @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/RunLoop.cpp:146)",
+     "operator() @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/glib/RunLoopGLib.cpp:153)",
+     "__invoke @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/glib/RunLoopGLib.cpp:152)",
+     "operator() @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/glib/RunLoopGLib.cpp:116)",
+     "__invoke @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/glib/RunLoopGLib.cpp:89)",
+     "?? @ libglib-2.0.so.0",
+     "?? @ libglib-2.0.so.0",
+     "g_main_loop_run @ libglib-2.0.so.0"
+    ]
+   }
+  },
+  "native_sigaction_installs": [
+   [
+    13,
+    "dfx2-wk-feas",
+    "?? @ libgio-2.0.so.0"
+   ],
+   [
+    13,
+    "dfx2-wk-feas",
+    "?? @ libgtk-3.so.0"
+   ],
+   [
+    13,
+    "dfx2-wk-feas",
+    "?? @ libgvfsdbus.so"
+   ],
+   [
+    60,
+    "dfx2-wk-feas",
+    "operator() @ libjavascriptcoregtk-4.1.so.0 (WTF/wtf/posix/ThreadingPOSIX.cpp:233)"
+   ]
+  ],
+  "inferior_exit": {
+   "kind": "inferior-exit",
+   "exit_code": 0,
+   "exit_signal": null,
+   "t": 1794496827.874
+  },
+  "sigxcpu_installs": [],
+  "thread_priority": {
+   "realtime-threads-created": 0,
+   "realtime-thread-registered": 0,
+   "highpriority-threads-created": 1,
+   "highpriority-thread-registered": 11
+  }
+ },
+ "limits_changed": [],
+ "exit_sigxcpu": {
+  "signal": 24,
+  "owner": "go",
+  "flags": [
+   "SA_SIGINFO",
+   "SA_ONSTACK",
+   "SA_RESTART",
+   "SA_RESTORER"
+  ]
+ },
+ "seconds": 21.6
+}
