@@ -1,10 +1,10 @@
 # Webview integration
 
-Draft for discussion. This narrows the unfinished browser portion of [foundation.md](foundation.md) into the next implementation arc after the accepted synthetic mixer. Michael agreed the mixed-window target, readiness behavior, explicit transports, navigation defaults and temporary per-window storage in the design discussion. This document records those decisions and proposes the remaining details. It is not a work order or authorization to implement; it has not had Mercurius review. Public API spelling, numerical limits and mechanisms identified below remain proposals.
+Draft for joint review with the [production work order](webview-integration-work-order.md). This narrows the unfinished browser portion of [foundation.md](foundation.md) into the next implementation arc after the accepted synthetic mixer. Michael agreed the mixed-window target, readiness behavior, explicit transports, finite-adapter limits, navigation defaults and temporary per-window storage in the design discussion. This document records those decisions and proposes the remaining details. Neither draft authorizes implementation. Public API spelling and mechanisms explicitly identified as proposals await acceptance.
 
 Built contracts remain in [runtime.md](../current/runtime.md) and [ui.md](../current/ui.md). The [webview findings](webview.md) and independent experiments supply comparison evidence, not an integrated host or a complete endpoint access policy.
 
-Distribution priority (2026-11-12): applications should ship as one executable, using system browser libraries. Michael authorized an isolated [Linux cgo comparison](webview-cgo-spike.md) to test whether relaxing no-cgo only for webview builds offers a simpler correct implementation. Immediate-mode-only builds must remain cgo-free. Production adoption, process topology and the proposed WebKitGTK ≥ 2.54.1 minimum remain undecided; the no-cgo mechanisms below are the existing draft baseline, not a decision to reject the comparison.
+Distribution priority (2026-11-12): applications should ship as one executable, using system browser libraries. The isolated [Linux cgo comparison](webview-cgo-spike.md) found no signal-coexistence benefit. Michael chose to monitor the observed risks during representative development, without adopting cgo, a helper, new handler manipulation or a new runtime version floor. Production planning retains the no-cgo host and browser subprocesses. The production GC-signal mechanism still needs an explicit decision; the experiment's reservation is not production approval. The work order also proposes embedding/extracting the Windows loader to remove the spike's separate distribution file.
 
 ## The target
 
@@ -94,7 +94,7 @@ This is a promise about framework actions, not at-most-once HTTP delivery. The W
 
 There is no automatic retry loop. Fetch and asset failures remain the page's responsibility and do not replace the whole page. Actual HTTP responses, including 404 and 500, display normally. The other windows and shared application services continue running.
 
-The error-page mechanism must work when the endpoint is unreachable, preserve endpoint isolation and avoid opening a navigation or credential bypass. Its native implementation and treatment of failed redirect chains still need validation; no generic reload operation may replay an edit POST. This is load recovery, not browser-process restart.
+The error-page mechanism must work when the endpoint is unreachable, preserve endpoint isolation and avoid opening a navigation or credential bypass. Both feasibility hosts exercised local error pages and redirects; production integration still needs its own validation. The adjusted Windows action assertions have a targeted native rerun pending. No generic reload operation may replay an edit POST. This is load recovery, not browser-process restart.
 
 ## Navigation and endpoint access
 
@@ -118,7 +118,7 @@ In-process endpoints also need routing isolation: requests from another window o
 
 Agreed: storage is temporary and isolated per window. Reload keeps that window's session. Closing ends it; reopening starts a fresh session, and one window cannot read another's cookies or web storage. This default applies to attachments as well as owned-handler windows. It intentionally excludes persistent login sessions in this arc.
 
-The mechanism is a validation item. The Windows spike used an on-disk profile directory; it does not prove the agreed temporary-storage contract. Verify separation of cookies, local/session storage and cache on both platforms. Browser engine processes may be shared internally; that must not become shared application storage or permission to kill another window's browser resources on close.
+Feasibility demonstrated per-window in-memory Linux sessions and fresh Windows profile directories, including release and deletion. Production must validate its own implementation and retain the records' coverage limits, particularly weak cache evidence where no response was cached. Verify separation of cookies, local/session storage and cache on both platforms. Browser engine processes may be shared internally; that must not become shared application storage or permission to kill another window's browser resources on close.
 
 Temporary on-disk storage, if required, is framework-owned. Agreed: distinguish live browser ownership from leftover files. While callbacks or browser resources still need the profile, shutdown keeps waiting and reporting them. After those resources release it, attempt directory deletion with bounded retries. If deletion still fails, shutdown may finish with a cleanup error naming the directory, preserved alongside any earlier failure; never report successful deletion or reuse that profile. Reopening always gets fresh storage. The work order must establish the native release evidence and retry bounds; deletion failure alone cannot establish that native use has ended.
 
@@ -148,7 +148,7 @@ Agreed after the reservation probe: the proposed Linux JSC integration requires 
 
 The handler-safety follow-up ruled out the proposed host-VM workaround: restricting JSC calls to the UI thread does not prevent later suspension while that thread executes Go. The VM-free investigation supports continuing with no JSC VM in the Go host, including none created by native JavaScript-result APIs, while preserving JavaScript in browser children and callback-based in-process HTTP dispatch. The exercised required paths on 2.52.6 stayed VM-free under external instrumentation validated by positive controls. This is bounded evidence for those paths and that version, not general signal safety or evidence for untested APIs. The fault-handler patch is excluded and signal-mask toggling is not pursued. The subsequent SIGXCPU and cgo comparisons remain evidence for the monitored risk above; see the [spike brief](webview-feasibility-spike.md).
 
-Use a supported WebKit runtime containing the relevant graphics-teardown fixes and retain child-exit observations. The earlier comparison could not reproduce the original crash on either version; it did not prove a remedy. Preserve that uncertainty. Distinguish host ownership drain from engine-child exit and record child statuses that cannot be observed.
+Use the installed runtime for development, record its version and retain child-exit observations. No new runtime minimum was adopted by the monitoring decision. The earlier comparison could not reproduce the original graphics-teardown crash on either version and did not prove a remedy; the mixed-package comparison is not supported-deployment validation. Preserve that uncertainty. Distinguish host ownership drain from engine-child exit and record child statuses that cannot be observed.
 
 Windows integration must cover synchronous creation completion, close during controller/environment creation, and reentrant teardown without attaching late objects. Native browser calls join the existing dispatch/reentrancy discipline. The established size/move behavior for native windows must remain intact while a browser window is open.
 
@@ -189,10 +189,10 @@ Embedded native/browser composition inside one window, arbitrary JavaScript eval
 
 In-process streaming and precise fetch-abandonment cancellation remain outside the finite contract. Loopback is the explicit alternative. WebSocket integration needs a separate ownership proof before it is advertised. Generated TypeScript, tray/discovery facilities, macOS, fader polish and mouse-wheel editing remain follow-ups. Sessionmixer hardware integration follows this shared-lifetime exercise.
 
-## Before a work order
+## Production planning status
 
-The approved next step is the bounded [webview feasibility spike](webview-feasibility-spike.md): extend the existing experiments on Linux, then validate the corresponding Windows mechanisms through the operator-mediated host handoff. It proves the native prerequisites below without changing root framework code.
+The bounded [webview feasibility spike](webview-feasibility-spike.md) has returned from both hosts. Linux closeout and both manual error-page auditions are recorded. The Windows raw 19/22 result remains unchanged: the confinement attribution failures established the required combined mechanism, and the POST finding clarified transport redelivery versus framework actions. The revised Windows `error-pages` assertions still need their targeted native run.
 
-Validate native cookie installation and same-origin request enforcement; complete copy/metadata accounting and HTTP adapter failure details within the agreed limits; the agreed load-error page/retry mechanism and native browser-failure classification; native profile-release evidence and bounded deletion retries; and the Linux signal/runtime prerequisites. The behavior already agreed above constrains those choices rather than being reopened by the experiment results. If a platform cannot meet it, bring the evidence back for a decision.
+The paired work order grounds the platform extension, asynchronous ownership, bounded HTTP adapter, packaging and implementation stages in the existing runtime. It carries the Linux signal-mechanism decision explicitly and requires integrated validation of the native mechanisms. Feasibility is evidence for the plan, not acceptance of a production backend.
 
-Then ground the private platform extension and public API in the existing core, draft bounded implementation stages with Windows handoffs and Linux return checks, and submit the spec/work-order pair to Mercurius. Canon alignment is deliberate work once new guarantees are settled; this draft does not edit the canon or claim the current qualities cover every new browser policy.
+Submit this pair to Mercurius before implementation. Canon alignment is deliberate work once new guarantees are settled; these drafts do not edit the canon or claim the current qualities cover every new browser policy.
