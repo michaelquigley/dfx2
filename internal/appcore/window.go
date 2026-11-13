@@ -10,9 +10,13 @@ import (
 
 // NewWindow creates a native window synchronously on the UI thread. Creation
 // failures are returned and latched as application failures even if ignored.
-func (a *App) NewWindow(options WindowOptions) (*Window, error) { return a.newWindow(options, nil) }
+func (a *App) NewWindow(options WindowOptions) (*Window, error) {
+	return a.newWindow(options, nil, nil)
+}
 
-func (a *App) newWindow(options WindowOptions, content Content) (*Window, error) {
+// newWindow creates a plain window, a drawn window when content is set, or a
+// browser window when browser is set.
+func (a *App) newWindow(options WindowOptions, content Content, browser *browserState) (*Window, error) {
 	if !a.backend.IsOwner() {
 		return nil, ErrWrongThread
 	}
@@ -35,37 +39,64 @@ func (a *App) newWindow(options WindowOptions, content Content) (*Window, error)
 		// Generation 1 is unconsumed: the first visible, sized surface renders.
 		w.attachment = &attachment{impl: content, generation: 1}
 	}
+	kind := platform.PlainContent
+	switch {
+	case content != nil:
+		kind = platform.DrawnContent
+	case browser != nil:
+		kind = platform.BrowserContent
+		w.browser = browser
+	}
 	// Register before Create: it can synchronously request close or destruction,
 	// and content surface notifications route through this record.
 	a.windows[w.id] = w
 	a.mu.Unlock()
-	err := a.backend.Create(w.id, platform.WindowOptions{Title: options.Title, Width: options.Width, Height: options.Height, Content: content != nil})
+	err := a.backend.Create(w.id, platform.WindowOptions{Title: options.Title, Width: options.Width, Height: options.Height, Content: kind})
 	a.mu.Lock()
-	defer a.mu.Unlock()
 	w.creating = false
-	if content != nil && errors.Is(err, platform.ErrUnsupportedContent) {
+	if kind != platform.PlainContent && errors.Is(err, platform.ErrUnsupportedContent) {
 		// Refused before native work: drain the record (releasing content)
 		// without latching an application failure.
 		w.native = false
+		if browser != nil {
+			browser.attaching, browser.released = false, true // nothing was attached
+		}
 		a.closeWindowLocked(w)
 		// The refused record was a live starting window and may have
 		// postponed last-window shutdown; nonfatal, but it still counts.
 		a.lastWindowLocked()
 		a.notifyLocked()
+		a.mu.Unlock()
 		return nil, err
 	}
 	if err != nil {
 		w.native = false // Create's failure contract releases partial objects.
+		if browser != nil {
+			browser.attaching, browser.released = false, true
+		}
 		err = fmt.Errorf("dfx2 NewWindow: %w", err)
 		a.failLocked(err)
 	} else if w.state == starting {
 		w.state = open
 	}
 	a.notifyLocked()
+	a.mu.Unlock()
 	if err != nil {
 		return nil, err
 	}
-	if w.state >= closing {
+	if browser != nil {
+		// The shell is live and owned; an attachment failure drains it through
+		// the ordinary close path.
+		if err := a.attachBrowser(w); err != nil {
+			err = fmt.Errorf("dfx2 webview.Open: %w", err)
+			a.mu.Lock()
+			a.failLocked(err)
+			a.notifyLocked()
+			a.mu.Unlock()
+			return nil, err
+		}
+	}
+	if a.closingWindow(w) {
 		return w, ErrClosed
 	}
 	return w, nil

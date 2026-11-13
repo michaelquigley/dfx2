@@ -222,7 +222,7 @@ func TestContentCreationFailureLeavesNoNativeObject(t *testing.T) {
 	n.unref = func(o uintptr) { order = append(order, "unref") }
 	n.show = func(uintptr) { t.Error("failed window shown") }
 	b.sink = func(e platform.Event) { t.Errorf("failed creation delivered %+v", e) }
-	err := b.Create(7, platform.WindowOptions{Width: 10, Height: 10, Content: true})
+	err := b.Create(7, platform.WindowOptions{Width: 10, Height: 10, Content: platform.DrawnContent})
 	if err == nil || !strings.Contains(err.Error(), "map") {
 		t.Fatalf("create: %v", err)
 	}

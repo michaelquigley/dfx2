@@ -283,6 +283,17 @@ func (a *App) event(e platform.Event) {
 		return
 	}
 	w := a.windows[e.Window]
+	if w != nil && w.browser != nil && e.Kind == platform.SurfaceChanged {
+		// Forward copied bounds outside the mutex; browsers are not enrolled
+		// in frame or input scheduling.
+		impl := a.browserBoundsLocked(w)
+		a.mu.Unlock()
+		if impl != nil {
+			impl.Bounds(e.Surface)
+		}
+		a.mu.Lock() // for the deferred unlock
+		return
+	}
 	switch e.Kind {
 	case platform.CloseRequested:
 		if w != nil {
@@ -291,6 +302,10 @@ func (a *App) event(e platform.Event) {
 		}
 	case platform.Destroyed:
 		if w != nil {
+			if w.browser != nil && !w.browser.released && w.native {
+				// The shell is destroyed only after the browser released it.
+				a.failLocked(fmt.Errorf("dfx2 webview window %d: native parent destroyed while the browser still used it", w.id))
+			}
 			w.native = false
 			a.closeWindowLocked(w)
 			a.lastWindowLocked()

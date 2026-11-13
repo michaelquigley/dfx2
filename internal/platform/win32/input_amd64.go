@@ -121,6 +121,11 @@ func (b *Backend) releaseCapture(w *window) {
 // ReleaseCapture ends the window's capture after a gesture ended without a
 // button-up edge. A size/move loop's capture is never touched: taking it
 // cleared captured through WM_CAPTURECHANGED.
+// BrowserParent refuses: this backend creates no BrowserContent shells yet.
+func (b *Backend) BrowserParent(platform.ID) (platform.BrowserParent, error) {
+	return platform.BrowserParent{}, platform.ErrUnsupportedContent
+}
+
 func (b *Backend) ReleaseCapture(id platform.ID) error {
 	b.mu.Lock()
 	w := b.windows[id]

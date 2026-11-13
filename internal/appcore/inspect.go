@@ -19,7 +19,10 @@ type Status struct {
 	Frames      uint64
 	Animating   int
 	FrameTimers uint64
-	Native      platform.Counters
+	// Browsers counts browser windows still registered, and BrowserCleanups
+	// their running post-release cleanup work.
+	Browsers, BrowserCleanups int
+	Native                    platform.Counters
 }
 
 // Inspect is safe from any goroutine. It is deliberately a package function in
@@ -34,6 +37,10 @@ func Inspect(a *App) Status {
 	for _, w := range a.windows {
 		s.Tasks += len(w.tasks)
 		s.Queued += len(w.queue)
+		if w.browser != nil {
+			s.Browsers++
+			s.BrowserCleanups += len(w.browser.cleanups)
+		}
 		if w.attachment != nil {
 			s.Frames += w.attachment.frames
 			if !w.attachment.deadline.IsZero() {

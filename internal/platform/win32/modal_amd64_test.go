@@ -342,7 +342,7 @@ func TestCreationFromAModalTurnDefersWakesItsReentryLatches(t *testing.T) {
 			}
 			return 96, nil
 		}
-		if err := b.Create(8, platform.WindowOptions{Width: 50, Height: 50, Content: true}); err != nil {
+		if err := b.Create(8, platform.WindowOptions{Width: 50, Height: 50, Content: platform.DrawnContent}); err != nil {
 			t.Error(err)
 		}
 		f.api.getDPI = func(uintptr) (uint32, error) { return 96, nil }

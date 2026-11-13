@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- FEATURE: The `webview` package opens browser windows that share the application lifetime, with an explicit `InProcess`, `Loopback` or `Attach` mode and no fallback between them. Its portable contracts are built and tested against fake native seams: the finite in-process `http.Handler` adapter with reserved request, response, metadata, admission and aggregate limits; the window-owned loopback server with a per-window HttpOnly credential, Host/Origin checks, connection and handler limits and streaming; a framework content security policy on every owned response; and browser, endpoint and cleanup ownership that keeps `Done` and `Run` pending until everything admitted has returned. No platform hosts a browser yet: `Open` refuses with `ErrUnsupportedContent` before native work. See [webview.md](docs/current/webview.md).
+
 - FIX: Paragraph caches own their UTF-8 keys and charge them against the existing budget, including through rewraps and eviction; substring keys no longer retain larger caller allocations.
 
 - FIX: GTK painting checks Cairo context errors and propagates them through the application cancellation and drain path to `Run`, preserving a deferred dispatch wake so shutdown can finish.

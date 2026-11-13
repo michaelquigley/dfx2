@@ -105,8 +105,9 @@ type Window struct {
 	creating       bool
 	native         bool
 	destroyStarted bool
-	attachment     *attachment // UI content bridge; nil for ordinary windows
-	releasing      bool        // native teardown done; content release in progress
+	attachment     *attachment   // UI content bridge; nil for ordinary windows
+	browser        *browserState // browser attachment; nil for other windows
+	releasing      bool          // native teardown done; content release in progress
 	done           chan struct{}
 }
 

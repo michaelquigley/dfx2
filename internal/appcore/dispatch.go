@@ -81,13 +81,16 @@ func (a *App) dispatch() {
 }
 
 func (a *App) drainInternal() {
+	// A browser closes while its parent shell is still valid; the shell is
+	// destroyed only after the browser reports its release.
+	a.closeBrowsers()
 	// Initiate native teardown outside the mutex: Destroy may synchronously
 	// deliver destruction and completion callbacks back into event.
 	for {
 		a.mu.Lock()
 		var target *Window
 		for _, w := range a.windows {
-			if w.state == closing && !w.creating && w.native && !w.destroyStarted {
+			if w.state == closing && !w.creating && w.native && !w.destroyStarted && (w.browser == nil || w.browser.released) {
 				target, w.destroyStarted = w, true
 				break
 			}
@@ -143,7 +146,7 @@ func (a *App) drainInternal() {
 				delete(w.tasks, taskID)
 			}
 		}
-		if w.state != closing || w.creating || w.native || w.releasing || len(w.tasks) != 0 {
+		if w.state != closing || w.creating || w.native || w.releasing || len(w.tasks) != 0 || !browserDrainedLocked(w) {
 			continue
 		}
 		pending := false
@@ -197,7 +200,11 @@ func (a *App) pendingLocked() bool {
 		}
 	}
 	for _, w := range a.windows {
-		if len(w.queue) != 0 || (w.state == closing && !w.creating && w.native && !w.destroyStarted) || a.frameDueLocked(w, now) {
+		destroyDue := w.state == closing && !w.creating && w.native && !w.destroyStarted && (w.browser == nil || w.browser.released)
+		if len(w.queue) != 0 || destroyDue || a.frameDueLocked(w, now) {
+			return true
+		}
+		if br := w.browser; br != nil && w.state == closing && !w.creating && !br.attaching && !br.closeStarted {
 			return true
 		}
 		for _, t := range w.tasks {

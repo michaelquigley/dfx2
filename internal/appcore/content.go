@@ -75,7 +75,7 @@ func OpenContent(a *App, options WindowOptions, content Content) (*Window, error
 	if content == nil {
 		return nil, errors.New("dfx2 ui: nil content")
 	}
-	return a.newWindow(options, content)
+	return a.newWindow(options, content, nil)
 }
 
 // Invalidate requests a frame from any goroutine. It never uses a public post

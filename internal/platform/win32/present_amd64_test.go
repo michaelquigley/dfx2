@@ -13,7 +13,7 @@ import (
 
 func openContent(t *testing.T, f *systemModel, id platform.ID, width, height int) *window {
 	t.Helper()
-	if err := f.b.Create(id, platform.WindowOptions{Width: width, Height: height, Content: true}); err != nil {
+	if err := f.b.Create(id, platform.WindowOptions{Width: width, Height: height, Content: platform.DrawnContent}); err != nil {
 		t.Fatal(err)
 	}
 	return f.b.windows[id]
@@ -904,7 +904,7 @@ func TestContentCreationFailureLeavesNothingBehind(t *testing.T) {
 	f := model(t)
 	boom := errors.New("adjust failed")
 	f.adjustError = boom
-	if err := f.b.Create(7, platform.WindowOptions{Width: 320, Height: 240, Content: true}); !errors.Is(err, boom) {
+	if err := f.b.Create(7, platform.WindowOptions{Width: 320, Height: 240, Content: platform.DrawnContent}); !errors.Is(err, boom) {
 		t.Fatal(err)
 	}
 	if len(f.b.windows) != 0 || f.allocations != 0 || len(f.storage) != 0 {

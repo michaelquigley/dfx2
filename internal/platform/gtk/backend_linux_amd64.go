@@ -212,6 +212,9 @@ func (b *Backend) Open(sink func(platform.Event)) error {
 func (b *Backend) IsOwner() bool { return syscall.Gettid() == b.owner }
 
 func (b *Backend) Create(id platform.ID, options platform.WindowOptions) error {
+	if options.Content == platform.BrowserContent {
+		return platform.ErrUnsupportedContent // browser hosting arrives with its own stage
+	}
 	if options.Width <= 0 || options.Height <= 0 || options.Width > math.MaxInt32 || options.Height > math.MaxInt32 {
 		return errors.New("GTK client dimensions must fit positive gint values")
 	}
@@ -240,7 +243,7 @@ func (b *Backend) Create(id platform.ID, options platform.WindowOptions) error {
 		b.abandon(id, w)
 		return errors.New("GTK could not connect window lifetime signals")
 	}
-	if options.Content {
+	if options.Content == platform.DrawnContent {
 		if err := b.attachContent(w); err != nil {
 			b.abandon(id, w)
 			return err
@@ -504,6 +507,11 @@ func (b *Backend) inputEdge(id platform.ID, kind platform.InputKind) {
 // ReleaseCapture does nothing: GTK's implicit grab has no revocation call, and
 // it ends at the button-up edge. The core ignores pointer events without a gesture.
 func (b *Backend) ReleaseCapture(platform.ID) error { return nil }
+
+// BrowserParent refuses: this backend creates no BrowserContent shells yet.
+func (b *Backend) BrowserParent(platform.ID) (platform.BrowserParent, error) {
+	return platform.BrowserParent{}, platform.ErrUnsupportedContent
+}
 
 // paint is the draw handler: it paints the last complete image and never asks
 // the core for a frame. Without an image GTK draws the default background.

@@ -94,7 +94,7 @@ func TestDependencyBoundaries(t *testing.T) {
 			}
 			seen[dependency] = true
 			for _, forbidden := range []string{module, module + "/internal/appcore", module + "/ui", module + "/webview",
-				module + "/internal/text", module + "/internal/render"} {
+				module + "/internal/text", module + "/internal/render", module + "/internal/endpoint"} {
 				if dependency == forbidden || (forbidden != module && strings.HasPrefix(dependency, forbidden+"/")) {
 					t.Errorf("%s transitively reaches %s", path, dependency)
 				}
@@ -118,7 +118,8 @@ func TestDependencyBoundaries(t *testing.T) {
 		seen[path] = true
 		lower := strings.ToLower(path)
 		for _, excluded := range []string{"webkit", "javascriptcore", "webview", module + "/ui", module + "/internal/text",
-			module + "/internal/render", "github.com/go-text/", "golang.org/x/image"} {
+			module + "/internal/render", "github.com/go-text/", "golang.org/x/image", module + "/internal/endpoint",
+			module + "/internal/origin", "net/http"} {
 			if strings.Contains(lower, excluded) {
 				t.Errorf("root pulls content dependency %s", path)
 			}
@@ -130,7 +131,8 @@ func TestDependencyBoundaries(t *testing.T) {
 	nativeOnly(module)
 	// The content packages are present and reachable from ui, so the walk
 	// above is not vacuous.
-	for _, required := range []string{module + "/ui", module + "/internal/text/gotext", "github.com/go-text/typesetting/shaping"} {
+	for _, required := range []string{module + "/ui", module + "/internal/text/gotext", "github.com/go-text/typesetting/shaping",
+		module + "/webview", module + "/internal/endpoint", "net/http"} {
 		if _, ok := packages[required]; !ok {
 			t.Errorf("dependency walk did not see %s", required)
 		}

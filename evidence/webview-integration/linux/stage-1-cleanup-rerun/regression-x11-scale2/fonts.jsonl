@@ -1,0 +1,13 @@
+{"event":"opened","time":"2026-11-12T22:24:56.956445555-05:00","window":"A"}
+{"event":"font-coverage","faces":["notosans: outline"],"sample":"latin","text":"Level","time":"2026-11-12T22:24:57.456807292-05:00"}
+{"event":"font-coverage","faces":["notosans: outline"],"sample":"greek","text":"Ελληνικά","time":"2026-11-12T22:24:57.456940568-05:00"}
+{"event":"font-coverage","faces":["notosans: outline"],"sample":"cyrillic","text":"Кириллица","time":"2026-11-12T22:24:57.457855621-05:00"}
+{"event":"font-coverage","faces":["dejavusans: outline"],"sample":"hebrew","text":"עברית","time":"2026-11-12T22:24:57.458495595-05:00"}
+{"event":"font-coverage","faces":["dejavusans: outline"],"sample":"arabic","text":"العربية","time":"2026-11-12T22:24:57.458953182-05:00"}
+{"event":"font-coverage","faces":["notosanscjkjp: outline"],"sample":"japanese","text":"日本語","time":"2026-11-12T22:24:57.459389606-05:00"}
+{"event":"font-coverage","faces":["notocoloremoji: png bitmap"],"sample":"emoji","text":"🎛️🎚️🎹","time":"2026-11-12T22:24:57.460498999-05:00"}
+{"event":"capture-request","name":"fonts","time":"2026-11-12T22:24:57.460600822-05:00","window":"A"}
+{"event":"closed","time":"2026-11-12T22:24:58.162624151-05:00","window":"A"}
+{"animating":0,"dispatch_targets":0,"dispatches":43,"event":"ownership","frame_timers":4,"frames":0,"input_queued":0,"modal_active":false,"modal_loops":0,"modal_refusals":0,"modal_timers":0,"modal_turns":0,"native_completions":0,"native_problem":"","native_retired":0,"native_windows":0,"paint_failures":0,"paints":39,"presents":39,"queued":0,"release_pending":true,"tasks":0,"terminal":true,"time":"2026-11-12T22:24:58.162716893-05:00","wakes":43,"windows":0}
+{"commands":{"accepted":0,"applied":0,"canceled":0,"delay_ms":0,"outstanding":0,"refused":0,"reject_next":0,"rejected":0},"commands_conserved":true,"error":"\u003cnil\u003e","event":"return","invalidations_refused_after_close":0,"time":"2026-11-12T22:24:58.162815938-05:00"}
+{"animating":0,"dispatch_targets":0,"dispatches":43,"event":"drained","frame_timers":4,"frames":0,"input_queued":0,"modal_active":false,"modal_loops":0,"modal_refusals":0,"modal_timers":0,"modal_turns":0,"native_completions":0,"native_problem":"","native_retired":0,"native_windows":0,"paint_failures":0,"paints":39,"presents":39,"queued":0,"release_pending":false,"tasks":0,"terminal":true,"time":"2026-11-12T22:24:58.16290876-05:00","wakes":43,"windows":0}

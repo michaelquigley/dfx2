@@ -2,6 +2,7 @@ package appcore
 
 import (
 	"fmt"
+	"slices"
 	"sort"
 	"strings"
 	"time"
@@ -142,8 +143,12 @@ func (a *App) supervise() {
 		case <-diagnosticC:
 			diagnostic = nil
 			a.mu.Lock()
-			message := a.diagnosticLocked()
+			message, browsers := a.diagnosticLocked()
 			a.mu.Unlock()
+			// Endpoint and native summaries are gathered outside the mutex.
+			for _, describe := range browsers {
+				message += "; " + describe()
+			}
 			if b, ok := a.backend.(interface{ Counters() platform.Counters }); ok {
 				c := b.Counters()
 				message += fmt.Sprintf("; dispatch-targets=%d native-problem=%q", c.DispatchTargets, c.Problem)
@@ -198,8 +203,19 @@ func (a *App) log(format string, args ...any) {
 
 // Copy diagnostics under the same mutex as producers, then log outside it.
 // Neither a stalled native pump nor a stuck UI callback prevents this snapshot.
-func (a *App) diagnosticLocked() string {
+func (a *App) diagnosticLocked() (string, []func() string) {
 	var parts []string
+	var browsers []func() string
+	var ids []platform.ID
+	for id, w := range a.windows {
+		if w.browser != nil {
+			ids = append(ids, id)
+		}
+	}
+	slices.Sort(ids)
+	for _, id := range ids {
+		browsers = append(browsers, browserDiagnosticLocked(id, a.windows[id]))
+	}
 	for id, w := range a.windows {
 		parts = append(parts, fmt.Sprintf("window=%d state=%s native=%t creating=%t content-release-pending=%t", id, w.state, w.native, w.creating, w.releasing))
 		for taskID, t := range w.tasks {
@@ -211,5 +227,5 @@ func (a *App) diagnosticLocked() string {
 	}
 	sort.Strings(parts)
 	return fmt.Sprintf("dfx2 shutdown outstanding: windows=%d app-tasks=%d native-completions=%d wake-pending=%t wake-failures=%d release-pending=%t failure=%v; %s",
-		len(a.windows), len(a.tasks), len(a.operations), a.wakePending, a.wakeFailures, a.terminal && !a.dispatchReleased, a.failure, strings.Join(parts, "; "))
+		len(a.windows), len(a.tasks), len(a.operations), a.wakePending, a.wakeFailures, a.terminal && !a.dispatchReleased, a.failure, strings.Join(parts, "; ")), browsers
 }

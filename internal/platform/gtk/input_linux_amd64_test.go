@@ -188,7 +188,7 @@ func TestContentCreationPreparesInputBeforeShowing(t *testing.T) {
 	n.setDefaultSize = func(uintptr, int32, int32) {}
 	n.getScale = func(uintptr) int32 { return 1 }
 	n.show = func(uintptr) { order = append(order, "show") }
-	if err := b.Create(7, platform.WindowOptions{Width: 4, Height: 3, Content: true}); err != nil {
+	if err := b.Create(7, platform.WindowOptions{Width: 4, Height: 3, Content: platform.DrawnContent}); err != nil {
 		t.Fatal(err)
 	}
 	t.Cleanup(func() { routes.Delete(b.windows[7].token) })

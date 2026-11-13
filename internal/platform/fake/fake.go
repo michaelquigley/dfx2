@@ -33,17 +33,21 @@ type Backend struct {
 	PumpErrors                              []error
 	CreateError, DestroyError, ReleaseError error
 	DelayDestroy                            bool
-	// ContentUnsupported mimics a backend without content surfaces. OnPresent
-	// runs before a Present copy and may fail it.
+	// ContentUnsupported mimics a backend without drawing surfaces, and
+	// BrowserUnsupported one without browser shells. OnPresent runs before a
+	// Present copy and may fail it.
 	ContentUnsupported bool
-	OnPresent          func(platform.ID, platform.Image) error
+	BrowserUnsupported bool
+	// ParentError fails BrowserParent.
+	ParentError error
+	OnPresent   func(platform.ID, platform.Image) error
 	// ReleaseCaptureError fails ReleaseCapture.
 	ReleaseCaptureError error
 
 	mu           sync.Mutex
 	sink         func(platform.Event)
 	windows      map[platform.ID]Window
-	events       []platform.Event
+	events       []item
 	changed      chan struct{}
 	wakeErrors   []error
 	wakes, pumps int
@@ -70,7 +74,8 @@ func (b *Backend) Create(id platform.ID, options platform.WindowOptions) error {
 	if b.BeforeCreate != nil {
 		b.BeforeCreate(id)
 	}
-	if options.Content && b.ContentUnsupported {
+	if options.Content == platform.DrawnContent && b.ContentUnsupported ||
+		options.Content == platform.BrowserContent && b.BrowserUnsupported {
 		return platform.ErrUnsupportedContent
 	}
 	b.mu.Lock()
@@ -122,11 +127,11 @@ func (b *Backend) Present(id platform.ID, image platform.Image) error {
 		b.violations = append(b.violations, "present after release")
 	case !ok:
 		b.violations = append(b.violations, "present after teardown")
-	case !w.Options.Content:
+	case w.Options.Content != platform.DrawnContent:
 		b.violations = append(b.violations, "present on a window without content")
 	}
 	b.mu.Unlock()
-	if b.released || !ok || !w.Options.Content {
+	if b.released || !ok || w.Options.Content != platform.DrawnContent {
 		return errors.New("fake: present rejected")
 	}
 	if b.OnPresent != nil {
@@ -144,6 +149,21 @@ func (b *Backend) Present(id platform.ID, image platform.Image) error {
 		b.windows[id] = w
 	}
 	return nil
+}
+
+// BrowserParent describes a live browser shell with a placeholder handle.
+func (b *Backend) BrowserParent(id platform.ID) (platform.BrowserParent, error) {
+	if b.ParentError != nil {
+		return platform.BrowserParent{}, b.ParentError
+	}
+	b.mu.Lock()
+	defer b.mu.Unlock()
+	w, ok := b.windows[id]
+	if !ok || w.Options.Content != platform.BrowserContent {
+		b.violations = append(b.violations, "browser parent for a window without a browser shell")
+		return platform.BrowserParent{}, errors.New("fake: no browser shell")
+	}
+	return platform.BrowserParent{Window: id, Handle: w.Handle}, nil
 }
 
 // ReleaseCapture records the request; the fake holds no native capture.
@@ -203,20 +223,43 @@ func (b *Backend) DeliverNext() bool {
 		b.mu.Unlock()
 		return false
 	}
-	e := b.events[0]
+	next := b.events[0]
 	b.events = b.events[1:]
 	b.mu.Unlock()
-	b.Emit(e)
+	b.deliver(next)
 	return true
+}
+
+// item is one queued native delivery: an event, or a native callback that
+// calls into the core the way a browser's own callbacks do.
+type item struct {
+	event platform.Event
+	call  func()
+}
+
+func (b *Backend) deliver(next item) {
+	if next.call != nil {
+		next.call()
+		return
+	}
+	b.Emit(next.event)
 }
 
 func (b *Backend) Enqueue(e platform.Event) {
 	b.mu.Lock()
 	defer b.mu.Unlock()
-	b.enqueueLocked(e)
+	b.enqueueLocked(item{event: e})
 }
 
-func (b *Backend) enqueueLocked(e platform.Event) {
+// Call queues f as a native callback: Pump runs it on the UI thread, outside
+// any dispatch turn, in order with queued events. Safe from any goroutine.
+func (b *Backend) Call(f func()) {
+	b.mu.Lock()
+	defer b.mu.Unlock()
+	b.enqueueLocked(item{call: f})
+}
+
+func (b *Backend) enqueueLocked(e item) {
 	if b.released {
 		panic("fake: event posted after Release")
 	}
@@ -245,7 +288,7 @@ func (b *Backend) Wake() error {
 			return err
 		}
 	}
-	b.enqueueLocked(platform.Event{Kind: platform.Wake})
+	b.enqueueLocked(item{event: platform.Event{Kind: platform.Wake}})
 	return nil
 }
 
@@ -273,11 +316,11 @@ func (b *Backend) Pump() error {
 	for {
 		b.mu.Lock()
 		if len(b.events) > 0 {
-			e := b.events[0]
+			next := b.events[0]
 			b.events = b.events[1:]
 			b.pumps++
 			b.mu.Unlock()
-			b.Emit(e)
+			b.deliver(next)
 			return nil
 		}
 		changed := b.changed

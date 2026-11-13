@@ -10,10 +10,10 @@ import (
 
 type ID uint64
 
-// ErrUnsupportedContent reports that a backend cannot host framework-drawn
-// content yet. Backends return it before starting any native work, so no
+// ErrUnsupportedContent reports that a backend cannot host the requested
+// content kind yet. Backends return it before starting any native work, so no
 // native object exists and the condition is not an application failure.
-var ErrUnsupportedContent = errors.New("dfx2: UI content is not supported by this platform backend yet")
+var ErrUnsupportedContent = errors.New("dfx2: content is not supported by this platform backend yet")
 
 // MaxImageBytes bounds one rendered or retained window image. Exceeding it is a
 // reported rendering failure rather than an unbounded allocation.
@@ -38,12 +38,25 @@ type Counters struct {
 	Problem                                            string
 }
 
+// ContentKind names what fills a window's client area. A backend that cannot
+// provide a kind returns ErrUnsupportedContent before native work.
+type ContentKind uint8
+
+const (
+	// PlainContent is an empty native window.
+	PlainContent ContentKind = iota
+	// DrawnContent is a framework drawing surface fed by Present.
+	DrawnContent
+	// BrowserContent is a shell whose client area a private browser attachment
+	// fills; see BrowserParent. It is not a drawing surface: Present is refused
+	// and no input is delivered, while SurfaceChanged reports copied bounds.
+	BrowserContent
+)
+
 type WindowOptions struct {
 	Title         string
 	Width, Height int
-	// Content requests a framework drawing surface inside the window. A backend
-	// that cannot provide one returns ErrUnsupportedContent before native work.
-	Content bool
+	Content       ContentKind
 }
 
 type Kind uint8
@@ -53,8 +66,8 @@ const (
 	CloseRequested
 	Destroyed
 	Completed
-	// SurfaceChanged carries a content window's copied size, scale and
-	// visibility. Backends deliver it only when one of those values changes.
+	// SurfaceChanged carries a drawn or browser window's copied size, scale
+	// and visibility. Backends deliver it only when one of those values changes.
 	SurfaceChanged
 	// InputReceived carries one copied native input edge or motion for a
 	// content window.
@@ -219,6 +232,9 @@ type Backend interface {
 	// revoked may do nothing: the core ignores pointer events that have no
 	// gesture, and the grab ends at the button-up edge.
 	ReleaseCapture(ID) error
+	// BrowserParent describes a live BrowserContent shell for the matching
+	// browser factory. It never delivers events.
+	BrowserParent(ID) (BrowserParent, error)
 	// Wake is nonblocking, safe from any goroutine and never delivers inline.
 	// It queues a Wake event or returns an error without queuing one. A Wake
 	// event normally arrives from Pump. A backend whose native toolkit runs its

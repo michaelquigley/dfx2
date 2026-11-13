@@ -124,6 +124,9 @@ func (b *Backend) Open(sink func(platform.Event)) error {
 func (b *Backend) IsOwner() bool { return b.api.threadID() == b.owner }
 
 func (b *Backend) Create(id platform.ID, options platform.WindowOptions) error {
+	if options.Content == platform.BrowserContent {
+		return platform.ErrUnsupportedContent // browser hosting arrives with its own stage
+	}
 	if options.Width <= 0 || options.Height <= 0 || options.Width > math.MaxInt32 || options.Height > math.MaxInt32 {
 		return errors.New("Win32 client dimensions must fit positive int values")
 	}
@@ -133,7 +136,7 @@ func (b *Backend) Create(id platform.ID, options platform.WindowOptions) error {
 	}
 	w := b.record(id, false)
 	w.logicalWidth, w.logicalHeight = float64(options.Width), float64(options.Height)
-	w.content = options.Content
+	w.content = options.Content == platform.DrawnContent
 	w.closeOnCreate, b.closeNext = b.closeNext, false
 	b.mu.Lock()
 	b.windows[id] = w

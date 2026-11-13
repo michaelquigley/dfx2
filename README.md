@@ -10,7 +10,7 @@ The root module contains the portable application/window lifecycle core, a contr
 
 The `ui` package draws immediate-mode text, measured rows and columns, animated meters, faders and checkboxes on the CPU with pure-Go text. Linux presents through GTK/Cairo; Windows presents through GDI and continues bounded dispatch during size/move loops. The accepted [synthetic mixer](examples/mixer/README.md) demonstrates two windows over an application-owned model with ordered commands and pending-value reconciliation. Both hosts passed automated and manual auditions; the two later input-deferral fixes have portable-test and cross-build coverage. Real Windows DPI transitions remain untested, and Windows CPU timing is unavailable as useful evidence. [ui.md](docs/current/ui.md) describes built behavior; the [stage 4 record](evidence/synthetic-mixer/stage-4.md) carries acceptance, validation revisions and remaining limits.
 
-Webview integration on the shared runtime is the next design slice; browser hosting is not built yet. The design work lives in [`docs/future/`](docs/future): start with [direction.md](docs/future/direction.md). Experiments live in [`experiments/`](experiments), each its own Go module.
+The `webview` package's portable contracts are built: explicit in-process, owned loopback and attached-URL modes, browser ownership in the shared lifetime, the finite in-process HTTP adapter and the owned loopback server ([webview.md](docs/current/webview.md)). No platform hosts a browser yet; the Linux and Windows browser hosts are the next stages. The design work lives in [`docs/future/`](docs/future): start with [direction.md](docs/future/direction.md). Experiments live in [`experiments/`](experiments), each its own Go module.
 
 
 ## Build and run
