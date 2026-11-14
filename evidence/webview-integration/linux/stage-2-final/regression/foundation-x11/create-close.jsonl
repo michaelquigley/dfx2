@@ -1,0 +1,6 @@
+{"event":"start","pause_after":"0s","resident":false,"script":"create-close","time":"2026-11-14T13:59:49.099756135-05:00"}
+{"event":"verified-create-close","time":"2026-11-14T13:59:49.129379889-05:00"}
+{"applied":0,"event":"closed","time":"2026-11-14T13:59:49.129658608-05:00","window":"starting"}
+{"dispatch_targets":0,"dispatches":2,"event":"ownership","native_completions":0,"native_problem":"","native_retired":0,"native_windows":0,"queued":0,"release_pending":false,"tasks":0,"terminal":true,"time":"2026-11-14T13:59:49.129681266-05:00","wakes":2,"windows":0}
+{"dispatch_targets":0,"dispatches":2,"event":"drained","native_completions":0,"native_problem":"","native_retired":0,"native_windows":0,"queued":0,"release_pending":false,"tasks":0,"terminal":true,"time":"2026-11-14T13:59:49.129744555-05:00","wakes":2,"windows":0}
+{"error":"","event":"return","time":"2026-11-14T13:59:49.129776667-05:00"}

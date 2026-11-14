@@ -12,4 +12,4 @@ test:
 
 clean:
 	go clean ./...
-	go clean -i ./examples/mixer ./examples/lifetime
+	go clean -i ./examples/mixer ./examples/lifetime ./examples/webview

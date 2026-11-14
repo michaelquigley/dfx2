@@ -1,0 +1,26 @@
+libmutter-Message: 14:41:13.993: Running GNOME Shell (using mutter 50.1) as a Wayland display server
+
+(gnome-shell:2570877): libmutter-WARNING **: 14:41:13.993: Unknown experimental feature 'scale-monitor-framebuffer'
+
+(gnome-shell:2570877): libmutter-WARNING **: 14:41:13.994: Unknown experimental feature 'xwayland-native-scaling'
+libmutter-Message: 14:41:14.141: Added device '/dev/dri/renderD129' (nvidia-drm) using no mode setting.
+libmutter-Message: 14:41:14.151: Added device '/dev/dri/renderD128' (i915) using no mode setting.
+libmutter-Message: 14:41:14.152: Created gbm renderer for '/dev/dri/renderD129'
+libmutter-Message: 14:41:14.153: Created gbm renderer for '/dev/dri/renderD128'
+libmutter-Message: 14:41:14.153: Boot VGA GPU /dev/dri/renderD128 selected as primary
+** Message: 14:41:14.155: Obtained a high priority EGL context
+libmutter-Message: 14:41:14.172: Added virtual monitor Meta-0
+libmutter-Message: 14:41:14.188: Using public X11 display :2, (using unix:/tmp/.X11-unix/X3 for managed services)
+libmutter-Message: 14:41:14.188: Using Wayland display name 'dfx2-audition'
+GNOME Shell-Message: 14:41:14.491: Unset XDG_SESSION_ID, getCurrentSessionProxy() called outside a user session. Asking logind directly.
+GNOME Shell-Message: 14:41:14.581: Registering session with GDM
+GNOME Shell-Message: 14:41:14.668: Will monitor session 3
+GNOME Shell-Message: 14:41:14.681: Error looking up permission: GDBus.Error:org.freedesktop.portal.Error.NotFound: No entry for geolocation
+GNOME Shell-Message: 14:41:14.774: Failed to register AuthenticationAgent
+
+(gnome-shell:2570877): Gjs-WARNING **: 14:41:14.845: Type GITypeInfo of property NM.Object::client does not match return type GITypeInfo of getter get_client. Falling back to slow path
+** Message: 14:41:14.858: Failed to start camera monitor
+GNOME Shell-Message: 14:41:15.328: GNOME Shell started at Sat Nov 14 2026 14:41:14 GMT-0500 (Eastern Standard Time)
+GNOME Shell-Message: 14:41:15.329: Registering display with GDM
+** Message: 14:42:02.994: Shutting down GNOME Shell
+libmutter-Message: 14:42:03.076: Removed virtual monitor Meta-0

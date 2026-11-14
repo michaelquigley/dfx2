@@ -132,7 +132,7 @@ func TestDependencyBoundaries(t *testing.T) {
 	// The content packages are present and reachable from ui, so the walk
 	// above is not vacuous.
 	for _, required := range []string{module + "/ui", module + "/internal/text/gotext", "github.com/go-text/typesetting/shaping",
-		module + "/webview", module + "/internal/endpoint", "net/http"} {
+		module + "/webview", module + "/internal/endpoint", "net/http", module + "/internal/platform/webkit"} {
 		if _, ok := packages[required]; !ok {
 			t.Errorf("dependency walk did not see %s", required)
 		}

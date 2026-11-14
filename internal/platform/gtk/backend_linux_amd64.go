@@ -165,6 +165,10 @@ type window struct {
 	surface                     uintptr
 	surfaceWidth, surfaceHeight int
 	reported                    platform.Surface
+
+	// Browser shells: the toplevel is the parent container a browser
+	// attachment fills. The backend draws nothing in it.
+	browser bool
 }
 
 // Backend keeps its source alive independently of all content windows. The
@@ -212,13 +216,11 @@ func (b *Backend) Open(sink func(platform.Event)) error {
 func (b *Backend) IsOwner() bool { return syscall.Gettid() == b.owner }
 
 func (b *Backend) Create(id platform.ID, options platform.WindowOptions) error {
-	if options.Content == platform.BrowserContent {
-		return platform.ErrUnsupportedContent // browser hosting arrives with its own stage
-	}
 	if options.Width <= 0 || options.Height <= 0 || options.Width > math.MaxInt32 || options.Height > math.MaxInt32 {
 		return errors.New("GTK client dimensions must fit positive gint values")
 	}
-	w := &window{token: uintptr(nextToken.Add(1)), width: options.Width, height: options.Height}
+	w := &window{token: uintptr(nextToken.Add(1)), width: options.Width, height: options.Height,
+		browser: options.Content == platform.BrowserContent}
 	b.mu.Lock()
 	b.windows[id] = w
 	b.mu.Unlock()
@@ -508,9 +510,17 @@ func (b *Backend) inputEdge(id platform.ID, kind platform.InputKind) {
 // it ends at the button-up edge. The core ignores pointer events without a gesture.
 func (b *Backend) ReleaseCapture(platform.ID) error { return nil }
 
-// BrowserParent refuses: this backend creates no BrowserContent shells yet.
-func (b *Backend) BrowserParent(platform.ID) (platform.BrowserParent, error) {
-	return platform.BrowserParent{}, platform.ErrUnsupportedContent
+// BrowserParent describes a live browser shell: its toplevel GtkWindow is the
+// container the attachment adds its view to. The core destroys the shell only
+// after the attachment has released it.
+func (b *Backend) BrowserParent(id platform.ID) (platform.BrowserParent, error) {
+	b.mu.Lock()
+	w := b.windows[id]
+	b.mu.Unlock()
+	if w == nil || !w.browser || w.destroyed {
+		return platform.BrowserParent{}, errors.New("GTK browser parent: no live browser shell")
+	}
+	return platform.BrowserParent{Window: id, Handle: w.widget}, nil
 }
 
 // paint is the draw handler: it paints the last complete image and never asks

@@ -157,3 +157,33 @@ func AuditionExpose(w *Window) error {
 	}
 	return b.AuditionExpose(w.id)
 }
+
+// BrowserWindows lists live browser windows in creation order, for internal
+// auditions. Safe from any goroutine.
+func BrowserWindows(a *App) []*Window {
+	a.mu.Lock()
+	defer a.mu.Unlock()
+	var out []*Window
+	for _, w := range a.windows {
+		if w.browser != nil && w.state < closing {
+			out = append(out, w)
+		}
+	}
+	slices.SortFunc(out, func(x, y *Window) int { return int(x.id) - int(y.id) })
+	return out
+}
+
+// AuditionBrowser returns a live window's browser attachment on the UI
+// thread, so an internal audition can drive the hooks its platform type
+// offers. It refuses closing windows and adds nothing to the public API.
+func AuditionBrowser(w *Window) (platform.Browser, error) {
+	if !w.app.backend.IsOwner() {
+		return nil, ErrWrongThread
+	}
+	w.app.mu.Lock()
+	defer w.app.mu.Unlock()
+	if w.browser == nil || w.browser.impl == nil || w.state >= closing {
+		return nil, ErrClosed
+	}
+	return w.browser.impl, nil
+}

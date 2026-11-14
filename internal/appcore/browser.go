@@ -269,7 +269,14 @@ func (h browserHost) Failed(err error) {
 	}
 	a.mu.Lock()
 	defer a.mu.Unlock()
-	a.failLocked(fmt.Errorf("dfx2 webview window %d: %w", w.id, err))
+	err = fmt.Errorf("dfx2 webview window %d: %w", w.id, err)
+	if a.failure == nil {
+		a.failLocked(err)
+	} else {
+		// A browser-process failure after an earlier failure is still kept:
+		// Run joins it as a distinct record rather than dropping it.
+		a.cleanupLocked(err)
+	}
 	a.notifyLocked()
 }
 

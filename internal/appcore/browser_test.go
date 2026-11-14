@@ -773,3 +773,32 @@ func TestOpenBrowserFollowsOpeningErrorPolicy(t *testing.T) {
 		}
 	})
 }
+
+func TestBrowserFailureAfterAnEarlierFailureIsKept(t *testing.T) {
+	first, crash := errors.New("application failed first"), errors.New("web process crashed")
+	f := &fake.BrowserFactory{DelayRelease: true}
+	b := &fake.Backend{}
+	fail := make(chan struct{})
+	h := launch(t, quietOptions(WindowApplication), b, newClock(), func(a *App) error {
+		if _, err := openBrowserWindow(a, "browser", attachSpec(f, nil)); err != nil {
+			return err
+		}
+		return a.Go("worker", func(ctx context.Context) error {
+			select {
+			case <-fail:
+				return first
+			case <-ctx.Done():
+				return nil
+			}
+		})
+	})
+	br := receive(t, f.Created())
+	close(fail)
+	eventually(t, "close after the first failure", func() bool { _, _, closed, _, _ := br.State(); return closed })
+	onUI(t, b, func() { br.Host.Failed(crash) })
+	onUI(t, b, br.Release)
+	err := receive(t, h.done)
+	if !errors.Is(err, first) || !errors.Is(err, crash) {
+		t.Fatalf("Run lost a failure: %v", err)
+	}
+}

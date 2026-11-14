@@ -1,0 +1,37 @@
+{
+  "binary": "/tmp/dfx2-stage2-review-webview",
+  "gdk_backend": "wayland",
+  "gdk_scale": null,
+  "passed": true,
+  "cases": [
+    {
+      "case": "browser_failure",
+      "killed": 2479895,
+      "exit": {
+        "host": "browser-failure",
+        "exit": 1,
+        "error": "dfx2 webview window 3: WebKit web process terminated (reason 0)",
+        "children": [
+          {
+            "pid": 2479692,
+            "name": "?",
+            "exit": 0
+          },
+          {
+            "pid": 2479696,
+            "name": "bwrap",
+            "signal": 9
+          },
+          {
+            "pid": 2479695,
+            "name": "bwrap",
+            "signal": 9
+          }
+        ],
+        "stderr_lines": 1
+      },
+      "ok": true,
+      "seconds": 0.7
+    }
+  ]
+}

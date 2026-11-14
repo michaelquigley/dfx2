@@ -85,6 +85,7 @@ func (f *Finite) Start(ctx context.Context, host appcore.EndpointHost, config *p
 	f.mu.Lock()
 	defer f.mu.Unlock()
 	f.ctx, f.host = ctx, host
+	config.RequestMetadata = f.limits.Metadata // the browser measures against it
 	return nil
 }
 
@@ -131,7 +132,9 @@ func (f *Finite) Status() string {
 		f.admitted, f.limits.Requests, native, handling, reading, f.refusals, Refusals, f.reserved, f.budget(), f.closed, f.drained)
 }
 
-func (f *Finite) budget() int64 { return f.limits.Buffers - f.limits.reserveRefusals() }
+func (f *Finite) budget() int64 {
+	return f.limits.Buffers - f.limits.reserveRefusals() - f.limits.reserveTransfer()
+}
 
 // set changes one reservation of a live request.
 func (f *Finite) set(r *request, field *int64, value int64) {
@@ -214,7 +217,9 @@ func (f *Finite) admit(in platform.BrowserRequest) (*request, platform.RequestDe
 	}
 	// Measure before parsing: nothing is decoded or copied for oversized
 	// metadata.
-	meta := metadataSize(in.Method, in.URL, in.Header)
+	// A browser that stopped measuring past the limit supplied no headers;
+	// its measurement then decides.
+	meta := max(metadataSize(in.Method, in.URL, in.Header), in.MetadataSize)
 	if meta > int64(f.limits.Metadata) {
 		return nil, f.refuseLocked(http.StatusRequestHeaderFieldsTooLarge)
 	}

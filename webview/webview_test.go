@@ -8,6 +8,7 @@ import (
 	"net/http/httptest"
 	"strings"
 	"sync"
+	"syscall"
 	"testing"
 	"time"
 
@@ -77,6 +78,26 @@ func (h harness) onUI(t *testing.T, f func()) {
 
 var size = dfx2.WindowOptions{Title: "web", Width: 320, Height: 200}
 
+// testSignal satisfies Linux's reservation requirement; the fake factory
+// never hands it to a runtime.
+const testSignal = syscall.Signal(60)
+
+func TestLinuxRequiresAnExplicitGCSignal(t *testing.T) {
+	o := Options{Mode: InProcess, Handler: http.NotFoundHandler()}
+	_, _, err := configure(o)
+	if needsGCSignal != (err != nil) {
+		t.Fatalf("missing reservation on this platform: %v", err)
+	}
+	o.LinuxGCSignal = -1
+	if _, _, err := configure(o); err == nil {
+		t.Fatal("negative signal accepted")
+	}
+	o.LinuxGCSignal = testSignal
+	if config, _, err := configure(o); err != nil || config.GCSignal != 60 {
+		t.Fatalf("%+v %v", config, err)
+	}
+}
+
 func TestConfigureRequiresAnExplicitConsistentMode(t *testing.T) {
 	h := http.NotFoundHandler()
 	for name, o := range map[string]Options{
@@ -102,27 +123,25 @@ func TestConfigureRequiresAnExplicitConsistentMode(t *testing.T) {
 			t.Errorf("%s accepted", name)
 		}
 	}
-	config, e, err := configure(Options{Mode: Attach, URL: "https://Example.com/app?x#y",
+	config, e, err := configure(Options{Mode: Attach, LinuxGCSignal: testSignal, URL: "https://Example.com/app?x#y",
 		Origins: []string{"https://example.com:443", "https://EXAMPLE.com/", "http://auth.example:8080"}})
 	if err != nil || e != nil || config.Mode != platform.BrowserAttach || config.StartURL != "https://Example.com/app?x#y" ||
 		strings.Join(config.Origins, ",") != "https://example.com:443,http://auth.example:8080" {
 		t.Fatalf("attach config %+v %v %v", config, e, err)
 	}
-	if _, e, err := configure(Options{Mode: InProcess, Handler: h, DevTools: true}); err != nil || e == nil {
+	if _, e, err := configure(Options{Mode: InProcess, Handler: h, DevTools: true, LinuxGCSignal: testSignal}); err != nil || e == nil {
 		t.Fatal(err)
 	}
 }
 
 func TestOpenRefusesWithoutBrowserHostingAndLatchesNothing(t *testing.T) {
-	if platformFactory() != nil {
-		t.Skip("this platform hosts browsers")
-	}
+	useFactory(t, nil) // as on a platform without a browser host
 	h := launch(t, dfx2.WindowApplication, func(a *dfx2.App) error {
 		w, err := a.NewWindow(size)
 		if err != nil {
 			return err
 		}
-		if _, err := Open(a, Options{Window: size, Mode: Loopback, Handler: http.NotFoundHandler()}); !errors.Is(err, ErrUnsupportedContent) {
+		if _, err := Open(a, Options{Window: size, LinuxGCSignal: testSignal, Mode: Loopback, Handler: http.NotFoundHandler()}); !errors.Is(err, ErrUnsupportedContent) {
 			t.Errorf("refusal: %v", err)
 		}
 		w.Close()
@@ -139,7 +158,7 @@ func TestOpenRefusesWithoutBrowserHostingAndLatchesNothing(t *testing.T) {
 func TestInvalidOptionsAreLatchedLikeOpeningFailures(t *testing.T) {
 	useFactory(t, &fake.BrowserFactory{})
 	h := launch(t, dfx2.ResidentApplication, func(a *dfx2.App) error {
-		_, err := Open(a, Options{Window: size, Handler: http.NotFoundHandler()})
+		_, err := Open(a, Options{Window: size, Handler: http.NotFoundHandler(), LinuxGCSignal: testSignal})
 		if err == nil {
 			t.Error("missing mode accepted")
 		}
@@ -159,7 +178,7 @@ func TestInProcessServesThroughTheBrowserAndDrainsOnClose(t *testing.T) {
 	t.Cleanup(func() { once.Do(func() { close(release) }) })
 	windows := make(chan *Window, 1)
 	h := launch(t, dfx2.WindowApplication, func(a *dfx2.App) error {
-		w, err := Open(a, Options{Window: size, Mode: InProcess, Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w, err := Open(a, Options{Window: size, LinuxGCSignal: testSignal, Mode: InProcess, Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			if r.URL.Path == "/slow" {
 				entered <- r
 				<-release
@@ -215,7 +234,7 @@ func TestOwnedHandlerPanicCancelsAndDrainsTheApplication(t *testing.T) {
 	f := &fake.BrowserFactory{Origin: "fake://w1"}
 	useFactory(t, f)
 	h := launch(t, dfx2.WindowApplication, func(a *dfx2.App) error {
-		_, err := Open(a, Options{Window: size, Mode: InProcess, Handler: http.HandlerFunc(func(http.ResponseWriter, *http.Request) {
+		_, err := Open(a, Options{Window: size, LinuxGCSignal: testSignal, Mode: InProcess, Handler: http.HandlerFunc(func(http.ResponseWriter, *http.Request) {
 			panic("model invariant broken")
 		})})
 		return err
@@ -241,7 +260,7 @@ func TestLoopbackWindowOwnsItsServer(t *testing.T) {
 	t.Cleanup(func() { once.Do(func() { close(release) }) })
 	windows := make(chan *Window, 1)
 	h := launch(t, dfx2.WindowApplication, func(a *dfx2.App) error {
-		w, err := Open(a, Options{Window: size, Mode: Loopback, Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w, err := Open(a, Options{Window: size, LinuxGCSignal: testSignal, Mode: Loopback, Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			if r.URL.Path == "/slow" {
 				entered <- struct{}{}
 				<-release
@@ -296,7 +315,7 @@ func TestAttachedServiceOutlivesItsWindow(t *testing.T) {
 	useFactory(t, f)
 	windows := make(chan *Window, 1)
 	h := launch(t, dfx2.WindowApplication, func(a *dfx2.App) error {
-		w, err := Open(a, Options{Window: size, Mode: Attach, URL: service.URL + "/", Origins: []string{service.URL}})
+		w, err := Open(a, Options{Window: size, LinuxGCSignal: testSignal, Mode: Attach, URL: service.URL + "/", Origins: []string{service.URL}})
 		windows <- w
 		return err
 	})

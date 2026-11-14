@@ -1,0 +1,4 @@
+body { font: 15px sans-serif; margin: 2em; background: #1e1f24; color: #e8e6e3; }
+a, button { margin-right: 1em; }
+a { color: #4fa3f7; }
+pre { background: #2a2b31; padding: 1em; min-height: 6em; white-space: pre-wrap; }

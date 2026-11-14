@@ -1,0 +1,10 @@
+SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry
+{"name": "window", "command": ["/tmp/dfx2-s4-lifetime", "-script", "lifecycle"], "exit_code": 0, "timed_out": false, "inspected": true, "children": [], "forbidden_libraries": [], "browser_children": [], "events": 23, "failures": []}
+{"name": "resident", "command": ["/tmp/dfx2-s4-lifetime", "-resident", "-script", "lifecycle"], "exit_code": 0, "timed_out": false, "inspected": true, "children": [], "forbidden_libraries": [], "browser_children": [], "events": 33, "failures": []}
+{"name": "idle-window", "command": ["/tmp/dfx2-s4-lifetime", "-script", "idle"], "exit_code": 0, "timed_out": false, "inspected": true, "children": [], "forbidden_libraries": [], "browser_children": [], "events": 27, "failures": []}
+{"name": "idle-resident", "command": ["/tmp/dfx2-s4-lifetime", "-resident", "-script", "idle"], "exit_code": 0, "timed_out": false, "inspected": true, "children": [], "forbidden_libraries": [], "browser_children": [], "events": 27, "failures": []}
+{"name": "failure", "command": ["/tmp/dfx2-s4-lifetime", "-script", "failure"], "exit_code": 1, "timed_out": false, "inspected": true, "children": [], "forbidden_libraries": [], "browser_children": [], "events": 20, "failures": []}
+{"name": "cancel", "command": ["/tmp/dfx2-s4-lifetime", "-script", "cancel"], "exit_code": 0, "timed_out": false, "inspected": true, "children": [], "forbidden_libraries": [], "browser_children": [], "events": 20, "failures": []}
+{"name": "create-close", "command": ["/tmp/dfx2-s4-lifetime", "-script", "create-close"], "exit_code": 0, "timed_out": false, "inspected": false, "children": [], "forbidden_libraries": [], "browser_children": [], "events": 6, "failures": []}
+{"name": "signal", "command": ["/tmp/dfx2-s4-lifetime"], "exit_code": 0, "timed_out": false, "inspected": true, "children": [], "forbidden_libraries": [], "browser_children": [], "events": 17, "failures": []}
+gnome-shell-calendar-server[1846675]: Lost (or failed to acquire) the name org.gnome.Shell.CalendarServer - exiting

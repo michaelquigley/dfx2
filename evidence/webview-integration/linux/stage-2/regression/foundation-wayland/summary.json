@@ -1,0 +1,277 @@
+{
+  "host": {
+    "os": "Linux-7.0.0-43-generic-x86_64-with-glibc2.43",
+    "architecture": "x86_64",
+    "go": "go version go1.27.1 linux/amd64",
+    "gtk": "3.24.52",
+    "glib": "2.88.0",
+    "session": "wayland",
+    "gdk_backend": "wayland",
+    "wayland_display": "dfx2-audition",
+    "display": ":2",
+    "date": "2026-11-13T17:21:31-05:00"
+  },
+  "results": [
+    {
+      "name": "window",
+      "command": [
+        "/tmp/dfx2-s4-lifetime",
+        "-script",
+        "lifecycle"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "inspected": true,
+      "children": [
+        {
+          "pid": "1842011",
+          "comm": "bwrap",
+          "exe": "/usr/bin/bwrap",
+          "loader": "/usr/libexec/glycin-loaders/2+/glycin-svg"
+        },
+        {
+          "pid": "1842012",
+          "comm": "bwrap",
+          "exe": "/usr/bin/bwrap",
+          "loader": "/usr/libexec/glycin-loaders/2+/glycin-svg"
+        },
+        {
+          "pid": "1842013",
+          "comm": "glycin-svg",
+          "exe": "/usr/libexec/glycin-loaders/2+/glycin-svg",
+          "loader": "/usr/libexec/glycin-loaders/2+/glycin-svg"
+        }
+      ],
+      "forbidden_libraries": [],
+      "browser_children": [],
+      "events": 23,
+      "failures": []
+    },
+    {
+      "name": "resident",
+      "command": [
+        "/tmp/dfx2-s4-lifetime",
+        "-resident",
+        "-script",
+        "lifecycle"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "inspected": true,
+      "children": [
+        {
+          "pid": "1842872",
+          "comm": "bwrap",
+          "exe": "/usr/bin/bwrap",
+          "loader": "/usr/libexec/glycin-loaders/2+/glycin-svg"
+        },
+        {
+          "pid": "1842873",
+          "comm": "bwrap",
+          "exe": "/usr/bin/bwrap",
+          "loader": "/usr/libexec/glycin-loaders/2+/glycin-svg"
+        },
+        {
+          "pid": "1842874",
+          "comm": "glycin-svg",
+          "exe": "/usr/libexec/glycin-loaders/2+/glycin-svg",
+          "loader": "/usr/libexec/glycin-loaders/2+/glycin-svg"
+        }
+      ],
+      "forbidden_libraries": [],
+      "browser_children": [],
+      "events": 33,
+      "failures": []
+    },
+    {
+      "name": "idle-window",
+      "command": [
+        "/tmp/dfx2-s4-lifetime",
+        "-script",
+        "idle"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "inspected": true,
+      "children": [
+        {
+          "pid": "1843667",
+          "comm": "bwrap",
+          "exe": "/usr/bin/bwrap",
+          "loader": "/usr/libexec/glycin-loaders/2+/glycin-svg"
+        },
+        {
+          "pid": "1843668",
+          "comm": "bwrap",
+          "exe": "/usr/bin/bwrap",
+          "loader": "/usr/libexec/glycin-loaders/2+/glycin-svg"
+        },
+        {
+          "pid": "1843669",
+          "comm": "glycin-svg",
+          "exe": "/usr/libexec/glycin-loaders/2+/glycin-svg",
+          "loader": "/usr/libexec/glycin-loaders/2+/glycin-svg"
+        }
+      ],
+      "forbidden_libraries": [],
+      "browser_children": [],
+      "events": 27,
+      "failures": []
+    },
+    {
+      "name": "idle-resident",
+      "command": [
+        "/tmp/dfx2-s4-lifetime",
+        "-resident",
+        "-script",
+        "idle"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "inspected": true,
+      "children": [
+        {
+          "pid": "1844470",
+          "comm": "bwrap",
+          "exe": "/usr/bin/bwrap",
+          "loader": "/usr/libexec/glycin-loaders/2+/glycin-svg"
+        },
+        {
+          "pid": "1844471",
+          "comm": "bwrap",
+          "exe": "/usr/bin/bwrap",
+          "loader": "/usr/libexec/glycin-loaders/2+/glycin-svg"
+        },
+        {
+          "pid": "1844472",
+          "comm": "glycin-svg",
+          "exe": "/usr/libexec/glycin-loaders/2+/glycin-svg",
+          "loader": "/usr/libexec/glycin-loaders/2+/glycin-svg"
+        }
+      ],
+      "forbidden_libraries": [],
+      "browser_children": [],
+      "events": 27,
+      "failures": []
+    },
+    {
+      "name": "failure",
+      "command": [
+        "/tmp/dfx2-s4-lifetime",
+        "-script",
+        "failure"
+      ],
+      "exit_code": 1,
+      "timed_out": false,
+      "inspected": true,
+      "children": [
+        {
+          "pid": "1845011",
+          "comm": "bwrap",
+          "exe": "/usr/bin/bwrap",
+          "loader": "/usr/libexec/glycin-loaders/2+/glycin-svg"
+        },
+        {
+          "pid": "1845012",
+          "comm": "bwrap",
+          "exe": "/usr/bin/bwrap",
+          "loader": "/usr/libexec/glycin-loaders/2+/glycin-svg"
+        },
+        {
+          "pid": "1845013",
+          "comm": "glycin-svg",
+          "exe": "/usr/libexec/glycin-loaders/2+/glycin-svg",
+          "loader": "/usr/libexec/glycin-loaders/2+/glycin-svg"
+        }
+      ],
+      "forbidden_libraries": [],
+      "browser_children": [],
+      "events": 20,
+      "failures": []
+    },
+    {
+      "name": "cancel",
+      "command": [
+        "/tmp/dfx2-s4-lifetime",
+        "-script",
+        "cancel"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "inspected": true,
+      "children": [
+        {
+          "pid": "1845655",
+          "comm": "bwrap",
+          "exe": "/usr/bin/bwrap",
+          "loader": "/usr/libexec/glycin-loaders/2+/glycin-svg"
+        },
+        {
+          "pid": "1845656",
+          "comm": "bwrap",
+          "exe": "/usr/bin/bwrap",
+          "loader": "/usr/libexec/glycin-loaders/2+/glycin-svg"
+        },
+        {
+          "pid": "1845657",
+          "comm": "glycin-svg",
+          "exe": "/usr/libexec/glycin-loaders/2+/glycin-svg",
+          "loader": "/usr/libexec/glycin-loaders/2+/glycin-svg"
+        }
+      ],
+      "forbidden_libraries": [],
+      "browser_children": [],
+      "events": 20,
+      "failures": []
+    },
+    {
+      "name": "create-close",
+      "command": [
+        "/tmp/dfx2-s4-lifetime",
+        "-script",
+        "create-close"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "inspected": false,
+      "children": [],
+      "forbidden_libraries": [],
+      "browser_children": [],
+      "events": 6,
+      "failures": []
+    },
+    {
+      "name": "signal",
+      "command": [
+        "/tmp/dfx2-s4-lifetime"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "inspected": true,
+      "children": [
+        {
+          "pid": "1846211",
+          "comm": "bwrap",
+          "exe": "/usr/bin/bwrap",
+          "loader": "/usr/libexec/glycin-loaders/2+/glycin-svg"
+        },
+        {
+          "pid": "1846212",
+          "comm": "bwrap",
+          "exe": "/usr/bin/bwrap",
+          "loader": "/usr/libexec/glycin-loaders/2+/glycin-svg"
+        },
+        {
+          "pid": "1846213",
+          "comm": "glycin-svg",
+          "exe": "/usr/libexec/glycin-loaders/2+/glycin-svg",
+          "loader": "/usr/libexec/glycin-loaders/2+/glycin-svg"
+        }
+      ],
+      "forbidden_libraries": [],
+      "browser_children": [],
+      "events": 16,
+      "failures": []
+    }
+  ]
+}

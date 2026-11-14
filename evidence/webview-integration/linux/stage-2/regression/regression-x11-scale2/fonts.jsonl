@@ -1,0 +1,13 @@
+{"event":"opened","time":"2026-11-13T17:21:26.880999011-05:00","window":"A"}
+{"event":"font-coverage","faces":["notosans: outline"],"sample":"latin","text":"Level","time":"2026-11-13T17:21:27.382154241-05:00"}
+{"event":"font-coverage","faces":["notosans: outline"],"sample":"greek","text":"Ελληνικά","time":"2026-11-13T17:21:27.38247189-05:00"}
+{"event":"font-coverage","faces":["notosans: outline"],"sample":"cyrillic","text":"Кириллица","time":"2026-11-13T17:21:27.384061302-05:00"}
+{"event":"font-coverage","faces":["dejavusans: outline"],"sample":"hebrew","text":"עברית","time":"2026-11-13T17:21:27.38556764-05:00"}
+{"event":"font-coverage","faces":["dejavusans: outline"],"sample":"arabic","text":"العربية","time":"2026-11-13T17:21:27.386694435-05:00"}
+{"event":"font-coverage","faces":["notosanscjkjp: outline"],"sample":"japanese","text":"日本語","time":"2026-11-13T17:21:27.387739233-05:00"}
+{"event":"font-coverage","faces":["notocoloremoji: png bitmap"],"sample":"emoji","text":"🎛️🎚️🎹","time":"2026-11-13T17:21:27.390697176-05:00"}
+{"event":"capture-request","name":"fonts","time":"2026-11-13T17:21:27.390862361-05:00","window":"A"}
+{"event":"closed","time":"2026-11-13T17:21:28.093716229-05:00","window":"A"}
+{"animating":0,"dispatch_targets":0,"dispatches":42,"event":"ownership","frame_timers":3,"frames":0,"input_queued":0,"modal_active":false,"modal_loops":0,"modal_refusals":0,"modal_timers":0,"modal_turns":0,"native_completions":0,"native_problem":"","native_retired":0,"native_windows":0,"paint_failures":0,"paints":38,"presents":38,"queued":0,"release_pending":true,"tasks":0,"terminal":true,"time":"2026-11-13T17:21:28.093908311-05:00","wakes":42,"windows":0}
+{"commands":{"accepted":0,"applied":0,"canceled":0,"delay_ms":0,"outstanding":0,"refused":0,"reject_next":0,"rejected":0},"commands_conserved":true,"error":"\u003cnil\u003e","event":"return","invalidations_refused_after_close":0,"time":"2026-11-13T17:21:28.094194612-05:00"}
+{"animating":0,"dispatch_targets":0,"dispatches":42,"event":"drained","frame_timers":3,"frames":0,"input_queued":0,"modal_active":false,"modal_loops":0,"modal_refusals":0,"modal_timers":0,"modal_turns":0,"native_completions":0,"native_problem":"","native_retired":0,"native_windows":0,"paint_failures":0,"paints":38,"presents":38,"queued":0,"release_pending":false,"tasks":0,"terminal":true,"time":"2026-11-13T17:21:28.094302529-05:00","wakes":42,"windows":0}

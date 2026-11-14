@@ -236,7 +236,7 @@ func TestFiniteAdmissionAndAggregatePressureRefuseWithoutQueueing(t *testing.T) 
 	// A near-limit URL and full body reservation fill enough of a one-worst-
 	// case budget to refuse a second request despite a free admission slot.
 	limits, _ := Limits{RequestBody: 1000, ResponseBody: 1000, Metadata: 1024}.Normalize()
-	limits.Buffers = limits.reserveRefusals() + limits.worstCase()
+	limits.Buffers = limits.reserveRefusals() + limits.reserveTransfer() + limits.worstCase()
 	h2 := newHeld(t)
 	y := newFinite(t, h2, limits)
 	first := y.f.Request(platform.BrowserRequest{Method: "PUT", URL: testOrigin + "/" + strings.Repeat("p", 850), BodyLength: -1})
@@ -504,7 +504,7 @@ func TestLimitsNormalize(t *testing.T) {
 		t.Fatalf("defaults %+v %v", l, err)
 	}
 	// Sixteen worst-case requests fit the default budget alongside the reserve.
-	if 16*l.worstCase()+l.reserveRefusals() > l.Buffers {
+	if 16*l.worstCase()+l.reserveRefusals()+l.reserveTransfer() > l.Buffers {
 		t.Fatal("defaults cannot hold their own admission limit")
 	}
 	for _, bad := range []Limits{{RequestBody: -1}, {Buffers: -1}, {Metadata: 1023}, {Buffers: 1 << 20},
@@ -607,7 +607,7 @@ func TestFiniteDeliveryStaysWithinTheAdmissionReservation(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	limits.Buffers = limits.reserveRefusals() + limits.worstCase()
+	limits.Buffers = limits.reserveRefusals() + limits.reserveTransfer() + limits.worstCase()
 	x := newFinite(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Near-limit metadata and a body grown in small writes, so its buffer's
 		// capacity exceeds its length.
@@ -715,7 +715,7 @@ func TestFiniteAggregateAdmissionPrecedesURLParsing(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	limits.Buffers = limits.reserveRefusals() + limits.worstCase()
+	limits.Buffers = limits.reserveRefusals() + limits.reserveTransfer() + limits.worstCase()
 	x := newFinite(t, http.NotFoundHandler(), limits)
 	var ids []platform.ID
 	for range 100 {
@@ -771,7 +771,7 @@ func TestFiniteBodyIsAllocatedOnceWithinItsReservation(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	limits.Buffers = limits.reserveRefusals() + limits.worstCase()
+	limits.Buffers = limits.reserveRefusals() + limits.reserveTransfer() + limits.worstCase()
 	got := make(chan int, 1)
 	x := newFinite(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		body, _ := io.ReadAll(r.Body)
@@ -803,5 +803,28 @@ func TestFiniteBodyIsAllocatedOnceWithinItsReservation(t *testing.T) {
 	x.f.RequestReleased(d.ID)
 	if x.reserved() != 0 {
 		t.Fatalf("leaked %d", x.reserved())
+	}
+}
+
+func TestFiniteRefusesABrowserMeasuredOversizeWithoutHeaders(t *testing.T) {
+	x := newFinite(t, http.NotFoundHandler(), Limits{Metadata: 1024})
+	config := platform.BrowserConfig{Mode: platform.BrowserInProcess}
+	x.f.Start(context.Background(), x.host, &config)
+	if config.RequestMetadata != 1024 {
+		t.Fatalf("browser not told the metadata limit: %d", config.RequestMetadata)
+	}
+	// The browser stopped counting past the limit and built no headers.
+	d := x.f.Request(platform.BrowserRequest{Method: "GET", URL: testOrigin + "/", MetadataSize: 1025})
+	if d.Action != platform.RequestRespond || d.Response.Status != http.StatusRequestHeaderFieldsTooLarge {
+		t.Fatalf("browser-measured oversize: %+v", d)
+	}
+	// A smaller browser measurement never lowers the endpoint's own.
+	big := platform.BrowserRequest{Method: "GET", URL: testOrigin + "/", MetadataSize: 1,
+		Header: []platform.Header{{Name: "X-Big", Value: strings.Repeat("v", 1000)}}}
+	if d := x.f.Request(big); d.Response.Status != http.StatusRequestHeaderFieldsTooLarge {
+		t.Fatalf("endpoint measurement ignored: %+v", d)
+	}
+	if x.reserved() != 0 {
+		t.Fatal("refusals reserved request storage")
 	}
 }

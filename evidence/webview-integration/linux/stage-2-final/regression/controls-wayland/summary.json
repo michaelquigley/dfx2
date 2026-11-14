@@ -1,0 +1,974 @@
+{
+  "gdk_backend": "wayland",
+  "gdk_scale": null,
+  "cases": [
+    {
+      "case": "drag_outside_window",
+      "ok": true,
+      "seconds": 2.7,
+      "edits": 5,
+      "release_outside": true
+    },
+    {
+      "case": "checkbox",
+      "ok": true,
+      "seconds": 1.29
+    },
+    {
+      "case": "keyboard",
+      "ok": true,
+      "seconds": 6.22,
+      "values": [
+        0.51,
+        0.52,
+        0.53,
+        0.52,
+        0.51,
+        0.61,
+        0.51,
+        0,
+        1
+      ]
+    },
+    {
+      "case": "independent_focus",
+      "ok": true,
+      "seconds": 2.43,
+      "sequence": [
+        [
+          "B",
+          "c"
+        ],
+        [
+          "A",
+          "a"
+        ],
+        [
+          "B",
+          "c"
+        ]
+      ]
+    },
+    {
+      "case": "external_during_drag",
+      "ok": true,
+      "seconds": 1.62,
+      "edits": 2
+    },
+    {
+      "case": "reorder_during_drag",
+      "ok": true,
+      "seconds": 1.88
+    },
+    {
+      "case": "remove_during_drag",
+      "ok": true,
+      "seconds": 2.64
+    },
+    {
+      "case": "focus_loss_during_drag",
+      "ok": true,
+      "seconds": 2.19
+    },
+    {
+      "case": "hover_is_idle",
+      "ok": true,
+      "seconds": 4.05,
+      "hover_frames": 0,
+      "quiet": {
+        "frames": 0,
+        "frame_timers": 0,
+        "presents": 0,
+        "evaluations": 0
+      },
+      "status_evaluations": 195
+    },
+    {
+      "case": "delayed_commands",
+      "ok": true,
+      "seconds": 3.86,
+      "latencies_ms": [
+        700.782,
+        1385.788,
+        2073.796,
+        2462.492
+      ]
+    },
+    {
+      "case": "rejected_commands",
+      "ok": true,
+      "seconds": 3.25,
+      "last_error": "#40 d gain 0.56 rejected: device refused"
+    },
+    {
+      "case": "overloaded_commands",
+      "ok": true,
+      "seconds": 2.09,
+      "accepted": 65,
+      "refused": 5
+    },
+    {
+      "case": "external_while_pending",
+      "ok": true,
+      "seconds": 1.55
+    },
+    {
+      "case": "timing",
+      "ok": true,
+      "seconds": 16.74,
+      "running": {
+        "seconds": 5.0,
+        "frames_per_s": 119.6,
+        "evaluations_per_s": 119.6,
+        "presents_per_s": 119.6,
+        "cpu_percent": 40.4,
+        "ticks": 150
+      },
+      "churn": {
+        "seconds": 5.0,
+        "frames_per_s": 119.2,
+        "evaluations_per_s": 119.2,
+        "presents_per_s": 119.2,
+        "cpu_percent": 36.7,
+        "ticks": 150
+      },
+      "quiet": {
+        "seconds": 3.0,
+        "frames_per_s": 0.0,
+        "evaluations_per_s": 0.0,
+        "presents_per_s": 0.0,
+        "cpu_percent": 0.5,
+        "ticks": 0
+      },
+      "text": {
+        "A": {
+          "glyph_bytes": 94819,
+          "glyph_entries": 595,
+          "glyph_evictions": 0,
+          "paragraph_bytes": 1004779,
+          "paragraph_entries": 247,
+          "paragraph_evictions": 1511,
+          "rasterized": 595,
+          "shapes": 2753,
+          "transient_glyphs": 0,
+          "transient_paragraphs": 995
+        },
+        "B": {
+          "glyph_bytes": 94819,
+          "glyph_entries": 595,
+          "glyph_evictions": 0,
+          "paragraph_bytes": 1009644,
+          "paragraph_entries": 248,
+          "paragraph_evictions": 1503,
+          "rasterized": 595,
+          "shapes": 2743,
+          "transient_glyphs": 0,
+          "transient_paragraphs": 992
+        }
+      }
+    },
+    {
+      "case": "close_first_window",
+      "ok": true,
+      "seconds": 3.23,
+      "B": 0.7000105574324325,
+      "C": 0.29998944256756754
+    },
+    {
+      "case": "close_during_drag",
+      "ok": true,
+      "seconds": 1.85,
+      "edits_before_close": 1
+    },
+    {
+      "case": "shutdown_outstanding",
+      "ok": true,
+      "seconds": 1.13,
+      "canceled": [
+        118,
+        119,
+        120,
+        121,
+        122
+      ],
+      "totals": {
+        "accepted": 117,
+        "applied": 110,
+        "canceled": 5,
+        "delay_ms": 60000,
+        "outstanding": 0,
+        "refused": 5,
+        "reject_next": 0,
+        "rejected": 2
+      }
+    }
+  ],
+  "windows": [
+    {
+      "title": "dfx2 mixer B",
+      "x": 1000,
+      "y": 80,
+      "w": 760,
+      "h": 557,
+      "focused": false
+    },
+    {
+      "title": "dfx2 mixer A",
+      "x": 40,
+      "y": 80,
+      "w": 760,
+      "h": 557,
+      "focused": true
+    }
+  ],
+  "first_status": {
+    "animating": 0,
+    "channels": [
+      {
+        "gain": 0.5,
+        "gain_pending": false,
+        "id": "a",
+        "mute_pending": false,
+        "muted": false,
+        "pending_gain": 0,
+        "pending_mute": false
+      },
+      {
+        "gain": 0.5,
+        "gain_pending": false,
+        "id": "b",
+        "mute_pending": false,
+        "muted": false,
+        "pending_gain": 0,
+        "pending_mute": false
+      },
+      {
+        "gain": 0.5,
+        "gain_pending": false,
+        "id": "c",
+        "mute_pending": false,
+        "muted": false,
+        "pending_gain": 0,
+        "pending_mute": false
+      },
+      {
+        "gain": 0.5,
+        "gain_pending": false,
+        "id": "d",
+        "mute_pending": false,
+        "muted": false,
+        "pending_gain": 0,
+        "pending_mute": false
+      },
+      {
+        "gain": 0.5,
+        "gain_pending": false,
+        "id": "e",
+        "mute_pending": false,
+        "muted": false,
+        "pending_gain": 0,
+        "pending_mute": false
+      },
+      {
+        "gain": 0.5,
+        "gain_pending": false,
+        "id": "f",
+        "mute_pending": false,
+        "muted": false,
+        "pending_gain": 0,
+        "pending_mute": false
+      }
+    ],
+    "commands": {
+      "accepted": 0,
+      "applied": 0,
+      "canceled": 0,
+      "delay_ms": 0,
+      "outstanding": 0,
+      "refused": 0,
+      "reject_next": 0,
+      "rejected": 0
+    },
+    "commands_outstanding": 0,
+    "cpu_seconds": 0.460533,
+    "dispatch_targets": 1,
+    "dispatches": 5,
+    "evaluations": 4,
+    "event": "status",
+    "first_frames": 2,
+    "first_surface": "760x520@1 visible=true",
+    "frame_timers": 0,
+    "frames": 4,
+    "input_queued": 0,
+    "last_error": "",
+    "modal_active": false,
+    "modal_loops": 0,
+    "modal_refusals": 0,
+    "modal_timers": 0,
+    "modal_turns": 0,
+    "native_completions": 0,
+    "native_problem": "",
+    "native_retired": 0,
+    "native_windows": 2,
+    "paint_failures": 0,
+    "paints": 15,
+    "presents": 4,
+    "queued": 0,
+    "release_pending": false,
+    "tasks": 3,
+    "terminal": false,
+    "text": {
+      "A": {
+        "glyph_bytes": 12553,
+        "glyph_entries": 90,
+        "glyph_evictions": 0,
+        "paragraph_bytes": 21185,
+        "paragraph_entries": 13,
+        "paragraph_evictions": 0,
+        "rasterized": 90,
+        "shapes": 13,
+        "transient_glyphs": 0,
+        "transient_paragraphs": 0
+      },
+      "B": {
+        "glyph_bytes": 12553,
+        "glyph_entries": 90,
+        "glyph_evictions": 0,
+        "paragraph_bytes": 21185,
+        "paragraph_entries": 13,
+        "paragraph_evictions": 0,
+        "rasterized": 90,
+        "shapes": 13,
+        "transient_glyphs": 0,
+        "transient_paragraphs": 0
+      }
+    },
+    "text_budget": {
+      "glyph_bytes": 16777216,
+      "glyph_entries": 0,
+      "glyph_evictions": 0,
+      "paragraph_bytes": 1048576,
+      "paragraph_entries": 256,
+      "paragraph_evictions": 0,
+      "rasterized": 0,
+      "shapes": 0,
+      "transient_glyphs": 0,
+      "transient_paragraphs": 0
+    },
+    "tick": 0,
+    "time": "2026-11-14T13:52:11.694762509-05:00",
+    "wakes": 5,
+    "windows": 2
+  },
+  "origins": {
+    "A": [
+      40,
+      117.0
+    ],
+    "B": [
+      1000,
+      117.0
+    ],
+    "C": [
+      40,
+      117.0
+    ]
+  },
+  "exit": 0,
+  "returned": "<nil>",
+  "drained": {
+    "animating": 0,
+    "dispatch_targets": 0,
+    "dispatches": 2206,
+    "event": "drained",
+    "frame_timers": 1029,
+    "frames": 0,
+    "input_queued": 0,
+    "modal_active": false,
+    "modal_loops": 0,
+    "modal_refusals": 0,
+    "modal_timers": 0,
+    "modal_turns": 0,
+    "native_completions": 0,
+    "native_problem": "",
+    "native_retired": 0,
+    "native_windows": 0,
+    "paint_failures": 0,
+    "paints": 2020,
+    "presents": 2086,
+    "queued": 0,
+    "release_pending": false,
+    "tasks": 0,
+    "terminal": true,
+    "time": "2026-11-14T13:53:11.536609884-05:00",
+    "wakes": 2206,
+    "windows": 0
+  },
+  "ownership_problems": [],
+  "commands": {
+    "accepted": 117,
+    "applied": 110,
+    "canceled": 5,
+    "delay_ms": 60000,
+    "outstanding": 0,
+    "refused": 5,
+    "reject_next": 0,
+    "rejected": 2
+  },
+  "commands_conserved": true,
+  "stderr": "",
+  "text": [
+    {
+      "budget": "small",
+      "flag": "49152:65536:48",
+      "passed": true,
+      "samples": [
+        {
+          "A": {
+            "glyph_bytes": 33627,
+            "glyph_entries": 220,
+            "glyph_evictions": 1099,
+            "paragraph_bytes": 26867,
+            "paragraph_entries": 19,
+            "paragraph_evictions": 135,
+            "rasterized": 2417,
+            "shapes": 197,
+            "transient_glyphs": 1098,
+            "transient_paragraphs": 43
+          },
+          "B": {
+            "glyph_bytes": 34805,
+            "glyph_entries": 227,
+            "glyph_evictions": 1092,
+            "paragraph_bytes": 26867,
+            "paragraph_entries": 19,
+            "paragraph_evictions": 135,
+            "rasterized": 2416,
+            "shapes": 198,
+            "transient_glyphs": 1097,
+            "transient_paragraphs": 44
+          }
+        },
+        {
+          "A": {
+            "glyph_bytes": 35378,
+            "glyph_entries": 231,
+            "glyph_evictions": 2276,
+            "paragraph_bytes": 25946,
+            "paragraph_entries": 18,
+            "paragraph_evictions": 280,
+            "rasterized": 4775,
+            "shapes": 386,
+            "transient_glyphs": 2268,
+            "transient_paragraphs": 88
+          },
+          "B": {
+            "glyph_bytes": 35008,
+            "glyph_entries": 228,
+            "glyph_evictions": 2256,
+            "paragraph_bytes": 25946,
+            "paragraph_entries": 18,
+            "paragraph_evictions": 280,
+            "rasterized": 4737,
+            "shapes": 387,
+            "transient_glyphs": 2253,
+            "transient_paragraphs": 89
+          }
+        },
+        {
+          "A": {
+            "glyph_bytes": 38026,
+            "glyph_entries": 245,
+            "glyph_evictions": 3451,
+            "paragraph_bytes": 25946,
+            "paragraph_entries": 18,
+            "paragraph_evictions": 414,
+            "rasterized": 7126,
+            "shapes": 565,
+            "transient_glyphs": 3430,
+            "transient_paragraphs": 133
+          },
+          "B": {
+            "glyph_bytes": 37728,
+            "glyph_entries": 243,
+            "glyph_evictions": 3420,
+            "paragraph_bytes": 25946,
+            "paragraph_entries": 18,
+            "paragraph_evictions": 418,
+            "rasterized": 7068,
+            "shapes": 571,
+            "transient_glyphs": 3405,
+            "transient_paragraphs": 135
+          }
+        },
+        {
+          "A": {
+            "glyph_bytes": 37361,
+            "glyph_entries": 241,
+            "glyph_evictions": 4645,
+            "paragraph_bytes": 25946,
+            "paragraph_entries": 18,
+            "paragraph_evictions": 558,
+            "rasterized": 9503,
+            "shapes": 755,
+            "transient_glyphs": 4617,
+            "transient_paragraphs": 179
+          },
+          "B": {
+            "glyph_bytes": 37241,
+            "glyph_entries": 241,
+            "glyph_evictions": 4635,
+            "paragraph_bytes": 27788,
+            "paragraph_entries": 20,
+            "paragraph_evictions": 560,
+            "rasterized": 9491,
+            "shapes": 761,
+            "transient_glyphs": 4615,
+            "transient_paragraphs": 181
+          }
+        },
+        {
+          "A": {
+            "glyph_bytes": 38250,
+            "glyph_entries": 248,
+            "glyph_evictions": 5821,
+            "paragraph_bytes": 26867,
+            "paragraph_entries": 19,
+            "paragraph_evictions": 699,
+            "rasterized": 11852,
+            "shapes": 942,
+            "transient_glyphs": 5783,
+            "transient_paragraphs": 224
+          },
+          "B": {
+            "glyph_bytes": 37886,
+            "glyph_entries": 244,
+            "glyph_evictions": 5800,
+            "paragraph_bytes": 25025,
+            "paragraph_entries": 17,
+            "paragraph_evictions": 706,
+            "rasterized": 11816,
+            "shapes": 949,
+            "transient_glyphs": 5772,
+            "transient_paragraphs": 226
+          }
+        },
+        {
+          "A": {
+            "glyph_bytes": 36446,
+            "glyph_entries": 236,
+            "glyph_evictions": 6979,
+            "paragraph_bytes": 25946,
+            "paragraph_entries": 18,
+            "paragraph_evictions": 847,
+            "rasterized": 14146,
+            "shapes": 1135,
+            "transient_glyphs": 6931,
+            "transient_paragraphs": 270
+          },
+          "B": {
+            "glyph_bytes": 35388,
+            "glyph_entries": 230,
+            "glyph_evictions": 6948,
+            "paragraph_bytes": 26867,
+            "paragraph_entries": 19,
+            "paragraph_evictions": 850,
+            "rasterized": 14089,
+            "shapes": 1140,
+            "transient_glyphs": 6911,
+            "transient_paragraphs": 271
+          }
+        },
+        {
+          "A": {
+            "glyph_bytes": 36352,
+            "glyph_entries": 235,
+            "glyph_evictions": 8139,
+            "paragraph_bytes": 25103,
+            "paragraph_entries": 17,
+            "paragraph_evictions": 990,
+            "rasterized": 16459,
+            "shapes": 1322,
+            "transient_glyphs": 8085,
+            "transient_paragraphs": 315
+          },
+          "B": {
+            "glyph_bytes": 36153,
+            "glyph_entries": 236,
+            "glyph_evictions": 8110,
+            "paragraph_bytes": 25103,
+            "paragraph_entries": 17,
+            "paragraph_evictions": 993,
+            "rasterized": 16410,
+            "shapes": 1326,
+            "transient_glyphs": 8064,
+            "transient_paragraphs": 316
+          }
+        },
+        {
+          "A": {
+            "glyph_bytes": 36283,
+            "glyph_entries": 239,
+            "glyph_evictions": 9289,
+            "paragraph_bytes": 26024,
+            "paragraph_entries": 18,
+            "paragraph_evictions": 1133,
+            "rasterized": 18760,
+            "shapes": 1511,
+            "transient_glyphs": 9232,
+            "transient_paragraphs": 360
+          },
+          "B": {
+            "glyph_bytes": 36080,
+            "glyph_entries": 237,
+            "glyph_evictions": 9273,
+            "paragraph_bytes": 26024,
+            "paragraph_entries": 18,
+            "paragraph_evictions": 1136,
+            "rasterized": 18736,
+            "shapes": 1515,
+            "transient_glyphs": 9226,
+            "transient_paragraphs": 361
+          }
+        }
+      ],
+      "final": {
+        "A": {
+          "glyph_bytes": 49017,
+          "glyph_entries": 317,
+          "glyph_evictions": 9310,
+          "paragraph_bytes": 56802,
+          "paragraph_entries": 22,
+          "paragraph_evictions": 1133,
+          "rasterized": 18880,
+          "shapes": 1515,
+          "transient_glyphs": 9253,
+          "transient_paragraphs": 360
+        },
+        "B": {
+          "glyph_bytes": 49059,
+          "glyph_entries": 316,
+          "glyph_evictions": 9299,
+          "paragraph_bytes": 56802,
+          "paragraph_entries": 22,
+          "paragraph_evictions": 1136,
+          "rasterized": 18866,
+          "shapes": 1519,
+          "transient_glyphs": 9251,
+          "transient_paragraphs": 361
+        },
+        "C": {
+          "glyph_bytes": 35606,
+          "glyph_entries": 232,
+          "glyph_evictions": 0,
+          "paragraph_bytes": 52056,
+          "paragraph_entries": 21,
+          "paragraph_evictions": 0,
+          "rasterized": 232,
+          "shapes": 21,
+          "transient_glyphs": 0,
+          "transient_paragraphs": 0
+        }
+      },
+      "budget_limits": {
+        "glyph_bytes": 49152,
+        "glyph_entries": 0,
+        "glyph_evictions": 0,
+        "paragraph_bytes": 65536,
+        "paragraph_entries": 48,
+        "paragraph_evictions": 0,
+        "rasterized": 0,
+        "shapes": 0,
+        "transient_glyphs": 0,
+        "transient_paragraphs": 0
+      },
+      "over_budget": [],
+      "a_matches_fresh_c": true,
+      "size": [
+        760,
+        520
+      ],
+      "glyph_evictions": 9310,
+      "paragraph_evictions": 1133,
+      "exit": 0,
+      "returned": "<nil>"
+    },
+    {
+      "budget": "default",
+      "flag": "default",
+      "passed": true,
+      "samples": [
+        {
+          "A": {
+            "glyph_bytes": 91653,
+            "glyph_entries": 574,
+            "glyph_evictions": 0,
+            "paragraph_bytes": 594407,
+            "paragraph_entries": 148,
+            "paragraph_evictions": 0,
+            "rasterized": 574,
+            "shapes": 148,
+            "transient_glyphs": 0,
+            "transient_paragraphs": 0
+          },
+          "B": {
+            "glyph_bytes": 91465,
+            "glyph_entries": 573,
+            "glyph_evictions": 0,
+            "paragraph_bytes": 566175,
+            "paragraph_entries": 144,
+            "paragraph_evictions": 0,
+            "rasterized": 573,
+            "shapes": 144,
+            "transient_glyphs": 0,
+            "transient_paragraphs": 0
+          }
+        },
+        {
+          "A": {
+            "glyph_bytes": 92525,
+            "glyph_entries": 579,
+            "glyph_evictions": 0,
+            "paragraph_bytes": 1034050,
+            "paragraph_entries": 241,
+            "paragraph_evictions": 10,
+            "rasterized": 579,
+            "shapes": 257,
+            "transient_glyphs": 0,
+            "transient_paragraphs": 6
+          },
+          "B": {
+            "glyph_bytes": 92525,
+            "glyph_entries": 579,
+            "glyph_evictions": 0,
+            "paragraph_bytes": 1033173,
+            "paragraph_entries": 241,
+            "paragraph_evictions": 6,
+            "rasterized": 579,
+            "shapes": 250,
+            "transient_glyphs": 0,
+            "transient_paragraphs": 3
+          }
+        },
+        {
+          "A": {
+            "glyph_bytes": 92713,
+            "glyph_entries": 580,
+            "glyph_evictions": 0,
+            "paragraph_bytes": 1034899,
+            "paragraph_entries": 231,
+            "paragraph_evictions": 107,
+            "rasterized": 580,
+            "shapes": 385,
+            "transient_glyphs": 0,
+            "transient_paragraphs": 47
+          },
+          "B": {
+            "glyph_bytes": 92713,
+            "glyph_entries": 580,
+            "glyph_evictions": 0,
+            "paragraph_bytes": 1031152,
+            "paragraph_entries": 231,
+            "paragraph_evictions": 103,
+            "rasterized": 580,
+            "shapes": 378,
+            "transient_glyphs": 0,
+            "transient_paragraphs": 44
+          }
+        },
+        {
+          "A": {
+            "glyph_bytes": 92925,
+            "glyph_entries": 581,
+            "glyph_evictions": 0,
+            "paragraph_bytes": 1037229,
+            "paragraph_entries": 235,
+            "paragraph_evictions": 199,
+            "rasterized": 581,
+            "shapes": 525,
+            "transient_glyphs": 0,
+            "transient_paragraphs": 91
+          },
+          "B": {
+            "glyph_bytes": 92925,
+            "glyph_entries": 581,
+            "glyph_evictions": 0,
+            "paragraph_bytes": 1032561,
+            "paragraph_entries": 234,
+            "paragraph_evictions": 196,
+            "rasterized": 581,
+            "shapes": 517,
+            "transient_glyphs": 0,
+            "transient_paragraphs": 87
+          }
+        },
+        {
+          "A": {
+            "glyph_bytes": 92925,
+            "glyph_entries": 581,
+            "glyph_evictions": 0,
+            "paragraph_bytes": 1041197,
+            "paragraph_entries": 242,
+            "paragraph_evictions": 283,
+            "rasterized": 581,
+            "shapes": 658,
+            "transient_glyphs": 0,
+            "transient_paragraphs": 133
+          },
+          "B": {
+            "glyph_bytes": 92925,
+            "glyph_entries": 581,
+            "glyph_evictions": 0,
+            "paragraph_bytes": 1035608,
+            "paragraph_entries": 240,
+            "paragraph_evictions": 283,
+            "rasterized": 581,
+            "shapes": 654,
+            "transient_glyphs": 0,
+            "transient_paragraphs": 131
+          }
+        },
+        {
+          "A": {
+            "glyph_bytes": 92925,
+            "glyph_entries": 581,
+            "glyph_evictions": 0,
+            "paragraph_bytes": 1032247,
+            "paragraph_entries": 236,
+            "paragraph_evictions": 377,
+            "rasterized": 581,
+            "shapes": 789,
+            "transient_glyphs": 0,
+            "transient_paragraphs": 176
+          },
+          "B": {
+            "glyph_bytes": 92925,
+            "glyph_entries": 581,
+            "glyph_evictions": 0,
+            "paragraph_bytes": 1036710,
+            "paragraph_entries": 236,
+            "paragraph_evictions": 375,
+            "rasterized": 581,
+            "shapes": 785,
+            "transient_glyphs": 0,
+            "transient_paragraphs": 174
+          }
+        },
+        {
+          "A": {
+            "glyph_bytes": 92925,
+            "glyph_entries": 581,
+            "glyph_evictions": 0,
+            "paragraph_bytes": 1034924,
+            "paragraph_entries": 242,
+            "paragraph_evictions": 467,
+            "rasterized": 581,
+            "shapes": 929,
+            "transient_glyphs": 0,
+            "transient_paragraphs": 220
+          },
+          "B": {
+            "glyph_bytes": 92925,
+            "glyph_entries": 581,
+            "glyph_evictions": 0,
+            "paragraph_bytes": 1034924,
+            "paragraph_entries": 242,
+            "paragraph_evictions": 464,
+            "rasterized": 581,
+            "shapes": 924,
+            "transient_glyphs": 0,
+            "transient_paragraphs": 218
+          }
+        },
+        {
+          "A": {
+            "glyph_bytes": 92925,
+            "glyph_entries": 581,
+            "glyph_evictions": 0,
+            "paragraph_bytes": 1037919,
+            "paragraph_entries": 245,
+            "paragraph_evictions": 556,
+            "rasterized": 581,
+            "shapes": 1063,
+            "transient_glyphs": 0,
+            "transient_paragraphs": 262
+          },
+          "B": {
+            "glyph_bytes": 92925,
+            "glyph_entries": 581,
+            "glyph_evictions": 0,
+            "paragraph_bytes": 1028575,
+            "paragraph_entries": 244,
+            "paragraph_evictions": 555,
+            "rasterized": 581,
+            "shapes": 1061,
+            "transient_glyphs": 0,
+            "transient_paragraphs": 262
+          }
+        }
+      ],
+      "final": {
+        "A": {
+          "glyph_bytes": 93215,
+          "glyph_entries": 583,
+          "glyph_evictions": 0,
+          "paragraph_bytes": 1040437,
+          "paragraph_entries": 246,
+          "paragraph_evictions": 562,
+          "rasterized": 583,
+          "shapes": 1073,
+          "transient_glyphs": 0,
+          "transient_paragraphs": 265
+        },
+        "B": {
+          "glyph_bytes": 93215,
+          "glyph_entries": 583,
+          "glyph_evictions": 0,
+          "paragraph_bytes": 1031696,
+          "paragraph_entries": 246,
+          "paragraph_evictions": 559,
+          "rasterized": 583,
+          "shapes": 1069,
+          "transient_glyphs": 0,
+          "transient_paragraphs": 264
+        },
+        "C": {
+          "glyph_bytes": 38129,
+          "glyph_entries": 248,
+          "glyph_evictions": 0,
+          "paragraph_bytes": 52899,
+          "paragraph_entries": 21,
+          "paragraph_evictions": 0,
+          "rasterized": 248,
+          "shapes": 21,
+          "transient_glyphs": 0,
+          "transient_paragraphs": 0
+        }
+      },
+      "budget_limits": {
+        "glyph_bytes": 16777216,
+        "glyph_entries": 0,
+        "glyph_evictions": 0,
+        "paragraph_bytes": 1048576,
+        "paragraph_entries": 256,
+        "paragraph_evictions": 0,
+        "rasterized": 0,
+        "shapes": 0,
+        "transient_glyphs": 0,
+        "transient_paragraphs": 0
+      },
+      "over_budget": [],
+      "a_matches_fresh_c": true,
+      "size": [
+        760,
+        520
+      ],
+      "glyph_evictions": 0,
+      "paragraph_evictions": 562,
+      "exit": 0,
+      "returned": "<nil>"
+    }
+  ],
+  "edits": 122,
+  "passed": true
+}

@@ -1,6 +1,6 @@
 # Webview integration work order
 
-Production plan paired with [webview-integration.md](webview-integration.md). Mercurius session `s_zlCzh4NrFu3w`, round 1, returned `ready_to_build` with no blocking findings; Michael accepted its one advisory, now included in stage 3's response-correlation test, and the review is closed. This translates the agreed browser behavior into the existing runtime. Review is not authorization to start implementation. The Linux signal mechanism below still requires Michael's decision; proposed API and packaging choices become commitments only when this pair is accepted.
+Production plan paired with [webview-integration.md](webview-integration.md). Mercurius session `s_zlCzh4NrFu3w`, round 1, returned `ready_to_build` with no blocking findings; Michael accepted its one advisory, now included in stage 3's response-correlation test, and the review is closed. This translates the agreed browser behavior into the existing runtime. Stage 1 is accepted and committed. Michael approved the Linux signal mechanism below on 2026-11-13, clearing the remaining design prerequisite for stage 2. Later stages retain their review and acceptance gates.
 
 ## Result and boundaries
 
@@ -16,13 +16,13 @@ The [Linux feasibility record](../../experiments/webkitgtk-spike/evidence/linux/
 
 The adjusted Windows `error-pages` driver has not run natively. Its targeted rerun is the first Windows task, before production host validation. Preserve both runs and report transport redelivery separately. A new failure returns for triage; do not repair it by weakening the action checks.
 
-### Linux signal decision still required
+### Linux signal decision (2026-11-13)
 
-Michael chose to monitor the reproduced signal risks during representative development, without further signal research, handler replacement, a helper, cgo adoption or a new runtime minimum. That decision did not select a production GC-signal configuration mechanism.
+Michael chose to monitor the reproduced signal risks during representative development, without further signal research, handler replacement, a helper, cgo adoption or a new runtime minimum. The following approval now selects the production GC-signal configuration mechanism without expanding that investigation.
 
-Proposed narrow mechanism for decision: the application supplies one explicitly reserved real-time signal through Linux browser options; before the first WebKit initialization, reuse the experiment's reservation/configuration sequence and private `JSConfigureSignalForGC` lookup. Missing symbol, inconsistent subsequent reservations or failed sanity checks refuse initialization visibly. Do not choose a signal automatically, initialize a host VM, patch fault handlers, change SIGXCPU, or add continuous signal auditing. No environment-variable fallback occurs silently. The first reservation is process-wide and survives closing every browser window.
+Approved mechanism: the application supplies one explicitly reserved real-time signal through Linux browser options; before the first WebKit initialization, reuse the experiment's reservation/configuration sequence and private `JSConfigureSignalForGC` lookup. Missing symbol, inconsistent subsequent reservations or failed sanity checks refuse initialization visibly. Do not choose a signal automatically, initialize a host VM, patch fault handlers, change SIGXCPU, or add continuous signal auditing. No environment-variable fallback is added. The first reservation is process-wide and survives closing every browser window.
 
-The application must ensure it and its dependencies neither already use nor later subscribe to, ignore, reset or send that signal. Checks cannot discover all Go subscriptions. This moves JSC's handler; it does not make stray delivery safe. The alternative environment setting has inherited-process and warning behavior documented by the cgo spike. Neither mechanism is approved by this draft. Stage 1 can establish the portable contract, but stage 2 cannot implement Linux initialization until Michael chooses. Keep this a compatibility decision, not another open-ended safety spike.
+The application must ensure it and its dependencies neither already use nor later subscribe to, ignore, reset or send that signal. Checks cannot discover all Go subscriptions. This moves JSC's handler; it does not make stray delivery safe. The alternative environment setting has inherited-process and warning behavior documented by the cgo spike. Michael approved the private-symbol mechanism, not the environment-variable alternative. Stage 2 may implement this sequence. Keep this a compatibility decision, not another open-ended safety spike.
 
 Use the installed runtime for development and retain its version and child-exit observations. Do not claim graphics-teardown safety or a supported fixed-runtime pass from the mixed-package comparison. Missing required runtime functions are an initialization error with an actionable message; this does not authorize a new version floor.
 
@@ -44,7 +44,7 @@ Options contain ordinary `dfx2.WindowOptions`, an explicitly nonzero mode, and m
 | `Loopback` | Handler; optional server limits | Attachment URL/origin list; finite response limits |
 | `Attach` | Initial HTTP(S) URL and explicit allowed navigation origins containing its origin | Handler and owned-endpoint settings |
 
-Owned modes start at `/`; the handler owns routing beneath it. Attachment URLs cannot contain user information. Canonicalize origins once, including effective ports, reject malformed origin entries, and compare parsed origins rather than string prefixes. Linux signal options apply to all browser modes on Linux and are inert on Windows; their final spelling waits for the decision above. Optional developer tools are off by default and enabled explicitly for auditions.
+Owned modes start at `/`; the handler owns routing beneath it. Attachment URLs cannot contain user information. Canonicalize origins once, including effective ports, reject malformed origin entries, and compare parsed origins rather than string prefixes. Linux signal options apply to all browser modes on Linux and are inert on Windows; the implementer may settle their spelling within the reservation contract above. Optional developer tools are off by default and enabled explicitly for auditions.
 
 Validate configuration before creating resources. Match existing opening semantics: nil app is an immediate argument error; on a valid owner, wrong-thread/closed-owner errors retain their existing classification, and invalid creation configuration follows `NewWindow`'s fatal opening-error policy. A platform that cannot host browsers returns the existing unsupported-content category before native work and rechecks last-window shutdown. Missing libraries or failed browser initialization on a supported platform are fatal and retained in `Run`.
 
@@ -132,9 +132,11 @@ Run the full no-cgo suite/vet, affected concurrency repetitions, Windows cross-b
 
 ### Stage 2 — Linux browser integration
 
-After the signal decision, implement the private WebKitGTK host in the existing GTK loop: lazy loading, per-window sessions, three modes, cookie/filter setup, bounded request handling, load-error page, native failure classification and asynchronous release. No host VM. Native-only operation remains browser-independent. Fill in `docs/current/webview.md` and `evidence/webview-integration/stage-2.md` with runtime requirements and monitored risks.
+With the signal mechanism approved, implement the private WebKitGTK host in the existing GTK loop: lazy loading, per-window sessions, three modes, cookie/filter setup, bounded request handling, load-error page, native failure classification and asynchronous release. No host VM. Native-only operation remains browser-independent. Fill in `docs/current/webview.md` and `evidence/webview-integration/stage-2.md` with runtime requirements and monitored risks.
 
 Run integrated Linux cases on Wayland and X11/XWayland, including scale 2 where available: both owned transports, attachment-server survival, two-window routing/storage isolation, streaming, rejected external requests with credential collectors, HTTP errors, GET/POST/303/307/unknown-method error actions, close during initialization/read/handler/completion, resident reopen, browser failure and profile/session release. Use page-driven reports. Run affected foundation/UI regressions and record child exits. Test in-process operation without an application listener. Do not reopen the signal investigation as an acceptance ritual; retain the VM-free API restriction and report representative failures.
+
+Linux custom-scheme limits accepted on 2026-11-14: redirects are not followed and cookies are not stored. Applications needing these features choose loopback; no emulation or silent fallback is required.
 
 Obtain Michael's Linux manual browser audition. Stage 2 does not claim Windows support. Stop for review/commit before the Windows stage.
 
@@ -160,4 +162,4 @@ Run the integrated browser matrix and affected foundation/UI regressions on both
 
 Never substitute spike results, cross-builds, a binary hash or a clean review for a new native claim. A matching hash can carry forward unchanged runtime evidence; a changed test driver still needs its changed assertions exercised. Keep the old signal probes and unexplained historical failures as context, not new prerequisites to solve.
 
-The implementer may settle local names and helper placement within these contracts. Return for a decision when a native mechanism cannot satisfy ownership, confinement, optional loading or packaging, or when the Linux signal choice is needed. Do not silently add cgo, another process, a weaker authentication boundary, a new runtime floor or a timeout that declares live work drained. Ordinary layout, counters and fixture wiring do not require a new permission loop.
+The implementer may settle local names and helper placement within these contracts. Return for a decision when a native mechanism cannot satisfy ownership, confinement, optional loading or packaging, or when the approved Linux signal mechanism cannot be implemented as specified. Do not silently add cgo, another process, a weaker authentication boundary, a new runtime floor or a timeout that declares live work drained. Ordinary layout, counters and fixture wiring do not require a new permission loop.

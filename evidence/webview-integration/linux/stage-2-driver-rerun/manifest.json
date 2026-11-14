@@ -1,0 +1,92 @@
+{
+  "revision": "a4dac698c9c7d757c46ee735202d35555d9a3c54",
+  "webview_sha256": "c985e240c5437042fb3bd5e41230fbba5a9bdfa7ac666b1c86d08809fc7a43f1",
+  "driver_sha256": "0f24e82f805a4965608f40279af309f0b3dad1e8541da107daf0d47ad958765e",
+  "started": "2026-11-14T14:15:10.371541-05:00",
+  "runs": [
+    {
+      "name": "wayland",
+      "exit_code": 0,
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/home/michael/Repos/q/products/dfx2/evidence/synthetic-mixer/linux/controls_drive.py",
+        "/tmp/dfx2-stage2-review-webview",
+        "--out",
+        "/home/michael/Repos/q/products/dfx2/evidence/webview-integration/linux/stage-2-driver-rerun/wayland/session",
+        "--base",
+        "/tmp",
+        "--timeout",
+        "180",
+        "--exec",
+        "/usr/bin/python3",
+        "-B",
+        "/home/michael/Repos/q/products/dfx2/evidence/webview-integration/linux/webview_drive.py",
+        "/tmp/dfx2-stage2-review-webview",
+        "--out",
+        "/home/michael/Repos/q/products/dfx2/evidence/webview-integration/linux/stage-2-driver-rerun/wayland",
+        "--gdk-backend",
+        "wayland",
+        "--only",
+        "browser_failure"
+      ]
+    },
+    {
+      "name": "x11",
+      "exit_code": 0,
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/home/michael/Repos/q/products/dfx2/evidence/synthetic-mixer/linux/controls_drive.py",
+        "/tmp/dfx2-stage2-review-webview",
+        "--out",
+        "/home/michael/Repos/q/products/dfx2/evidence/webview-integration/linux/stage-2-driver-rerun/x11/session",
+        "--base",
+        "/tmp",
+        "--timeout",
+        "180",
+        "--exec",
+        "/usr/bin/python3",
+        "-B",
+        "/home/michael/Repos/q/products/dfx2/evidence/webview-integration/linux/webview_drive.py",
+        "/tmp/dfx2-stage2-review-webview",
+        "--out",
+        "/home/michael/Repos/q/products/dfx2/evidence/webview-integration/linux/stage-2-driver-rerun/x11",
+        "--gdk-backend",
+        "x11",
+        "--only",
+        "browser_failure"
+      ]
+    },
+    {
+      "name": "x11-scale2",
+      "exit_code": 0,
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/home/michael/Repos/q/products/dfx2/evidence/synthetic-mixer/linux/controls_drive.py",
+        "/tmp/dfx2-stage2-review-webview",
+        "--out",
+        "/home/michael/Repos/q/products/dfx2/evidence/webview-integration/linux/stage-2-driver-rerun/x11-scale2/session",
+        "--base",
+        "/tmp",
+        "--timeout",
+        "180",
+        "--gdk-scale",
+        "2",
+        "--exec",
+        "/usr/bin/python3",
+        "-B",
+        "/home/michael/Repos/q/products/dfx2/evidence/webview-integration/linux/webview_drive.py",
+        "/tmp/dfx2-stage2-review-webview",
+        "--out",
+        "/home/michael/Repos/q/products/dfx2/evidence/webview-integration/linux/stage-2-driver-rerun/x11-scale2",
+        "--gdk-backend",
+        "x11",
+        "--only",
+        "browser_failure"
+      ]
+    }
+  ],
+  "finished": "2026-11-14T14:15:17.895780-05:00"
+}

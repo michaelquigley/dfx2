@@ -1,0 +1,12 @@
+{"event":"ready","gc_signal":60,"pid":2582781,"time":"2026-11-14T14:42:53.557030651-05:00"}
+{"command": "native N"}
+{"command": "open A inprocess"}
+{"error":"\u003cnil\u003e","event":"opened","mode":"inprocess","start":"dfx2://app/","time":"2026-11-14T14:42:55.719088125-05:00","window":"A"}
+{"command": "status"}
+{"core":{"browsers":1,"cleanups":0,"closing":false,"native_completions":0,"tasks":1,"windows":2},"event":"status","time":"2026-11-14T14:42:56.230546395-05:00","windows":{"A":{"browser":{"Runtime":"2.52.6","Start":"dfx2://app/","Signal":60,"Navigated":true,"Closing":false,"Destroyed":false,"Released":false,"Requests":0,"Reads":0,"Copies":0,"Asyncs":0,"Allowed":0,"Refused":0,"Popups":0,"Permissions":0,"Downloads":0,"Delivered":0,"ErrorPages":0,"Actions":0,"Events":null},"endpoint":"in-process admitted=0/16 native=0 handlers=0 reading=0 refusals=0/16 reserved=0/67059712 closed=false drained=false","handler":{},"mode":"inprocess","native":"webkitgtk 2.52.6 signal=60 navigated=true closing=false destroyed=false released=false native-requests=0 reads=0 response-copies=0 async=0","released":false,"title":"","uri":"dfx2://app/"},"N":{"mode":"native"}}}
+{"command": "status"}
+{"core":{"browsers":1,"cleanups":0,"closing":false,"native_completions":0,"tasks":1,"windows":2},"event":"status","time":"2026-11-14T14:42:56.431237928-05:00","windows":{"A":{"browser":{"Runtime":"2.52.6","Start":"dfx2://app/","Signal":60,"Navigated":true,"Closing":false,"Destroyed":false,"Released":false,"Requests":0,"Reads":0,"Copies":0,"Asyncs":0,"Allowed":1,"Refused":0,"Popups":0,"Permissions":0,"Downloads":0,"Delivered":4,"ErrorPages":0,"Actions":0,"Events":[{"kind":"navigation-allowed","uri":"dfx2://app/","method":"GET"}]},"endpoint":"in-process admitted=0/16 native=0 handlers=0 reading=0 refusals=0/16 reserved=0/67059712 closed=false drained=false","handler":{"GET /":1,"GET /logo.svg":1,"GET /probe.css":1,"GET /probe.js":1},"mode":"inprocess","native":"webkitgtk 2.52.6 signal=60 navigated=true closing=false destroyed=false released=false native-requests=0 reads=0 response-copies=0 async=0","released":false,"title":"dfx2 webview audition","uri":"dfx2://app/"},"N":{"mode":"native"}}}
+{"command": "quit"}
+{"event":"closed","mode":"native","time":"2026-11-14T14:42:56.466165657-05:00","window":"N"}
+{"event":"closed","mode":"inprocess","time":"2026-11-14T14:42:56.467125248-05:00","window":"A"}
+{"error":"\u003cnil\u003e","event":"return","time":"2026-11-14T14:42:56.467205806-05:00"}

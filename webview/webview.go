@@ -19,9 +19,10 @@
 // every admitted handler to return. Browser storage is temporary and isolated
 // per window.
 //
-// No platform hosts browsers yet: Open refuses with ErrUnsupportedContent
-// before any native work. The portable contracts are built and tested; the
-// Linux and Windows browser hosts arrive in their own stages.
+// Linux/amd64 hosts browsers in WebKitGTK 4.1, loaded on the first Open, and
+// requires Options.LinuxGCSignal. Other platforms refuse with
+// ErrUnsupportedContent before any native work; the Windows host arrives in
+// its own stage.
 package webview
 
 import (
@@ -32,6 +33,7 @@ import (
 	"net/url"
 	"slices"
 	"strings"
+	"syscall"
 	"time"
 
 	"github.com/michaelquigley/dfx2"
@@ -82,6 +84,16 @@ type Options struct {
 	Origins []string
 	// DevTools enables the browser's inspector, for development.
 	DevTools bool
+	// LinuxGCSignal is a real-time signal (SIGRTMIN to SIGRTMAX, from 35 on
+	// glibc) that the application reserves for WebKit's JavaScriptCore garbage
+	// collector. It is required on Linux and inert elsewhere; it is never
+	// chosen automatically. The first browser window hands it to JavaScriptCore
+	// for the life of the process, and every later window must name the same
+	// signal. The application promises that neither it nor its dependencies
+	// use, subscribe to, ignore, reset or send that signal: any delivery of it
+	// can kill the process. The framework's checks cannot see Go signal.Notify
+	// subscriptions.
+	LinuxGCSignal syscall.Signal
 }
 
 // Limits bound one in-process endpoint. They cover adapter-owned storage,
@@ -140,7 +152,10 @@ func Open(app *dfx2.App, options Options) (*Window, error) {
 
 // configure validates options without acquiring resources.
 func configure(o Options) (platform.BrowserConfig, appcore.Endpoint, error) {
-	config := platform.BrowserConfig{DevTools: o.DevTools}
+	config := platform.BrowserConfig{DevTools: o.DevTools, GCSignal: int(o.LinuxGCSignal)}
+	if o.LinuxGCSignal < 0 || (needsGCSignal && o.LinuxGCSignal == 0) {
+		return config, nil, errors.New("Linux browser windows need Options.LinuxGCSignal: a real-time signal the application reserves for JavaScriptCore")
+	}
 	attachSet := o.URL != "" || len(o.Origins) != 0
 	switch o.Mode {
 	case InProcess:

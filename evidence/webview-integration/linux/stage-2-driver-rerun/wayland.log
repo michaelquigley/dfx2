@@ -1,0 +1,4 @@
+SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry
+{"case": "browser_failure", "ok": true, "failure": null}
+{"passed": true, "cases": [["browser_failure", true]]}
+gnome-shell-calendar-server[2479251]: Lost (or failed to acquire) the name org.gnome.Shell.CalendarServer - exiting

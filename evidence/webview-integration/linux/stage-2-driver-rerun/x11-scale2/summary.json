@@ -1,0 +1,21 @@
+{
+  "binary": "/tmp/dfx2-stage2-review-webview",
+  "gdk_backend": "x11",
+  "gdk_scale": "2",
+  "passed": true,
+  "cases": [
+    {
+      "case": "browser_failure",
+      "killed": 2481553,
+      "exit": {
+        "host": "browser-failure",
+        "exit": 1,
+        "error": "dfx2 webview window 3: WebKit web process terminated (reason 0)",
+        "children": [],
+        "stderr_lines": 1
+      },
+      "ok": true,
+      "seconds": 0.9
+    }
+  ]
+}

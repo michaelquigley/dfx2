@@ -8,6 +8,9 @@ import (
 	"errors"
 	"fmt"
 	"time"
+	"unsafe"
+
+	"github.com/michaelquigley/dfx2/internal/platform"
 )
 
 // Limits bound one in-process endpoint. Zero fields select defaults.
@@ -36,8 +39,8 @@ const (
 	// recordOverhead is charged per request or response metadata record, and
 	// headerOverhead per header occurrence, beyond their UTF-8 bytes: the
 	// string, slice and map entries that hold one occurrence in Go.
-	recordOverhead = 64
-	headerOverhead = 64
+	recordOverhead = platform.RequestRecordOverhead
+	headerOverhead = platform.RequestHeaderOverhead
 	// minMetadata leaves room for the fixed headers every response carries,
 	// the security policy above all.
 	minMetadata = refusalReserve
@@ -76,8 +79,8 @@ func (l Limits) Normalize() (Limits, error) {
 	if l.Metadata < minMetadata {
 		return l, fmt.Errorf("metadata limit %d cannot carry the framework's own response headers (minimum %d)", l.Metadata, minMetadata)
 	}
-	if need := l.reserveRefusals() + l.worstCase(); l.Buffers < need {
-		return l, fmt.Errorf("buffer limit %d cannot hold one maximal request (%d bytes with the refusal reserve)", l.Buffers, need)
+	if need := l.reserveRefusals() + l.reserveTransfer() + l.worstCase(); l.Buffers < need {
+		return l, fmt.Errorf("buffer limit %d cannot hold one maximal request (%d bytes with the refusal and transfer reserves)", l.Buffers, need)
 	}
 	return l, nil
 }
@@ -101,6 +104,16 @@ func (l Limits) worstCase() int64 {
 func (l Limits) responseAllowance() int64 { return 2 * (l.ResponseBody + int64(l.Metadata)) }
 
 func (l Limits) reserveRefusals() int64 { return Refusals * refusalReserve }
+
+// reserveTransfer covers the browser's transient header slice: the Go
+// []platform.Header it builds, from native string views, for the duration of
+// one synchronous Request call. Requests arrive one at a time on the UI
+// thread, so at most one exists per endpoint, admitted or refused, beside the
+// endpoint's own charged copies. Within the metadata limit each occurrence
+// is charged at least RequestHeaderOverhead, which bounds its entries.
+func (l Limits) reserveTransfer() int64 {
+	return int64(l.Metadata) / headerOverhead * int64(unsafe.Sizeof(platform.Header{}))
+}
 
 // ServerLimits bound one owned loopback server. Zero fields select defaults.
 type ServerLimits struct {

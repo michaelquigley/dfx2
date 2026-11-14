@@ -1,0 +1,65 @@
+dbus-daemon[2479948]: [session uid=1000 pid=2479948 pidfd=5] Activating service name='org.gtk.vfs.Daemon' requested by ':1.1' (uid=1000 pid=2479952 comm="gnome-shell --wayland --headless --unsafe-mode --v" label="unconfined")
+dbus-daemon[2479948]: [session uid=1000 pid=2479948 pidfd=5] Successfully activated service 'org.gtk.vfs.Daemon'
+dbus-daemon[2479948]: [session uid=1000 pid=2479948 pidfd=5] Activating service name='org.a11y.Bus' requested by ':1.4' (uid=1000 pid=2479952 comm="gnome-shell --wayland --headless --unsafe-mode --v" label="unconfined")
+dbus-daemon[2479948]: [session uid=1000 pid=2479948 pidfd=5] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[2480005]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=2479952 comm="gnome-shell --wayland --headless --unsafe-mode --v" label="unconfined")
+dbus-daemon[2480005]: Successfully activated service 'org.a11y.atspi.Registry'
+dbus-daemon[2479948]: [session uid=1000 pid=2479948 pidfd=5] Activating service name='org.gnome.Shell.Screencast' requested by ':1.1' (uid=1000 pid=2479952 comm="gnome-shell --wayland --headless --unsafe-mode --v" label="unconfined")
+dbus-daemon[2479948]: [session uid=1000 pid=2479948 pidfd=5] Activating service name='org.freedesktop.impl.portal.PermissionStore' requested by ':1.1' (uid=1000 pid=2479952 comm="gnome-shell --wayland --headless --unsafe-mode --v" label="unconfined")
+dbus-daemon[2479948]: [session uid=1000 pid=2479948 pidfd=5] Activating service name='org.gnome.Shell.CalendarServer' requested by ':1.1' (uid=1000 pid=2479952 comm="gnome-shell --wayland --headless --unsafe-mode --v" label="unconfined")
+dbus-daemon[2479948]: [session uid=1000 pid=2479948 pidfd=5] Successfully activated service 'org.freedesktop.impl.portal.PermissionStore'
+dbus-daemon[2479948]: [session uid=1000 pid=2479948 pidfd=5] Activating service name='org.gnome.evolution.dataserver.Sources5' requested by ':1.12' (uid=1000 pid=2480037 comm="/usr/libexec/gnome-shell-calendar-server" label="unconfined")
+dbus-daemon[2479948]: [session uid=1000 pid=2479948 pidfd=5] Activating service name='org.gnome.OnlineAccounts' requested by ':1.13' (uid=1000 pid=2480048 comm="/usr/libexec/evolution-source-registry" label="unconfined")
+dbus-daemon[2479948]: [session uid=1000 pid=2479948 pidfd=5] Successfully activated service 'org.gnome.evolution.dataserver.Sources5'
+dbus-daemon[2479948]: [session uid=1000 pid=2479948 pidfd=5] Activating service name='org.gnome.Shell.Notifications' requested by ':1.1' (uid=1000 pid=2479952 comm="gnome-shell --wayland --headless --unsafe-mode --v" label="unconfined")
+dbus-daemon[2479948]: [session uid=1000 pid=2479948 pidfd=5] Activating service name='org.gnome.evolution.dataserver.Calendar8' requested by ':1.12' (uid=1000 pid=2480037 comm="/usr/libexec/gnome-shell-calendar-server" label="unconfined")
+dbus-daemon[2479948]: [session uid=1000 pid=2479948 pidfd=5] Successfully activated service 'org.gnome.Shell.CalendarServer'
+goa-daemon-Message: 14:15:13.359: goa-daemon version 3.58.0 starting
+dbus-daemon[2479948]: [session uid=1000 pid=2479948 pidfd=5] Activating service name='org.gnome.Identity' requested by ':1.15' (uid=1000 pid=2480055 comm="/usr/libexec/goa-daemon" label="unconfined")
+dbus-daemon[2479948]: [session uid=1000 pid=2479948 pidfd=5] Successfully activated service 'org.gnome.OnlineAccounts'
+dbus-daemon[2479948]: [session uid=1000 pid=2479948 pidfd=5] Successfully activated service 'org.gnome.Identity'
+dbus-daemon[2479948]: [session uid=1000 pid=2479948 pidfd=5] Successfully activated service 'org.gnome.evolution.dataserver.Calendar8'
+dbus-daemon[2479948]: [session uid=1000 pid=2479948 pidfd=5] Activating service name='org.gtk.vfs.Metadata' requested by ':1.16' (uid=1000 pid=2480073 comm="/usr/libexec/evolution-calendar-factory" label="unconfined")
+dbus-daemon[2479948]: [session uid=1000 pid=2479948 pidfd=5] Successfully activated service 'org.gtk.vfs.Metadata'
+dbus-daemon[2479948]: [session uid=1000 pid=2479948 pidfd=5] Activating service name='org.gnome.evolution.dataserver.AddressBook10' requested by ':1.16' (uid=1000 pid=2480073 comm="/usr/libexec/evolution-calendar-factory" label="unconfined")
+dbus-daemon[2479948]: [session uid=1000 pid=2479948 pidfd=5] Successfully activated service 'org.gnome.Shell.Notifications'
+dbus-daemon[2479948]: [session uid=1000 pid=2479948 pidfd=5] Successfully activated service 'org.gnome.evolution.dataserver.AddressBook10'
+dbus-daemon[2479948]: [session uid=1000 pid=2479948 pidfd=5] Activating service name='org.gtk.vfs.UDisks2VolumeMonitor' requested by ':1.1' (uid=1000 pid=2479952 comm="gnome-shell --wayland --headless --unsafe-mode --v" label="unconfined")
+dbus-daemon[2479948]: [session uid=1000 pid=2479948 pidfd=5] Activating service name='org.freedesktop.portal.Desktop' requested by ':1.10' (uid=1000 pid=2480020 comm="/usr/bin/gjs -m /usr/share/gnome-shell/org.gnome.S" label="unconfined")
+dbus-daemon[2479948]: [session uid=1000 pid=2479948 pidfd=5] Activating service name='org.freedesktop.portal.Documents' requested by ':1.24' (uid=1000 pid=2480475 comm="/usr/libexec/xdg-desktop-portal" label="unconfined")
+dbus-daemon[2479948]: [session uid=1000 pid=2479948 pidfd=5] Successfully activated service 'org.gtk.vfs.UDisks2VolumeMonitor'
+dbus-daemon[2479948]: [session uid=1000 pid=2479948 pidfd=5] Successfully activated service 'org.freedesktop.portal.Documents'
+dbus-daemon[2479948]: [session uid=1000 pid=2479948 pidfd=5] Activating service name='org.gtk.vfs.MTPVolumeMonitor' requested by ':1.1' (uid=1000 pid=2479952 comm="gnome-shell --wayland --headless --unsafe-mode --v" label="unconfined")
+dbus-daemon[2479948]: [session uid=1000 pid=2479948 pidfd=5] Activating service name='org.freedesktop.impl.portal.desktop.gnome' requested by ':1.24' (uid=1000 pid=2480475 comm="/usr/libexec/xdg-desktop-portal" label="unconfined")
+dbus-daemon[2479948]: [session uid=1000 pid=2479948 pidfd=5] Activating service name='org.freedesktop.portal.IBus' requested by ':1.27' (uid=1000 pid=2480150 comm="ibus-daemon --panel disable" label="unconfined")
+dbus-daemon[2479948]: [session uid=1000 pid=2479948 pidfd=5] Successfully activated service 'org.freedesktop.portal.IBus'
+dbus-daemon[2479948]: [session uid=1000 pid=2479948 pidfd=5] Successfully activated service 'org.gtk.vfs.MTPVolumeMonitor'
+dbus-daemon[2479948]: [session uid=1000 pid=2479948 pidfd=5] Activating service name='org.gtk.vfs.GPhoto2VolumeMonitor' requested by ':1.1' (uid=1000 pid=2479952 comm="gnome-shell --wayland --headless --unsafe-mode --v" label="unconfined")
+dbus-daemon[2479948]: [session uid=1000 pid=2479948 pidfd=5] Successfully activated service 'org.gtk.vfs.GPhoto2VolumeMonitor'
+dbus-daemon[2479948]: [session uid=1000 pid=2479948 pidfd=5] Activating service name='org.gtk.vfs.AfcVolumeMonitor' requested by ':1.1' (uid=1000 pid=2479952 comm="gnome-shell --wayland --headless --unsafe-mode --v" label="unconfined")
+dbus-daemon[2479948]: [session uid=1000 pid=2479948 pidfd=5] Successfully activated service 'org.gtk.vfs.AfcVolumeMonitor'
+dbus-daemon[2479948]: [session uid=1000 pid=2479948 pidfd=5] Activating service name='org.gtk.vfs.GoaVolumeMonitor' requested by ':1.1' (uid=1000 pid=2479952 comm="gnome-shell --wayland --headless --unsafe-mode --v" label="unconfined")
+dbus-daemon[2479948]: [session uid=1000 pid=2479948 pidfd=5] Successfully activated service 'org.gtk.vfs.GoaVolumeMonitor'
+dbus-daemon[2479948]: [session uid=1000 pid=2479948 pidfd=5] Activating service name='org.gnome.Settings.GlobalShortcutsProvider' requested by ':1.33' (uid=1000 pid=2480498 comm="/usr/libexec/xdg-desktop-portal-gnome" label="unconfined")
+dbus-daemon[2479948]: [session uid=1000 pid=2479948 pidfd=5] Successfully activated service 'org.gnome.Settings.GlobalShortcutsProvider'
+dbus-daemon[2479948]: [session uid=1000 pid=2479948 pidfd=5] Successfully activated service 'org.freedesktop.impl.portal.desktop.gnome'
+dbus-daemon[2479948]: [session uid=1000 pid=2479948 pidfd=5] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.24' (uid=1000 pid=2480475 comm="/usr/libexec/xdg-desktop-portal" label="unconfined")
+dbus-daemon[2479948]: [session uid=1000 pid=2479948 pidfd=5] Successfully activated service 'org.freedesktop.impl.portal.desktop.gtk'
+
+(/usr/libexec/xdg-desktop-portal:2480475): xdg-desktop-portal-WARNING **: 14:15:14.121: Failed to connect to PipeWire: Couldn't connect to PipeWire
+dbus-daemon[2479948]: [session uid=1000 pid=2479948 pidfd=5] Activating service name='org.freedesktop.secrets' requested by ':1.24' (uid=1000 pid=2480475 comm="/usr/libexec/xdg-desktop-portal" label="unconfined")
+** Message: 14:15:14.131: couldn't access control socket: /tmp/dx134a2fz5/run/keyring/control: No such file or directory
+discover_other_daemon: 0dbus-daemon[2479948]: [session uid=1000 pid=2479948 pidfd=5] Successfully activated service 'org.freedesktop.secrets'
+dbus-daemon[2479948]: [session uid=1000 pid=2479948 pidfd=5] Successfully activated service 'org.freedesktop.portal.Desktop'
+dbus-daemon[2479948]: [session uid=1000 pid=2479948 pidfd=5] Activating service name='org.freedesktop.portal.IBus' requested by ':1.45' (uid=1000 pid=2480786 comm="ibus-daemon --panel disable -r --xim" label="unconfined")
+dbus-daemon[2479948]: [session uid=1000 pid=2479948 pidfd=5] Successfully activated service 'org.freedesktop.portal.IBus'
+dbus-daemon[2479948]: [session uid=1000 pid=2479948 pidfd=5] Successfully activated service 'org.gnome.Shell.Screencast'
+Gdk-Message: 14:15:15.424: Lost connection to Wayland compositor.
+Gdk-Message: 14:15:15.424: Lost connection to Wayland compositor.
+Gdk-Message: 14:15:15.424: Lost connection to Wayland compositor.
+Gdk-Message: 14:15:15.425: Error reading events from display: Broken pipe
+A connection to the bus can't be made
+
+(evolution-calendar-factory:2480073): libedbus-private-WARNING **: 14:15:15.541: Error setting property 'ConnectionStatus' on interface org.gnome.evolution.dataserver.Source: The connection is closed (g-io-error-quark, 18)
+
+(evolution-addressbook-factory:2480249): libedbus-private-WARNING **: 14:15:15.541: Error setting property 'ConnectionStatus' on interface org.gnome.evolution.dataserver.Source: The connection is closed (g-io-error-quark, 18)

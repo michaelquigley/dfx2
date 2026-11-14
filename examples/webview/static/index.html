@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>dfx2 webview audition</title>
+<link rel="stylesheet" href="probe.css">
+<script src="probe.js"></script>
+</head>
+<body>
+<h1>dfx2 webview audition</h1>
+<p>origin <code id="origin">?</code> · <span id="assets">loading</span> <img id="logo" src="logo.svg" alt="logo" width="24" height="24"></p>
+<p>
+<button id="checks">Checks</button>
+<button id="stream">Stream</button>
+<button id="outside">Navigate outside</button>
+<button id="popup">Open popup</button>
+<a href="api/status?code=404">404 page</a>
+<a href="api/fail">Failing page</a>
+</p>
+<form id="edit" method="post" action="api/fail"><input name="gain" value="0.5"> <button>POST to a failing page</button></form>
+<pre id="log"></pre>
+</body>
+</html>

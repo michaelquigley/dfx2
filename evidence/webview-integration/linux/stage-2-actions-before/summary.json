@@ -1,0 +1,15 @@
+{
+  "binary": "/tmp/dfx2-stage2-review-webview",
+  "gdk_backend": "wayland",
+  "gdk_scale": null,
+  "passed": false,
+  "cases": [
+    {
+      "case": "error_actions_same_uri",
+      "ok": false,
+      "failure": "Failure: same-uri-actions: no error event within 5s",
+      "trace": "Traceback (most recent call last):\n  File \"/home/michael/Repos/q/products/dfx2/evidence/webview-integration/linux/webview_drive.py\", line 356, in case\n    result.update(body() or {})\n                  ~~~~^^\n  File \"/home/michael/Repos/q/products/dfx2/evidence/webview-integration/linux/webview_drive.py\", line 561, in error_actions_same_uri\n    rejected = h.expect(\"error\", timeout=5, match=lambda e: e.get(\"command\") == command)\n  File \"/home/michael/Repos/q/products/dfx2/evidence/webview-integration/linux/webview_drive.py\", line 165, in expect\n    raise Failure(f\"{self.name}: no {name} event within {timeout}s\")\nFailure: same-uri-actions: no error event within 5s\n",
+      "seconds": 6.3
+    }
+  ]
+}

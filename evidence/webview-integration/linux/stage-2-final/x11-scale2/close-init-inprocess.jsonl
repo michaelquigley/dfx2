@@ -1,0 +1,7 @@
+{"event":"ready","gc_signal":60,"pid":2378174,"time":"2026-11-14T13:51:51.926660862-05:00"}
+{"command": "open A inprocess"}
+{"command": "close A"}
+{"error":"\u003cnil\u003e","event":"opened","mode":"inprocess","start":"dfx2://app/","time":"2026-11-14T13:51:52.07138684-05:00","window":"A"}
+{"event":"closed","mode":"inprocess","time":"2026-11-14T13:51:52.08294887-05:00","window":"A"}
+{"command": "quit"}
+{"error":"\u003cnil\u003e","event":"return","time":"2026-11-14T13:51:52.106177877-05:00"}

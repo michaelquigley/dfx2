@@ -54,6 +54,15 @@ type BrowserConfig struct {
 	Credential *BrowserCookie
 	// DevTools enables the engine's inspector, for auditions.
 	DevTools bool
+	// RequestMetadata is the in-process endpoint's request metadata limit,
+	// set by the endpoint when it starts. A browser measures each native
+	// request against it, by RequestRecordOverhead and RequestHeaderOverhead,
+	// before building anything from it.
+	RequestMetadata int
+	// GCSignal is the real-time signal the application reserves for the
+	// engine's garbage collector, where the engine needs one (Linux). The
+	// first reservation is process-wide; others are ignored.
+	GCSignal int
 }
 
 // BrowserFactory creates browser attachments for one platform. A factory is
@@ -126,6 +135,14 @@ type BrowserHost interface {
 	RequestReleased(ID)
 }
 
+// Request metadata is charged as the UTF-8 bytes of the method, URL and every
+// header name and value, plus these per-record and per-occurrence overheads.
+// A browser and the endpoint measure with the same rule.
+const (
+	RequestRecordOverhead = 64
+	RequestHeaderOverhead = 64
+)
+
 // Header is one header field occurrence, in order.
 type Header struct{ Name, Value string }
 
@@ -136,6 +153,11 @@ type BrowserRequest struct {
 	Header []Header
 	// BodyLength is the declared body size: 0 none, -1 unknown.
 	BodyLength int64
+	// MetadataSize is the browser's own measurement of the native request's
+	// metadata. Past BrowserConfig.RequestMetadata the browser may stop
+	// counting, and then supplies no Header; the endpoint uses the larger of
+	// this and its own measurement, so such a request is refused as oversized.
+	MetadataSize int64
 }
 
 type RequestAction uint8

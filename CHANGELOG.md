@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- FEATURE: Linux/amd64 hosts `webview` windows in the system WebKitGTK 4.1 without cgo, in all three modes: per-window ephemeral sessions, a native content filter plus the framework security policy confining owned windows, the loopback credential installed before navigation, bounded asynchronous in-process requests, a framework load-failure page with Retry only for known GETs, and fatal browser-process failures. Libraries load on the first browser window. Linux applications must set `webview.Options.LinuxGCSignal`, a real-time signal reserved for JavaScriptCore's garbage collector. The new `webview` example auditions it. See [webview.md](docs/current/webview.md#linux-host).
+
 - FEATURE: The `webview` package opens browser windows that share the application lifetime, with an explicit `InProcess`, `Loopback` or `Attach` mode and no fallback between them. Its portable contracts are built and tested against fake native seams: the finite in-process `http.Handler` adapter with reserved request, response, metadata, admission and aggregate limits; the window-owned loopback server with a per-window HttpOnly credential, Host/Origin checks, connection and handler limits and streaming; a framework content security policy on every owned response; and browser, endpoint and cleanup ownership that keeps `Done` and `Run` pending until everything admitted has returned. No platform hosts a browser yet: `Open` refuses with `ErrUnsupportedContent` before native work. See [webview.md](docs/current/webview.md).
 
 - FIX: Paragraph caches own their UTF-8 keys and charge them against the existing budget, including through rewraps and eviction; substring keys no longer retain larger caller allocations.

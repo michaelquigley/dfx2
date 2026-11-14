@@ -1,0 +1,170 @@
+{
+ "revision": "a4dac698c9c7d757c46ee735202d35555d9a3c54",
+ "working_tree": " M AGENTS.md\n M CHANGELOG.md\n M Makefile\n M README.md\n M docs/current/runtime.md\n M docs/current/webview.md\n M docs/future/webview-integration-work-order.md\n M docs/future/webview-integration.md\n M docs/journal/2026-11-13.md\n M imports_test.go\n M internal/appcore/browser.go\n M internal/appcore/browser_test.go\n M internal/appcore/inspect.go\n M internal/endpoint/finite.go\n M internal/endpoint/finite_test.go\n M internal/endpoint/limits.go\n M internal/platform/browser.go\n M internal/platform/gtk/backend_linux_amd64.go\n M webview/platform.go\n M webview/webview.go\n M webview/webview_test.go\n?? docs/journal/2026-11-14.md\n?? evidence/webview-integration/linux/__pycache__/\n?? evidence/webview-integration/linux/stage-2/\n?? evidence/webview-integration/linux/stage2_matrix.py\n?? evidence/webview-integration/linux/test_webview_drive.py\n?? evidence/webview-integration/linux/webview_drive.py\n?? evidence/webview-integration/stage-2.md\n?? examples/webview/\n?? internal/platform/webkit/\n?? webview/platform_linux_amd64.go\n",
+ "webview_sha256": "c985e240c5437042fb3bd5e41230fbba5a9bdfa7ac666b1c86d08809fc7a43f1",
+ "kernel": "7.0.0-43-generic",
+ "go": "go version go1.27.1 linux/amd64",
+ "packages": {
+  "libwebkit2gtk-4.1-0": "2.52.6-0ubuntu0.26.04.1",
+  "libjavascriptcoregtk-4.1-0": "2.52.6-0ubuntu0.26.04.1",
+  "libgtk-3-0t64": "3.24.52-0ubuntu1",
+  "libsoup-3.0-0": "3.6.6-1ubuntu0.3",
+  "libglib2.0-0t64": "2.88.0-1ubuntu0.1",
+  "bubblewrap": "0.11.1-1ubuntu0.3",
+  "gnome-shell": "50.1-0ubuntu1.5"
+ },
+ "started": "2026-11-14T13:49:32-05:00",
+ "runs": [
+  {
+   "name": "wayland",
+   "started": "2026-11-14T13:49:32-05:00",
+   "finished": "2026-11-14T13:50:20-05:00",
+   "exit_code": 0,
+   "cases": [
+    [
+     "owned_basics",
+     true
+    ],
+    [
+     "in_process_alone",
+     true
+    ],
+    [
+     "confinement",
+     true
+    ],
+    [
+     "storage",
+     true
+    ],
+    [
+     "error_pages_loopback",
+     true
+    ],
+    [
+     "attachment",
+     true
+    ],
+    [
+     "close_cases",
+     true
+    ],
+    [
+     "close_one_keep_one",
+     true
+    ],
+    [
+     "lazy_loading",
+     true
+    ],
+    [
+     "browser_failure",
+     true
+    ]
+   ]
+  },
+  {
+   "name": "x11",
+   "started": "2026-11-14T13:50:20-05:00",
+   "finished": "2026-11-14T13:51:13-05:00",
+   "exit_code": 0,
+   "cases": [
+    [
+     "owned_basics",
+     true
+    ],
+    [
+     "in_process_alone",
+     true
+    ],
+    [
+     "confinement",
+     true
+    ],
+    [
+     "storage",
+     true
+    ],
+    [
+     "error_pages_loopback",
+     true
+    ],
+    [
+     "attachment",
+     true
+    ],
+    [
+     "close_cases",
+     true
+    ],
+    [
+     "close_one_keep_one",
+     true
+    ],
+    [
+     "lazy_loading",
+     true
+    ],
+    [
+     "browser_failure",
+     true
+    ]
+   ]
+  },
+  {
+   "name": "x11-scale2",
+   "started": "2026-11-14T13:51:13-05:00",
+   "finished": "2026-11-14T13:52:08-05:00",
+   "exit_code": 0,
+   "cases": [
+    [
+     "owned_basics",
+     true
+    ],
+    [
+     "in_process_alone",
+     true
+    ],
+    [
+     "confinement",
+     true
+    ],
+    [
+     "storage",
+     true
+    ],
+    [
+     "error_pages_loopback",
+     true
+    ],
+    [
+     "attachment",
+     true
+    ],
+    [
+     "close_cases",
+     true
+    ],
+    [
+     "close_one_keep_one",
+     true
+    ],
+    [
+     "lazy_loading",
+     true
+    ],
+    [
+     "browser_failure",
+     true
+    ]
+   ]
+  },
+  {
+   "name": "regression",
+   "started": "2026-11-14T13:52:08-05:00",
+   "finished": "2026-11-14T13:59:50-05:00",
+   "exit_code": 0
+  }
+ ],
+ "finished": "2026-11-14T13:59:50-05:00"
+}
