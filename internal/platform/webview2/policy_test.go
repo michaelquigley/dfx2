@@ -1,6 +1,7 @@
 package webview2
 
 import (
+	"path/filepath"
 	"strings"
 	"testing"
 )
@@ -44,19 +45,20 @@ func TestAllowedComparesCanonicalOrigins(t *testing.T) {
 }
 
 func TestWithinComparesPathsCaseInsensitively(t *testing.T) {
+	root := t.TempDir()
+	dir := filepath.Join(root, "dfx2-webview2-profile-1")
 	for _, tc := range []struct {
-		path, dir string
-		want      bool
+		path string
+		want bool
 	}{
-		{`C:\Temp\dfx2-webview2-profile-1\EBWebView\Default`, `C:\Temp\dfx2-webview2-profile-1`, true},
-		{`c:\temp\DFX2-WEBVIEW2-PROFILE-1\EBWebView`, `C:\Temp\dfx2-webview2-profile-1`, true},
-		{`C:\Temp\dfx2-webview2-profile-1`, `C:\Temp\dfx2-webview2-profile-1`, true},
-		{`C:\Temp\dfx2-webview2-profile-10\EBWebView`, `C:\Temp\dfx2-webview2-profile-1`, false},
-		{`C:\Users\x\AppData\Local\app\EBWebView`, `C:\Temp\dfx2-webview2-profile-1`, false},
-		{`/tmp/p1/EBWebView`, `/tmp/p1`, true}, {`/tmp/p2/EBWebView`, `/tmp/p1`, false},
+		{filepath.Join(dir, "EBWebView", "Default"), true},
+		{strings.ToUpper(filepath.Join(dir, "EBWebView")), true},
+		{dir, true},
+		{filepath.Join(root, "dfx2-webview2-profile-10", "EBWebView"), false},
+		{filepath.Join(root, "other-app", "EBWebView"), false},
 	} {
-		if got := within(tc.path, tc.dir); got != tc.want {
-			t.Errorf("within(%q, %q) = %t", tc.path, tc.dir, got)
+		if got := within(tc.path, dir); got != tc.want {
+			t.Errorf("within(%q, %q) = %t", tc.path, dir, got)
 		}
 	}
 }

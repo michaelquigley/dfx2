@@ -14,9 +14,9 @@ type api struct {
 	loadLibrary    func(path string) (uintptr, error)
 	freeLibrary    func(lib uintptr) error
 	runtimeVersion func(lib uintptr) (string, error)
-	// post runs fn on the UI thread from any thread; false means the loop is
-	// gone and fn will never run.
-	post func(fn func()) bool
+	// post retains fn until a later UI-thread dispatch, retrying failed wakes.
+	// It is available only after installation; it never runs fn inline.
+	post func(fn func())
 
 	// Handler objects the host implements. invoke runs on whichever thread the
 	// engine calls on; dropped runs when the engine releases the object without

@@ -1,0 +1,182 @@
+{
+ "revision": "d328fbb82e757a2f51ef779a867c716e010ac315",
+ "working_tree": "",
+ "webview_sha256": "3c2d80990de22fd54e031a95e9fb786b00a4333322c2ed244383af66c1d003e4",
+ "kernel": "7.0.0-43-generic",
+ "go": "go version go1.27.1 linux/amd64",
+ "packages": {
+  "libwebkit2gtk-4.1-0": "2.52.6-0ubuntu0.26.04.1",
+  "libjavascriptcoregtk-4.1-0": "2.52.6-0ubuntu0.26.04.1",
+  "libgtk-3-0t64": "3.24.52-0ubuntu1",
+  "libsoup-3.0-0": "3.6.6-1ubuntu0.3",
+  "libglib2.0-0t64": "2.88.0-1ubuntu0.1",
+  "bubblewrap": "0.11.1-1ubuntu0.3",
+  "gnome-shell": "50.1-0ubuntu1.5"
+ },
+ "started": "2026-11-16T13:39:53-05:00",
+ "runs": [
+  {
+   "name": "wayland",
+   "started": "2026-11-16T13:39:53-05:00",
+   "finished": "2026-11-16T13:40:44-05:00",
+   "exit_code": 0,
+   "cases": [
+    [
+     "owned_basics",
+     true
+    ],
+    [
+     "in_process_alone",
+     true
+    ],
+    [
+     "confinement",
+     true
+    ],
+    [
+     "storage",
+     true
+    ],
+    [
+     "error_pages_loopback",
+     true
+    ],
+    [
+     "error_actions_same_uri",
+     true
+    ],
+    [
+     "attachment",
+     true
+    ],
+    [
+     "close_cases",
+     true
+    ],
+    [
+     "close_one_keep_one",
+     true
+    ],
+    [
+     "lazy_loading",
+     true
+    ],
+    [
+     "browser_failure",
+     true
+    ]
+   ]
+  },
+  {
+   "name": "x11",
+   "started": "2026-11-16T13:40:44-05:00",
+   "finished": "2026-11-16T13:41:39-05:00",
+   "exit_code": 0,
+   "cases": [
+    [
+     "owned_basics",
+     true
+    ],
+    [
+     "in_process_alone",
+     true
+    ],
+    [
+     "confinement",
+     true
+    ],
+    [
+     "storage",
+     true
+    ],
+    [
+     "error_pages_loopback",
+     true
+    ],
+    [
+     "error_actions_same_uri",
+     true
+    ],
+    [
+     "attachment",
+     true
+    ],
+    [
+     "close_cases",
+     true
+    ],
+    [
+     "close_one_keep_one",
+     true
+    ],
+    [
+     "lazy_loading",
+     true
+    ],
+    [
+     "browser_failure",
+     true
+    ]
+   ]
+  },
+  {
+   "name": "x11-scale2",
+   "started": "2026-11-16T13:41:39-05:00",
+   "finished": "2026-11-16T13:42:37-05:00",
+   "exit_code": 0,
+   "cases": [
+    [
+     "owned_basics",
+     true
+    ],
+    [
+     "in_process_alone",
+     true
+    ],
+    [
+     "confinement",
+     true
+    ],
+    [
+     "storage",
+     true
+    ],
+    [
+     "error_pages_loopback",
+     true
+    ],
+    [
+     "error_actions_same_uri",
+     true
+    ],
+    [
+     "attachment",
+     true
+    ],
+    [
+     "close_cases",
+     true
+    ],
+    [
+     "close_one_keep_one",
+     true
+    ],
+    [
+     "lazy_loading",
+     true
+    ],
+    [
+     "browser_failure",
+     true
+    ]
+   ]
+  },
+  {
+   "name": "regression",
+   "started": "2026-11-16T13:42:37-05:00",
+   "finished": "2026-11-16T13:50:22-05:00",
+   "exit_code": 0
+  }
+ ],
+ "finished": "2026-11-16T13:50:22-05:00"
+}

@@ -1,0 +1,7 @@
+{"event":"ready","gc_signal":60,"pid":3734699,"time":"2026-11-16T13:41:23.46881092-05:00"}
+{"command": "open A loopback"}
+{"command": "close A"}
+{"asyncs_at_open":0,"close_at":"","close_at_error":"","error":"\u003cnil\u003e","event":"opened","events_at_open":0,"mode":"loopback","start":"http://127.0.0.1:42677/","time":"2026-11-16T13:41:23.628064975-05:00","window":"A"}
+{"event":"closed","mode":"loopback","time":"2026-11-16T13:41:23.641702199-05:00","window":"A"}
+{"command": "quit"}
+{"error":"\u003cnil\u003e","event":"return","time":"2026-11-16T13:41:23.662382264-05:00"}

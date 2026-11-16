@@ -233,6 +233,12 @@ func (b *browser) dropped(name string, settle func()) {
 
 func (b *browser) onEnvironment(hr hresult, env uintptr) {
 	b.envPending = false
+	failed := hr.failed() || env == 0
+	if failed {
+		// Close does not cancel environment creation. Keep a delivered failure
+		// even when it races with shutdown.
+		b.host.Failed(fmt.Errorf("WebView2 environment creation failed: HRESULT %v (is the WebView2 Runtime installed?)", hr))
+	}
 	if b.closing {
 		// Late: not AddRef'd, so returning releases it; nothing attaches.
 		b.event(platform.BrowserEvent{Kind: "late-callback", Detail: "environment " + hr.String()}, nil)
@@ -240,8 +246,7 @@ func (b *browser) onEnvironment(hr hresult, env uintptr) {
 		b.maybeRelease()
 		return
 	}
-	if hr.failed() || env == 0 {
-		b.host.Failed(fmt.Errorf("WebView2 environment creation failed: HRESULT %v (is the WebView2 Runtime installed?)", hr))
+	if failed {
 		return
 	}
 	n.addRef(env)
@@ -289,6 +294,12 @@ func (b *browser) onEnvironment(hr hresult, env uintptr) {
 
 func (b *browser) onController(hr hresult, ctl uintptr) {
 	b.ctlPending = false
+	failed := hr.failed() || ctl == 0
+	if failed {
+		// The parent stays alive until attachment release, so even E_ABORT
+		// (creation canceled by parent destruction) is unexpected here.
+		b.host.Failed(fmt.Errorf("WebView2 controller creation failed: HRESULT %v", hr))
+	}
 	if b.closing {
 		// Late: close what was delivered; never attach it. Its browser process
 		// then exits, and release waits for that.
@@ -302,8 +313,7 @@ func (b *browser) onController(hr hresult, ctl uintptr) {
 		b.maybeRelease()
 		return
 	}
-	if hr.failed() || ctl == 0 {
-		b.host.Failed(fmt.Errorf("WebView2 controller creation failed: HRESULT %v", hr))
+	if failed {
 		return
 	}
 	n.addRef(ctl)
@@ -458,13 +468,18 @@ func (b *browser) onCookies(hr hresult, list uintptr, name string) {
 	if !hr.failed() && list != 0 {
 		found, httpOnly, sameSite = n.cookieFound(list, name)
 	}
+	failed := hr.failed() || !found || !httpOnly
+	if failed {
+		// A handler dropped by Close settles through dropped(), not this callback.
+		b.host.Failed(fmt.Errorf("endpoint credential not installed: GetCookies %v, found %t, HttpOnly %t", hr, found, httpOnly))
+	}
 	switch {
 	case b.closing:
 		b.event(platform.BrowserEvent{Kind: "late-callback", Detail: "cookies " + hr.String()}, nil)
 		b.sync()
 		b.maybeRelease()
-	case hr.failed() || !found || !httpOnly:
-		b.host.Failed(fmt.Errorf("endpoint credential not installed: GetCookies %v, found %t, HttpOnly %t", hr, found, httpOnly))
+	case failed:
+		return
 	default:
 		b.cookieReady = true
 		b.event(platform.BrowserEvent{Kind: "cookie-installed", Detail: "SameSite kind " + strconv.Itoa(int(sameSite))}, nil)
@@ -757,6 +772,7 @@ func (b *browser) receive(args uintptr) {
 
 // act carries out the endpoint's decision for an intercepted request.
 func (b *browser) act(args, content uintptr, d platform.RequestDecision) {
+	id := d.ID // body-read decisions may abort without repeating the admitted ID
 	for d.Action == platform.RequestRead {
 		// Bounded synchronous reads of the engine's buffered request body, in
 		// the chunks the endpoint grants, until it ends or the endpoint decides.
@@ -792,7 +808,11 @@ func (b *browser) act(args, content uintptr, d platform.RequestDecision) {
 		b.deliver(d.ID, args, 0, d.Response)
 	default:
 		// Abort: no response is installed, so the engine's request proceeds to
-		// its unresolvable host and fails there.
+		// its unresolvable host and fails there. The original admission still
+		// needs releasing even when the abort decision omits its ID.
+		if d.ID == 0 {
+			d.ID = id
+		}
 		if d.ID != 0 {
 			b.host.RequestReleased(d.ID)
 		}
@@ -847,9 +867,7 @@ func (b *browser) deliver(id platform.ID, args, deferral uintptr, resp platform.
 	if len(resp.Body) > 0 {
 		body := append([]byte(nil), resp.Body...) // borrowed for the call
 		stream = n.newBodyStream(body, func() {
-			if !n.post(func() { b.streamReleased(id) }) {
-				return
-			}
+			n.post(func() { b.streamReleased(id) })
 		})
 	}
 	native, hr := n.envCreateResponse(b.env, stream, resp.Status, reasonPhrase(resp.Status), sb.String())
@@ -952,9 +970,7 @@ func (b *browser) maybeRelease() {
 	}
 	b.releasing = true
 	// One loop iteration later: never inside the exit callback itself.
-	if !n.post(b.afterRelease) {
-		b.afterRelease()
-	}
+	n.post(b.afterRelease)
 }
 
 // afterRelease runs after every native user of the profile has let go:

@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"sync"
 	"syscall"
+	"time"
 	"unsafe"
 )
 
@@ -65,9 +66,8 @@ type rect struct{ left, top, right, bottom int32 }
 // other threads (stream releases, dropped handlers) and from the UI thread
 // itself one message later. It lives for the process.
 var hop struct {
-	mu      sync.Mutex
 	hwnd    uintptr
-	posted  []func()
+	queue   *callbackQueue
 	wndProc uintptr
 }
 
@@ -109,19 +109,20 @@ func bind() error {
 		return fmt.Errorf("CreateWindowExW(%s): %w", hopClass, err)
 	}
 	hop.hwnd = hwnd
+	hop.queue = &callbackQueue{
+		wake: func() bool {
+			ok, _, _ := pPostMessageW.Call(hwnd, wmHop, 0, 0)
+			return ok != 0
+		},
+		after: func(delay time.Duration, retry func()) { time.AfterFunc(delay, retry) },
+	}
 	n = realAPI()
 	return nil
 }
 
 func hopProc(hwnd, msg, wp, lp uintptr) uintptr {
 	if msg == wmHop && hwnd == hop.hwnd {
-		hop.mu.Lock()
-		fns := hop.posted
-		hop.posted = nil
-		hop.mu.Unlock()
-		for _, fn := range fns {
-			fn()
-		}
+		hop.queue.dispatch()
 		return 0
 	}
 	r, _, _ := pDefWindowProcW.Call(hwnd, msg, wp, lp)
@@ -129,20 +130,8 @@ func hopProc(hwnd, msg, wp, lp uintptr) uintptr {
 }
 
 // post queues fn for the UI thread, from any thread.
-func post(fn func()) bool {
-	hop.mu.Lock()
-	defer hop.mu.Unlock()
-	if hop.hwnd == 0 {
-		return false
-	}
-	hop.posted = append(hop.posted, fn)
-	if len(hop.posted) == 1 {
-		if ok, _, _ := pPostMessageW.Call(hop.hwnd, wmHop, 0, 0); ok == 0 {
-			hop.posted = hop.posted[:0]
-			return false
-		}
-	}
-	return true
+func post(fn func()) {
+	hop.queue.post(fn)
 }
 
 // call invokes vtable slot i of a COM interface pointer with this first.

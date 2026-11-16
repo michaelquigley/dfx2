@@ -3,6 +3,7 @@ package webview2
 import (
 	"errors"
 	"os"
+	"path/filepath"
 	"slices"
 	"strings"
 	"testing"
@@ -84,7 +85,7 @@ func installFake(t *testing.T) *fakeNative {
 		},
 		freeLibrary:    func(uintptr) error { f.freed++; return nil },
 		runtimeVersion: func(uintptr) (string, error) { return "test-runtime", nil },
-		post:           func(fn func()) bool { f.posted = append(f.posted, fn); return true },
+		post:           func(fn func()) { f.posted = append(f.posted, fn) },
 		newHandler: func(name string, _ guid, invoke func(a, b uintptr) hresult, dropped func()) handler {
 			h := &fakeHandler{name: name, invoke: invoke, dropped: dropped}
 			f.handlers = append(f.handlers, h)
@@ -328,7 +329,7 @@ func (h *fakeHost) RequestBody(id platform.ID, data []byte) platform.RequestDeci
 func (h *fakeHost) RequestBodyEnd(id platform.ID, err error) platform.RequestDecision {
 	h.ends++
 	if err != nil {
-		return platform.RequestDecision{ID: id, Action: platform.RequestAbort}
+		return platform.RequestDecision{Action: platform.RequestAbort} // real endpoint convention
 	}
 	return platform.RequestDecision{ID: id, Action: platform.RequestWait}
 }
@@ -349,7 +350,7 @@ func newTestBrowser(t *testing.T, host *fakeHost, mode platform.BrowserMode) (*f
 	if err != nil {
 		t.Fatal(err)
 	}
-	f.profile = b.profile + `\EBWebView\Default`
+	f.profile = filepath.Join(b.profile, "EBWebView", "Default")
 	return f, b
 }
 
@@ -790,7 +791,7 @@ func TestProfileOutsideTheWindowDirectoryIsFatal(t *testing.T) {
 	f, b := newTestBrowser(t, host, platform.BrowserInProcess)
 	b.Start()
 	f.invoke("EnvironmentCompleted", 0, 100)
-	f.profile = `C:\Users\someone\AppData\Local\dfx2\EBWebView\Default`
+	f.profile = filepath.Join(t.TempDir(), "EBWebView", "Default")
 	f.invoke("ControllerCompleted", 0, 200)
 	if len(host.failed) != 1 || !strings.Contains(host.failed[0].Error(), "profile isolation") || f.did("navigate "+startURL) {
 		t.Fatalf("foreign profile accepted: %v %v", host.failed, f.calls)
