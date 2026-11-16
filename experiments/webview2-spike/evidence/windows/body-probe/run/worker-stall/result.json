@@ -1,0 +1,524 @@
+{
+ "scenario": "worker-stall",
+ "flags": [
+  "-feas-body",
+  "worker"
+ ],
+ "checks": [
+  {
+   "check": "blob/921600/stall1500: exact bytes reached the handler",
+   "ok": true,
+   "detail": {
+    "expected_length": 921600,
+    "expected_sha256": "43b973b14310d4da8f6bc98a9e54f791f74b60cb37327772ae75e811975d1570",
+    "handler_length": 921600,
+    "handler_sha256": "43b973b14310d4da8f6bc98a9e54f791f74b60cb37327772ae75e811975d1570",
+    "status": 200
+   }
+  },
+  {
+   "check": "blob/921600/stall1500: the host's read is the same body the handler received",
+   "ok": true,
+   "detail": {
+    "read_bytes": 921600,
+    "read_error": "",
+    "read_sha256": "43b973b14310d4da8f6bc98a9e54f791f74b60cb37327772ae75e811975d1570"
+   }
+  },
+  {
+   "check": "blob/921600/stall1500: stream facts recorded on the UI thread before the read",
+   "ok": true,
+   "detail": {
+    "facts": {
+     "agile": "S_OK",
+     "free_threaded_marshaler": true,
+     "marshal": "S_OK",
+     "pointer": "0x1acfaa655b0",
+     "position": 0,
+     "position_hr": "S_OK",
+     "sequential_stream": "S_OK",
+     "stat": "S_OK",
+     "stat_size": 921600,
+     "stat_type": 2,
+     "unmarshal_class": "0000033a-0000-0000-c000-000000000046",
+     "unmarshal_class_hr": "S_OK"
+    }
+   }
+  },
+  {
+   "check": "blob/921600/stall1500: branch follows the stream's advertised agility",
+   "ok": true,
+   "detail": {
+    "agile": "S_OK",
+    "branch": "agile"
+   }
+  },
+  {
+   "check": "blob/921600/stall1500: read on a separate multithreaded-apartment thread",
+   "ok": true,
+   "detail": {
+    "coinit": "S_OK",
+    "reader_thread": 2800,
+    "ui_thread": 11372
+   }
+  },
+  {
+   "check": "blob/921600/stall1500: the read completed while the UI thread was blocked without pumping",
+   "ok": true,
+   "detail": {
+    "stall_ms": 1500,
+    "took_ms": 1503.82,
+    "total_read_ms": 2.803
+   }
+  },
+  {
+   "check": "blob/921600/stall1500: read timing",
+   "ok": true,
+   "detail": {
+    "chunks": 16,
+    "first_read_ms": 0,
+    "max_read_gap_ms": 0.515,
+    "stat_size": 921600,
+    "ticks_during": 0,
+    "took_ms": 1503.82,
+    "total_read_ms": 2.803
+   }
+  },
+  {
+   "check": "string/921600/stall1500: exact bytes reached the handler",
+   "ok": true,
+   "detail": {
+    "expected_length": 921600,
+    "expected_sha256": "a0ff36dea24b0b300f3018ac24b1c4113c83069bc24220ad77d4a53c33ece237",
+    "handler_length": 921600,
+    "handler_sha256": "a0ff36dea24b0b300f3018ac24b1c4113c83069bc24220ad77d4a53c33ece237",
+    "status": 200
+   }
+  },
+  {
+   "check": "string/921600/stall1500: the host's read is the same body the handler received",
+   "ok": true,
+   "detail": {
+    "read_bytes": 921600,
+    "read_error": "",
+    "read_sha256": "a0ff36dea24b0b300f3018ac24b1c4113c83069bc24220ad77d4a53c33ece237"
+   }
+  },
+  {
+   "check": "string/921600/stall1500: stream facts recorded on the UI thread before the read",
+   "ok": true,
+   "detail": {
+    "facts": {
+     "agile": "S_OK",
+     "free_threaded_marshaler": true,
+     "marshal": "S_OK",
+     "pointer": "0x1acfaa655b0",
+     "position": 0,
+     "position_hr": "S_OK",
+     "sequential_stream": "S_OK",
+     "stat": "S_OK",
+     "stat_size": 921600,
+     "stat_type": 2,
+     "unmarshal_class": "0000033a-0000-0000-c000-000000000046",
+     "unmarshal_class_hr": "S_OK"
+    }
+   }
+  },
+  {
+   "check": "string/921600/stall1500: branch follows the stream's advertised agility",
+   "ok": true,
+   "detail": {
+    "agile": "S_OK",
+    "branch": "agile"
+   }
+  },
+  {
+   "check": "string/921600/stall1500: read on a separate multithreaded-apartment thread",
+   "ok": true,
+   "detail": {
+    "coinit": "S_OK",
+    "reader_thread": 5264,
+    "ui_thread": 11372
+   }
+  },
+  {
+   "check": "string/921600/stall1500: the read completed while the UI thread was blocked without pumping",
+   "ok": true,
+   "detail": {
+    "stall_ms": 1500,
+    "took_ms": 1503.718,
+    "total_read_ms": 1.727
+   }
+  },
+  {
+   "check": "string/921600/stall1500: read timing",
+   "ok": true,
+   "detail": {
+    "chunks": 16,
+    "first_read_ms": 0,
+    "max_read_gap_ms": 0,
+    "stat_size": 921600,
+    "ticks_during": 0,
+    "took_ms": 1503.718,
+    "total_read_ms": 1.727
+   }
+  },
+  {
+   "check": "multipart/65536/stall1500: exact bytes reached the handler",
+   "ok": true,
+   "detail": {
+    "expected_length": 65536,
+    "expected_sha256": "ef4636928161808e87035fa51983821677527ccd9661991c5d0126a778b2268a",
+    "handler_length": 65824,
+    "handler_sha256": "ef4636928161808e87035fa51983821677527ccd9661991c5d0126a778b2268a",
+    "status": 200
+   }
+  },
+  {
+   "check": "multipart/65536/stall1500: the host's read is the same body the handler received",
+   "ok": true,
+   "detail": {
+    "read_bytes": 65824,
+    "read_error": "",
+    "read_sha256": "8ee5913061a724d5422458d60cd733dd82c0096f5bc4257ef9d2f010f50683c8"
+   }
+  },
+  {
+   "check": "multipart/65536/stall1500: stream facts recorded on the UI thread before the read",
+   "ok": true,
+   "detail": {
+    "facts": {
+     "agile": "S_OK",
+     "free_threaded_marshaler": true,
+     "marshal": "S_OK",
+     "pointer": "0x1acfaa655b0",
+     "position": 0,
+     "position_hr": "S_OK",
+     "sequential_stream": "S_OK",
+     "stat": "S_OK",
+     "stat_size": 65824,
+     "stat_type": 2,
+     "unmarshal_class": "0000033a-0000-0000-c000-000000000046",
+     "unmarshal_class_hr": "S_OK"
+    }
+   }
+  },
+  {
+   "check": "multipart/65536/stall1500: branch follows the stream's advertised agility",
+   "ok": true,
+   "detail": {
+    "agile": "S_OK",
+    "branch": "agile"
+   }
+  },
+  {
+   "check": "multipart/65536/stall1500: read on a separate multithreaded-apartment thread",
+   "ok": true,
+   "detail": {
+    "coinit": "S_OK",
+    "reader_thread": 11868,
+    "ui_thread": 11372
+   }
+  },
+  {
+   "check": "multipart/65536/stall1500: the read completed while the UI thread was blocked without pumping",
+   "ok": true,
+   "detail": {
+    "stall_ms": 1500,
+    "took_ms": 1501.353,
+    "total_read_ms": 0
+   }
+  },
+  {
+   "check": "multipart/65536/stall1500: read timing",
+   "ok": true,
+   "detail": {
+    "chunks": 3,
+    "first_read_ms": 0,
+    "max_read_gap_ms": 0,
+    "stat_size": 65824,
+    "ticks_during": 0,
+    "took_ms": 1501.353,
+    "total_read_ms": 0
+   }
+  }
+ ],
+ "ok": true,
+ "detail": {
+  "bodies": [
+   {
+    "case": "blob/921600/stall1500",
+    "page": {
+     "echo": {
+      "content_type": "application/octet-stream",
+      "length": 921600,
+      "sha256": "43b973b14310d4da8f6bc98a9e54f791f74b60cb37327772ae75e811975d1570"
+     },
+     "expectedLength": 921600,
+     "expectedSha": "43b973b14310d4da8f6bc98a9e54f791f74b60cb37327772ae75e811975d1570",
+     "kind": "blob",
+     "ms": 1534,
+     "size": 921600,
+     "status": 200
+    },
+    "read": {
+     "branch": "agile",
+     "bytes": 921600,
+     "chunks": 16,
+     "closed_early": false,
+     "coinit": "S_OK",
+     "error": "",
+     "event": "body-read",
+     "first_read_ms": 0,
+     "id": 1,
+     "kind": "blob",
+     "max_read_gap_ms": 0.515,
+     "modeled": false,
+     "off_ui": true,
+     "read_done_during_stall": true,
+     "reader_thread": 2800,
+     "settled": 0,
+     "sha256": "43b973b14310d4da8f6bc98a9e54f791f74b60cb37327772ae75e811975d1570",
+     "stall_ms": 1500,
+     "t": "14:46:16.407",
+     "ticks_during": 0,
+     "too_large": false,
+     "took_ms": 1503.82,
+     "total_read_ms": 2.803,
+     "ui_thread": 11372,
+     "window": "A"
+    },
+    "stall": {
+     "actual_ms": 1500,
+     "event": "ui-stall",
+     "id": 1,
+     "kind": "blob",
+     "read_done_during_stall": true,
+     "stall_ms": 1500,
+     "t": "14:46:16.404",
+     "window": "A"
+    },
+    "stream": {
+     "closing": false,
+     "content_length": "",
+     "content_type": "application/octet-stream",
+     "event": "body-stream",
+     "facts": {
+      "agile": "S_OK",
+      "free_threaded_marshaler": true,
+      "marshal": "S_OK",
+      "pointer": "0x1acfaa655b0",
+      "position": 0,
+      "position_hr": "S_OK",
+      "sequential_stream": "S_OK",
+      "stat": "S_OK",
+      "stat_size": 921600,
+      "stat_type": 2,
+      "unmarshal_class": "0000033a-0000-0000-c000-000000000046",
+      "unmarshal_class_hr": "S_OK"
+     },
+     "id": 1,
+     "kind": "blob",
+     "method": "POST",
+     "mode": "worker",
+     "t": "14:46:14.903",
+     "ui_thread": 11372,
+     "uri": "https://dfx2-spike.invalid/api/body?kind=blob\u0026stall=1500",
+     "window": "A"
+    }
+   },
+   {
+    "case": "string/921600/stall1500",
+    "page": {
+     "echo": {
+      "content_type": "text/plain; charset=utf-8",
+      "length": 921600,
+      "sha256": "a0ff36dea24b0b300f3018ac24b1c4113c83069bc24220ad77d4a53c33ece237"
+     },
+     "expectedLength": 921600,
+     "expectedSha": "a0ff36dea24b0b300f3018ac24b1c4113c83069bc24220ad77d4a53c33ece237",
+     "kind": "string",
+     "ms": 1544,
+     "size": 921600,
+     "status": 200
+    },
+    "read": {
+     "branch": "agile",
+     "bytes": 921600,
+     "chunks": 16,
+     "closed_early": false,
+     "coinit": "S_OK",
+     "error": "",
+     "event": "body-read",
+     "first_read_ms": 0,
+     "id": 3,
+     "kind": "string",
+     "max_read_gap_ms": 0,
+     "modeled": false,
+     "off_ui": true,
+     "read_done_during_stall": true,
+     "reader_thread": 5264,
+     "settled": 0,
+     "sha256": "a0ff36dea24b0b300f3018ac24b1c4113c83069bc24220ad77d4a53c33ece237",
+     "stall_ms": 1500,
+     "t": "14:46:17.992",
+     "ticks_during": 0,
+     "too_large": false,
+     "took_ms": 1503.718,
+     "total_read_ms": 1.727,
+     "ui_thread": 11372,
+     "window": "A"
+    },
+    "stall": {
+     "actual_ms": 1500,
+     "event": "ui-stall",
+     "id": 3,
+     "kind": "string",
+     "read_done_during_stall": true,
+     "stall_ms": 1500,
+     "t": "14:46:17.989",
+     "window": "A"
+    },
+    "stream": {
+     "closing": false,
+     "content_length": "",
+     "content_type": "text/plain; charset=utf-8",
+     "event": "body-stream",
+     "facts": {
+      "agile": "S_OK",
+      "free_threaded_marshaler": true,
+      "marshal": "S_OK",
+      "pointer": "0x1acfaa655b0",
+      "position": 0,
+      "position_hr": "S_OK",
+      "sequential_stream": "S_OK",
+      "stat": "S_OK",
+      "stat_size": 921600,
+      "stat_type": 2,
+      "unmarshal_class": "0000033a-0000-0000-c000-000000000046",
+      "unmarshal_class_hr": "S_OK"
+     },
+     "id": 3,
+     "kind": "string",
+     "method": "POST",
+     "mode": "worker",
+     "t": "14:46:16.488",
+     "ui_thread": 11372,
+     "uri": "https://dfx2-spike.invalid/api/body?kind=string\u0026stall=1500",
+     "window": "A"
+    }
+   },
+   {
+    "case": "multipart/65536/stall1500",
+    "page": {
+     "echo": {
+      "content_type": "multipart/form-data; boundary=----WebKitFormBoundaryqoXo5MXrUbKBAjVo",
+      "length": 65824,
+      "parts": [
+       {
+        "filename": "",
+        "length": 1,
+        "name": "note",
+        "sha256": "1b16b1df538ba12dc3f97edbb85caa7050d46c148134290feba80f8236c83db9"
+       },
+       {
+        "filename": "blob.bin",
+        "length": 65536,
+        "name": "file",
+        "sha256": "ef4636928161808e87035fa51983821677527ccd9661991c5d0126a778b2268a"
+       }
+      ],
+      "sha256": "8ee5913061a724d5422458d60cd733dd82c0096f5bc4257ef9d2f010f50683c8"
+     },
+     "expectedLength": 65536,
+     "expectedSha": "ef4636928161808e87035fa51983821677527ccd9661991c5d0126a778b2268a",
+     "kind": "multipart",
+     "ms": 1510,
+     "size": 65536,
+     "status": 200
+    },
+    "read": {
+     "branch": "agile",
+     "bytes": 65824,
+     "chunks": 3,
+     "closed_early": false,
+     "coinit": "S_OK",
+     "error": "",
+     "event": "body-read",
+     "first_read_ms": 0,
+     "id": 5,
+     "kind": "multipart",
+     "max_read_gap_ms": 0,
+     "modeled": false,
+     "off_ui": true,
+     "read_done_during_stall": true,
+     "reader_thread": 11868,
+     "settled": 0,
+     "sha256": "8ee5913061a724d5422458d60cd733dd82c0096f5bc4257ef9d2f010f50683c8",
+     "stall_ms": 1500,
+     "t": "14:46:19.536",
+     "ticks_during": 0,
+     "too_large": false,
+     "took_ms": 1501.353,
+     "total_read_ms": 0,
+     "ui_thread": 11372,
+     "window": "A"
+    },
+    "stall": {
+     "actual_ms": 1500,
+     "event": "ui-stall",
+     "id": 5,
+     "kind": "multipart",
+     "read_done_during_stall": true,
+     "stall_ms": 1500,
+     "t": "14:46:19.536",
+     "window": "A"
+    },
+    "stream": {
+     "closing": false,
+     "content_length": "",
+     "content_type": "multipart/form-data; boundary=----WebKitFormBoundaryqoXo5MXrUbKBAjVo",
+     "event": "body-stream",
+     "facts": {
+      "agile": "S_OK",
+      "free_threaded_marshaler": true,
+      "marshal": "S_OK",
+      "pointer": "0x1acfaa655b0",
+      "position": 0,
+      "position_hr": "S_OK",
+      "sequential_stream": "S_OK",
+      "stat": "S_OK",
+      "stat_size": 65824,
+      "stat_type": 2,
+      "unmarshal_class": "0000033a-0000-0000-c000-000000000046",
+      "unmarshal_class_hr": "S_OK"
+     },
+     "id": 5,
+     "kind": "multipart",
+     "method": "POST",
+     "mode": "worker",
+     "t": "14:46:18.035",
+     "ui_thread": 11372,
+     "uri": "https://dfx2-spike.invalid/api/body?kind=multipart\u0026stall=1500",
+     "window": "A"
+    }
+   }
+  ]
+ },
+ "exit": {
+  "host_exit": 0,
+  "timed_out": false,
+  "browser_pids": [
+   3980
+  ],
+  "browser_processes_remaining": null,
+  "stderr_suspicious": null,
+  "callback_objects_live": 0,
+  "off_ui_thread": 0,
+  "body_workers_live": 0,
+  "gate_streams_live": 0,
+  "profiles_remaining": null
+ },
+ "seconds": 5.6,
+ "runtime": "151.0.4129.93"
+}

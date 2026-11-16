@@ -1,0 +1,1142 @@
+{
+ "scenario": "inspect",
+ "flags": [
+  "-feas-body",
+  "inspect"
+ ],
+ "checks": [
+  {
+   "check": "string/65536: exact bytes reached the handler",
+   "ok": true,
+   "detail": {
+    "expected_length": 65536,
+    "expected_sha256": "b152c1a8b25a3a217a64749d705ba6f7e804b2a0984742c5f45729c66f4974ac",
+    "handler_length": 65536,
+    "handler_sha256": "b152c1a8b25a3a217a64749d705ba6f7e804b2a0984742c5f45729c66f4974ac",
+    "status": 200
+   }
+  },
+  {
+   "check": "string/65536: the host's read is the same body the handler received",
+   "ok": true,
+   "detail": {
+    "read_bytes": 65536,
+    "read_error": "",
+    "read_sha256": "b152c1a8b25a3a217a64749d705ba6f7e804b2a0984742c5f45729c66f4974ac"
+   }
+  },
+  {
+   "check": "string/65536: stream facts recorded on the UI thread before the read",
+   "ok": true,
+   "detail": {
+    "facts": {
+     "agile": "S_OK",
+     "free_threaded_marshaler": true,
+     "marshal": "S_OK",
+     "pointer": "0x234ca7a54a0",
+     "position": 0,
+     "position_hr": "S_OK",
+     "sequential_stream": "S_OK",
+     "stat": "S_OK",
+     "stat_size": 65536,
+     "stat_type": 2,
+     "unmarshal_class": "0000033a-0000-0000-c000-000000000046",
+     "unmarshal_class_hr": "S_OK"
+    }
+   }
+  },
+  {
+   "check": "string/65536: read on the UI thread (production path)",
+   "ok": true,
+   "detail": {
+    "reader_thread": 1288,
+    "ui_thread": 1288
+   }
+  },
+  {
+   "check": "string/65536: read timing",
+   "ok": true,
+   "detail": {
+    "chunks": 2,
+    "first_read_ms": 0,
+    "max_read_gap_ms": 0,
+    "stat_size": 65536,
+    "ticks_during": 0,
+    "took_ms": 0.625,
+    "total_read_ms": 0
+   }
+  },
+  {
+   "check": "json/65536: exact bytes reached the handler",
+   "ok": true,
+   "detail": {
+    "expected_length": 67017,
+    "expected_sha256": "8a2f9a1c40927a7b442dac645fc249e9a4ec27df9f8f9b487c80061af05502ba",
+    "handler_length": 67017,
+    "handler_sha256": "8a2f9a1c40927a7b442dac645fc249e9a4ec27df9f8f9b487c80061af05502ba",
+    "status": 200
+   }
+  },
+  {
+   "check": "json/65536: the host's read is the same body the handler received",
+   "ok": true,
+   "detail": {
+    "read_bytes": 67017,
+    "read_error": "",
+    "read_sha256": "8a2f9a1c40927a7b442dac645fc249e9a4ec27df9f8f9b487c80061af05502ba"
+   }
+  },
+  {
+   "check": "json/65536: stream facts recorded on the UI thread before the read",
+   "ok": true,
+   "detail": {
+    "facts": {
+     "agile": "S_OK",
+     "free_threaded_marshaler": true,
+     "marshal": "S_OK",
+     "pointer": "0x234ca7a54a0",
+     "position": 0,
+     "position_hr": "S_OK",
+     "sequential_stream": "S_OK",
+     "stat": "S_OK",
+     "stat_size": 67017,
+     "stat_type": 2,
+     "unmarshal_class": "0000033a-0000-0000-c000-000000000046",
+     "unmarshal_class_hr": "S_OK"
+    }
+   }
+  },
+  {
+   "check": "json/65536: read on the UI thread (production path)",
+   "ok": true,
+   "detail": {
+    "reader_thread": 1288,
+    "ui_thread": 1288
+   }
+  },
+  {
+   "check": "json/65536: read timing",
+   "ok": true,
+   "detail": {
+    "chunks": 3,
+    "first_read_ms": 0,
+    "max_read_gap_ms": 0,
+    "stat_size": 67017,
+    "ticks_during": 0,
+    "took_ms": 0,
+    "total_read_ms": 0
+   }
+  },
+  {
+   "check": "form/65536: exact bytes reached the handler",
+   "ok": true,
+   "detail": {
+    "expected_length": 100505,
+    "expected_sha256": "468f96b5fc0841bd0f43e210a27068608c0b5e22837c82536e66ab539c48dd24",
+    "handler_length": 100505,
+    "handler_sha256": "468f96b5fc0841bd0f43e210a27068608c0b5e22837c82536e66ab539c48dd24",
+    "status": 200
+   }
+  },
+  {
+   "check": "form/65536: the host's read is the same body the handler received",
+   "ok": true,
+   "detail": {
+    "read_bytes": 100505,
+    "read_error": "",
+    "read_sha256": "468f96b5fc0841bd0f43e210a27068608c0b5e22837c82536e66ab539c48dd24"
+   }
+  },
+  {
+   "check": "form/65536: stream facts recorded on the UI thread before the read",
+   "ok": true,
+   "detail": {
+    "facts": {
+     "agile": "S_OK",
+     "free_threaded_marshaler": true,
+     "marshal": "S_OK",
+     "pointer": "0x234ca7a54a0",
+     "position": 0,
+     "position_hr": "S_OK",
+     "sequential_stream": "S_OK",
+     "stat": "S_OK",
+     "stat_size": 100505,
+     "stat_type": 2,
+     "unmarshal_class": "0000033a-0000-0000-c000-000000000046",
+     "unmarshal_class_hr": "S_OK"
+    }
+   }
+  },
+  {
+   "check": "form/65536: read on the UI thread (production path)",
+   "ok": true,
+   "detail": {
+    "reader_thread": 1288,
+    "ui_thread": 1288
+   }
+  },
+  {
+   "check": "form/65536: read timing",
+   "ok": true,
+   "detail": {
+    "chunks": 3,
+    "first_read_ms": 0,
+    "max_read_gap_ms": 0,
+    "stat_size": 100505,
+    "ticks_during": 0,
+    "took_ms": 0.559,
+    "total_read_ms": 0.514
+   }
+  },
+  {
+   "check": "blob/65536: exact bytes reached the handler",
+   "ok": true,
+   "detail": {
+    "expected_length": 65536,
+    "expected_sha256": "ef4636928161808e87035fa51983821677527ccd9661991c5d0126a778b2268a",
+    "handler_length": 65536,
+    "handler_sha256": "ef4636928161808e87035fa51983821677527ccd9661991c5d0126a778b2268a",
+    "status": 200
+   }
+  },
+  {
+   "check": "blob/65536: the host's read is the same body the handler received",
+   "ok": true,
+   "detail": {
+    "read_bytes": 65536,
+    "read_error": "",
+    "read_sha256": "ef4636928161808e87035fa51983821677527ccd9661991c5d0126a778b2268a"
+   }
+  },
+  {
+   "check": "blob/65536: stream facts recorded on the UI thread before the read",
+   "ok": true,
+   "detail": {
+    "facts": {
+     "agile": "S_OK",
+     "free_threaded_marshaler": true,
+     "marshal": "S_OK",
+     "pointer": "0x234ca7a54a0",
+     "position": 0,
+     "position_hr": "S_OK",
+     "sequential_stream": "S_OK",
+     "stat": "S_OK",
+     "stat_size": 65536,
+     "stat_type": 2,
+     "unmarshal_class": "0000033a-0000-0000-c000-000000000046",
+     "unmarshal_class_hr": "S_OK"
+    }
+   }
+  },
+  {
+   "check": "blob/65536: read on the UI thread (production path)",
+   "ok": true,
+   "detail": {
+    "reader_thread": 1288,
+    "ui_thread": 1288
+   }
+  },
+  {
+   "check": "blob/65536: read timing",
+   "ok": true,
+   "detail": {
+    "chunks": 2,
+    "first_read_ms": 0,
+    "max_read_gap_ms": 0,
+    "stat_size": 65536,
+    "ticks_during": 0,
+    "took_ms": 0.586,
+    "total_read_ms": 0
+   }
+  },
+  {
+   "check": "multipart/65536: exact bytes reached the handler",
+   "ok": true,
+   "detail": {
+    "expected_length": 65536,
+    "expected_sha256": "ef4636928161808e87035fa51983821677527ccd9661991c5d0126a778b2268a",
+    "handler_length": 65824,
+    "handler_sha256": "ef4636928161808e87035fa51983821677527ccd9661991c5d0126a778b2268a",
+    "status": 200
+   }
+  },
+  {
+   "check": "multipart/65536: the host's read is the same body the handler received",
+   "ok": true,
+   "detail": {
+    "read_bytes": 65824,
+    "read_error": "",
+    "read_sha256": "37d7066e5b596af900bb1aa32323394126624cdc7a9dc0ef5ae61cd4d015c407"
+   }
+  },
+  {
+   "check": "multipart/65536: stream facts recorded on the UI thread before the read",
+   "ok": true,
+   "detail": {
+    "facts": {
+     "agile": "S_OK",
+     "free_threaded_marshaler": true,
+     "marshal": "S_OK",
+     "pointer": "0x234ca7a54a0",
+     "position": 0,
+     "position_hr": "S_OK",
+     "sequential_stream": "S_OK",
+     "stat": "S_OK",
+     "stat_size": 65824,
+     "stat_type": 2,
+     "unmarshal_class": "0000033a-0000-0000-c000-000000000046",
+     "unmarshal_class_hr": "S_OK"
+    }
+   }
+  },
+  {
+   "check": "multipart/65536: read on the UI thread (production path)",
+   "ok": true,
+   "detail": {
+    "reader_thread": 1288,
+    "ui_thread": 1288
+   }
+  },
+  {
+   "check": "multipart/65536: read timing",
+   "ok": true,
+   "detail": {
+    "chunks": 3,
+    "first_read_ms": 0,
+    "max_read_gap_ms": 0,
+    "stat_size": 65824,
+    "ticks_during": 0,
+    "took_ms": 0,
+    "total_read_ms": 0
+   }
+  },
+  {
+   "check": "string/921600: exact bytes reached the handler",
+   "ok": true,
+   "detail": {
+    "expected_length": 921600,
+    "expected_sha256": "a0ff36dea24b0b300f3018ac24b1c4113c83069bc24220ad77d4a53c33ece237",
+    "handler_length": 921600,
+    "handler_sha256": "a0ff36dea24b0b300f3018ac24b1c4113c83069bc24220ad77d4a53c33ece237",
+    "status": 200
+   }
+  },
+  {
+   "check": "string/921600: the host's read is the same body the handler received",
+   "ok": true,
+   "detail": {
+    "read_bytes": 921600,
+    "read_error": "",
+    "read_sha256": "a0ff36dea24b0b300f3018ac24b1c4113c83069bc24220ad77d4a53c33ece237"
+   }
+  },
+  {
+   "check": "string/921600: stream facts recorded on the UI thread before the read",
+   "ok": true,
+   "detail": {
+    "facts": {
+     "agile": "S_OK",
+     "free_threaded_marshaler": true,
+     "marshal": "S_OK",
+     "pointer": "0x234ca7a54a0",
+     "position": 0,
+     "position_hr": "S_OK",
+     "sequential_stream": "S_OK",
+     "stat": "S_OK",
+     "stat_size": 921600,
+     "stat_type": 2,
+     "unmarshal_class": "0000033a-0000-0000-c000-000000000046",
+     "unmarshal_class_hr": "S_OK"
+    }
+   }
+  },
+  {
+   "check": "string/921600: read on the UI thread (production path)",
+   "ok": true,
+   "detail": {
+    "reader_thread": 1288,
+    "ui_thread": 1288
+   }
+  },
+  {
+   "check": "string/921600: read timing",
+   "ok": true,
+   "detail": {
+    "chunks": 16,
+    "first_read_ms": 0,
+    "max_read_gap_ms": 0,
+    "stat_size": 921600,
+    "ticks_during": 0,
+    "took_ms": 5,
+    "total_read_ms": 3.004
+   }
+  },
+  {
+   "check": "blob/921600: exact bytes reached the handler",
+   "ok": true,
+   "detail": {
+    "expected_length": 921600,
+    "expected_sha256": "43b973b14310d4da8f6bc98a9e54f791f74b60cb37327772ae75e811975d1570",
+    "handler_length": 921600,
+    "handler_sha256": "43b973b14310d4da8f6bc98a9e54f791f74b60cb37327772ae75e811975d1570",
+    "status": 200
+   }
+  },
+  {
+   "check": "blob/921600: the host's read is the same body the handler received",
+   "ok": true,
+   "detail": {
+    "read_bytes": 921600,
+    "read_error": "",
+    "read_sha256": "43b973b14310d4da8f6bc98a9e54f791f74b60cb37327772ae75e811975d1570"
+   }
+  },
+  {
+   "check": "blob/921600: stream facts recorded on the UI thread before the read",
+   "ok": true,
+   "detail": {
+    "facts": {
+     "agile": "S_OK",
+     "free_threaded_marshaler": true,
+     "marshal": "S_OK",
+     "pointer": "0x234ca7a6e60",
+     "position": 0,
+     "position_hr": "S_OK",
+     "sequential_stream": "S_OK",
+     "stat": "S_OK",
+     "stat_size": 921600,
+     "stat_type": 2,
+     "unmarshal_class": "0000033a-0000-0000-c000-000000000046",
+     "unmarshal_class_hr": "S_OK"
+    }
+   }
+  },
+  {
+   "check": "blob/921600: read on the UI thread (production path)",
+   "ok": true,
+   "detail": {
+    "reader_thread": 1288,
+    "ui_thread": 1288
+   }
+  },
+  {
+   "check": "blob/921600: read timing",
+   "ok": true,
+   "detail": {
+    "chunks": 16,
+    "first_read_ms": 0,
+    "max_read_gap_ms": 0.021,
+    "stat_size": 921600,
+    "ticks_during": 0,
+    "took_ms": 5.053,
+    "total_read_ms": 2.273
+   }
+  },
+  {
+   "check": "multipart/921600: exact bytes reached the handler",
+   "ok": true,
+   "detail": {
+    "expected_length": 921600,
+    "expected_sha256": "43b973b14310d4da8f6bc98a9e54f791f74b60cb37327772ae75e811975d1570",
+    "handler_length": 921888,
+    "handler_sha256": "43b973b14310d4da8f6bc98a9e54f791f74b60cb37327772ae75e811975d1570",
+    "status": 200
+   }
+  },
+  {
+   "check": "multipart/921600: the host's read is the same body the handler received",
+   "ok": true,
+   "detail": {
+    "read_bytes": 921888,
+    "read_error": "",
+    "read_sha256": "a80908ab89883afcb7314150a8d60e45464b08405070c9b832435f686b6a4ea0"
+   }
+  },
+  {
+   "check": "multipart/921600: stream facts recorded on the UI thread before the read",
+   "ok": true,
+   "detail": {
+    "facts": {
+     "agile": "S_OK",
+     "free_threaded_marshaler": true,
+     "marshal": "S_OK",
+     "pointer": "0x234ca7a6e60",
+     "position": 0,
+     "position_hr": "S_OK",
+     "sequential_stream": "S_OK",
+     "stat": "S_OK",
+     "stat_size": 921888,
+     "stat_type": 2,
+     "unmarshal_class": "0000033a-0000-0000-c000-000000000046",
+     "unmarshal_class_hr": "S_OK"
+    }
+   }
+  },
+  {
+   "check": "multipart/921600: read on the UI thread (production path)",
+   "ok": true,
+   "detail": {
+    "reader_thread": 1288,
+    "ui_thread": 1288
+   }
+  },
+  {
+   "check": "multipart/921600: read timing",
+   "ok": true,
+   "detail": {
+    "chunks": 16,
+    "first_read_ms": 0,
+    "max_read_gap_ms": 0,
+    "stat_size": 921888,
+    "ticks_during": 0,
+    "took_ms": 4.029,
+    "total_read_ms": 1.705
+   }
+  },
+  {
+   "check": "stream/65536: the intercepted request carried no content stream for a ReadableStream body",
+   "ok": true,
+   "detail": {
+    "expected_length": 65536,
+    "handler_length": 0,
+    "page_ms": 6,
+    "status": 200
+   }
+  }
+ ],
+ "ok": true,
+ "detail": {
+  "bodies": [
+   {
+    "case": "string/65536",
+    "page": {
+     "echo": {
+      "content_type": "text/plain; charset=utf-8",
+      "length": 65536,
+      "sha256": "b152c1a8b25a3a217a64749d705ba6f7e804b2a0984742c5f45729c66f4974ac"
+     },
+     "expectedLength": 65536,
+     "expectedSha": "b152c1a8b25a3a217a64749d705ba6f7e804b2a0984742c5f45729c66f4974ac",
+     "kind": "string",
+     "ms": 10,
+     "size": 65536,
+     "status": 200
+    },
+    "read": {
+     "branch": "ui",
+     "bytes": 65536,
+     "chunks": 2,
+     "closed_early": false,
+     "coinit": "S_OK",
+     "error": "",
+     "event": "body-read",
+     "first_read_ms": 0,
+     "id": 1,
+     "kind": "string",
+     "max_read_gap_ms": 0,
+     "modeled": false,
+     "off_ui": false,
+     "read_done_during_stall": false,
+     "reader_thread": 1288,
+     "settled": 0,
+     "sha256": "b152c1a8b25a3a217a64749d705ba6f7e804b2a0984742c5f45729c66f4974ac",
+     "stall_ms": 0,
+     "t": "14:46:11.924",
+     "ticks_during": 0,
+     "too_large": false,
+     "took_ms": 0.625,
+     "total_read_ms": 0,
+     "ui_thread": 1288,
+     "window": "A"
+    },
+    "stream": {
+     "closing": false,
+     "content_length": "",
+     "content_type": "text/plain; charset=utf-8",
+     "event": "body-stream",
+     "facts": {
+      "agile": "S_OK",
+      "free_threaded_marshaler": true,
+      "marshal": "S_OK",
+      "pointer": "0x234ca7a54a0",
+      "position": 0,
+      "position_hr": "S_OK",
+      "sequential_stream": "S_OK",
+      "stat": "S_OK",
+      "stat_size": 65536,
+      "stat_type": 2,
+      "unmarshal_class": "0000033a-0000-0000-c000-000000000046",
+      "unmarshal_class_hr": "S_OK"
+     },
+     "id": 1,
+     "kind": "string",
+     "method": "POST",
+     "mode": "inspect",
+     "t": "14:46:11.924",
+     "ui_thread": 1288,
+     "uri": "https://dfx2-spike.invalid/api/body?kind=string\u0026stall=0",
+     "window": "A"
+    }
+   },
+   {
+    "case": "json/65536",
+    "page": {
+     "echo": {
+      "content_type": "application/json",
+      "length": 67017,
+      "sha256": "8a2f9a1c40927a7b442dac645fc249e9a4ec27df9f8f9b487c80061af05502ba"
+     },
+     "expectedLength": 67017,
+     "expectedSha": "8a2f9a1c40927a7b442dac645fc249e9a4ec27df9f8f9b487c80061af05502ba",
+     "kind": "json",
+     "ms": 9,
+     "size": 65536,
+     "status": 200
+    },
+    "read": {
+     "branch": "ui",
+     "bytes": 67017,
+     "chunks": 3,
+     "closed_early": false,
+     "coinit": "S_OK",
+     "error": "",
+     "event": "body-read",
+     "first_read_ms": 0,
+     "id": 3,
+     "kind": "json",
+     "max_read_gap_ms": 0,
+     "modeled": false,
+     "off_ui": false,
+     "read_done_during_stall": false,
+     "reader_thread": 1288,
+     "settled": 0,
+     "sha256": "8a2f9a1c40927a7b442dac645fc249e9a4ec27df9f8f9b487c80061af05502ba",
+     "stall_ms": 0,
+     "t": "14:46:11.959",
+     "ticks_during": 0,
+     "too_large": false,
+     "took_ms": 0,
+     "total_read_ms": 0,
+     "ui_thread": 1288,
+     "window": "A"
+    },
+    "stream": {
+     "closing": false,
+     "content_length": "",
+     "content_type": "application/json",
+     "event": "body-stream",
+     "facts": {
+      "agile": "S_OK",
+      "free_threaded_marshaler": true,
+      "marshal": "S_OK",
+      "pointer": "0x234ca7a54a0",
+      "position": 0,
+      "position_hr": "S_OK",
+      "sequential_stream": "S_OK",
+      "stat": "S_OK",
+      "stat_size": 67017,
+      "stat_type": 2,
+      "unmarshal_class": "0000033a-0000-0000-c000-000000000046",
+      "unmarshal_class_hr": "S_OK"
+     },
+     "id": 3,
+     "kind": "json",
+     "method": "POST",
+     "mode": "inspect",
+     "t": "14:46:11.959",
+     "ui_thread": 1288,
+     "uri": "https://dfx2-spike.invalid/api/body?kind=json\u0026stall=0",
+     "window": "A"
+    }
+   },
+   {
+    "case": "form/65536",
+    "page": {
+     "echo": {
+      "content_type": "application/x-www-form-urlencoded;charset=UTF-8",
+      "length": 100505,
+      "sha256": "468f96b5fc0841bd0f43e210a27068608c0b5e22837c82536e66ab539c48dd24"
+     },
+     "expectedLength": 100505,
+     "expectedSha": "468f96b5fc0841bd0f43e210a27068608c0b5e22837c82536e66ab539c48dd24",
+     "kind": "form",
+     "ms": 12,
+     "size": 65536,
+     "status": 200
+    },
+    "read": {
+     "branch": "ui",
+     "bytes": 100505,
+     "chunks": 3,
+     "closed_early": false,
+     "coinit": "S_OK",
+     "error": "",
+     "event": "body-read",
+     "first_read_ms": 0,
+     "id": 5,
+     "kind": "form",
+     "max_read_gap_ms": 0,
+     "modeled": false,
+     "off_ui": false,
+     "read_done_during_stall": false,
+     "reader_thread": 1288,
+     "settled": 0,
+     "sha256": "468f96b5fc0841bd0f43e210a27068608c0b5e22837c82536e66ab539c48dd24",
+     "stall_ms": 0,
+     "t": "14:46:12.001",
+     "ticks_during": 0,
+     "too_large": false,
+     "took_ms": 0.559,
+     "total_read_ms": 0.514,
+     "ui_thread": 1288,
+     "window": "A"
+    },
+    "stream": {
+     "closing": false,
+     "content_length": "",
+     "content_type": "application/x-www-form-urlencoded;charset=UTF-8",
+     "event": "body-stream",
+     "facts": {
+      "agile": "S_OK",
+      "free_threaded_marshaler": true,
+      "marshal": "S_OK",
+      "pointer": "0x234ca7a54a0",
+      "position": 0,
+      "position_hr": "S_OK",
+      "sequential_stream": "S_OK",
+      "stat": "S_OK",
+      "stat_size": 100505,
+      "stat_type": 2,
+      "unmarshal_class": "0000033a-0000-0000-c000-000000000046",
+      "unmarshal_class_hr": "S_OK"
+     },
+     "id": 5,
+     "kind": "form",
+     "method": "POST",
+     "mode": "inspect",
+     "t": "14:46:12.001",
+     "ui_thread": 1288,
+     "uri": "https://dfx2-spike.invalid/api/body?kind=form\u0026stall=0",
+     "window": "A"
+    }
+   },
+   {
+    "case": "blob/65536",
+    "page": {
+     "echo": {
+      "content_type": "application/octet-stream",
+      "length": 65536,
+      "sha256": "ef4636928161808e87035fa51983821677527ccd9661991c5d0126a778b2268a"
+     },
+     "expectedLength": 65536,
+     "expectedSha": "ef4636928161808e87035fa51983821677527ccd9661991c5d0126a778b2268a",
+     "kind": "blob",
+     "ms": 8,
+     "size": 65536,
+     "status": 200
+    },
+    "read": {
+     "branch": "ui",
+     "bytes": 65536,
+     "chunks": 2,
+     "closed_early": false,
+     "coinit": "S_OK",
+     "error": "",
+     "event": "body-read",
+     "first_read_ms": 0,
+     "id": 7,
+     "kind": "blob",
+     "max_read_gap_ms": 0,
+     "modeled": false,
+     "off_ui": false,
+     "read_done_during_stall": false,
+     "reader_thread": 1288,
+     "settled": 0,
+     "sha256": "ef4636928161808e87035fa51983821677527ccd9661991c5d0126a778b2268a",
+     "stall_ms": 0,
+     "t": "14:46:12.043",
+     "ticks_during": 0,
+     "too_large": false,
+     "took_ms": 0.586,
+     "total_read_ms": 0,
+     "ui_thread": 1288,
+     "window": "A"
+    },
+    "stream": {
+     "closing": false,
+     "content_length": "",
+     "content_type": "application/octet-stream",
+     "event": "body-stream",
+     "facts": {
+      "agile": "S_OK",
+      "free_threaded_marshaler": true,
+      "marshal": "S_OK",
+      "pointer": "0x234ca7a54a0",
+      "position": 0,
+      "position_hr": "S_OK",
+      "sequential_stream": "S_OK",
+      "stat": "S_OK",
+      "stat_size": 65536,
+      "stat_type": 2,
+      "unmarshal_class": "0000033a-0000-0000-c000-000000000046",
+      "unmarshal_class_hr": "S_OK"
+     },
+     "id": 7,
+     "kind": "blob",
+     "method": "POST",
+     "mode": "inspect",
+     "t": "14:46:12.043",
+     "ui_thread": 1288,
+     "uri": "https://dfx2-spike.invalid/api/body?kind=blob\u0026stall=0",
+     "window": "A"
+    }
+   },
+   {
+    "case": "multipart/65536",
+    "page": {
+     "echo": {
+      "content_type": "multipart/form-data; boundary=----WebKitFormBoundaryKfQr4LnJq6Ie6w5v",
+      "length": 65824,
+      "parts": [
+       {
+        "filename": "",
+        "length": 1,
+        "name": "note",
+        "sha256": "1b16b1df538ba12dc3f97edbb85caa7050d46c148134290feba80f8236c83db9"
+       },
+       {
+        "filename": "blob.bin",
+        "length": 65536,
+        "name": "file",
+        "sha256": "ef4636928161808e87035fa51983821677527ccd9661991c5d0126a778b2268a"
+       }
+      ],
+      "sha256": "37d7066e5b596af900bb1aa32323394126624cdc7a9dc0ef5ae61cd4d015c407"
+     },
+     "expectedLength": 65536,
+     "expectedSha": "ef4636928161808e87035fa51983821677527ccd9661991c5d0126a778b2268a",
+     "kind": "multipart",
+     "ms": 10,
+     "size": 65536,
+     "status": 200
+    },
+    "read": {
+     "branch": "ui",
+     "bytes": 65824,
+     "chunks": 3,
+     "closed_early": false,
+     "coinit": "S_OK",
+     "error": "",
+     "event": "body-read",
+     "first_read_ms": 0,
+     "id": 9,
+     "kind": "multipart",
+     "max_read_gap_ms": 0,
+     "modeled": false,
+     "off_ui": false,
+     "read_done_during_stall": false,
+     "reader_thread": 1288,
+     "settled": 0,
+     "sha256": "37d7066e5b596af900bb1aa32323394126624cdc7a9dc0ef5ae61cd4d015c407",
+     "stall_ms": 0,
+     "t": "14:46:12.082",
+     "ticks_during": 0,
+     "too_large": false,
+     "took_ms": 0,
+     "total_read_ms": 0,
+     "ui_thread": 1288,
+     "window": "A"
+    },
+    "stream": {
+     "closing": false,
+     "content_length": "",
+     "content_type": "multipart/form-data; boundary=----WebKitFormBoundaryKfQr4LnJq6Ie6w5v",
+     "event": "body-stream",
+     "facts": {
+      "agile": "S_OK",
+      "free_threaded_marshaler": true,
+      "marshal": "S_OK",
+      "pointer": "0x234ca7a54a0",
+      "position": 0,
+      "position_hr": "S_OK",
+      "sequential_stream": "S_OK",
+      "stat": "S_OK",
+      "stat_size": 65824,
+      "stat_type": 2,
+      "unmarshal_class": "0000033a-0000-0000-c000-000000000046",
+      "unmarshal_class_hr": "S_OK"
+     },
+     "id": 9,
+     "kind": "multipart",
+     "method": "POST",
+     "mode": "inspect",
+     "t": "14:46:12.082",
+     "ui_thread": 1288,
+     "uri": "https://dfx2-spike.invalid/api/body?kind=multipart\u0026stall=0",
+     "window": "A"
+    }
+   },
+   {
+    "case": "string/921600",
+    "page": {
+     "echo": {
+      "content_type": "text/plain; charset=utf-8",
+      "length": 921600,
+      "sha256": "a0ff36dea24b0b300f3018ac24b1c4113c83069bc24220ad77d4a53c33ece237"
+     },
+     "expectedLength": 921600,
+     "expectedSha": "a0ff36dea24b0b300f3018ac24b1c4113c83069bc24220ad77d4a53c33ece237",
+     "kind": "string",
+     "ms": 52,
+     "size": 921600,
+     "status": 200
+    },
+    "read": {
+     "branch": "ui",
+     "bytes": 921600,
+     "chunks": 16,
+     "closed_early": false,
+     "coinit": "S_OK",
+     "error": "",
+     "event": "body-read",
+     "first_read_ms": 0,
+     "id": 11,
+     "kind": "string",
+     "max_read_gap_ms": 0,
+     "modeled": false,
+     "off_ui": false,
+     "read_done_during_stall": false,
+     "reader_thread": 1288,
+     "settled": 0,
+     "sha256": "a0ff36dea24b0b300f3018ac24b1c4113c83069bc24220ad77d4a53c33ece237",
+     "stall_ms": 0,
+     "t": "14:46:12.165",
+     "ticks_during": 0,
+     "too_large": false,
+     "took_ms": 5,
+     "total_read_ms": 3.004,
+     "ui_thread": 1288,
+     "window": "A"
+    },
+    "stream": {
+     "closing": false,
+     "content_length": "",
+     "content_type": "text/plain; charset=utf-8",
+     "event": "body-stream",
+     "facts": {
+      "agile": "S_OK",
+      "free_threaded_marshaler": true,
+      "marshal": "S_OK",
+      "pointer": "0x234ca7a54a0",
+      "position": 0,
+      "position_hr": "S_OK",
+      "sequential_stream": "S_OK",
+      "stat": "S_OK",
+      "stat_size": 921600,
+      "stat_type": 2,
+      "unmarshal_class": "0000033a-0000-0000-c000-000000000046",
+      "unmarshal_class_hr": "S_OK"
+     },
+     "id": 11,
+     "kind": "string",
+     "method": "POST",
+     "mode": "inspect",
+     "t": "14:46:12.160",
+     "ui_thread": 1288,
+     "uri": "https://dfx2-spike.invalid/api/body?kind=string\u0026stall=0",
+     "window": "A"
+    }
+   },
+   {
+    "case": "blob/921600",
+    "page": {
+     "echo": {
+      "content_type": "application/octet-stream",
+      "length": 921600,
+      "sha256": "43b973b14310d4da8f6bc98a9e54f791f74b60cb37327772ae75e811975d1570"
+     },
+     "expectedLength": 921600,
+     "expectedSha": "43b973b14310d4da8f6bc98a9e54f791f74b60cb37327772ae75e811975d1570",
+     "kind": "blob",
+     "ms": 33,
+     "size": 921600,
+     "status": 200
+    },
+    "read": {
+     "branch": "ui",
+     "bytes": 921600,
+     "chunks": 16,
+     "closed_early": false,
+     "coinit": "S_OK",
+     "error": "",
+     "event": "body-read",
+     "first_read_ms": 0,
+     "id": 13,
+     "kind": "blob",
+     "max_read_gap_ms": 0.021,
+     "modeled": false,
+     "off_ui": false,
+     "read_done_during_stall": false,
+     "reader_thread": 1288,
+     "settled": 0,
+     "sha256": "43b973b14310d4da8f6bc98a9e54f791f74b60cb37327772ae75e811975d1570",
+     "stall_ms": 0,
+     "t": "14:46:12.235",
+     "ticks_during": 0,
+     "too_large": false,
+     "took_ms": 5.053,
+     "total_read_ms": 2.273,
+     "ui_thread": 1288,
+     "window": "A"
+    },
+    "stream": {
+     "closing": false,
+     "content_length": "",
+     "content_type": "application/octet-stream",
+     "event": "body-stream",
+     "facts": {
+      "agile": "S_OK",
+      "free_threaded_marshaler": true,
+      "marshal": "S_OK",
+      "pointer": "0x234ca7a6e60",
+      "position": 0,
+      "position_hr": "S_OK",
+      "sequential_stream": "S_OK",
+      "stat": "S_OK",
+      "stat_size": 921600,
+      "stat_type": 2,
+      "unmarshal_class": "0000033a-0000-0000-c000-000000000046",
+      "unmarshal_class_hr": "S_OK"
+     },
+     "id": 13,
+     "kind": "blob",
+     "method": "POST",
+     "mode": "inspect",
+     "t": "14:46:12.230",
+     "ui_thread": 1288,
+     "uri": "https://dfx2-spike.invalid/api/body?kind=blob\u0026stall=0",
+     "window": "A"
+    }
+   },
+   {
+    "case": "multipart/921600",
+    "page": {
+     "echo": {
+      "content_type": "multipart/form-data; boundary=----WebKitFormBoundaryPBRzN73LobADsJMN",
+      "length": 921888,
+      "parts": [
+       {
+        "filename": "",
+        "length": 1,
+        "name": "note",
+        "sha256": "1b16b1df538ba12dc3f97edbb85caa7050d46c148134290feba80f8236c83db9"
+       },
+       {
+        "filename": "blob.bin",
+        "length": 921600,
+        "name": "file",
+        "sha256": "43b973b14310d4da8f6bc98a9e54f791f74b60cb37327772ae75e811975d1570"
+       }
+      ],
+      "sha256": "a80908ab89883afcb7314150a8d60e45464b08405070c9b832435f686b6a4ea0"
+     },
+     "expectedLength": 921600,
+     "expectedSha": "43b973b14310d4da8f6bc98a9e54f791f74b60cb37327772ae75e811975d1570",
+     "kind": "multipart",
+     "ms": 36,
+     "size": 921600,
+     "status": 200
+    },
+    "read": {
+     "branch": "ui",
+     "bytes": 921888,
+     "chunks": 16,
+     "closed_early": false,
+     "coinit": "S_OK",
+     "error": "",
+     "event": "body-read",
+     "first_read_ms": 0,
+     "id": 15,
+     "kind": "multipart",
+     "max_read_gap_ms": 0,
+     "modeled": false,
+     "off_ui": false,
+     "read_done_during_stall": false,
+     "reader_thread": 1288,
+     "settled": 0,
+     "sha256": "a80908ab89883afcb7314150a8d60e45464b08405070c9b832435f686b6a4ea0",
+     "stall_ms": 0,
+     "t": "14:46:12.302",
+     "ticks_during": 0,
+     "too_large": false,
+     "took_ms": 4.029,
+     "total_read_ms": 1.705,
+     "ui_thread": 1288,
+     "window": "A"
+    },
+    "stream": {
+     "closing": false,
+     "content_length": "",
+     "content_type": "multipart/form-data; boundary=----WebKitFormBoundaryPBRzN73LobADsJMN",
+     "event": "body-stream",
+     "facts": {
+      "agile": "S_OK",
+      "free_threaded_marshaler": true,
+      "marshal": "S_OK",
+      "pointer": "0x234ca7a6e60",
+      "position": 0,
+      "position_hr": "S_OK",
+      "sequential_stream": "S_OK",
+      "stat": "S_OK",
+      "stat_size": 921888,
+      "stat_type": 2,
+      "unmarshal_class": "0000033a-0000-0000-c000-000000000046",
+      "unmarshal_class_hr": "S_OK"
+     },
+     "id": 15,
+     "kind": "multipart",
+     "method": "POST",
+     "mode": "inspect",
+     "t": "14:46:12.298",
+     "ui_thread": 1288,
+     "uri": "https://dfx2-spike.invalid/api/body?kind=multipart\u0026stall=0",
+     "window": "A"
+    }
+   },
+   {
+    "case": "stream/65536",
+    "page": {
+     "echo": {
+      "content_type": "",
+      "length": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+     },
+     "expectedLength": 65536,
+     "expectedSha": "ef4636928161808e87035fa51983821677527ccd9661991c5d0126a778b2268a",
+     "kind": "stream",
+     "ms": 6,
+     "size": 65536,
+     "status": 200
+    },
+    "read": null,
+    "stream": null
+   }
+  ]
+ },
+ "exit": {
+  "host_exit": 0,
+  "timed_out": false,
+  "browser_pids": [
+   10920
+  ],
+  "browser_processes_remaining": null,
+  "stderr_suspicious": null,
+  "callback_objects_live": 0,
+  "off_ui_thread": 0,
+  "body_workers_live": 0,
+  "gate_streams_live": 0,
+  "profiles_remaining": null
+ },
+ "seconds": 1.6,
+ "runtime": "151.0.4129.93"
+}

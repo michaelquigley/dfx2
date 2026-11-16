@@ -40,6 +40,7 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"sync/atomic"
 	"syscall"
 	"time"
 	"unsafe"
@@ -116,6 +117,8 @@ type fwin struct {
 	ctx         context.Context
 	cancel      context.CancelFunc
 	pending     map[uint64]*pending
+	reads       map[int]*bodyRead // request bodies being read (-feas-body), until their result was handled
+	waitedReads bool              // release has reported waiting for reads
 
 	closing, destroyed, navigated bool
 	cookieReady                   bool
@@ -156,6 +159,13 @@ type feas struct {
 	out    sync.Mutex
 
 	counts struct{ invoked, offUI, late int }
+
+	// The request-body probe (bodyprobe_windows.go).
+	nextRead int
+	ticks    uint64 // UI timer ticks while reads are in flight
+	ticking  bool
+	workers  atomic.Int32
+	gates    []*gateStream
 }
 
 var (
@@ -306,7 +316,7 @@ func runFeasibility(c config) error {
 	pDestroyWindow.Call(f.ctrl)
 	live := liveCallbacks()
 	f.event("exit", "callbacks", f.counts.invoked, "off_ui_thread", f.counts.offUI, "late_creation_callbacks", f.counts.late,
-		"callback_objects_live", len(live), "live", live)
+		"callback_objects_live", len(live), "live", live, "body_workers_live", f.workers.Load(), "gate_streams_live", liveGates())
 	return nil
 }
 
@@ -349,6 +359,10 @@ func feasProc(hwnd, msg, wp, lp uintptr) uintptr {
 		if id == 0 && hwnd == f.ctrl {
 			if msg == wmFeasPosted {
 				f.drain()
+				return 0
+			}
+			if msg == wmTimer && wp == timerTicks {
+				f.ticks++
 				return 0
 			}
 		} else if w := f.windows[int(id)]; w != nil {
@@ -468,6 +482,14 @@ func (f *feas) command(line string) {
 		}
 	case "status":
 		f.status()
+	case "gate-read": // gate-read LABEL BYTES: a worker read of a host-implemented agile stream held on a gate
+		if n, err := strconv.Atoi(arg(2)); w != nil && err == nil {
+			f.gateRead(w, n)
+		}
+	case "gate-release":
+		f.gateRelease()
+	case "ping": // UI-thread liveness
+		f.event("pong", "ui_thread", f.thread, "ticks", f.ticks, "body_workers", f.workers.Load())
 	case "quit":
 		f.quit = true
 		for _, w := range f.windows {
@@ -487,7 +509,7 @@ func (f *feas) open(label, mode, attachURL string) {
 	}
 	f.nextID++
 	w := &fwin{id: f.nextID, label: label, mode: mode, page: feasibility.NewPage(), counters: &feasibility.Counters{},
-		pending: map[uint64]*pending{}, blocked: map[string]int{}, owed: map[uintptr]string{}, opened: time.Now()}
+		pending: map[uint64]*pending{}, reads: map[int]*bodyRead{}, blocked: map[string]int{}, owed: map[uintptr]string{}, opened: time.Now()}
 	w.ctx, w.cancel = context.WithCancel(context.Background())
 	var origin *url.URL
 	switch mode {
@@ -1126,6 +1148,9 @@ func (f *feas) onWebResourceRequested(w *fwin, args *com) hresult {
 		}
 		hdrs.release()
 	}
+	if f.c.feas.bodyMode != "" {
+		return f.probeBody(w, args, req, in)
+	}
 	var body *com
 	if req.call(reqGetContent, uintptr(unsafe.Pointer(&body))) == sOK && body != nil {
 		b, tooLarge, err := readStream(body, adapt.Limit)
@@ -1136,19 +1161,7 @@ func (f *feas) onWebResourceRequested(w *fwin, args *com) hresult {
 		}
 		in.Body, in.BodyTooLarge = b, tooLarge
 	}
-	var def *com
-	if hr := args.call(wrrGetDeferral, uintptr(unsafe.Pointer(&def))); hr.failed() {
-		return sOK
-	}
-	args.addRef()
-	id, ok := w.dispatcher.Start(in)
-	p := &pending{args: args, deferral: def, what: in.Method + " " + in.URL, start: time.Now()}
-	if !ok {
-		f.settle(w, 0, p, synthetic(http.StatusServiceUnavailable, "window closing"), "refused")
-		return sOK
-	}
-	w.pending[id] = p
-	return sOK
+	return f.startHandler(w, args, in, nil)
 }
 
 func (f *feas) settle(w *fwin, id uint64, p *pending, resp adapt.Response, how string) {
@@ -1312,7 +1325,7 @@ func (f *feas) status() {
 			"endpoint": w.counters.Snapshot(), "handler": w.page.Counts(), "native_async": f.outstanding(w), "pending_requests": len(w.pending),
 			"port": portOf(w.host), "profile": w.profile, "browser_pid": w.browserPID, "browser_exited": w.browserExited,
 			"blocked": w.blocked, "refused": map[string]int{"navigation": w.refused.navigation, "subframe": w.refused.subframe, "popup": w.refused.popup},
-			"navigations": w.navigations, "document_requests": w.docRequests}
+			"navigations": w.navigations, "document_requests": w.docRequests, "reads_in_flight": len(w.reads)}
 		if w.wv != nil && !w.closing {
 			var s, t *uint16
 			w.wv.call(wvGetSource, uintptr(unsafe.Pointer(&s)))
@@ -1321,7 +1334,7 @@ func (f *feas) status() {
 		}
 		windows[w.label] = m
 	}
-	f.event("status", "windows", windows, "callbacks_live", len(liveCallbacks()))
+	f.event("status", "windows", windows, "callbacks_live", len(liveCallbacks()), "body_workers", f.workers.Load(), "ticks", f.ticks, "gate_streams_live", liveGates())
 }
 
 func (f *feas) close(w *fwin, why string) {
@@ -1343,11 +1356,12 @@ func (f *feas) close(w *fwin, why string) {
 		w.closeStage = "running"
 	}
 	f.event("closing", "window", w.label, "why", why, "stage", w.closeStage, "native_async", f.outstanding(w), "pending_requests", len(w.pending),
-		"navigated", w.navigated, "browser_pid", w.browserPID)
+		"reads_in_flight", len(w.reads), "navigated", w.navigated, "browser_pid", w.browserPID)
 	w.cancel()
 	if w.dispatcher != nil {
 		w.dispatcher.Close()
 	}
+	f.closeReads(w)
 	ids := make([]uint64, 0, len(w.pending))
 	for id := range w.pending {
 		ids = append(ids, id)
@@ -1391,6 +1405,15 @@ func (f *feas) close(w *fwin, why string) {
 // the window waits and reports; filesystem deletion never runs early.
 func (f *feas) maybeRelease(w *fwin) {
 	if !w.closing || w.destroyed || w.releasing || w.envPending || w.ctlPending || f.outstanding(w) > 0 {
+		return
+	}
+	if len(w.reads) > 0 {
+		// A worker still owns a stream and buffer of this window: release
+		// waits for the read to return, however long that is.
+		if !w.waitedReads {
+			w.waitedReads = true
+			f.event("release-waiting-reads", "window", w.label, "reads_in_flight", len(w.reads), "since_close", time.Since(w.closeAsked).Round(time.Millisecond).String())
+		}
 		return
 	}
 	if w.browserStarted && !w.browserExited {

@@ -1,0 +1,21 @@
+{
+ "dirty": [
+  "M feasibility/page.go",
+  " M feasibility/static/probe.js",
+  " M feasibility_windows.go",
+  " M main.go",
+  "?? bodyprobe_windows.go",
+  "?? evidence/windows/body-probe/"
+ ],
+ "exe": "C:\\Repos\\q\\products\\dfx2\\experiments\\webview2-spike\\dfx2-webview2-spike.exe",
+ "exe_sha256": "620fc16ed4a4d2dbae035a11f5e3ae3d52d4cd12d79716c832f3b8408efcb371",
+ "go": "go version go1.27.3 windows/amd64",
+ "os": "Microsoft Windows [Version 10.0.19045.6466]",
+ "revision": "fdb640b264c79f87436a54ee0421b2f2ae47605b",
+ "root": "C:\\Cygwin64\\tmp\\dfx2-feasibility",
+ "screen": "3440x1440",
+ "session": "RDP-Tcp#0",
+ "session_state": "Active",
+ "system_dpi": 96,
+ "time": "2026-11-16T14:46:10-05:00"
+}

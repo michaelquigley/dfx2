@@ -45,6 +45,7 @@ type feasConfig struct {
 	cookieFail  bool   // injected: cookie installation reports failure
 	removeFail  bool   // injected: profile deletion fails after release
 	closeDuring string // test hook: close the next window during "env", "controller" or "cookie"
+	bodyMode    string // request-body threading probe: "" (read on the UI thread, unrecorded), "inspect" or "worker"; see bodyprobe_windows.go
 }
 
 func main() {
@@ -67,6 +68,7 @@ func main() {
 	flag.BoolVar(&c.feas.cookieFail, "feas-cookie-fail", false, "with -feasibility: injected cookie installation failure")
 	flag.BoolVar(&c.feas.removeFail, "feas-remove-fail", false, "with -feasibility: injected profile deletion failure after native release")
 	flag.StringVar(&c.feas.closeDuring, "feas-close-during", "", `with -feasibility: test hook, close the next opened window during "env", "controller" or "cookie"`)
+	flag.StringVar(&c.feas.bodyMode, "feas-body", "", `with -feasibility: request-body threading probe: "inspect" records each incoming body stream's interface facts and reads it on the UI thread; "worker" reads agile streams on a locked COINIT_MULTITHREADED thread (marshaled otherwise). Empty: the unrecorded UI-thread read`)
 	flag.Parse()
 
 	log.SetFlags(log.Ltime | log.Lmicroseconds)

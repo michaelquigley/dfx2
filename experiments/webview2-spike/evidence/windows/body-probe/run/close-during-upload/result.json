@@ -1,0 +1,464 @@
+{
+ "scenario": "close-during-upload",
+ "flags": [
+  "-feas-body",
+  "worker"
+ ],
+ "checks": [
+  {
+   "check": "delay 0s: the window closed once with nothing pending",
+   "ok": true,
+   "detail": {
+    "closed": {
+     "browser_exit_observed": true,
+     "browser_pid": 12232,
+     "browser_started": true,
+     "completions_dropped": null,
+     "endpoint": {
+      "admitted": 0,
+      "handled": 4,
+      "refused": {}
+     },
+     "event": "closed",
+     "exit_kind": 0,
+     "handler": {
+      "GET /": 1,
+      "GET /logo.svg": 1,
+      "GET /probe.css": 1,
+      "GET /probe.js": 1
+     },
+     "handlers_drained": true,
+     "native_async": 0,
+     "pending_requests": 0,
+     "profile_removed": true,
+     "removal_attempts": 1,
+     "removal_error": "",
+     "since_close": "6.591s",
+     "stage": "running",
+     "t": "14:46:30.751",
+     "window": "U0"
+    }
+   }
+  },
+  {
+   "check": "delay 20ms: the window closed once with nothing pending",
+   "ok": true,
+   "detail": {
+    "closed": {
+     "browser_exit_observed": true,
+     "browser_pid": 11280,
+     "browser_started": true,
+     "completions_dropped": null,
+     "endpoint": {
+      "admitted": 0,
+      "handled": 9,
+      "refused": {}
+     },
+     "event": "closed",
+     "exit_kind": 0,
+     "handler": {
+      "GET /": 2,
+      "GET /favicon.ico": 1,
+      "GET /logo.svg": 2,
+      "GET /probe.css": 2,
+      "GET /probe.js": 2
+     },
+     "handlers_drained": true,
+     "native_async": 0,
+     "pending_requests": 0,
+     "profile_removed": true,
+     "removal_attempts": 1,
+     "removal_error": "",
+     "since_close": "6.522s",
+     "stage": "running",
+     "t": "14:46:37.758",
+     "window": "U1"
+    }
+   }
+  },
+  {
+   "check": "delay 60ms: the read in flight at close was settled once and returned after close",
+   "ok": true,
+   "detail": {
+    "outcome": {
+     "body_stream_seen": 1,
+     "closed": {
+      "browser_exit_observed": true,
+      "browser_pid": 11684,
+      "browser_started": true,
+      "completions_dropped": null,
+      "endpoint": {
+       "admitted": 0,
+       "handled": 10,
+       "refused": {}
+      },
+      "event": "closed",
+      "exit_kind": 0,
+      "handler": {
+       "GET /": 2,
+       "GET /favicon.ico": 2,
+       "GET /logo.svg": 2,
+       "GET /probe.css": 2,
+       "GET /probe.js": 2
+      },
+      "handlers_drained": true,
+      "native_async": 0,
+      "pending_requests": 0,
+      "profile_removed": true,
+      "removal_attempts": 1,
+      "removal_error": "",
+      "since_close": "6.652s",
+      "stage": "running",
+      "t": "14:46:44.951",
+      "window": "U2"
+     },
+     "delay_ms": 60,
+     "reads_after_close": [
+      {
+       "after_close_ms": 31.562,
+       "branch": "agile",
+       "bytes": 921600,
+       "chunks": 16,
+       "closed_early": true,
+       "coinit": "S_OK",
+       "error": "",
+       "event": "body-read-after-close",
+       "first_read_ms": 0,
+       "id": 1,
+       "kind": "blob",
+       "max_read_gap_ms": 0.577,
+       "modeled": false,
+       "off_ui": true,
+       "read_done_during_stall": false,
+       "reader_thread": 10208,
+       "settled": 1,
+       "sha256": "43b973b14310d4da8f6bc98a9e54f791f74b60cb37327772ae75e811975d1570",
+       "stall_ms": 0,
+       "t": "14:46:38.330",
+       "ticks_during": 0,
+       "too_large": false,
+       "took_ms": 32.103,
+       "total_read_ms": 3.158,
+       "ui_thread": 9856,
+       "window": "U2"
+      }
+     ],
+     "reads_done_before_close": 0,
+     "reads_in_flight_at_close": 1,
+     "retained": [
+      {
+       "branch": "agile",
+       "event": "read-retained-at-close",
+       "id": 1,
+       "kind": "blob",
+       "modeled": false,
+       "read_done": false,
+       "settled": 1,
+       "t": "14:46:38.299",
+       "window": "U2"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "check": "delay 60ms: the window closed once with nothing pending",
+   "ok": true,
+   "detail": {
+    "closed": {
+     "browser_exit_observed": true,
+     "browser_pid": 11684,
+     "browser_started": true,
+     "completions_dropped": null,
+     "endpoint": {
+      "admitted": 0,
+      "handled": 10,
+      "refused": {}
+     },
+     "event": "closed",
+     "exit_kind": 0,
+     "handler": {
+      "GET /": 2,
+      "GET /favicon.ico": 2,
+      "GET /logo.svg": 2,
+      "GET /probe.css": 2,
+      "GET /probe.js": 2
+     },
+     "handlers_drained": true,
+     "native_async": 0,
+     "pending_requests": 0,
+     "profile_removed": true,
+     "removal_attempts": 1,
+     "removal_error": "",
+     "since_close": "6.652s",
+     "stage": "running",
+     "t": "14:46:44.951",
+     "window": "U2"
+    }
+   }
+  },
+  {
+   "check": "delay 150ms: the window closed once with nothing pending",
+   "ok": true,
+   "detail": {
+    "closed": {
+     "browser_exit_observed": true,
+     "browser_pid": 11768,
+     "browser_started": true,
+     "completions_dropped": null,
+     "endpoint": {
+      "admitted": 0,
+      "handled": 11,
+      "refused": {}
+     },
+     "event": "closed",
+     "exit_kind": 0,
+     "handler": {
+      "GET /": 2,
+      "GET /favicon.ico": 1,
+      "GET /logo.svg": 2,
+      "GET /probe.css": 2,
+      "GET /probe.js": 2,
+      "POST /api/body": 1,
+      "POST /api/report": 1
+     },
+     "handlers_drained": true,
+     "native_async": 0,
+     "pending_requests": 0,
+     "profile_removed": true,
+     "removal_attempts": 1,
+     "removal_error": "",
+     "since_close": "327ms",
+     "stage": "running",
+     "t": "14:46:45.902",
+     "window": "U3"
+    }
+   }
+  },
+  {
+   "check": "a close landed during an in-flight read",
+   "ok": true,
+   "detail": {
+    "hit": true
+   }
+  }
+ ],
+ "ok": true,
+ "detail": {
+  "outcomes": [
+   {
+    "body_stream_seen": 0,
+    "closed": {
+     "browser_exit_observed": true,
+     "browser_pid": 12232,
+     "browser_started": true,
+     "completions_dropped": null,
+     "endpoint": {
+      "admitted": 0,
+      "handled": 4,
+      "refused": {}
+     },
+     "event": "closed",
+     "exit_kind": 0,
+     "handler": {
+      "GET /": 1,
+      "GET /logo.svg": 1,
+      "GET /probe.css": 1,
+      "GET /probe.js": 1
+     },
+     "handlers_drained": true,
+     "native_async": 0,
+     "pending_requests": 0,
+     "profile_removed": true,
+     "removal_attempts": 1,
+     "removal_error": "",
+     "since_close": "6.591s",
+     "stage": "running",
+     "t": "14:46:30.751",
+     "window": "U0"
+    },
+    "delay_ms": 0,
+    "reads_after_close": null,
+    "reads_done_before_close": 0,
+    "reads_in_flight_at_close": 0,
+    "retained": null
+   },
+   {
+    "body_stream_seen": 0,
+    "closed": {
+     "browser_exit_observed": true,
+     "browser_pid": 11280,
+     "browser_started": true,
+     "completions_dropped": null,
+     "endpoint": {
+      "admitted": 0,
+      "handled": 9,
+      "refused": {}
+     },
+     "event": "closed",
+     "exit_kind": 0,
+     "handler": {
+      "GET /": 2,
+      "GET /favicon.ico": 1,
+      "GET /logo.svg": 2,
+      "GET /probe.css": 2,
+      "GET /probe.js": 2
+     },
+     "handlers_drained": true,
+     "native_async": 0,
+     "pending_requests": 0,
+     "profile_removed": true,
+     "removal_attempts": 1,
+     "removal_error": "",
+     "since_close": "6.522s",
+     "stage": "running",
+     "t": "14:46:37.758",
+     "window": "U1"
+    },
+    "delay_ms": 20,
+    "reads_after_close": null,
+    "reads_done_before_close": 0,
+    "reads_in_flight_at_close": 0,
+    "retained": null
+   },
+   {
+    "body_stream_seen": 1,
+    "closed": {
+     "browser_exit_observed": true,
+     "browser_pid": 11684,
+     "browser_started": true,
+     "completions_dropped": null,
+     "endpoint": {
+      "admitted": 0,
+      "handled": 10,
+      "refused": {}
+     },
+     "event": "closed",
+     "exit_kind": 0,
+     "handler": {
+      "GET /": 2,
+      "GET /favicon.ico": 2,
+      "GET /logo.svg": 2,
+      "GET /probe.css": 2,
+      "GET /probe.js": 2
+     },
+     "handlers_drained": true,
+     "native_async": 0,
+     "pending_requests": 0,
+     "profile_removed": true,
+     "removal_attempts": 1,
+     "removal_error": "",
+     "since_close": "6.652s",
+     "stage": "running",
+     "t": "14:46:44.951",
+     "window": "U2"
+    },
+    "delay_ms": 60,
+    "reads_after_close": [
+     {
+      "after_close_ms": 31.562,
+      "branch": "agile",
+      "bytes": 921600,
+      "chunks": 16,
+      "closed_early": true,
+      "coinit": "S_OK",
+      "error": "",
+      "event": "body-read-after-close",
+      "first_read_ms": 0,
+      "id": 1,
+      "kind": "blob",
+      "max_read_gap_ms": 0.577,
+      "modeled": false,
+      "off_ui": true,
+      "read_done_during_stall": false,
+      "reader_thread": 10208,
+      "settled": 1,
+      "sha256": "43b973b14310d4da8f6bc98a9e54f791f74b60cb37327772ae75e811975d1570",
+      "stall_ms": 0,
+      "t": "14:46:38.330",
+      "ticks_during": 0,
+      "too_large": false,
+      "took_ms": 32.103,
+      "total_read_ms": 3.158,
+      "ui_thread": 9856,
+      "window": "U2"
+     }
+    ],
+    "reads_done_before_close": 0,
+    "reads_in_flight_at_close": 1,
+    "retained": [
+     {
+      "branch": "agile",
+      "event": "read-retained-at-close",
+      "id": 1,
+      "kind": "blob",
+      "modeled": false,
+      "read_done": false,
+      "settled": 1,
+      "t": "14:46:38.299",
+      "window": "U2"
+     }
+    ]
+   },
+   {
+    "body_stream_seen": 1,
+    "closed": {
+     "browser_exit_observed": true,
+     "browser_pid": 11768,
+     "browser_started": true,
+     "completions_dropped": null,
+     "endpoint": {
+      "admitted": 0,
+      "handled": 11,
+      "refused": {}
+     },
+     "event": "closed",
+     "exit_kind": 0,
+     "handler": {
+      "GET /": 2,
+      "GET /favicon.ico": 1,
+      "GET /logo.svg": 2,
+      "GET /probe.css": 2,
+      "GET /probe.js": 2,
+      "POST /api/body": 1,
+      "POST /api/report": 1
+     },
+     "handlers_drained": true,
+     "native_async": 0,
+     "pending_requests": 0,
+     "profile_removed": true,
+     "removal_attempts": 1,
+     "removal_error": "",
+     "since_close": "327ms",
+     "stage": "running",
+     "t": "14:46:45.902",
+     "window": "U3"
+    },
+    "delay_ms": 150,
+    "reads_after_close": null,
+    "reads_done_before_close": 1,
+    "reads_in_flight_at_close": 0,
+    "retained": null
+   }
+  ]
+ },
+ "exit": {
+  "host_exit": 0,
+  "timed_out": false,
+  "browser_pids": [
+   11280,
+   11684,
+   11768,
+   12232
+  ],
+  "browser_processes_remaining": null,
+  "stderr_suspicious": null,
+  "callback_objects_live": 0,
+  "off_ui_thread": 0,
+  "body_workers_live": 0,
+  "gate_streams_live": 0,
+  "profiles_remaining": null
+ },
+ "seconds": 22.3,
+ "runtime": "151.0.4129.93"
+}

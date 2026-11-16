@@ -59,7 +59,7 @@ On other platforms, `go test ./...` and `go vet ./...` cover the handler, the ad
 | `-width`, `-height` | Client size in DIPs (1000×760). |
 | `-break-listener D` | Loopback only: close the listener under the server after `D`, to show that a server failure ends the app (exit 1). |
 | `-close-during env\|controller` | Test hook: post `WM_CLOSE` just before that creation call. |
-| `-feasibility` | Run the integration feasibility probe host instead: multi-window, console-driven, one temporary profile per window. Its own flags are `-feas-root`, `-feas-filter`, `-feas-csp`, `-feas-cookie`, `-feas-cookie-fail`, `-feas-remove-fail` and `-feas-close-during`; see the [Windows handoff](evidence/windows/integration-feasibility/README.md). |
+| `-feasibility` | Run the integration feasibility probe host instead: multi-window, console-driven, one temporary profile per window. Its own flags are `-feas-root`, `-feas-filter`, `-feas-csp`, `-feas-cookie`, `-feas-cookie-fail`, `-feas-remove-fail` and `-feas-close-during`; see the [Windows handoff](evidence/windows/integration-feasibility/README.md). `-feas-body inspect\|worker` adds the [request-body threading probe](evidence/windows/body-probe/README.md). |
 
 ## The page
 

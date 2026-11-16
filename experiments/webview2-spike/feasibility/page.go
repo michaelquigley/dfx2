@@ -1,14 +1,18 @@
 package feasibility
 
 import (
+	"bytes"
 	"crypto/sha256"
 	"embed"
 	"encoding/hex"
 	"encoding/json"
 	"io"
+	"mime"
+	"mime/multipart"
 	"net/http"
 	"sort"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 )
@@ -72,6 +76,32 @@ func (p *Page) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		b, _ := io.ReadAll(io.LimitReader(r.Body, 1<<20))
 		sum := sha256.Sum256(b)
 		writeJSON(w, http.StatusOK, map[string]any{"length": len(b), "sha256": hex.EncodeToString(sum[:])})
+	case "/api/body":
+		// The request-body probe's echo: length and digest of the whole body,
+		// and of each part of a multipart body, so the page's own digest of
+		// what it sent can be compared with what reached the handler.
+		if r.Method != http.MethodPost {
+			http.Error(w, "POST only", http.StatusMethodNotAllowed)
+			return
+		}
+		b, _ := io.ReadAll(io.LimitReader(r.Body, 1<<20))
+		sum := sha256.Sum256(b)
+		out := map[string]any{"length": len(b), "sha256": hex.EncodeToString(sum[:]), "content_type": r.Header.Get("Content-Type")}
+		if mt, params, err := mime.ParseMediaType(r.Header.Get("Content-Type")); err == nil && strings.HasPrefix(mt, "multipart/") {
+			parts := []map[string]any{}
+			mr := multipart.NewReader(bytes.NewReader(b), params["boundary"])
+			for {
+				p, err := mr.NextPart()
+				if err != nil {
+					break
+				}
+				pb, _ := io.ReadAll(p)
+				ps := sha256.Sum256(pb)
+				parts = append(parts, map[string]any{"name": p.FormName(), "filename": p.FileName(), "length": len(pb), "sha256": hex.EncodeToString(ps[:])})
+			}
+			out["parts"] = parts
+		}
+		writeJSON(w, http.StatusOK, out)
 	case "/api/form":
 		// An edit POST: counted, then 303 to a GET, as a page form would be.
 		http.Redirect(w, r, "/?posted="+strconv.Itoa(p.Counts()["POST /api/form"]), http.StatusSeeOther)

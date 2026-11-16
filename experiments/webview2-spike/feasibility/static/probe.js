@@ -100,8 +100,46 @@ probe.navigate = (how, collector) => {
   return how;
 };
 
+// Request bodies of each kind the host's body-read probe inspects. The page
+// knows the exact bytes it sends (for multipart, the file part's), so what
+// the host read can be checked byte for byte against the page's own digest.
+// "stream" is a ReadableStream body produced in delayed chunks: whether the
+// browser sends it at all over this transport is part of what is recorded.
+probe.body = async (kind, size, stall) => {
+  const n = size || 65536;
+  const bytes = new Uint8Array(n);
+  for (let i = 0; i < n; i++) bytes[i] = (i * 31 + 7) & 0xff;
+  const ascii = new Uint8Array(n);
+  for (let i = 0; i < n; i++) ascii[i] = 32 + ((i * 7) % 90);
+  const text = new TextDecoder().decode(ascii);
+  const enc = new TextEncoder();
+  const hex = async (u8) => Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256", u8))).map((b) => b.toString(16).padStart(2, "0")).join("");
+  let body, expect, headers = {};
+  switch (kind) {
+    case "string": body = text; expect = enc.encode(text); headers = { "Content-Type": "text/plain; charset=utf-8" }; break;
+    case "json": { const s = JSON.stringify({ kind, text }); body = s; expect = enc.encode(s); headers = { "Content-Type": "application/json" }; break; }
+    case "form": { const p = new URLSearchParams({ kind, text }); body = p; expect = enc.encode(p.toString()); break; }
+    case "blob": { const parts = []; for (let i = 0; i < n; i += 4096) parts.push(bytes.slice(i, i + 4096)); body = new Blob(parts, { type: "application/octet-stream" }); expect = bytes; break; }
+    case "multipart": { const fd = new FormData(); fd.append("note", "n"); fd.append("file", new File([bytes], "blob.bin", { type: "application/octet-stream" })); body = fd; expect = bytes; break; }
+    case "stream": { let i = 0; body = new ReadableStream({ async pull(c) { if (i >= n) { c.close(); return; } await sleep(50); c.enqueue(bytes.slice(i, i + 16384)); i += 16384; } }); expect = bytes; break; }
+    default: throw new Error("unknown body kind " + kind);
+  }
+  const out = { kind, size: n, expectedLength: expect.length, expectedSha: await hex(expect) };
+  try {
+    const init = { method: "POST", body, headers };
+    if (kind === "stream") init.duplex = "half";
+    const t0 = performance.now();
+    const r = await fetch("api/body?kind=" + kind + "&stall=" + (stall || 0), init);
+    out.status = r.status;
+    out.echo = await r.json();
+    out.ms = Math.round(performance.now() - t0);
+  } catch (e) { out.error = String(e); }
+  return out;
+};
+
 // Page-driven runs: each takes the URL's parameters.
 probe.runs = {
+  body: (q) => probe.body(q.get("kind"), Number(q.get("size") || 0), q.get("stall")),
   checks: () => probe.checks(),
   stream: () => probe.stream(),
   storageSet: (q) => probe.storageSet(q.get("tag")),

@@ -1,0 +1,391 @@
+{
+ "scenario": "gate",
+ "flags": [
+  "-feas-body",
+  "worker"
+ ],
+ "checks": [
+  {
+   "check": "the modeled stream advertises IAgileObject",
+   "ok": true,
+   "detail": {
+    "facts": {
+     "agile": "S_OK",
+     "free_threaded_marshaler": false,
+     "marshal": "0x80004002",
+     "pointer": "0x24c02db36d0",
+     "position": 0,
+     "position_hr": "S_OK",
+     "sequential_stream": "S_OK",
+     "stat": "S_OK",
+     "stat_size": 1048576,
+     "stat_type": 2,
+     "unmarshal_class": "",
+     "unmarshal_class_hr": ""
+    }
+   }
+  },
+  {
+   "check": "the worker is a multithreaded-apartment thread, not the UI thread",
+   "ok": true,
+   "detail": {
+    "worker": {
+     "branch": "modeled-agile",
+     "coinit": "S_OK",
+     "event": "body-worker",
+     "id": 1,
+     "t": "14:46:20.899",
+     "thread": 9000,
+     "window": "A"
+    }
+   }
+  },
+  {
+   "check": "the UI thread answers while the read is held",
+   "ok": true,
+   "detail": {
+    "pong": {
+     "body_workers": 1,
+     "event": "pong",
+     "t": "14:46:21.400",
+     "ticks": 26,
+     "ui_thread": 3968
+    }
+   }
+  },
+  {
+   "check": "another window's page loads and its requests complete while the read is held",
+   "ok": true,
+   "detail": {
+    "report": {
+     "href": "https://dfx2-spike.invalid/?run=checks\u0026id=b-checks",
+     "id": "b-checks",
+     "result": {
+      "cookieVisible": false,
+      "css": true,
+      "echoLength": 1005,
+      "echoSha": "a5903776f0c8d72f5b1e8689519fc8d9d6317785a20e31659786c8d8703a6b8c",
+      "img": true,
+      "origin": "https://dfx2-spike.invalid",
+      "query": "é\u0026ü",
+      "script": true
+     },
+     "run": "checks"
+    }
+   }
+  },
+  {
+   "check": "the read is in flight for A alone",
+   "ok": true,
+   "detail": {
+    "status": {
+     "body_workers": 1,
+     "callbacks_live": 16,
+     "event": "status",
+     "gate_streams_live": 1,
+     "t": "14:46:21.433",
+     "ticks": 28,
+     "windows": {
+      "A": {
+       "blocked": {},
+       "browser_exited": false,
+       "browser_pid": 5756,
+       "closing": false,
+       "destroyed": false,
+       "document_requests": 1,
+       "endpoint": {
+        "admitted": 0,
+        "handled": 5,
+        "refused": {}
+       },
+       "handler": {
+        "GET /": 1,
+        "GET /favicon.ico": 1,
+        "GET /logo.svg": 1,
+        "GET /probe.css": 1,
+        "GET /probe.js": 1
+       },
+       "mode": "inprocess",
+       "native_async": 0,
+       "navigations": 1,
+       "pending_requests": 0,
+       "port": 0,
+       "profile": "C:\\Cygwin64\\tmp\\dfx2-feasibility\\profile-3140-1",
+       "reads_in_flight": 1,
+       "refused": {
+        "navigation": 0,
+        "popup": 0,
+        "subframe": 0
+       },
+       "title": "dfx2 feasibility probe",
+       "uri": "https://dfx2-spike.invalid/"
+      },
+      "B": {
+       "blocked": {},
+       "browser_exited": false,
+       "browser_pid": 8064,
+       "closing": false,
+       "destroyed": false,
+       "document_requests": 2,
+       "endpoint": {
+        "admitted": 0,
+        "handled": 12,
+        "refused": {}
+       },
+       "handler": {
+        "GET /": 2,
+        "GET /api/query": 1,
+        "GET /favicon.ico": 1,
+        "GET /logo.svg": 2,
+        "GET /probe.css": 2,
+        "GET /probe.js": 2,
+        "POST /api/echo": 1,
+        "POST /api/report": 1
+       },
+       "mode": "inprocess",
+       "native_async": 0,
+       "navigations": 2,
+       "pending_requests": 0,
+       "port": 0,
+       "profile": "C:\\Cygwin64\\tmp\\dfx2-feasibility\\profile-3140-2",
+       "reads_in_flight": 0,
+       "refused": {
+        "navigation": 0,
+        "popup": 0,
+        "subframe": 0
+       },
+       "title": "dfx2 feasibility probe",
+       "uri": "https://dfx2-spike.invalid/?run=checks\u0026id=b-checks"
+      }
+     }
+    }
+   }
+  },
+  {
+   "check": "the UI timer keeps ticking while the read is held",
+   "ok": true,
+   "detail": {
+    "after": 46,
+    "before": 28
+   }
+  },
+  {
+   "check": "close found the read in flight and retained it",
+   "ok": true,
+   "detail": {
+    "closing": {
+     "browser_pid": 5756,
+     "event": "closing",
+     "native_async": 0,
+     "navigated": true,
+     "pending_requests": 0,
+     "reads_in_flight": 1,
+     "stage": "running",
+     "t": "14:46:21.734",
+     "why": "command",
+     "window": "A"
+    },
+    "retained": {
+     "branch": "modeled-agile",
+     "event": "read-retained-at-close",
+     "id": 1,
+     "kind": "gate",
+     "modeled": true,
+     "read_done": false,
+     "settled": 0,
+     "t": "14:46:21.735",
+     "window": "A"
+    }
+   }
+  },
+  {
+   "check": "the window's release waits for the read",
+   "ok": true,
+   "detail": {
+    "waiting": {
+     "event": "release-waiting-reads",
+     "reads_in_flight": 1,
+     "since_close": "24ms",
+     "t": "14:46:21.758",
+     "window": "A"
+    }
+   }
+  },
+  {
+   "check": "still not released 1.5 s later, with the browser process already gone",
+   "ok": true,
+   "detail": {
+    "closed_events": 0,
+    "exits": 1
+   }
+  },
+  {
+   "check": "the UI thread still answers",
+   "ok": true,
+   "detail": {
+    "pong": {
+     "body_workers": 1,
+     "event": "pong",
+     "t": "14:46:23.259",
+     "ticks": 128,
+     "ui_thread": 3968
+    }
+   }
+  },
+  {
+   "check": "Read ran on the worker thread with no proxy in between",
+   "ok": true,
+   "detail": {
+    "read_callback_threads": [
+     9000,
+     9000,
+     9000,
+     9000,
+     9000,
+     9000,
+     9000,
+     9000,
+     9000,
+     9000,
+     9000,
+     9000,
+     9000,
+     9000,
+     9000,
+     9000,
+     9000
+    ],
+    "worker_thread": 9000
+   }
+  },
+  {
+   "check": "the read returned the whole body after the gate opened",
+   "ok": true,
+   "detail": {
+    "read": {
+     "after_close_ms": 1529.665,
+     "branch": "modeled-agile",
+     "bytes": 1048576,
+     "chunks": 17,
+     "closed_early": true,
+     "coinit": "S_OK",
+     "error": "",
+     "event": "body-read-after-close",
+     "first_read_ms": 2359.183,
+     "gate_releases": 1,
+     "id": 1,
+     "kind": "gate",
+     "max_read_gap_ms": 2359.183,
+     "modeled": true,
+     "off_ui": true,
+     "read_callback_threads": [
+      9000,
+      9000,
+      9000,
+      9000,
+      9000,
+      9000,
+      9000,
+      9000,
+      9000,
+      9000,
+      9000,
+      9000,
+      9000,
+      9000,
+      9000,
+      9000,
+      9000
+     ],
+     "read_done_during_stall": false,
+     "reader_thread": 9000,
+     "settled": 0,
+     "sha256": "06b7bbfb7824aa03382051691630eb26de85102d1b08a81e907ec0744cd8a286",
+     "stall_ms": 0,
+     "t": "14:46:23.264",
+     "ticks_during": 128,
+     "too_large": false,
+     "took_ms": 2365.324,
+     "total_read_ms": 2361.966,
+     "ui_thread": 3968,
+     "window": "A"
+    }
+   }
+  },
+  {
+   "check": "the stream was released exactly once, by the worker",
+   "ok": true,
+   "detail": {
+    "released": {
+     "event": "gate-stream-released",
+     "final_releases": 1,
+     "t": "14:46:23.261",
+     "thread": 9000,
+     "window": "A"
+    }
+   }
+  },
+  {
+   "check": "the window closed once, after the read",
+   "ok": true,
+   "detail": {
+    "closed": {
+     "browser_exit_observed": true,
+     "browser_pid": 5756,
+     "browser_started": true,
+     "completions_dropped": null,
+     "endpoint": {
+      "admitted": 0,
+      "handled": 5,
+      "refused": {}
+     },
+     "event": "closed",
+     "exit_kind": 0,
+     "handler": {
+      "GET /": 1,
+      "GET /favicon.ico": 1,
+      "GET /logo.svg": 1,
+      "GET /probe.css": 1,
+      "GET /probe.js": 1
+     },
+     "handlers_drained": true,
+     "native_async": 0,
+     "pending_requests": 0,
+     "profile_removed": true,
+     "removal_attempts": 1,
+     "removal_error": "",
+     "since_close": "1.565s",
+     "stage": "running",
+     "t": "14:46:23.299",
+     "window": "A"
+    }
+   }
+  },
+  {
+   "check": "timing",
+   "ok": true,
+   "detail": {
+    "after_close_ms": 1529.665,
+    "since_close": "1.565s"
+   }
+  }
+ ],
+ "ok": true,
+ "exit": {
+  "host_exit": 0,
+  "timed_out": false,
+  "browser_pids": [
+   5756,
+   8064
+  ],
+  "browser_processes_remaining": null,
+  "stderr_suspicious": null,
+  "callback_objects_live": 0,
+  "off_ui_thread": 0,
+  "body_workers_live": 0,
+  "gate_streams_live": 0,
+  "profiles_remaining": null
+ },
+ "seconds": 3.7,
+ "runtime": "151.0.4129.93"
+}
