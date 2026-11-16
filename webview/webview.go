@@ -20,9 +20,10 @@
 // per window.
 //
 // Linux/amd64 hosts browsers in WebKitGTK 4.1, loaded on the first Open, and
-// requires Options.LinuxGCSignal. Other platforms refuse with
-// ErrUnsupportedContent before any native work; the Windows host arrives in
-// its own stage.
+// requires Options.LinuxGCSignal. Windows/amd64 hosts them in the system
+// WebView2 Runtime, through a loader embedded in the executable and extracted
+// on the first Open. Other platforms refuse with ErrUnsupportedContent before
+// any native work.
 package webview
 
 import (

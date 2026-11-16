@@ -1,0 +1,213 @@
+{
+ "case": "confinement",
+ "ok": true,
+ "checks": [
+  {
+   "check": "subresources, fetches, sockets, frames, workers and redirects reached no collector",
+   "ok": true,
+   "detail": {
+    "hits": null
+   }
+  },
+  {
+   "check": "no page reached another window's endpoint",
+   "ok": true,
+   "detail": {
+    "other_handler": {
+     "GET /": 1,
+     "GET /favicon.ico": 1,
+     "GET /logo.svg": 1,
+     "GET /probe.css": 1,
+     "GET /probe.js": 1
+    }
+   }
+  },
+  {
+   "check": "L location stays on its origin",
+   "ok": true,
+   "detail": {
+    "uri": "http://127.0.0.1:51121/?run=armed\u0026id=armed-86500\u0026then=navigate\u0026how=location\u0026collector=http%3A%2F%2F127.0.0.1%3A51120"
+   }
+  },
+  {
+   "check": "L redirect stays on its origin",
+   "ok": true,
+   "detail": {
+    "uri": "http://127.0.0.1:51121/?run=armed\u0026id=armed-27300\u0026collector=http%3A%2F%2F127.0.0.1%3A51120\u0026then=navigate\u0026how=redirect"
+   }
+  },
+  {
+   "check": "L popup stays on its origin",
+   "ok": true,
+   "detail": {
+    "uri": "http://127.0.0.1:51121/?run=armed\u0026id=armed-400\u0026then=navigate\u0026how=popup\u0026collector=http%3A%2F%2F127.0.0.1%3A51120"
+   }
+  },
+  {
+   "check": "L form stays on its origin",
+   "ok": true,
+   "detail": {
+    "uri": "http://127.0.0.1:51121/?run=armed\u0026id=armed-60700\u0026how=form\u0026collector=http%3A%2F%2F127.0.0.1%3A51120\u0026then=navigate"
+   }
+  },
+  {
+   "check": "P location stays on its origin",
+   "ok": true,
+   "detail": {
+    "uri": "https://dfx2.invalid/?run=armed\u0026id=armed-46700\u0026then=navigate\u0026how=location\u0026collector=http%3A%2F%2F127.0.0.1%3A51120"
+   }
+  },
+  {
+   "check": "P redirect stays on its origin",
+   "ok": true,
+   "detail": {
+    "uri": "https://dfx2.invalid/?run=armed\u0026id=armed-77800\u0026collector=http%3A%2F%2F127.0.0.1%3A51120\u0026then=navigate\u0026how=redirect"
+   }
+  },
+  {
+   "check": "P popup stays on its origin",
+   "ok": true,
+   "detail": {
+    "uri": "https://dfx2.invalid/?run=armed\u0026id=armed-85900\u0026collector=http%3A%2F%2F127.0.0.1%3A51120\u0026then=navigate\u0026how=popup"
+   }
+  },
+  {
+   "check": "P form stays on its origin",
+   "ok": true,
+   "detail": {
+    "uri": "https://dfx2.invalid/?run=armed\u0026id=armed-54500\u0026then=navigate\u0026how=form\u0026collector=http%3A%2F%2F127.0.0.1%3A51120"
+   }
+  },
+  {
+   "check": "navigation attempts reached no collector: interception is the network boundary",
+   "ok": true,
+   "detail": {
+    "hits": null
+   }
+  }
+ ],
+ "detail": {
+  "page_views": {
+   "inprocess": {
+    "beacon": "true",
+    "css": "added",
+    "eventsource": "error",
+    "fetch": "threw TypeError",
+    "iframe": "added",
+    "iframe-same": "loaded",
+    "img": "added",
+    "other-endpoint": "threw TypeError",
+    "redirect-fetch": "threw TypeError",
+    "redirect-img": "added",
+    "script": "added",
+    "websocket": "error",
+    "worker": "threw SecurityError",
+    "xhr": "0"
+   },
+   "loopback": {
+    "beacon": "true",
+    "css": "added",
+    "eventsource": "error",
+    "fetch": "threw TypeError",
+    "iframe": "added",
+    "iframe-same": "loaded",
+    "img": "added",
+    "other-endpoint": "threw TypeError",
+    "redirect-fetch": "threw TypeError",
+    "redirect-img": "added",
+    "script": "added",
+    "websocket": "error",
+    "worker": "threw SecurityError",
+    "xhr": "0"
+   }
+  },
+  "refusals": {
+   "L-form": null,
+   "L-location": [
+    {
+     "kind": "navigation-refused",
+     "seq": 17,
+     "uri": "http://127.0.0.1:51120/nav"
+    },
+    {
+     "detail": "1",
+     "kind": "blocked",
+     "method": "GET",
+     "seq": 19,
+     "uri": "http://127.0.0.1:51120/nav"
+    }
+   ],
+   "L-popup": [
+    {
+     "kind": "popup-refused",
+     "seq": 34
+    }
+   ],
+   "L-redirect": [
+    {
+     "detail": "redirect",
+     "kind": "navigation-refused",
+     "seq": 26,
+     "uri": "http://127.0.0.1:51120/redirect-nav"
+    },
+    {
+     "detail": "1",
+     "kind": "blocked",
+     "method": "GET",
+     "seq": 28,
+     "uri": "http://127.0.0.1:51120/redirect-nav"
+    }
+   ],
+   "P-form": null,
+   "P-location": [
+    {
+     "kind": "navigation-refused",
+     "seq": 16,
+     "uri": "http://127.0.0.1:51120/nav"
+    },
+    {
+     "detail": "1",
+     "kind": "blocked",
+     "method": "GET",
+     "seq": 18,
+     "uri": "http://127.0.0.1:51120/nav"
+    }
+   ],
+   "P-popup": [
+    {
+     "kind": "popup-refused",
+     "seq": 33
+    }
+   ],
+   "P-redirect": [
+    {
+     "detail": "redirect",
+     "kind": "navigation-refused",
+     "seq": 25,
+     "uri": "http://127.0.0.1:51120/redirect-nav"
+    },
+    {
+     "detail": "1",
+     "kind": "blocked",
+     "method": "GET",
+     "seq": 27,
+     "uri": "http://127.0.0.1:51120/redirect-nav"
+    }
+   ]
+  }
+ },
+ "hosts": [
+  {
+   "host": "confinement-host",
+   "exit": 0,
+   "error": "\u003cnil\u003e",
+   "temp_leftovers": null,
+   "browser_pids": [
+    4632,
+    10648,
+    12252
+   ]
+  }
+ ],
+ "seconds": 20.6
+}

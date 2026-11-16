@@ -10,7 +10,9 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 probe.assets = () => ({
   origin: location.origin,
   css: getComputedStyle(document.body).backgroundColor === "rgb(30, 31, 36)",
-  img: document.getElementById("logo").complete && document.getElementById("logo").naturalWidth === 24,
+  // Engines report an SVG image.s intrinsic size differently (WebKit 24, Chromium 48): decoded is what matters.
+  img: document.getElementById("logo").complete && document.getElementById("logo").naturalWidth > 0,
+  imgWidth: document.getElementById("logo").naturalWidth,
   cookie: document.cookie,
 });
 
@@ -92,6 +94,7 @@ probe.runs = {
   attacks: (q) => probe.attacks(q.get("collector"), q.get("other") || ""),
   hold: () => { fetch("api/hold"); return "started"; },
   upload: () => { fetch("api/echo", { method: "POST", body: "u".repeat(900000) }); return "started"; },
+  fetchURL: (q) => { fetch(q.get("url")); return "started"; },
   armed: () => "armed",
 };
 probe.then = {

@@ -1,0 +1,6 @@
+# dfx2-webview.exe -resident (TEMP=C:\Cygwin64\tmp\dfx2-wv-matrix-3015951783\missing_runtime\browser)
+{"event":"ready","gc_signal":60,"pid":9628,"time":"2026-11-15T21:08:46.6804678-05:00"}
+{"command":"open A inprocess"}
+{"command":"open A inprocess","error":"dfx2 webview.Open: browser: WebView2 Runtime not found (HRESULT ERROR_FILE_NOT_FOUND (0x80070002)): install the Evergreen WebView2 Runtime from https://developer.microsoft.com/microsoft-edge/webview2/ (Windows 11 includes it)","event":"error","time":"2026-11-15T21:08:46.7259636-05:00"}
+{"error":"dfx2 webview.Open: browser: WebView2 Runtime not found (HRESULT ERROR_FILE_NOT_FOUND (0x80070002)): install the Evergreen WebView2 Runtime from https://developer.microsoft.com/microsoft-edge/webview2/ (Windows 11 includes it)","event":"return","time":"2026-11-15T21:08:46.7364441-05:00"}
+{"command":"quit"}

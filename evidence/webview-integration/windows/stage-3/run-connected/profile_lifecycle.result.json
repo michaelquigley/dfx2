@@ -1,0 +1,65 @@
+{
+ "case": "profile_lifecycle",
+ "ok": true,
+ "checks": [
+  {
+   "check": "the profile is a fresh framework directory under the host's TEMP",
+   "ok": true,
+   "detail": {
+    "profile": "C:\\Cygwin64\\tmp\\dfx2-wv-matrix-3015951783\\profile_lifecycle\\host\\dfx2-webview2-profile-1884353253",
+    "temp": [
+     "dfx2-webview2-loader-3670207156",
+     "dfx2-webview2-profile-1884353253"
+    ]
+   }
+  },
+  {
+   "check": "the profile directory exists while the window lives",
+   "ok": true
+  },
+  {
+   "check": "the browser process has exited when the window reports closed",
+   "ok": true,
+   "detail": {
+    "pid": 2492
+   }
+  },
+  {
+   "check": "the profile directory is gone after close",
+   "ok": true,
+   "detail": {
+    "err": "GetFileAttributesEx C:\\Cygwin64\\tmp\\dfx2-wv-matrix-3015951783\\profile_lifecycle\\host\\dfx2-webview2-profile-1884353253: The system cannot find the file specified."
+   }
+  },
+  {
+   "check": "nothing framework-owned remains in TEMP",
+   "ok": true,
+   "detail": {
+    "temp": null
+   }
+  }
+ ],
+ "detail": {
+  "close_took": "327ms",
+  "closed_event": [
+   {
+    "event": "closed",
+    "mode": "loopback",
+    "time": "2026-11-15T21:08:39.4183973-05:00",
+    "window": "L"
+   }
+  ]
+ },
+ "hosts": [
+  {
+   "host": "profile_lifecycle-host",
+   "exit": 0,
+   "error": "\u003cnil\u003e",
+   "temp_leftovers": null,
+   "browser_pids": [
+    2492
+   ]
+  }
+ ],
+ "seconds": 1
+}

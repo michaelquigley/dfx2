@@ -1,0 +1,25 @@
+{
+ "case": "in_process_alone",
+ "ok": true,
+ "checks": [
+  {
+   "check": "in-process host listens on nothing",
+   "ok": true,
+   "detail": {
+    "listeners": null
+   }
+  }
+ ],
+ "hosts": [
+  {
+   "host": "in_process_alone-host",
+   "exit": 0,
+   "error": "\u003cnil\u003e",
+   "temp_leftovers": null,
+   "browser_pids": [
+    5904
+   ]
+  }
+ ],
+ "seconds": 0.9
+}

@@ -69,6 +69,7 @@ type browser struct {
 	released                            bool
 
 	mu    sync.Mutex
+	seq   uint64
 	stats Audit
 }
 
@@ -77,6 +78,8 @@ const eventMemory = 64
 func (b *browser) event(e Event, count func(*Audit)) {
 	b.mu.Lock()
 	defer b.mu.Unlock()
+	b.seq++
+	e.Seq = b.seq
 	if count != nil {
 		count(&b.stats)
 	}

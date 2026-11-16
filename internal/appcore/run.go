@@ -283,13 +283,17 @@ func (a *App) event(e platform.Event) {
 		return
 	}
 	w := a.windows[e.Window]
-	if w != nil && w.browser != nil && e.Kind == platform.SurfaceChanged {
-		// Forward copied bounds outside the mutex; browsers are not enrolled
-		// in frame or input scheduling.
+	if w != nil && w.browser != nil && (e.Kind == platform.SurfaceChanged || e.Kind == platform.InputReceived) {
+		// Forward copied bounds, and focus to an engine that wants it, outside
+		// the mutex; browsers are not enrolled in frame or input scheduling.
 		impl := a.browserBoundsLocked(w)
 		a.mu.Unlock()
 		if impl != nil {
-			impl.Bounds(e.Surface)
+			if e.Kind == platform.SurfaceChanged {
+				impl.Bounds(e.Surface)
+			} else if f, ok := impl.(platform.BrowserFocuser); ok && e.Input.Kind == platform.FocusGained {
+				f.Focus()
+			}
 		}
 		a.mu.Lock() // for the deferred unlock
 		return

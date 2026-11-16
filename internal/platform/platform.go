@@ -67,10 +67,13 @@ const (
 	Destroyed
 	Completed
 	// SurfaceChanged carries a drawn or browser window's copied size, scale
-	// and visibility. Backends deliver it only when one of those values changes.
+	// and visibility. Backends deliver it only when one of those values changes,
+	// except for a browser shell that moved: its unchanged surface is delivered
+	// again, so an engine that positions popups by screen location can follow.
 	SurfaceChanged
 	// InputReceived carries one copied native input edge or motion for a
-	// content window.
+	// content window. For a browser shell only FocusGained is delivered, and
+	// only forwarded to an attachment that implements BrowserFocuser.
 	InputReceived
 )
 

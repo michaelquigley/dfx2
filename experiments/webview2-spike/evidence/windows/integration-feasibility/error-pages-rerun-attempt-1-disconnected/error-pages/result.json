@@ -1,0 +1,80 @@
+{
+ "scenario": "error-pages",
+ "flags": null,
+ "checks": [
+  {
+   "check": "failed GET: Retry and Return to start, no script",
+   "ok": true,
+   "detail": {
+    "failed": {
+     "document_http_status": 0,
+     "document_responded": false,
+     "error_page": true,
+     "event": "load-failed",
+     "from_post": false,
+     "http_status": 0,
+     "id": 4,
+     "method": "GET",
+     "retry_offered": true,
+     "source": "http://127.0.0.1:64856/api/query?x=later",
+     "status": 0,
+     "success": false,
+     "t": "15:25:54.435",
+     "uri": "http://127.0.0.1:64856/api/query?x=later",
+     "window": "E"
+    },
+    "page": {
+     "event": "error-page",
+     "hresult": "S_OK",
+     "method": "GET",
+     "retry": true,
+     "retry_at": [
+      130,
+      262
+     ],
+     "script": false,
+     "start_at": [
+      350,
+      262
+     ],
+     "t": "15:25:54.435",
+     "uri": "http://127.0.0.1:64856/api/query?x=later",
+     "window": "E"
+    }
+   }
+  }
+ ],
+ "ok": false,
+ "failure": "timed out waiting for error-action [window E action retry]",
+ "exit": {
+  "host_exit": 0,
+  "timed_out": false,
+  "killed": false,
+  "browser_pids": [
+   6424
+  ],
+  "browser_processes_remaining": null,
+  "stderr_suspicious": null,
+  "callback_objects_live": 0,
+  "off_ui_thread": 0,
+  "late_creation_callbacks": 0,
+  "profiles_remaining": null
+ },
+ "seconds": 35.5,
+ "ready": {
+  "close_during": "",
+  "cookie": true,
+  "cookie_fail_injected": false,
+  "csp": true,
+  "event": "ready",
+  "filter": true,
+  "loader_pinned": true,
+  "loader_sha256": "a9a09232c25805323d4cfb3fc8f545a190a9c8a99c93262ea99d0b88df99ec90",
+  "pid": 7784,
+  "remove_fail_injected": false,
+  "root": "C:\\Cygwin64\\tmp\\dfx2-feasibility",
+  "runtime": "151.0.4129.93",
+  "t": "15:25:50.255",
+  "ui_thread": 11936
+ }
+}

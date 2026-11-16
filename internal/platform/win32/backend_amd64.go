@@ -30,11 +30,14 @@ type window struct {
 	// Content windows only. The client size survives minimization, so restoring
 	// an unchanged window does not read as a resize.
 	content, shown, minimized bool
-	captured                  bool // this window holds native pointer capture for a left press
-	reported                  platform.Surface
-	image                     retained
-	unfreed                   [][]byte // allocations whose free failed; retirement waits for them
-	cleanupErrs               []error  // each failed free's first error, kept for the acknowledgment
+	// Browser shells: the HWND is the parent a browser attachment fills. The
+	// backend draws nothing in it and delivers it no input but focus.
+	browser     bool
+	captured    bool // this window holds native pointer capture for a left press
+	reported    platform.Surface
+	image       retained
+	unfreed     [][]byte // allocations whose free failed; retirement waits for them
+	cleanupErrs []error  // each failed free's first error, kept for the acknowledgment
 }
 
 // Backend owns the message-only dispatch window until appcore authorizes
@@ -124,9 +127,6 @@ func (b *Backend) Open(sink func(platform.Event)) error {
 func (b *Backend) IsOwner() bool { return b.api.threadID() == b.owner }
 
 func (b *Backend) Create(id platform.ID, options platform.WindowOptions) error {
-	if options.Content == platform.BrowserContent {
-		return platform.ErrUnsupportedContent // browser hosting arrives with its own stage
-	}
 	if options.Width <= 0 || options.Height <= 0 || options.Width > math.MaxInt32 || options.Height > math.MaxInt32 {
 		return errors.New("Win32 client dimensions must fit positive int values")
 	}
@@ -137,6 +137,7 @@ func (b *Backend) Create(id platform.ID, options platform.WindowOptions) error {
 	w := b.record(id, false)
 	w.logicalWidth, w.logicalHeight = float64(options.Width), float64(options.Height)
 	w.content = options.Content == platform.DrawnContent
+	w.browser = options.Content == platform.BrowserContent
 	w.closeOnCreate, b.closeNext = b.closeNext, false
 	b.mu.Lock()
 	b.windows[id] = w
@@ -294,9 +295,13 @@ func windowMessage(api *native, hwnd, msg, wp, lp uintptr) uintptr {
 			b.reportSurface(w)
 		}
 	case wmShowWindow:
-		if w.content && !w.closing {
+		if (w.content || w.browser) && !w.closing {
 			w.shown = wp != 0
 			b.reportSurface(w)
+		}
+	case wmMove:
+		if w.browser && !w.closing {
+			b.reportMove(w)
 		}
 	case wmEraseBkgnd:
 		if w.content {
@@ -311,6 +316,10 @@ func windowMessage(api *native, hwnd, msg, wp, lp uintptr) uintptr {
 		wmKeyDown, wmKeyUp, wmSetFocus, wmKillFocus, wmCaptureChanged:
 		if w.content && !w.closing && !w.destroyed && b.input(w, msg, wp, lp) {
 			return 0
+		}
+		if w.browser && !w.closing && !w.destroyed && msg == wmSetFocus {
+			// The shell took keyboard focus: the attachment moves it into the engine.
+			b.sink(platform.Event{Kind: platform.InputReceived, Window: w.id, Input: platform.Input{Kind: platform.FocusGained}})
 		}
 	case wmEnterSizeMove:
 		b.enterSizeMove(w)

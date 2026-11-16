@@ -1,0 +1,56 @@
+{
+ "case": "error_actions_same_uri",
+ "ok": true,
+ "checks": [
+  {
+   "check": "initial failure offers Retry",
+   "ok": true,
+   "detail": {
+    "event": {
+     "detail": "status 8 http 0",
+     "kind": "error-page",
+     "method": "GET",
+     "retry": true,
+     "seq": 8,
+     "uri": "http://127.0.0.1:49475/recover"
+    }
+   }
+  },
+  {
+   "check": "old retry is refused after the same-URI recovery",
+   "ok": true,
+   "detail": {
+    "event": {
+     "command": "action X retry",
+     "error": "no error page is showing",
+     "event": "error",
+     "time": "2026-11-15T16:26:03.6548319-05:00"
+    }
+   }
+  },
+  {
+   "check": "old start is refused after the same-URI recovery",
+   "ok": true,
+   "detail": {
+    "event": {
+     "command": "action X start",
+     "error": "no error page is showing",
+     "event": "error",
+     "time": "2026-11-15T16:26:03.6548319-05:00"
+    }
+   }
+  }
+ ],
+ "hosts": [
+  {
+   "host": "error_actions_same_uri-host",
+   "exit": 0,
+   "error": "\u003cnil\u003e",
+   "temp_leftovers": null,
+   "browser_pids": [
+    10392
+   ]
+  }
+ ],
+ "seconds": 1.2
+}

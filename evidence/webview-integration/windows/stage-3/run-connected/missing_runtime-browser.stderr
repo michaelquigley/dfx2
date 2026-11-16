@@ -1,0 +1,1 @@
+dfx2 webview.Open: browser: WebView2 Runtime not found (HRESULT ERROR_FILE_NOT_FOUND (0x80070002)): install the Evergreen WebView2 Runtime from https://developer.microsoft.com/microsoft-edge/webview2/ (Windows 11 includes it)

@@ -6,9 +6,11 @@
 //
 //	open LABEL inprocess|loopback      a window serving the audition page
 //	open LABEL attach URL ORIGIN...    a window onto an independent service
+//	open-close LABEL MODE STAGE        open, then close when initialization reaches STAGE
 //	native LABEL                       a plain native window
 //	go LABEL URI                       navigate, through the window's policy
 //	action LABEL retry|start           follow the error page's action
+//	devtools LABEL                     open the inspector (needs -devtools)
 //	release LABEL                      let the page's /api/hold requests return
 //	close LABEL | status | quit
 //
@@ -32,7 +34,7 @@ import (
 
 	"github.com/michaelquigley/dfx2"
 	"github.com/michaelquigley/dfx2/internal/appcore"
-	"github.com/michaelquigley/dfx2/internal/platform/webkit"
+	"github.com/michaelquigley/dfx2/internal/platform"
 	"github.com/michaelquigley/dfx2/webview"
 )
 
@@ -69,7 +71,7 @@ type host struct {
 }
 
 func main() {
-	gcSignal := flag.Int("gc-signal", 60, "real-time signal reserved for JavaScriptCore's garbage collector")
+	gcSignal := flag.Int("gc-signal", 60, "real-time signal reserved for JavaScriptCore's garbage collector (Linux; inert elsewhere)")
 	resident := flag.Bool("resident", false, "keep running with no windows until quit")
 	devtools := flag.Bool("devtools", false, "enable the browser inspector")
 	open := flag.String("open", "", "comma-separated windows to open at startup, labelled by initial: inprocess (I), loopback (L), native (N)")
@@ -137,7 +139,11 @@ func (h *host) command(line string) {
 	fail := func(err error) { h.o.event("error", "command", line, "error", err.Error()) }
 	switch {
 	case f[0] == "open" && len(f) >= 3:
-		if err := h.open(f[1], f[2], f[3:]); err != nil {
+		if err := h.open(f[1], f[2], f[3:], ""); err != nil {
+			fail(err)
+		}
+	case f[0] == "open-close" && len(f) == 4:
+		if err := h.open(f[1], f[2], nil, f[3]); err != nil {
 			fail(err)
 		}
 	case f[0] == "native" && len(f) == 2:
@@ -151,6 +157,13 @@ func (h *host) command(line string) {
 		h.drive(f[1], fail, func(b auditionBrowser) error { return b.AuditionLoad(f[2]) })
 	case f[0] == "action" && len(f) == 3:
 		h.drive(f[1], fail, func(b auditionBrowser) error { return b.AuditionErrorAction(f[2]) })
+	case f[0] == "devtools" && len(f) == 2:
+		h.drive(f[1], fail, func(b auditionBrowser) error {
+			if d, ok := b.(interface{ AuditionOpenDevTools() error }); ok {
+				return d.AuditionOpenDevTools()
+			}
+			return errors.New("this host opens the inspector only from the page's context menu")
+		})
 	case f[0] == "release" && len(f) == 2:
 		if w := h.windows[f[1]]; w != nil && w.page != nil {
 			w.page.Release()
@@ -172,7 +185,10 @@ func (h *host) command(line string) {
 	}
 }
 
-func (h *host) open(label, mode string, rest []string) error {
+// open creates a browser window. closeAt names an initialization stage at
+// which the window closes itself, for the close-during-creation cases; the
+// stage must not have passed by the time Open returns.
+func (h *host) open(label, mode string, rest []string, closeAt string) error {
 	if w := h.windows[label]; w != nil {
 		return fmt.Errorf("label %s is open", label)
 	}
@@ -203,11 +219,25 @@ func (h *host) open(label, mode string, rest []string) error {
 		w.core = browsers[len(browsers)-1] // the window Open just created
 	}
 	w.browser = b
-	start := ""
-	if a := h.audition(w); a != nil {
-		start = a.AuditionState().Start
+	start, eventsAtOpen, asyncsAtOpen := "", 0, 0
+	a := h.audition(w)
+	if a != nil {
+		state := a.AuditionState()
+		start, eventsAtOpen, asyncsAtOpen = state.Start, len(state.Events), state.Asyncs
 	}
-	h.o.event("opened", "window", label, "mode", mode, "start", start, "error", fmt.Sprint(err))
+	stageErr := ""
+	if closeAt != "" {
+		c, ok := a.(interface{ AuditionCloseAt(string, func()) error })
+		if !ok {
+			stageErr = "this host has no staged close"
+		} else if err := c.AuditionCloseAt(closeAt, b.Close); err != nil {
+			stageErr = err.Error()
+		}
+	}
+	// events_at_open tells which creation callbacks had already completed,
+	// synchronously, by the time Open returned.
+	h.o.event("opened", "window", label, "mode", mode, "start", start, "error", fmt.Sprint(err), "close_at", closeAt, "close_at_error", stageErr,
+		"events_at_open", eventsAtOpen, "asyncs_at_open", asyncsAtOpen)
 	h.track(w, b.Done())
 	return nil
 }
@@ -227,12 +257,13 @@ func (h *host) track(w *window, done <-chan struct{}) {
 	}()
 }
 
-// auditionBrowser is the WebKitGTK attachment's internal audition surface.
+// auditionBrowser is the internal audition surface both native attachments
+// offer. Navigation goes through each engine's policy, as a user's would.
 type auditionBrowser interface {
 	AuditionLoad(string) error
 	AuditionErrorAction(string) error
 	AuditionURI() (string, string)
-	AuditionState() webkit.Audit
+	AuditionState() platform.BrowserAudit
 }
 
 func (h *host) audition(w *window) auditionBrowser {
@@ -268,6 +299,9 @@ func (h *host) status() {
 		if b := h.audition(w); b != nil {
 			s["uri"], s["title"] = b.AuditionURI()
 			s["browser"] = b.AuditionState()
+			if p, ok := b.(interface{ AuditionProfile() (string, uint32) }); ok {
+				s["profile"], s["browser_pid"] = p.AuditionProfile()
+			}
 		}
 		if w.core != nil {
 			if st, ok := appcore.InspectBrowser(w.core); ok {
@@ -278,5 +312,6 @@ func (h *host) status() {
 	}
 	a := appcore.Inspect(h.app)
 	h.o.event("status", "windows", windows, "core", map[string]any{"windows": a.Windows, "tasks": a.Tasks,
-		"native_completions": a.NativeCompletions, "browsers": a.Browsers, "cleanups": a.BrowserCleanups, "closing": a.Closing})
+		"native_completions": a.NativeCompletions, "browsers": a.Browsers, "cleanups": a.BrowserCleanups, "closing": a.Closing},
+		"native_counters", a.Native)
 }

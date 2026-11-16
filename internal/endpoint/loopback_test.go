@@ -11,7 +11,6 @@ import (
 	"strings"
 	"sync"
 	"sync/atomic"
-	"syscall"
 	"testing"
 	"time"
 
@@ -233,7 +232,7 @@ func TestLoopbackProtocolRejectionsStayOutsideApplicationResponses(t *testing.T)
 			resp.Body.Close()
 			// net/http may reset a connection with unread oversized input.
 			// Accept that only after receiving the exact fixed error body.
-			if err != nil && !errors.Is(err, syscall.ECONNRESET) {
+			if err != nil && !connectionReset(err) {
 				t.Fatal(err)
 			}
 			wantBody := fmt.Sprintf("%d %s", tc.status, http.StatusText(tc.status))

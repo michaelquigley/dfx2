@@ -1,0 +1,38 @@
+{
+ "case": "size_move",
+ "ok": true,
+ "untested": "no size/move loop could be started (SC_MOVE through SendMessage; session Disc): needs a connected, unlocked desktop",
+ "checks": [
+  {
+   "check": "the browser shell was found by title",
+   "ok": true
+  }
+ ],
+ "detail": {
+  "counters": {
+   "DispatchTargets": 1,
+   "Dispatches": 18,
+   "ModalActive": false,
+   "ModalLoops": 0,
+   "ModalRefusals": 0,
+   "ModalTimers": 0,
+   "ModalTurns": 0,
+   "PaintFailures": 0,
+   "Paints": 0,
+   "Presents": 0,
+   "Problem": "",
+   "Retired": 0,
+   "Wakes": 19,
+   "Windows": 2
+  }
+ },
+ "hosts": [
+  {
+   "host": "size_move-host",
+   "exit": 0,
+   "error": "\u003cnil\u003e",
+   "temp_leftovers": null
+  }
+ ],
+ "seconds": 1.5
+}

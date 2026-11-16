@@ -169,14 +169,43 @@ func (b *Backend) cleanupProblem() string {
 // reportSurface copies the current size, scale and visibility to the core when
 // one of them changed. Closing has already sealed content work.
 func (b *Backend) reportSurface(w *window) {
-	if !w.content || w.closing || w.dpi == 0 {
+	if !(w.content || w.browser) || w.closing || w.dpi == 0 {
 		return
 	}
-	s := platform.Surface{Width: int(w.pixelWidth), Height: int(w.pixelHeight), Scale: float64(w.dpi) / 96, Visible: w.shown && !w.minimized}
+	s := b.surfaceOf(w)
 	if s != w.reported {
 		w.reported = s
 		b.sink(platform.Event{Kind: platform.SurfaceChanged, Window: w.id, Surface: s})
 	}
+}
+
+func (b *Backend) surfaceOf(w *window) platform.Surface {
+	return platform.Surface{Width: int(w.pixelWidth), Height: int(w.pixelHeight), Scale: float64(w.dpi) / 96, Visible: w.shown && !w.minimized}
+}
+
+// reportMove delivers a browser shell's unchanged surface again after it
+// moved: the engine positions its popups by screen location and is told
+// through the same copied-bounds notification.
+func (b *Backend) reportMove(w *window) {
+	if !w.browser || w.closing || w.dpi == 0 || !w.shown {
+		return
+	}
+	s := b.surfaceOf(w)
+	w.reported = s
+	b.sink(platform.Event{Kind: platform.SurfaceChanged, Window: w.id, Surface: s})
+}
+
+// BrowserParent describes a live browser shell: its HWND is the parent the
+// attachment's controller fills. The core destroys the shell only after the
+// attachment has released it.
+func (b *Backend) BrowserParent(id platform.ID) (platform.BrowserParent, error) {
+	b.mu.Lock()
+	w := b.windows[id]
+	b.mu.Unlock()
+	if w == nil || !w.browser || w.destroyed || w.hwnd == 0 {
+		return platform.BrowserParent{}, errors.New("Win32 browser parent: no live browser shell")
+	}
+	return platform.BrowserParent{Window: id, Handle: w.hwnd, Surface: b.surfaceOf(w)}, nil
 }
 
 // Present copies a complete image into native storage and asks for a paint.
@@ -291,7 +320,7 @@ func (b *Backend) auditionTarget(id platform.ID) (*window, error) {
 	b.mu.Lock()
 	w := b.windows[id]
 	b.mu.Unlock()
-	if w == nil || w.destroyed || w.closing || !w.content {
+	if w == nil || w.destroyed || w.closing || !(w.content || w.browser) {
 		return nil, errors.New("Win32 audition target is not open")
 	}
 	return w, nil

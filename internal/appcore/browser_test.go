@@ -802,3 +802,69 @@ func TestBrowserFailureAfterAnEarlierFailureIsKept(t *testing.T) {
 		t.Fatalf("Run lost a failure: %v", err)
 	}
 }
+
+// focusing wraps the fake factory's browsers in an attachment that wants the
+// shell's focus, as the WebView2 host does.
+type focusing struct {
+	inner *fake.BrowserFactory
+	focus atomic.Int32
+}
+
+type focusingBrowser struct {
+	platform.Browser
+	f *focusing
+}
+
+func (f *focusing) New(p platform.BrowserParent, c platform.BrowserConfig, h platform.BrowserHost) (platform.Browser, error) {
+	b, err := f.inner.New(p, c, h)
+	if err != nil {
+		return nil, err
+	}
+	return focusingBrowser{b, f}, nil
+}
+
+func (b focusingBrowser) Focus() { b.f.focus.Add(1) }
+
+// A browser shell's focus reaches an attachment that implements
+// BrowserFocuser, and only focus: no other input is forwarded, and a browser
+// without the method is left alone.
+func TestShellFocusIsForwardedOnlyToAFocusingBrowser(t *testing.T) {
+	for _, wants := range []bool{true, false} {
+		t.Run(map[bool]string{true: "focusing", false: "plain"}[wants], func(t *testing.T) {
+			inner := &fake.BrowserFactory{}
+			var factory platform.BrowserFactory = inner
+			focuser := &focusing{inner: inner}
+			if wants {
+				factory = focuser
+			}
+			b := &fake.Backend{}
+			windows := make(chan *Window, 1)
+			spec := attachSpec(inner, nil)
+			spec.Factory = factory
+			h := launch(t, quietOptions(WindowApplication), b, newClock(), func(a *App) error {
+				w, err := openBrowserWindow(a, "browser", spec)
+				windows <- w
+				return err
+			})
+			w := receive(t, windows)
+			br := receive(t, inner.Created())
+			receive(t, h.ready)
+			for _, in := range []platform.Input{{Kind: platform.FocusGained}, {Kind: platform.PointerDown, Button: platform.ButtonLeft}, {Kind: platform.FocusGained}} {
+				b.Enqueue(platform.Event{Kind: platform.InputReceived, Window: w.id, Input: in})
+			}
+			b.Enqueue(platform.Event{Kind: platform.SurfaceChanged, Window: w.id, Surface: platform.Surface{Width: 1, Height: 1, Scale: 1, Visible: true}})
+			onUI(t, b, func() {})
+			if got := focuser.focus.Load(); got != map[bool]int32{true: 2, false: 0}[wants] {
+				t.Fatalf("focus forwarded %d times", got)
+			}
+			if len(br.Bounded()) != 1 {
+				t.Fatal("bounds not forwarded alongside")
+			}
+			w.Close()
+			if err := receive(t, h.done); err != nil {
+				t.Fatal(err)
+			}
+			noViolations(t, b, br)
+		})
+	}
+}

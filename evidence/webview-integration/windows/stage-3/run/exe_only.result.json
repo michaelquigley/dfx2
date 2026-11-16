@@ -1,0 +1,53 @@
+{
+ "case": "exe_only",
+ "ok": true,
+ "checks": [
+  {
+   "check": "nothing but the executable is beside it",
+   "ok": true,
+   "detail": {
+    "entries": 1
+   }
+  },
+  {
+   "check": "the copied executable hosts a loopback window",
+   "ok": true,
+   "detail": {
+    "result": {
+     "cookie": "",
+     "css": true,
+     "echo": {
+      "length": 1005,
+      "method": "POST",
+      "sha256": "a5903776f0c8d72f5b1e8689519fc8d9d6317785a20e31659786c8d8703a6b8c"
+     },
+     "img": true,
+     "imgWidth": 48,
+     "missing": 404,
+     "origin": "http://127.0.0.1:49607",
+     "query": "é\u0026ü"
+    }
+   }
+  },
+  {
+   "check": "the loader was loaded from the extracted copy under TEMP",
+   "ok": true,
+   "detail": {
+    "loader": "C:\\Cygwin64\\tmp\\dfx2-wv-matrix-59012932\\exe_only\\host\\dfx2-webview2-loader-2825151455\\WebView2Loader.dll"
+   }
+  },
+  {
+   "check": "no file appeared beside the executable",
+   "ok": true
+  }
+ ],
+ "hosts": [
+  {
+   "host": "exe_only-host",
+   "exit": 0,
+   "error": "\u003cnil\u003e",
+   "temp_leftovers": null
+  }
+ ],
+ "seconds": 1.1
+}

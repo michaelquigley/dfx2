@@ -1,0 +1,15 @@
+{
+ "dirty": [
+  ""
+ ],
+ "exe": "C:\\Repos\\q\\products\\dfx2\\experiments\\webview2-spike\\dfx2-webview2-spike.exe",
+ "exe_sha256": "21960e42e0376b1181186143139c139ccb9a89baf1e12f87c2fd1d9f4c1aba5f",
+ "go": "go version go1.27.3 windows/amd64",
+ "os": "Microsoft Windows [Version 10.0.19045.6466]",
+ "revision": "59ff40e07d941ddc1ff0d735854db95b0e812671",
+ "root": "C:\\Cygwin64\\tmp\\dfx2-feasibility",
+ "screen": "1920x1080",
+ "session": "RDP-Tcp#0",
+ "system_dpi": 96,
+ "time": "2026-11-15T15:25:49-05:00"
+}
