@@ -8,6 +8,8 @@ import (
 	"io"
 	"net"
 	"net/http"
+	"net/http/httptrace"
+	"net/textproto"
 	"strings"
 	"sync"
 	"sync/atomic"
@@ -582,5 +584,40 @@ func TestLoopbackListenerFailureOverlappingCloseIsKept(t *testing.T) {
 	closed(t, host.drained)
 	if f := host.failed(); len(f) != 1 || !errors.Is(f[0], errInjected) || host.failuresAtDrain != 1 {
 		t.Fatalf("failures %v, at drain %d", f, host.failuresAtDrain)
+	}
+}
+
+// A handler's informational responses (103 Early Hints and the like) are not
+// forwarded: they would reach the page without the framework policy, and the
+// in-process adapter refuses them too. The final response is unchanged.
+func TestLoopbackDropsHandlerInformationalResponses(t *testing.T) {
+	x := newLoopback(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Link", "</static/app.js>; rel=preload; as=script")
+		w.WriteHeader(http.StatusEarlyHints)
+		w.WriteHeader(http.StatusOK)
+		io.WriteString(w, "ok")
+	}), ServerLimits{})
+	var informational []int
+	resp, err := x.do(t, "GET", "/", func(req *http.Request) {
+		*req = *req.WithContext(httptrace.WithClientTrace(req.Context(), &httptrace.ClientTrace{
+			Got1xxResponse: func(code int, _ textproto.MIMEHeader) error {
+				informational = append(informational, code)
+				return nil
+			},
+		}))
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer resp.Body.Close()
+	body, _ := io.ReadAll(resp.Body)
+	if len(informational) != 0 {
+		t.Fatalf("informational responses forwarded: %v", informational)
+	}
+	if resp.StatusCode != http.StatusOK || string(body) != "ok" {
+		t.Fatalf("final response changed: %d %q", resp.StatusCode, body)
+	}
+	if policies := resp.Header.Values("Content-Security-Policy"); len(policies) != 1 || policies[0] != ContentSecurityPolicy {
+		t.Fatalf("final response policy: %q", policies)
 	}
 }

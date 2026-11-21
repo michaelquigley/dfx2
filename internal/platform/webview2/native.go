@@ -35,7 +35,7 @@ type api struct {
 	envCreateResponse func(env uintptr, body uintptr, status int, reason, headers string) (uintptr, hresult)
 	env5AddExited     func(env5 uintptr, cb handler) (int64, hresult)
 	env5RemoveExited  func(env5 uintptr, token int64)
-	exitedArgs        func(args uintptr) (kind int32, pid uint32)
+	exitedArgs        func(args uintptr) (kind int32, pid uint32, kindHR hresult) // kindHR: get_BrowserProcessExitKind's result
 
 	// Controller and web view.
 	ctrlWebView     func(ctl uintptr) (uintptr, hresult)
@@ -69,9 +69,11 @@ type api struct {
 	responseReceived func(args uintptr) (uri string, status int32)
 
 	// Intercepted requests. requestInfo's req is a reference the caller
-	// releases. Header iteration converts nothing until asked: wlen measures a
-	// UTF-16 string in place, take converts and frees it, free only frees.
-	requestInfo    func(args uintptr) (req uintptr, uri, method string, context int32)
+	// releases; its URI and method are native strings the caller takes or
+	// frees, like every header string. Nothing is converted until asked: wlen
+	// measures a UTF-16 string in place, take converts and frees it, free only
+	// frees.
+	requestInfo    func(args uintptr) (req uintptr, uri, method *uint16, context int32)
 	requestHeaders func(req uintptr) (it uintptr, hr hresult)
 	iterHas        func(it uintptr) bool
 	iterCurrent    func(it uintptr) (name, value *uint16, ok bool)
@@ -79,11 +81,22 @@ type api struct {
 	wlen           func(p *uint16) int
 	take           func(p *uint16) string
 	free           func(p *uint16)
-	requestContent func(req uintptr) uintptr
-	streamRead     func(stream uintptr, buf []byte) (n int, end bool, hr hresult)
-	deferral       func(args uintptr) (uintptr, hresult)
-	deferralDone   func(def uintptr) hresult
-	putResponse    func(args uintptr, resp uintptr) hresult
+	// requestContent keeps get_Content's HRESULT: a failed getter is not a
+	// successful null body.
+	requestContent func(req uintptr) (stream uintptr, hr hresult)
+	// agile queries IAgileObject, releasing what it returns: S_OK means the
+	// stream may be called from any apartment.
+	agile func(stream uintptr) hresult
+	// streamRead reads once. It runs on a body worker, never the UI thread.
+	streamRead func(stream uintptr, buf []byte) (n int, end bool, hr hresult)
+	// startWorker runs a body worker on a new goroutine locked to its own OS
+	// thread in COM's multithreaded apartment, through runWorker: work, then
+	// COM's uninitialization, then finished, called once. A failed
+	// initialization skips work and reports its error to finished.
+	startWorker  func(work func(), finished func(initErr error))
+	deferral     func(args uintptr) (uintptr, hresult)
+	deferralDone func(def uintptr) hresult
+	putResponse  func(args uintptr, resp uintptr) hresult
 	// newBodyStream is a response body the host implements as an IStream over
 	// a copy of body; released runs, on any thread, when the engine drops its
 	// last reference.

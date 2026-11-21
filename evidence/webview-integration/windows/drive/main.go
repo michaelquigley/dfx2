@@ -294,7 +294,7 @@ func main() {
 		{"error_pages_loopback", errorPagesLoopback}, {"error_actions_same_uri", errorActionsSameURI}, {"attachment", attachment},
 		{"response_race", responseRace}, {"close_cases", closeCases}, {"close_one_keep_one", closeOneKeepOne},
 		{"lazy_loading", lazyLoading}, {"profile_lifecycle", profileLifecycle}, {"size_move", sizeMove},
-		{"browser_failure", browserFailure}, {"missing_runtime", missingRuntime}, {"exe_only", exeOnly},
+		{"browser_failure", browserFailure}, {"missing_runtime", missingRuntime}, {"exe_only", exeOnly}, {"body_reader", bodyReader}, {"body_close", bodyClose},
 	}
 	for _, c := range cases {
 		m.run(c.name, func() { c.body(m) })

@@ -301,6 +301,13 @@ func (rw *responseWriter) commit() {
 }
 
 func (rw *responseWriter) WriteHeader(code int) {
+	if code >= 100 && code < 200 && code != http.StatusSwitchingProtocols {
+		// A handler's informational response (103 Early Hints and the like)
+		// is not forwarded: it would reach the page without the framework
+		// policy. The in-process adapter refuses these too. net/http's own
+		// 100 Continue does not pass through here.
+		return
+	}
 	if code == http.StatusSwitchingProtocols || code >= 200 {
 		rw.commit()
 	}

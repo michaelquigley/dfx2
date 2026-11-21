@@ -105,15 +105,21 @@ func (l Limits) responseAllowance() int64 { return 2 * (l.ResponseBody + int64(l
 
 func (l Limits) reserveRefusals() int64 { return Refusals * refusalReserve }
 
-// reserveTransfer covers the browser's transient header slice: the Go
-// []platform.Header it builds, from native string views, for the duration of
-// one synchronous Request call. Requests arrive one at a time on the UI
-// thread, so at most one exists per endpoint, admitted or refused, beside the
-// endpoint's own charged copies. Within the metadata limit each occurrence
-// is charged at least RequestHeaderOverhead, which bounds its entries.
-func (l Limits) reserveTransfer() int64 {
-	return int64(l.Metadata) / headerOverhead * int64(unsafe.Sizeof(platform.Header{}))
-}
+// reserveTransfer covers the browser's transient request metadata for the
+// one synchronous Request call in progress: requests arrive one at a time on
+// the UI thread, so at most one exists per endpoint, admitted or refused,
+// beside the endpoint's own charged copies. A browser builds it only for a
+// request within the metadata limit, measured by the endpoint's own rule, so
+// it never exceeds one limit: WebKit's slice of native string views (each
+// occurrence charged at least RequestHeaderOverhead, more than its entry),
+// and WebView2's converted UTF-8 copies of the method, URL, header names and
+// values with their exact-size slice (the strings' bytes are charged exactly,
+// the entry again within the overhead).
+func (l Limits) reserveTransfer() int64 { return int64(l.Metadata) }
+
+// transferEntry is one header's slice entry in the transfer; the reserve
+// relies on it fitting within headerOverhead.
+const transferEntry = int64(unsafe.Sizeof(platform.Header{}))
 
 // ServerLimits bound one owned loopback server. Zero fields select defaults.
 type ServerLimits struct {

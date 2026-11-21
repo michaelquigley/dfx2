@@ -59,6 +59,7 @@ type window struct {
 	native      *dfx2.Window
 	core        *appcore.Window
 	page        *page
+	audit       auditionBrowser // kept from open: the closed reply reads its final state
 }
 
 type host struct {
@@ -221,6 +222,7 @@ func (h *host) open(label, mode string, rest []string, closeAt string) error {
 	w.browser = b
 	start, eventsAtOpen, asyncsAtOpen := "", 0, 0
 	a := h.audition(w)
+	w.audit = a // its state stays readable, from any goroutine, after the window closes
 	if a != nil {
 		state := a.AuditionState()
 		start, eventsAtOpen, asyncsAtOpen = state.Start, len(state.Events), state.Asyncs
@@ -248,7 +250,17 @@ func (h *host) track(w *window, done <-chan struct{}) {
 	go func() {
 		defer h.watchers.Done()
 		<-done
-		h.o.event("closed", "window", w.label, "mode", w.mode)
+		// close: the engine's record of its close boundary, if it keeps one
+		// (WebView2: the claimed body reads close stopped); "" otherwise.
+		closeDetail := ""
+		if w.audit != nil {
+			for _, e := range w.audit.AuditionState().Events {
+				if e.Kind == "close" {
+					closeDetail = e.Detail
+				}
+			}
+		}
+		h.o.event("closed", "window", w.label, "mode", w.mode, "close", closeDetail)
 		_ = h.app.Post(func() {
 			if h.windows[w.label] == w {
 				delete(h.windows, w.label)

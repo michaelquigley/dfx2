@@ -4,6 +4,7 @@ import (
 	_ "embed"
 	"errors"
 	"fmt"
+	"runtime"
 	"sync"
 	"syscall"
 	"time"
@@ -25,6 +26,16 @@ var (
 // Notices returns the loader's redistribution texts, as embedded.
 func Notices() (license, notice string) { return loaderLicense, loaderNotice }
 
+// loaderWithNotices returns the loader blob and keeps its notices reachable
+// from the same call. The linker drops embedded data nothing reachable
+// references; the loader's license requires its notices to travel with every
+// distribution, so whatever links the loader links them too.
+func loaderWithNotices() []byte {
+	runtime.KeepAlive(loaderLicense)
+	runtime.KeepAlive(loaderNotice)
+	return loaderBlob
+}
+
 var (
 	user32   = syscall.NewLazyDLL("user32.dll")
 	kernel32 = syscall.NewLazyDLL("kernel32.dll")
@@ -37,6 +48,7 @@ var (
 	pGetModuleHandleW   = kernel32.NewProc("GetModuleHandleW")
 	pGetCurrentThreadID = kernel32.NewProc("GetCurrentThreadId")
 	pCoInitializeEx     = ole32.NewProc("CoInitializeEx")
+	pCoUninitialize     = ole32.NewProc("CoUninitialize")
 	pCoTaskMemAlloc     = ole32.NewProc("CoTaskMemAlloc")
 	pCoTaskMemFree      = ole32.NewProc("CoTaskMemFree")
 )
@@ -47,6 +59,7 @@ const (
 	wmNCCreate = 0x0081
 	hwndMsg    = ^uintptr(2) // HWND_MESSAGE
 
+	coinitMultithreaded     = 0x0
 	coinitApartmentThreaded = 0x2
 	coinitDisableOLE1DDE    = 0x4
 )
@@ -85,7 +98,7 @@ func install() error {
 
 func bind() error {
 	for _, p := range []*syscall.LazyProc{pRegisterClassExW, pCreateWindowExW, pDefWindowProcW, pPostMessageW, pGetModuleHandleW,
-		pGetCurrentThreadID, pCoInitializeEx, pCoTaskMemAlloc, pCoTaskMemFree} {
+		pGetCurrentThreadID, pCoInitializeEx, pCoUninitialize, pCoTaskMemAlloc, pCoTaskMemFree} {
 		if err := p.Find(); err != nil {
 			return fmt.Errorf("WebView2 host requires %s: %w", p.Name, err)
 		}
@@ -212,7 +225,7 @@ func realAPI() api {
 			}
 			return fmt.Errorf("CoInitializeEx(COINIT_APARTMENTTHREADED) on the UI thread: HRESULT %v", hr)
 		},
-		loaderBlob: func() []byte { return loaderBlob },
+		loaderBlob: loaderWithNotices,
 		loadLibrary: func(path string) (uintptr, error) {
 			dll, err := syscall.LoadDLL(path)
 			if err != nil {
@@ -291,12 +304,12 @@ func realAPI() api {
 			return token, hr
 		},
 		env5RemoveExited: func(env5 uintptr, token int64) { call(env5, env5RemoveBrowserProcessExited, uintptr(token)) },
-		exitedArgs: func(args uintptr) (int32, uint32) {
+		exitedArgs: func(args uintptr) (int32, uint32, hresult) {
 			var kind int32
 			var pid uint32
-			call(args, bpeGetExitKind, uintptr(unsafe.Pointer(&kind)))
+			hr := call(args, bpeGetExitKind, uintptr(unsafe.Pointer(&kind))) // zero, "normal", if this fails
 			call(args, bpeGetProcessID, uintptr(unsafe.Pointer(&pid)))
-			return kind, pid
+			return kind, pid, hr
 		},
 		ctrlWebView: func(ctl uintptr) (uintptr, hresult) {
 			var wv uintptr
@@ -424,14 +437,21 @@ func realAPI() api {
 			}
 			return uri, status
 		},
-		requestInfo: func(args uintptr) (uintptr, string, string, int32) {
+		requestInfo: func(args uintptr) (uintptr, *uint16, *uint16, int32) {
 			var req uintptr
 			var context int32
 			if hr := call(args, wrrGetRequest, uintptr(unsafe.Pointer(&req))); hr.failed() || req == 0 {
-				return 0, "", "", 0
+				return 0, nil, nil, 0
 			}
 			call(args, wrrGetResourceContext, uintptr(unsafe.Pointer(&context)))
-			return req, getString(req, reqGetURI), getString(req, reqGetMethod), context
+			var uri, method *uint16
+			if call(req, reqGetURI, uintptr(unsafe.Pointer(&uri))).failed() {
+				uri = nil
+			}
+			if call(req, reqGetMethod, uintptr(unsafe.Pointer(&method))).failed() {
+				method = nil
+			}
+			return req, uri, method, context
 		},
 		requestHeaders: func(req uintptr) (uintptr, hresult) {
 			var headers, it uintptr
@@ -464,12 +484,38 @@ func realAPI() api {
 				pCoTaskMemFree.Call(uintptr(unsafe.Pointer(p)))
 			}
 		},
-		requestContent: func(req uintptr) uintptr {
+		requestContent: func(req uintptr) (uintptr, hresult) {
 			var content uintptr
-			if call(req, reqGetContent, uintptr(unsafe.Pointer(&content))).failed() {
-				return 0
+			hr := call(req, reqGetContent, uintptr(unsafe.Pointer(&content)))
+			if hr.failed() {
+				return 0, hr
 			}
-			return content
+			return content, hr
+		},
+		agile: func(stream uintptr) hresult {
+			var p uintptr
+			hr := call(stream, slotQueryInterface, uintptr(unsafe.Pointer(&iidIAgileObject)), uintptr(unsafe.Pointer(&p)))
+			if p != 0 {
+				call(p, slotRelease)
+			}
+			if !hr.failed() && p == 0 {
+				return ePointer
+			}
+			return hr
+		},
+		startWorker: func(work func(), finished func(initErr error)) {
+			go func() {
+				runtime.LockOSThread()
+				defer runtime.UnlockOSThread()
+				runWorker(func() error {
+					// S_FALSE: already initialized on this thread, which still
+					// takes a matching CoUninitialize.
+					if hr := callProc(pCoInitializeEx, 0, coinitMultithreaded); hr != sOK && hr != sFalse {
+						return fmt.Errorf("CoInitializeEx(COINIT_MULTITHREADED) on a body worker: HRESULT %v", hr)
+					}
+					return nil
+				}, func() { pCoUninitialize.Call() }, work, finished)
+			}()
 		},
 		streamRead: func(stream uintptr, buf []byte) (int, bool, hresult) {
 			if len(buf) == 0 {

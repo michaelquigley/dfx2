@@ -151,8 +151,12 @@ type BrowserRequest struct {
 	Method string
 	URL    string // absolute, as the browser presented it
 	Header []Header
-	// BodyLength is the declared body size: 0 none, -1 unknown.
+	// BodyLength is the declared body size (Content-Length), -1 when
+	// undeclared. NoBody, separately, says the engine supplied no body stream
+	// (its getter succeeded and returned none): nothing can be read. A
+	// declaration and a stream disagreeing is the endpoint's to refuse.
 	BodyLength int64
+	NoBody     bool
 	// MetadataSize is the browser's own measurement of the native request's
 	// metadata. Past BrowserConfig.RequestMetadata the browser may stop
 	// counting, and then supplies no Header; the endpoint uses the larger of

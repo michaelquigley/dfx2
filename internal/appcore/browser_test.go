@@ -868,3 +868,42 @@ func TestShellFocusIsForwardedOnlyToAFocusingBrowser(t *testing.T) {
 		})
 	}
 }
+
+// An endpoint failure reported after an earlier failure began shutdown, such
+// as a loopback listener failure reported before drain or a handler panic,
+// still reaches Run as its own record beside the first.
+func TestEndpointFailureAfterAnEarlierFailureIsKept(t *testing.T) {
+	for _, late := range []error{errors.New("loopback listener failed"), errors.New("handler panicked")} {
+		t.Run(late.Error(), func(t *testing.T) {
+			first := errors.New("application failed first")
+			f := &fake.BrowserFactory{DelayRelease: true}
+			b := &fake.Backend{}
+			ep := newEndpoint()
+			fail := make(chan struct{})
+			h := launch(t, quietOptions(WindowApplication), b, newClock(), func(a *App) error {
+				if _, err := openBrowserWindow(a, "browser", attachSpec(f, ep)); err != nil {
+					return err
+				}
+				return a.Go("worker", func(ctx context.Context) error {
+					select {
+					case <-fail:
+						return first
+					case <-ctx.Done():
+						return nil
+					}
+				})
+			})
+			br := receive(t, f.Created())
+			host := receive(t, ep.started)
+			close(fail)
+			eventually(t, "close after the first failure", func() bool { _, _, closed, _, _ := br.State(); return closed })
+			host.Fail(late)
+			host.Drained()
+			onUI(t, b, br.Release)
+			err := receive(t, h.done)
+			if !errors.Is(err, first) || !errors.Is(err, late) {
+				t.Fatalf("Run lost a failure: %v", err)
+			}
+		})
+	}
+}

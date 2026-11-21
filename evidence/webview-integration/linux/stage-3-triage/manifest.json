@@ -1,0 +1,176 @@
+{
+ "revision": "5b8b88aaca0d8cf215fc1aaa2c5aff265c961305",
+ "working_tree": " M docs/current/webview.md\n M docs/journal/2026-11-16.md\n M evidence/webview-integration/stage-3.md\n M evidence/webview-integration/windows/drive/cases.go\n M evidence/webview-integration/windows/drive/main.go\n M examples/webview/main.go\n M examples/webview/static/probe.js\n M internal/endpoint/finite_test.go\n M internal/endpoint/limits.go\n M internal/platform/webview2/browser.go\n M internal/platform/webview2/browser_test.go\n M internal/platform/webview2/endpoint_test.go\n M internal/platform/webview2/native.go\n M internal/platform/webview2/native_windows_amd64.go\n?? docs/future/roadmap/bound-page-controlled-uris-retained-in-browser-audit-events.md\n?? docs/journal/2026-11-19.md\n?? docs/journal/2026-11-20.md\n?? evidence/webview-integration/linux/stage-3-corrections/\n?? internal/platform/webview2/body_test.go\n?? internal/platform/webview2/metadata.go\n?? internal/platform/webview2/metadata_test.go\n?? internal/platform/webview2/notices_test.go\n?? internal/platform/webview2/worker.go\n",
+ "webview_sha256": "e410adb3f511b3ae30afa5517d0a1aed7d8bb13c43664180a8118a7c0705487a",
+ "kernel": "7.0.0-43-generic",
+ "go": "go version go1.27.4 linux/amd64",
+ "packages": {
+  "libwebkit2gtk-4.1-0": "2.52.6-0ubuntu0.26.04.1",
+  "libjavascriptcoregtk-4.1-0": "2.52.6-0ubuntu0.26.04.1",
+  "libgtk-3-0t64": "3.24.52-0ubuntu1",
+  "libsoup-3.0-0": "3.6.6-1ubuntu0.3",
+  "libglib2.0-0t64": "2.88.0-1ubuntu0.1",
+  "bubblewrap": "0.11.1-1ubuntu0.3",
+  "gnome-shell": "50.1-0ubuntu1.5"
+ },
+ "started": "2026-11-20T12:06:11-05:00",
+ "runs": [
+  {
+   "name": "wayland",
+   "started": "2026-11-20T12:06:11-05:00",
+   "finished": "2026-11-20T12:07:02-05:00",
+   "exit_code": 0,
+   "cases": [
+    [
+     "owned_basics",
+     true
+    ],
+    [
+     "in_process_alone",
+     true
+    ],
+    [
+     "confinement",
+     true
+    ],
+    [
+     "storage",
+     true
+    ],
+    [
+     "error_pages_loopback",
+     true
+    ],
+    [
+     "error_actions_same_uri",
+     true
+    ],
+    [
+     "attachment",
+     true
+    ],
+    [
+     "close_cases",
+     true
+    ],
+    [
+     "close_one_keep_one",
+     true
+    ],
+    [
+     "lazy_loading",
+     true
+    ],
+    [
+     "browser_failure",
+     true
+    ]
+   ]
+  },
+  {
+   "name": "x11",
+   "started": "2026-11-20T12:07:02-05:00",
+   "finished": "2026-11-20T12:07:57-05:00",
+   "exit_code": 0,
+   "cases": [
+    [
+     "owned_basics",
+     true
+    ],
+    [
+     "in_process_alone",
+     true
+    ],
+    [
+     "confinement",
+     true
+    ],
+    [
+     "storage",
+     true
+    ],
+    [
+     "error_pages_loopback",
+     true
+    ],
+    [
+     "error_actions_same_uri",
+     true
+    ],
+    [
+     "attachment",
+     true
+    ],
+    [
+     "close_cases",
+     true
+    ],
+    [
+     "close_one_keep_one",
+     true
+    ],
+    [
+     "lazy_loading",
+     true
+    ],
+    [
+     "browser_failure",
+     true
+    ]
+   ]
+  },
+  {
+   "name": "x11-scale2",
+   "started": "2026-11-20T12:07:57-05:00",
+   "finished": "2026-11-20T12:08:51-05:00",
+   "exit_code": 0,
+   "cases": [
+    [
+     "owned_basics",
+     true
+    ],
+    [
+     "in_process_alone",
+     true
+    ],
+    [
+     "confinement",
+     true
+    ],
+    [
+     "storage",
+     true
+    ],
+    [
+     "error_pages_loopback",
+     true
+    ],
+    [
+     "error_actions_same_uri",
+     true
+    ],
+    [
+     "attachment",
+     true
+    ],
+    [
+     "close_cases",
+     true
+    ],
+    [
+     "close_one_keep_one",
+     true
+    ],
+    [
+     "lazy_loading",
+     true
+    ],
+    [
+     "browser_failure",
+     true
+    ]
+   ]
+  }
+ ],
+ "finished": "2026-11-20T12:08:51-05:00"
+}

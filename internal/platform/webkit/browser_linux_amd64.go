@@ -20,12 +20,15 @@ var _ platform.BrowserFactory = Factory{}
 
 // WebKit enum and error values used here.
 const (
-	policyNavigation  = 0
-	policyNewWindow   = 1
-	policyResponse    = 2
-	headersResponse   = 1 // SOUP_MESSAGE_HEADERS_RESPONSE
-	sameSiteStrict    = 2 // SOUP_SAME_SITE_POLICY_STRICT
-	networkCancelled  = 302
+	policyNavigation = 0
+	policyNewWindow  = 1
+	policyResponse   = 2
+	headersResponse  = 1 // SOUP_MESSAGE_HEADERS_RESPONSE
+	sameSiteStrict   = 2 // SOUP_SAME_SITE_POLICY_STRICT
+	networkCancelled = 302
+	// policyInterrupted is WEBKIT_POLICY_ERROR_FRAME_LOAD_INTERRUPTED_BY_POLICY_CHANGE:
+	// the failure the host's own policy-decision ignores produce.
+	policyInterrupted = 102
 	ioErrorCancelled  = 19 // G_IO_ERROR_CANCELLED, in the g-io-error-quark domain
 	processTerminated = 2  // WEBKIT_WEB_PROCESS_TERMINATED_BY_API
 )
@@ -448,14 +451,10 @@ func (b *browser) receive(request uintptr) {
 		}
 	}
 	stream := w.schemeBody(request) // transfer full; may be NULL
-	switch {
-	case stream == 0:
-		in.BodyLength = 0
-	case length == 0:
-		in.BodyLength = 0
-	default:
-		in.BodyLength = length
-	}
+	// The declaration and the stream are separate facts; the endpoint
+	// refuses their disagreement. WebKit reports no failure here: NULL is
+	// the engine supplying no body.
+	in.BodyLength, in.NoBody = length, stream == 0
 	r := &nativeRequest{native: w.ref(request), stream: stream}
 	d := b.host.Request(in)
 	b.act(d, r)
@@ -660,10 +659,12 @@ func (b *browser) policy(decision uintptr, kind int32) uintptr {
 }
 
 // loadFailed replaces a failed top-level load with the framework's error
-// page. Refused navigations and cancellations are not load failures.
+// page. The host's own refusals (an ignored policy decision interrupts the
+// load) and cancellations are not load failures; WebKit's other policy
+// errors, such as a URI or MIME type it cannot show, are.
 func (b *browser) loadFailed(uri string, gerr uintptr) uintptr {
 	domain, code, message := borrowError(gerr)
-	if b.closing || domain == "WebKitPolicyError" || (domain == "WebKitNetworkError" && code == networkCancelled) {
+	if b.closing || (domain == "WebKitPolicyError" && code == policyInterrupted) || (domain == "WebKitNetworkError" && code == networkCancelled) {
 		b.event(Event{Kind: "load-stopped", URI: uri, Detail: fmt.Sprintf("%s %d", domain, code)}, nil)
 		return 0
 	}

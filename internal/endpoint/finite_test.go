@@ -11,6 +11,7 @@ import (
 	"strings"
 	"sync"
 	"testing"
+	"time"
 	"unsafe"
 
 	"github.com/michaelquigley/dfx2/internal/platform"
@@ -40,7 +41,7 @@ func newFinite(t *testing.T, handler http.Handler, limits Limits) finiteFixture 
 }
 
 func get(path string) platform.BrowserRequest {
-	return platform.BrowserRequest{Method: http.MethodGet, URL: testOrigin + path}
+	return platform.BrowserRequest{Method: http.MethodGet, URL: testOrigin + path, NoBody: true}
 }
 
 func (x finiteFixture) reserved() int64 {
@@ -436,7 +437,7 @@ func TestFiniteWriterOffersNoStreamingOrUpgrade(t *testing.T) {
 	if r, _ := x.host.response(early.ID); r.Status != 502 {
 		t.Fatalf("informational response must fail locally: %d", r.Status)
 	}
-	head := x.f.Request(platform.BrowserRequest{Method: http.MethodHead, URL: testOrigin + "/"})
+	head := x.f.Request(platform.BrowserRequest{Method: http.MethodHead, URL: testOrigin + "/", NoBody: true})
 	x.host.settleNext(t, false)
 	if r, _ := x.host.response(head.ID); r.Status != 200 || len(r.Body) != 0 {
 		t.Fatalf("HEAD carried a body: %d %q", r.Status, r.Body)
@@ -826,5 +827,155 @@ func TestFiniteRefusesABrowserMeasuredOversizeWithoutHeaders(t *testing.T) {
 	}
 	if x.reserved() != 0 {
 		t.Fatal("refusals reserved request storage")
+	}
+}
+
+// The transfer reserve holds the largest transient metadata a browser can
+// build within the limit: converted strings plus an exactly sized slice.
+func TestTransferReserveCoversConvertedMetadata(t *testing.T) {
+	l, err := Limits{}.Normalize()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if transferEntry > headerOverhead {
+		t.Fatalf("a slice entry (%d bytes) exceeds the per-header charge (%d)", transferEntry, headerOverhead)
+	}
+	budget := int64(l.Metadata) - recordOverhead // what strings and headers may use within the limit
+	for headers := int64(0); headers <= budget/headerOverhead; headers += max(1, budget/headerOverhead/64) {
+		strings := budget - headers*headerOverhead // the rest is method, URL, names and values
+		if transient := strings + headers*transferEntry; transient > l.reserveTransfer() {
+			t.Fatalf("%d headers: %d transient bytes exceed the %d reserve", headers, transient, l.reserveTransfer())
+		}
+	}
+}
+
+// The declared Content-Length and whether the engine supplied a body stream
+// are separate facts; the endpoint enforces their agreement for both engines.
+func TestDeclaredLengthAndBodyStreamAreSeparate(t *testing.T) {
+	post := func(length int64, noBody bool) platform.BrowserRequest {
+		return platform.BrowserRequest{Method: http.MethodPost, URL: testOrigin + "/upload", BodyLength: length, NoBody: noBody}
+	}
+	for _, tc := range []struct {
+		name   string
+		in     platform.BrowserRequest
+		body   string // bytes the stream yields before EOF
+		status int    // a fixed answer before any handler, or 0 when served
+		chunk  int    // the first read granted, when one is owed
+	}{
+		{"positive declaration, no stream", post(10, true), "", http.StatusBadRequest, 0},
+		{"zero declaration, stream with a byte", post(0, false), "x", http.StatusBadRequest, 1},
+		{"zero declaration, empty stream", post(0, false), "", 0, 1},
+		{"zero declaration, no stream", post(0, true), "", 0, 0},
+		{"undeclared, no stream", post(-1, true), "", 0, 0},
+		{"undeclared, stream", post(-1, false), "abc", 0, ReadChunk},
+		{"over the limit, no stream", post(DefaultRequestBody+1, true), "", http.StatusRequestEntityTooLarge, 0},
+		{"over the limit, stream", post(DefaultRequestBody+1, false), "", http.StatusRequestEntityTooLarge, 0},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			served := make(chan string, 1)
+			x := newFinite(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				b, _ := io.ReadAll(r.Body)
+				served <- string(b)
+			}), Limits{})
+			d := x.f.Request(tc.in)
+			if tc.chunk != 0 {
+				if d.Action != platform.RequestRead || d.ReadChunk != tc.chunk {
+					t.Fatalf("decision %+v, want a read of %d", d, tc.chunk)
+				}
+				if tc.body != "" {
+					d = x.f.RequestBody(d.ID, []byte(tc.body))
+				}
+				if d.Action == platform.RequestRead {
+					d = x.f.RequestBodyEnd(d.ID, nil)
+				}
+			}
+			if tc.status != 0 {
+				if d.Action != platform.RequestRespond || d.Response.Status != tc.status {
+					t.Fatalf("decision %+v, want %d before the handler", d, tc.status)
+				}
+				select {
+				case b := <-served:
+					t.Fatalf("handler ran with %q", b)
+				case <-time.After(20 * time.Millisecond):
+				}
+				return
+			}
+			if d.Action != platform.RequestWait {
+				t.Fatalf("decision %+v, want the handler", d)
+			}
+			if got := <-served; got != tc.body {
+				t.Fatalf("handler body %q, want %q", got, tc.body)
+			}
+		})
+	}
+}
+
+// A zero-declared request with a stream reserves one read byte and stores
+// nothing; its EOF serves an empty body.
+func TestZeroDeclaredStreamReservesOneByte(t *testing.T) {
+	x := newFinite(t, http.HandlerFunc(func(http.ResponseWriter, *http.Request) {}), Limits{})
+	before := x.reserved()
+	empty := x.f.Request(platform.BrowserRequest{Method: http.MethodPost, URL: testOrigin + "/", NoBody: true})
+	emptyNeed := x.reserved() - before
+	x.f.RequestReleased(empty.ID)
+	before = x.reserved()
+	d := x.f.Request(platform.BrowserRequest{Method: http.MethodPost, URL: testOrigin + "/"})
+	if d.Action != platform.RequestRead || d.ReadChunk != 1 {
+		t.Fatalf("decision %+v", d)
+	}
+	if need := x.reserved() - before; need != emptyNeed+1 {
+		t.Fatalf("zero-declared stream reserved %d, want the empty request's %d plus one read byte", need, emptyNeed)
+	}
+	x.f.mu.Lock()
+	r := x.f.requests[d.ID]
+	stored, read := r.bodyRes, r.read
+	x.f.mu.Unlock()
+	if stored != 0 || read != 1 {
+		t.Fatalf("stored body %d, read buffer %d", stored, read)
+	}
+}
+
+// The response snapshot owns its strings: a header name or value sliced from
+// a much larger string must not keep that allocation alive, so what the
+// adapter retains matches what it measured. Nil value slices stay nil.
+func TestResponseHeaderSnapshotOwnsItsStrings(t *testing.T) {
+	big := "X-Name" + strings.Repeat("v", 1<<20)
+	name, value := big[:6], big[6:11]
+	start := uintptr(unsafe.Pointer(unsafe.StringData(big)))
+	inside := func(s string) bool {
+		if s == "" {
+			return false
+		}
+		p := uintptr(unsafe.Pointer(unsafe.StringData(s)))
+		return p >= start && p < start+uintptr(len(big))
+	}
+	w := &writer{method: "GET", limit: 100, metadata: 2048, header: make(http.Header)}
+	w.Header()[name] = []string{value}
+	w.Header()["X-Nil"] = nil
+	w.WriteHeader(http.StatusOK)
+	if w.written == nil {
+		t.Fatal("no snapshot")
+	}
+	for k, vs := range w.written {
+		if inside(k) {
+			t.Fatalf("snapshot name %q shares the large string's storage", k)
+		}
+		for _, v := range vs {
+			if inside(v) {
+				t.Fatalf("snapshot value %q of %q shares the large string's storage", v, k)
+			}
+		}
+	}
+	if got := w.written[name]; len(got) != 1 || got[0] != value {
+		t.Fatalf("snapshot %q = %v", name, got)
+	}
+	if vs, ok := w.written["X-Nil"]; !ok || vs != nil {
+		t.Fatalf("nil value slice not preserved: %v %t", vs, ok)
+	}
+	r := w.finish()
+	for _, h := range r.Header {
+		if inside(h.Name) || inside(h.Value) {
+			t.Fatalf("delivered header %q: %q shares the large string's storage", h.Name, h.Value)
+		}
 	}
 }

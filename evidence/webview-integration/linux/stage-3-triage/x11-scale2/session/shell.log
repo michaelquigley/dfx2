@@ -1,0 +1,34 @@
+libmutter-Message: 12:07:57.367: Running GNOME Shell (using mutter 50.1) as a Wayland display server
+
+(gnome-shell:3778404): libmutter-WARNING **: 12:07:57.367: Unknown experimental feature 'scale-monitor-framebuffer'
+
+(gnome-shell:3778404): libmutter-WARNING **: 12:07:57.367: Unknown experimental feature 'xwayland-native-scaling'
+libmutter-Message: 12:07:57.494: Added device '/dev/dri/renderD129' (nvidia-drm) using no mode setting.
+libmutter-Message: 12:07:57.503: Added device '/dev/dri/renderD128' (i915) using no mode setting.
+libmutter-Message: 12:07:57.504: Created gbm renderer for '/dev/dri/renderD129'
+libmutter-Message: 12:07:57.506: Created gbm renderer for '/dev/dri/renderD128'
+libmutter-Message: 12:07:57.506: Boot VGA GPU /dev/dri/renderD128 selected as primary
+** Message: 12:07:57.507: Obtained a high priority EGL context
+libmutter-Message: 12:07:57.523: Added virtual monitor Meta-0
+libmutter-Message: 12:07:57.538: Using public X11 display :2, (using unix:/tmp/.X11-unix/X3 for managed services)
+libmutter-Message: 12:07:57.538: Using Wayland display name 'dfx2-audition'
+GNOME Shell-Message: 12:07:57.815: Unset XDG_SESSION_ID, getCurrentSessionProxy() called outside a user session. Asking logind directly.
+GNOME Shell-Message: 12:07:57.903: Registering session with GDM
+GNOME Shell-Message: 12:07:57.982: Will monitor session 5
+GNOME Shell-Message: 12:07:57.996: Error looking up permission: GDBus.Error:org.freedesktop.portal.Error.NotFound: No entry for geolocation
+GNOME Shell-Message: 12:07:58.083: Failed to register AuthenticationAgent
+
+(gnome-shell:3778404): Gjs-WARNING **: 12:07:58.169: Type GITypeInfo of property NM.Object::client does not match return type GITypeInfo of getter get_client. Falling back to slow path
+** Message: 12:07:58.181: Failed to start camera monitor
+The XKEYBOARD keymap compiler (xkbcomp) reports:
+> Warning:          Unsupported maximum keycode 708, clipping.
+>                   X11 cannot support keycodes above 255.
+> Warning:          Virtual modifier Hyper multiply defined
+>                   Using 0, ignoring 0
+> Warning:          Virtual modifier ScrollLock multiply defined
+>                   Using 0, ignoring 0
+Errors from xkbcomp are not fatal to the X server
+GNOME Shell-Message: 12:07:58.603: GNOME Shell started at Fri Nov 20 2026 12:07:57 GMT-0500 (Eastern Standard Time)
+GNOME Shell-Message: 12:07:58.605: Registering display with GDM
+** Message: 12:08:50.956: Shutting down GNOME Shell
+libmutter-Message: 12:08:51.043: Removed virtual monitor Meta-0

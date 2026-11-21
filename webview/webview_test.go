@@ -195,8 +195,8 @@ func TestInProcessServesThroughTheBrowserAndDrainsOnClose(t *testing.T) {
 		if !br.Ready() {
 			t.Error("navigation refused")
 		}
-		fast = br.Request(platform.BrowserRequest{Method: "GET", URL: "fake://w1/api/snapshot"})
-		slow = br.Request(platform.BrowserRequest{Method: "GET", URL: "fake://w1/slow"})
+		fast = br.Request(platform.BrowserRequest{Method: "GET", URL: "fake://w1/api/snapshot", NoBody: true})
+		slow = br.Request(platform.BrowserRequest{Method: "GET", URL: "fake://w1/slow", NoBody: true})
 	})
 	if fast.Action != platform.RequestWait || slow.Action != platform.RequestWait {
 		t.Fatalf("decisions %+v %+v", fast, slow)
@@ -241,7 +241,9 @@ func TestOwnedHandlerPanicCancelsAndDrainsTheApplication(t *testing.T) {
 	})
 	br := receive(t, f.Created())
 	var d platform.RequestDecision
-	h.onUI(t, func() { d = br.Request(platform.BrowserRequest{Method: "POST", URL: "fake://w1/api/edit"}) })
+	h.onUI(t, func() {
+		d = br.Request(platform.BrowserRequest{Method: "POST", URL: "fake://w1/api/edit", NoBody: true})
+	})
 	err := receive(t, h.done)
 	if err == nil || !strings.Contains(err.Error(), "model invariant broken") || !strings.Contains(err.Error(), "goroutine") {
 		t.Fatalf("Run: %v", err)

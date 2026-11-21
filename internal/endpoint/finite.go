@@ -202,8 +202,8 @@ func (f *Finite) Request(in platform.BrowserRequest) platform.RequestDecision {
 	if r == nil {
 		return decision
 	}
-	if r.bodyCap == 0 {
-		return f.serve(r)
+	if !r.reading {
+		return f.serve(r) // no read owed: an empty body, served now
 	}
 	return decision
 }
@@ -229,11 +229,24 @@ func (f *Finite) admit(in platform.BrowserRequest) (*request, platform.RequestDe
 	if in.BodyLength > f.limits.RequestBody {
 		return nil, f.refuseLocked(http.StatusRequestEntityTooLarge)
 	}
+	if in.NoBody && in.BodyLength > 0 {
+		// A declared body the engine supplied no stream for.
+		return nil, f.refuseLocked(http.StatusBadRequest)
+	}
+	// bodyCap is the body storage reserved; read, the native read buffer.
 	bodyCap := in.BodyLength
 	if bodyCap < 0 {
 		bodyCap = f.limits.RequestBody + 1 // detection byte
 	}
 	read := min(int64(ReadChunk), bodyCap)
+	switch {
+	case in.NoBody:
+		bodyCap, read = 0, 0 // nothing to read: served at once
+	case in.BodyLength == 0:
+		// Declared empty with a stream present: one detection byte read,
+		// nothing stored. EOF serves an empty body; a byte is refused.
+		read = 1
+	}
 	// The public metadata ceiling measures the incoming representation. The
 	// aggregate reservation also covers parsing and retained URL variants.
 	meta += urlAllowance(int64(len(in.URL)))
@@ -264,7 +277,7 @@ func (f *Finite) admit(in platform.BrowserRequest) (*request, platform.RequestDe
 		header.Add(strings.Clone(h.Name), strings.Clone(h.Value))
 	}
 	r := &request{method: strings.Clone(in.Method), url: u, header: header, declared: in.BodyLength, bodyCap: bodyCap,
-		admitted: true, native: true, reading: bodyCap > 0,
+		admitted: true, native: true, reading: read > 0,
 		meta: meta, bodyRes: bodyCap, read: read, resp: f.limits.responseAllowance()}
 	accepted = true
 	f.admitted++
@@ -527,7 +540,26 @@ func (w *writer) WriteHeader(code int) {
 		w.unsupported = true
 		return
 	}
-	w.written = w.header.Clone()
+	w.written = ownedHeader(w.header)
+}
+
+// ownedHeader snapshots a header map with its own copy of every name and
+// value, so the bytes it retains are the bytes measured: a string sliced from
+// a larger one would otherwise keep that whole allocation alive. Nil value
+// slices stay nil, as the metadata rule charges their names.
+func ownedHeader(h http.Header) http.Header {
+	out := make(http.Header, len(h))
+	for name, values := range h {
+		var copied []string
+		if values != nil {
+			copied = make([]string, len(values))
+			for i, v := range values {
+				copied[i] = strings.Clone(v)
+			}
+		}
+		out[strings.Clone(name)] = copied
+	}
+	return out
 }
 
 func bodyAllowed(status int) bool { return status >= 200 && status != 204 && status != 304 }

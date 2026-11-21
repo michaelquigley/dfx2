@@ -3,10 +3,14 @@
 package main
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
 	"fmt"
 	"net/url"
 	"os"
 	"path/filepath"
+	"regexp"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -393,6 +397,79 @@ func closeCases(m *matrix) {
 	h.run("A", start, "upload", nil)
 	h.close("A")
 	m.done(h, "", false)
+}
+
+// The body reader, natively: an awaited upload larger than the read chunk is
+// echoed intact; the in-process content getter's result is recorded for an
+// empty POST and a ReadableStream upload; closing during an upload drains.
+// The page's report and the host's request-content event are kept side by
+// side: what the getter returned, and what the page saw.
+func bodyReader(m *matrix) {
+	h := m.host("body", true, nil)
+	start := h.open("A", "inprocess")
+	const size = 900000
+	r := event(h.run("A", start, "uploadEcho", map[string]string{"size": fmt.Sprint(size)})["result"].(map[string]any))
+	sum := sha256.Sum256([]byte(strings.Repeat("u", size)))
+	m.check("a 900000-byte upload is echoed intact", r.num("status") == 200 && r.sub("echo").num("length") == size &&
+		r.sub("echo").str("sha256") == hex.EncodeToString(sum[:]), "result", r)
+	m.check("no body reader remains after the upload", h.window("A").sub("browser").num("Reads") == 0, "browser", h.window("A")["browser"])
+	pages := map[string]event{}
+	for _, run := range []string{"emptyPost", "streamUpload"} {
+		after := h.seq("A")
+		pages[run] = event(h.run("A", start, run, nil)["result"].(map[string]any))
+		// The run's events: the host records the getter's result only, so
+		// they are matched by sequence, after the mark, not by URL or method.
+		var content any = "no event observed"
+		if list := kindsAfter(h.browserEvents("A"), after, "request-content"); len(list) > 0 {
+			content = list
+		}
+		m.detail(run, map[string]any{"page": pages[run], "request_content": content, "handler": h.window("A")["handler"]})
+	}
+	m.check("an empty POST is answered as an empty body", pages["emptyPost"].num("status") == 200 &&
+		pages["emptyPost"].sub("echo").num("length") == 0, "page", pages["emptyPost"])
+	h.close("A")
+	m.done(h, "", false)
+}
+
+// closeObserved is the WebView2 close event's record, carried in the closed
+// reply: how many body reads the close stopped while claimed, a Read in
+// flight at the close boundary.
+var closeObserved = regexp.MustCompile(`^claimed-reads=(0|[1-9][0-9]*)$`)
+
+// bodyClose closes windows during a 900 KB upload, a bounded number of
+// times at staggered delays, each in a fresh host. Native reads are fast, so
+// a close landing on a claimed read is observed, not forced: the modeled
+// tests force it. Every attempt must close, record a well-formed observation
+// and drain cleanly, or the case fails. Only then does it pass, if some close
+// stopped a claimed read, or report untested, if every close recorded zero.
+func bodyClose(m *matrix) {
+	claimed := 0
+	var attempts []map[string]any
+	for i, delay := range []time.Duration{0, 5, 10, 20, 40, 80} {
+		delay *= time.Millisecond
+		h := m.host(fmt.Sprintf("attempt-%d", i), true, nil)
+		start := h.open("A", "inprocess")
+		h.run("A", start, "upload", nil)
+		time.Sleep(delay)
+		closed := h.close("A")
+		observed := closed.str("close")
+		match := closeObserved.FindStringSubmatch(observed)
+		attempt := map[string]any{"delay_ms": delay.Milliseconds(), "close": observed}
+		attempts = append(attempts, attempt)
+		m.detail("attempts", attempts)
+		require(match != nil, "attempt %d: close observation missing or malformed: %q", i, observed)
+		count, _ := strconv.Atoi(match[1])
+		claimed += count
+		m.done(h, "", false) // fails the case on any unclean exit or drain
+	}
+	m.detail("claimed_at_close", claimed)
+	if claimed == 0 {
+		// Every attempt closed, recorded a valid zero and drained: reached
+		// here only after all of that succeeded.
+		m.untested(fmt.Sprintf("no close landed on a claimed body read in %d attempts", len(attempts)))
+		return
+	}
+	m.check("a close stopped a claimed body read, and every attempt drained", true, "claimed_at_close", claimed)
 }
 
 // Several windows: closing one leaves the others and the application; the

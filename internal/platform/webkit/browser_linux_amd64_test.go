@@ -86,8 +86,13 @@ func install(t *testing.T) *fakeNative {
 		},
 		quarkFromString: func(string) uint32 { return 1 },
 		quarkToString: func(q uint32) string {
-			if q == quarkIOError {
+			switch q {
+			case quarkIOError:
 				return "g-io-error-quark"
+			case quarkPolicyError:
+				return "WebKitPolicyError"
+			case quarkNetworkError:
+				return "WebKitNetworkError"
 			}
 			return "fake"
 		},
@@ -168,8 +173,13 @@ func cstr(t *testing.T, s string) uintptr {
 	return uintptr(unsafe.Pointer(unsafe.SliceData(b)))
 }
 
-// quarkIOError is the fake quark for GLib's G_IO_ERROR domain.
-const quarkIOError = 2
+// quarkIOError is the fake quark for GLib's G_IO_ERROR domain; the others,
+// WebKit's policy and network error domains.
+const (
+	quarkIOError      = 2
+	quarkPolicyError  = 3
+	quarkNetworkError = 4
+)
 
 // complete runs the oldest pending async callback, as GLib would.
 func (f *fakeNative) complete() {
@@ -559,5 +569,49 @@ func TestInitializationResultsAfterClose(t *testing.T) {
 				}
 			})
 		}
+	}
+}
+
+// A load failure in WebKit's policy domain is a stopped load only for the
+// host's own ignore decisions (frame load interrupted by a policy change,
+// 102); WebKit's other policy failures are load failures with an error page.
+func TestOnlyPolicyInterruptionsAreStoppedLoads(t *testing.T) {
+	for _, tc := range []struct {
+		name    string
+		domain  uint32
+		code    int32
+		closing bool
+		page    bool // an error page is shown
+	}{
+		{"interrupted by policy (host refusal)", quarkPolicyError, 102, false, false},
+		{"cannot show MIME type", quarkPolicyError, 100, false, true},
+		{"cannot show URI", quarkPolicyError, 101, false, true},
+		{"restricted port", quarkPolicyError, 103, false, true},
+		{"network cancellation", quarkNetworkError, networkCancelled, false, false},
+		{"network failure", quarkNetworkError, 399, false, true},
+		{"any failure while closing", quarkPolicyError, 101, true, false},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			f, b := newTestBrowser(t, &fakeHost{ready: true}, platform.BrowserInProcess)
+			b.Start()
+			f.complete()
+			uri := Origin + "/api/fail"
+			b.nav.record(uri, "GET")
+			if tc.closing {
+				b.closing = true
+			}
+			shown := b.loadFailed(uri, nativeErrorOf(t, tc.domain, tc.code))
+			if (shown == 1) != tc.page || f.did("error-page") != tc.page {
+				t.Fatalf("error page %t (returned %d), want %t", f.did("error-page"), shown, tc.page)
+			}
+			events := b.AuditionState().Events
+			want := "load-stopped"
+			if tc.page {
+				want = "error-page"
+			}
+			if e := events[len(events)-1]; e.Kind != want {
+				t.Fatalf("last event %+v, want %s", e, want)
+			}
+		})
 	}
 }

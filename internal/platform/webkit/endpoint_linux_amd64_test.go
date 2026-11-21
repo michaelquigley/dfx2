@@ -3,10 +3,13 @@ package webkit
 import (
 	"context"
 	"fmt"
+	"io"
 	"net/http"
+	"strconv"
 	"strings"
 	"syscall"
 	"testing"
+	"time"
 	"unsafe"
 
 	"github.com/michaelquigley/dfx2/internal/endpoint"
@@ -169,7 +172,7 @@ type recordingHost struct {
 }
 
 func (h *recordingHost) Request(r platform.BrowserRequest) platform.RequestDecision {
-	h.seen = append(h.seen, platform.BrowserRequest{MetadataSize: r.MetadataSize, Header: r.Header})
+	h.seen = append(h.seen, platform.BrowserRequest{MetadataSize: r.MetadataSize, Header: r.Header, BodyLength: r.BodyLength, NoBody: r.NoBody})
 	return h.endpointHost.Request(r)
 }
 
@@ -251,4 +254,93 @@ func TestOrdinaryHeadersSurviveTheirNativeStorage(t *testing.T) {
 		t.Fatalf("retained request data changed with native storage: %+v", o)
 	}
 	_ = native
+}
+
+// Through the WebKitGTK adapter and the real endpoint: the declared length
+// and the stream's presence reach the endpoint separately, which refuses a
+// contradiction before any handler runs.
+func TestDeclaredLengthAndStreamReachTheEndpointSeparately(t *testing.T) {
+	for _, tc := range []struct {
+		name   string
+		length string // Content-Length, "" for none
+		stream bool
+		body   string // bytes the stream yields before EOF
+		status uint32 // a fixed answer before the handler; 0 when served
+	}{
+		{"positive declaration, no stream", "10", false, "", http.StatusBadRequest},
+		{"zero declaration, stream with a byte", "0", true, "x", http.StatusBadRequest},
+		{"zero declaration, empty stream", "0", true, "", 0},
+		{"zero declaration, no stream", "0", false, "", 0},
+		{"undeclared, no stream", "", false, "", 0},
+		{"undeclared, stream", "", true, "abc", 0},
+		{"over the limit", fmt.Sprint(endpoint.DefaultRequestBody + 1), true, "x", http.StatusRequestEntityTooLarge},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			served := make(chan string, 1)
+			native, b, host, _ := newEndpointBrowser(t, func(_ http.ResponseWriter, r *http.Request) {
+				body, _ := io.ReadAll(r.Body)
+				served <- string(body)
+			})
+			var headers nativeHeaders
+			if tc.length != "" {
+				headers.install(t, "Content-Length", tc.length)
+			}
+			post := cstr(t, "POST")
+			w.schemeMethod = func(uintptr) uintptr { return post }
+			if tc.stream {
+				w.schemeBody = func(uintptr) uintptr { return 555 }
+			}
+			chunks := []string{tc.body}
+			w.readBytesFinish = func(uintptr, uintptr, *uintptr) uintptr { return 1 }
+			w.bytesData = func(_ uintptr, size *uintptr) unsafe.Pointer {
+				if len(chunks) == 0 || chunks[0] == "" {
+					*size = 0
+					return nil // end of stream
+				}
+				c := chunks[0]
+				chunks = chunks[1:]
+				m, err := syscall.Mmap(-1, 0, len(c), syscall.PROT_READ|syscall.PROT_WRITE, syscall.MAP_ANON|syscall.MAP_PRIVATE)
+				if err != nil {
+					t.Fatal(err)
+				}
+				t.Cleanup(func() { syscall.Munmap(m) })
+				copy(m, c)
+				*size = uintptr(len(c))
+				return unsafe.Pointer(unsafe.SliceData(m)) // native storage, as GBytes holds
+			}
+			b.receive(950)
+			declared := int64(-1)
+			if tc.length != "" {
+				declared, _ = strconv.ParseInt(tc.length, 10, 64)
+			}
+			if seen := host.seen[0]; seen.BodyLength != declared || seen.NoBody != !tc.stream {
+				t.Fatalf("endpoint saw length %d no-body %t, want %d %t", seen.BodyLength, seen.NoBody, declared, !tc.stream)
+			}
+			for range 4 { // the reads, one completion at a time
+				if len(native.asyncs) == 0 {
+					break
+				}
+				native.complete()
+			}
+			if tc.status != 0 {
+				if len(native.statuses) != 1 || native.statuses[0] != tc.status || native.finished[950] != "response" {
+					t.Fatalf("answered %v (%v), want %d", native.statuses, native.finished, tc.status)
+				}
+				select {
+				case got := <-served:
+					t.Fatalf("handler ran with %q", got)
+				case <-time.After(20 * time.Millisecond):
+				}
+				return
+			}
+			select {
+			case got := <-served:
+				if got != tc.body {
+					t.Fatalf("handler body %q, want %q", got, tc.body)
+				}
+			case <-time.After(5 * time.Second):
+				t.Fatalf("handler never ran: statuses %v finished %v", native.statuses, native.finished)
+			}
+		})
+	}
 }

@@ -24,6 +24,13 @@ probe.checks = async () => {
   return { ...probe.assets(), query: q.x, echo: e, missing };
 };
 
+probe.echo = async (init) => {
+  try {
+    const r = await fetch("api/echo", init);
+    return { status: r.status, echo: r.ok ? await r.json() : null };
+  } catch (e) { return { error: String(e) }; }
+};
+
 probe.stream = async () => {
   const r = await fetch("api/stream");
   const reader = r.body.getReader();
@@ -95,6 +102,14 @@ probe.runs = {
   hold: () => { fetch("api/hold"); return "started"; },
   upload: () => { fetch("api/echo", { method: "POST", body: "u".repeat(900000) }); return "started"; },
   fetchURL: (q) => { fetch(q.get("url")); return "started"; },
+  // For comparing what the host's request-content event records: an empty
+  // POST, and a streamed upload (which the browser may refuse before sending).
+  uploadEcho: (q) => probe.echo({ method: "POST", body: "u".repeat(Number(q.get("size"))) }),
+  emptyPost: () => probe.echo({ method: "POST" }),
+  streamUpload: () => probe.echo({
+    method: "POST", duplex: "half",
+    body: new ReadableStream({ start(c) { c.enqueue(new TextEncoder().encode("streamed")); c.close(); } }),
+  }),
   armed: () => "armed",
 };
 probe.then = {

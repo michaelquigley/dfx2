@@ -2,12 +2,16 @@ package webview2
 
 import (
 	"errors"
+	"fmt"
 	"os"
 	"path/filepath"
 	"slices"
 	"strings"
+	"sync"
 	"testing"
+	"time"
 	"unicode/utf16"
+	"unsafe"
 
 	"github.com/michaelquigley/dfx2/internal/platform"
 )
@@ -28,25 +32,37 @@ type fakeHandler struct {
 func (h *fakeHandler) ptr() uintptr { return 0xbad }
 func (h *fakeHandler) release()     {}
 
+// fakeStream is a host-implemented response body. The engine holds it once
+// a response was created over it, until the test frees it; one no response
+// took is ended by the host's own release.
 type fakeStream struct {
 	body     []byte
 	released func()
+	taken    bool
 }
 
 type fakeNative struct {
 	t         *testing.T
+	mu        sync.Mutex // calls and posted: body workers record from their goroutines
+	notify    chan struct{}
 	calls     []string
 	handlers  []*fakeHandler
 	posted    []func()
 	streams   map[uintptr]*fakeStream
 	responses []uintptr // response objects created
-	next      uintptr
-	loaded    int
-	freed     int
-	users     []uintptr
-	profile   string // what the runtime reports
-	cookie    struct{ found, httpOnly bool }
-	request   struct {
+	statuses  []int     // and their statuses
+	// responseHR, when failed, fails CreateWebResourceResponse;
+	// exitKindHR, get_BrowserProcessExitKind.
+	responseHR hresult
+	exitKindHR hresult
+	bufs       []*byte // each worker read's buffer
+	next       uintptr
+	loaded     int
+	freed      int
+	users      []uintptr
+	profile    string // what the runtime reports
+	cookie     struct{ found, httpOnly bool }
+	request    struct {
 		uri, method string
 		context     int32
 		headers     [][2]string
@@ -55,6 +71,25 @@ type fakeNative struct {
 	}
 	deferrals map[uintptr]uintptr
 	cleanups  []string
+	// Body reads. contentHR is get_Content's result; agileHR the stream's
+	// IAgileObject answer; initErr a worker's COM initialization failure.
+	// gate, when set, holds every read until it is closed or sent to;
+	// startGate holds a worker before its first claim; postHold, one-shot,
+	// holds the next poster after its post is queued (set it only while the
+	// worker is the sole poster).
+	contentHR hresult
+	agileHR   hresult
+	initErr   error
+	gate      chan struct{}
+	startGate chan struct{}
+	postHold  chan struct{}
+	// uninitGate, when set, holds a worker inside COM's uninitialization.
+	uninitGate chan struct{}
+	workers    sync.WaitGroup
+	// Native strings handed out (URI, method, header names and values): each
+	// must be taken or freed exactly once. A freed string is scribbled over.
+	strings16 map[*uint16]int
+	taken     int
 }
 
 func installFake(t *testing.T) *fakeNative {
@@ -68,9 +103,23 @@ func installFake(t *testing.T) *fakeNative {
 	t.Setenv("TMPDIR", dir)
 	t.Setenv("TMP", dir)
 	t.Setenv("TEMP", dir)
-	f := &fakeNative{t: t, streams: map[uintptr]*fakeStream{}, next: 1000, deferrals: map[uintptr]uintptr{}, profile: "<profile>"}
+	f := &fakeNative{t: t, streams: map[uintptr]*fakeStream{}, next: 1000, deferrals: map[uintptr]uintptr{}, profile: "<profile>",
+		notify: make(chan struct{}, 1)}
 	f.cookie.found, f.cookie.httpOnly = true, true
-	call := func(s string) { f.calls = append(f.calls, s) }
+	t.Cleanup(func() { // no worker outlives its test; a leak is reported, not waited on forever
+		done := make(chan struct{})
+		go func() { f.workers.Wait(); close(done) }()
+		select {
+		case <-done:
+		case <-time.After(5 * time.Second):
+			t.Error("a body worker never returned")
+		}
+	})
+	call := func(s string) {
+		f.mu.Lock()
+		defer f.mu.Unlock()
+		f.calls = append(f.calls, s)
+	}
 	obj := func() uintptr { f.next++; return f.next }
 	removeAll = func(path string) error { call("remove " + path); return nil }
 	n = api{
@@ -85,7 +134,20 @@ func installFake(t *testing.T) *fakeNative {
 		},
 		freeLibrary:    func(uintptr) error { f.freed++; return nil },
 		runtimeVersion: func(uintptr) (string, error) { return "test-runtime", nil },
-		post:           func(fn func()) { f.posted = append(f.posted, fn) },
+		post: func(fn func()) {
+			f.mu.Lock()
+			f.posted = append(f.posted, fn)
+			hold := f.postHold
+			f.postHold = nil
+			f.mu.Unlock()
+			select {
+			case f.notify <- struct{}{}:
+			default:
+			}
+			if hold != nil {
+				<-hold
+			}
+		},
 		newHandler: func(name string, _ guid, invoke func(a, b uintptr) hresult, dropped func()) handler {
 			h := &fakeHandler{name: name, invoke: invoke, dropped: dropped}
 			f.handlers = append(f.handlers, h)
@@ -105,8 +167,23 @@ func installFake(t *testing.T) *fakeNative {
 		addRef: func(o uintptr) { call("addref") },
 		release: func(o uintptr) {
 			call("release")
-			if s := f.streams[o]; s != nil {
-				// The host's own reference; the engine's are released by the test.
+			if o == 700 {
+				call("release body stream")
+			}
+			// A response stream's own reference is the host's; the engine's
+			// are released by the test (freeStream). A stream no response
+			// took ends with the host's release.
+			f.mu.Lock()
+			st := f.streams[o]
+			if st != nil && !st.taken {
+				delete(f.streams, o)
+			} else {
+				st = nil
+			}
+			f.mu.Unlock()
+			if st != nil {
+				call("stream final release")
+				st.released()
 			}
 		},
 		createEnvironment: func(lib uintptr, userData string, cb handler) hresult {
@@ -117,14 +194,23 @@ func installFake(t *testing.T) *fakeNative {
 		envVersion:    func(uintptr) string { return "151.test" },
 		envCreateCtrl: func(env, parent uintptr, cb handler) hresult { call("create-controller"); return sOK },
 		envCreateResponse: func(env, body uintptr, status int, reason, headers string) (uintptr, hresult) {
+			call(strings.TrimSpace("response " + reason + " " + strings.TrimSuffix(strings.ReplaceAll(headers, "\r\n", " | "), " | ")))
+			if f.responseHR.failed() {
+				return 0, f.responseHR
+			}
 			r := obj()
 			f.responses = append(f.responses, r)
-			call(strings.TrimSpace("response " + reason + " " + strings.TrimSuffix(strings.ReplaceAll(headers, "\r\n", " | "), " | ")))
+			f.statuses = append(f.statuses, status)
+			f.mu.Lock()
+			if st := f.streams[body]; st != nil {
+				st.taken = true
+			}
+			f.mu.Unlock()
 			return r, sOK
 		},
 		env5AddExited:    func(uintptr, handler) (int64, hresult) { return 9, sOK },
 		env5RemoveExited: func(uintptr, int64) { call("remove-exited") },
-		exitedArgs:       func(args uintptr) (int32, uint32) { return int32(args), 4242 },
+		exitedArgs:       func(args uintptr) (int32, uint32, hresult) { return int32(args), 4242, f.exitKindHR },
 		ctrlWebView:      func(uintptr) (uintptr, hresult) { return 300, sOK },
 		ctrlVisible:      func(_ uintptr, v bool) { call(map[bool]string{true: "visible", false: "hidden"}[v]) },
 		ctrlBounds:       func(_ uintptr, w, h int32) { call("bounds") },
@@ -158,26 +244,55 @@ func installFake(t *testing.T) *fakeNative {
 		permissionDeny:   func(uintptr) { call("permission-deny") },
 		downloadCancel:   func(uintptr) { call("download-cancel") },
 		responseReceived: func(uintptr) (string, int32) { f.t.Fatal("responseReceived read through the fake"); return "", 0 },
-		requestInfo: func(args uintptr) (uintptr, string, string, int32) {
-			return 600, f.request.uri, f.request.method, f.request.context
+		requestInfo: func(args uintptr) (uintptr, *uint16, *uint16, int32) {
+			return 600, f.alloc(f.request.uri), f.alloc(f.request.method), f.request.context
 		},
 		requestHeaders: func(uintptr) (uintptr, hresult) { f.request.pos = 0; return 601, sOK },
 		iterHas:        func(uintptr) bool { return f.request.pos < len(f.request.headers) },
 		iterCurrent: func(uintptr) (*uint16, *uint16, bool) {
 			h := f.request.headers[f.request.pos]
-			return wstr(h[0]), wstr(h[1]), true
+			return f.alloc(h[0]), f.alloc(h[1]), true
 		},
 		iterNext: func(uintptr) { f.request.pos++ },
 		wlen:     func(p *uint16) int { return wcount(p) },
-		take:     func(p *uint16) string { return string(utf16.Decode(wslice(p))) },
-		free:     func(*uint16) {},
-		requestContent: func(uintptr) uintptr {
-			if f.request.body == nil {
-				return 0
+		take: func(p *uint16) string {
+			s := string(utf16.Decode(wslice(p)))
+			f.release16(p)
+			return s
+		},
+		free: func(p *uint16) { f.release16(p) },
+		requestContent: func(uintptr) (uintptr, hresult) {
+			if f.contentHR.failed() || f.request.body == nil {
+				return 0, f.contentHR
 			}
-			return 700
+			return 700, sOK
+		},
+		agile: func(uintptr) hresult { call("agile?"); return f.agileHR },
+		startWorker: func(work func(), finished func(error)) {
+			call("worker")
+			f.workers.Add(1)
+			start, uninit, initErr := f.startGate, f.uninitGate, f.initErr
+			go func() {
+				defer f.workers.Done()
+				if start != nil {
+					<-start
+				}
+				runWorker(func() error { return initErr }, func() {
+					call("uninitialize")
+					if uninit != nil {
+						<-uninit
+					}
+				}, work, func(err error) { call("worker-finished"); finished(err) })
+			}()
 		},
 		streamRead: func(_ uintptr, buf []byte) (int, bool, hresult) {
+			call("read")
+			f.mu.Lock()
+			f.bufs = append(f.bufs, unsafe.SliceData(buf))
+			f.mu.Unlock()
+			if f.gate != nil {
+				<-f.gate
+			}
 			n := copy(buf, f.request.body)
 			f.request.body = f.request.body[n:]
 			return n, len(f.request.body) == 0, sOK
@@ -191,7 +306,9 @@ func installFake(t *testing.T) *fakeNative {
 		putResponse:  func(args, resp uintptr) hresult { call("put-response"); return sOK },
 		newBodyStream: func(body []byte, released func()) uintptr {
 			s := obj()
+			f.mu.Lock()
 			f.streams[s] = &fakeStream{body: body, released: released}
+			f.mu.Unlock()
 			return s
 		},
 		cookieCreate: func(_ uintptr, name, value, domain, path string) (uintptr, hresult) {
@@ -204,6 +321,43 @@ func installFake(t *testing.T) *fakeNative {
 		cookieFound:  func(uintptr, string) (bool, bool, int32) { return f.cookie.found, f.cookie.httpOnly, 2 },
 	}
 	return f
+}
+
+// alloc hands out a native string, as a WebView2 getter's CoTaskMem copy.
+func (f *fakeNative) alloc(s string) *uint16 {
+	p := wstr(s)
+	if f.strings16 == nil {
+		f.strings16 = map[*uint16]int{}
+	}
+	f.strings16[p] = 0
+	return p
+}
+
+// release16 frees a native string once, scribbling its memory so a view that
+// outlived it would read garbage.
+func (f *fakeNative) release16(p *uint16) {
+	if p == nil {
+		return
+	}
+	if _, ok := f.strings16[p]; !ok {
+		f.t.Errorf("freed a string the fake never handed out")
+		return
+	}
+	f.strings16[p]++
+	for i := 0; *(*uint16)(ptrAdd(p, i)) != 0; i++ {
+		*(*uint16)(ptrAdd(p, i)) = 'X'
+	}
+}
+
+// unfreed lists native strings not freed exactly once.
+func (f *fakeNative) unfreed() []int {
+	var bad []int
+	for _, c := range f.strings16 {
+		if c != 1 {
+			bad = append(bad, c)
+		}
+	}
+	return bad
 }
 
 func wstr(s string) *uint16 {
@@ -230,9 +384,15 @@ func wslice(p *uint16) []uint16 {
 	}
 }
 
-func (f *fakeNative) did(name string) bool { return slices.Contains(f.calls, name) }
+func (f *fakeNative) did(name string) bool {
+	f.mu.Lock()
+	defer f.mu.Unlock()
+	return slices.Contains(f.calls, name)
+}
 
 func (f *fakeNative) count(name string) int {
+	f.mu.Lock()
+	defer f.mu.Unlock()
 	c := 0
 	for _, s := range f.calls {
 		if s == name {
@@ -274,26 +434,94 @@ func (f *fakeNative) drop(name string) {
 	h.dropped()
 }
 
-// flush runs everything posted to the UI thread.
+// flush runs everything already posted to the UI thread, as the hop would.
 func (f *fakeNative) flush() {
-	for len(f.posted) > 0 {
+	for {
+		f.mu.Lock()
+		if len(f.posted) == 0 {
+			f.mu.Unlock()
+			return
+		}
 		fn := f.posted[0]
 		f.posted = f.posted[1:]
+		f.mu.Unlock()
 		fn()
 	}
+}
+
+// pump plays the UI thread's message loop until done holds, running posts as
+// workers deliver them. The deadline only guards a hang.
+func (f *fakeNative) pump(done func() bool) {
+	f.t.Helper()
+	deadline := time.After(5 * time.Second)
+	for {
+		f.flush()
+		if done() {
+			return
+		}
+		select {
+		case <-f.notify:
+		case <-deadline:
+			f.t.Fatal("timed out pumping the UI thread")
+		}
+	}
+}
+
+// awaitRead waits, running nothing, until a worker has claimed a read and
+// entered the stream: the read is then in flight, held by any gate.
+func (f *fakeNative) awaitRead() { f.t.Helper(); f.awaitCall("read") }
+
+// awaitCall waits, running nothing, until a native call has been made.
+func (f *fakeNative) awaitCall(name string) {
+	f.t.Helper()
+	deadline := time.After(5 * time.Second)
+	for !f.did(name) {
+		select {
+		case <-deadline:
+			f.t.Fatal("timed out waiting for " + name)
+		case <-time.After(time.Millisecond):
+		}
+	}
+}
+
+// awaitPost waits, running nothing, until something is posted: a worker's
+// result is then queued for the UI thread but not yet handled.
+func (f *fakeNative) awaitPost() {
+	f.t.Helper()
+	deadline := time.After(5 * time.Second)
+	for f.pending() == 0 {
+		select {
+		case <-f.notify:
+		case <-deadline:
+			f.t.Fatal("timed out waiting for a post")
+		}
+	}
+}
+
+// pending reports whether anything is posted and not yet run.
+func (f *fakeNative) pending() int {
+	f.mu.Lock()
+	defer f.mu.Unlock()
+	return len(f.posted)
 }
 
 // freeStream releases a response body as the engine dropping its last
 // reference would, then runs the hop to the UI thread.
 func (f *fakeNative) freeStream() {
 	f.t.Helper()
+	f.mu.Lock()
+	var held *fakeStream
 	for s, st := range f.streams {
 		delete(f.streams, s)
-		st.released()
-		f.flush()
-		return
+		held = st
+		break
 	}
-	f.t.Fatal("no response body held")
+	f.mu.Unlock()
+	if held == nil {
+		f.t.Fatal("no response body held")
+	}
+	held.released()
+	f.flush()
 }
 
 type fakeHost struct {
@@ -518,12 +746,46 @@ func TestCloseSettlesRequestsAndReleasesOnlyAfterResponseStreamsFree(t *testing.
 	}
 	f.invoke("BrowserProcessExited", 0, exitKindNormal)
 	f.flush()
-	if host.released != 1 {
-		t.Fatal("not released: the engine's response body does not use the parent")
+	// The engine still holds a response body: the controller is already
+	// closed, so the engine can drop it, but teardown waits for it.
+	if !f.did("controller-close") || f.did("remove-exited") || f.freed != 0 || len(host.cleanups) != 0 || host.released != 0 {
+		t.Fatalf("teardown ran while the engine held a response stream: %v cleanups %v freed %d released %d", f.calls, host.cleanups, f.freed, host.released)
 	}
 	f.freeStream()
 	if len(host.releasedR) != 2 || host.releasedR[1] != 1 || b.AuditionState().Copies != 0 {
 		t.Fatalf("released %v copies %d", host.releasedR, b.AuditionState().Copies)
+	}
+	f.flush()
+	cleaned := strings.Join(host.cleanups, " | ")
+	if f.count("remove-exited") != 1 || f.freed != 1 || len(host.cleanups) != 2 || !strings.Contains(cleaned, "WebView2 loader") ||
+		!strings.Contains(cleaned, "browser profile") || host.released != 1 {
+		t.Fatalf("teardown not completed once after the stream was freed: %v cleanups %v freed %d released %d", f.calls, host.cleanups, f.freed, host.released)
+	}
+}
+
+// A response that fails to be created after its body stream was allocated:
+// the stream was counted before the host released it, so its final release,
+// the only one, settles the count and the request, and close drains.
+func TestFailedResponseCreationReleasesItsStreamOnce(t *testing.T) {
+	host := &fakeHost{ready: true, decisions: []platform.RequestDecision{{ID: 4, Action: platform.RequestWait}}}
+	f, b := newTestBrowser(t, host, platform.BrowserInProcess)
+	started(t, f, b)
+	f.request.uri, f.request.method = startURL+"api/a", "GET"
+	b.receive(503)
+	f.responseHR = eFail
+	b.Respond(4, platform.BrowserResponse{Status: 200, Body: []byte("lost")})
+	f.flush()
+	if f.count("stream final release") != 1 || f.did("put-response") || f.count("deferral-complete") != 1 {
+		t.Fatalf("failed creation: %v", f.calls)
+	}
+	if len(host.releasedR) != 1 || host.releasedR[0] != 4 || b.streams != 0 || b.AuditionState().Copies != 0 {
+		t.Fatalf("released %v streams %d", host.releasedR, b.streams)
+	}
+	b.Close()
+	f.invoke("BrowserProcessExited", 0, exitKindNormal)
+	f.flush()
+	if host.released != 1 || len(host.releasedR) != 1 {
+		t.Fatalf("close did not drain: released %d requests %v streams %d", host.released, host.releasedR, b.streams)
 	}
 }
 
@@ -538,6 +800,7 @@ func TestBodyIsReadInGrantedChunksAndFixedRefusalsHoldUntilReleased(t *testing.T
 	f.request.headers = [][2]string{{"Content-Length", "10"}, {"X-Test", "é"}}
 	f.request.body = []byte("0123456789")
 	b.receive(510)
+	f.pump(func() bool { return host.ends == 1 && len(b.reads) == 0 })
 	in := host.requests[0]
 	if in.BodyLength != 10 || len(in.Header) != 2 || in.Header[1].Value != "é" || in.MetadataSize != int64(platform.RequestRecordOverhead+len("POST")+len(in.URL)+2*platform.RequestHeaderOverhead+len("Content-Length")+len("10")+len("X-Test")+len("é")) {
 		t.Fatalf("request %+v", in)
@@ -575,8 +838,9 @@ func TestOversizedHeadersAreMeasuredWithoutConversion(t *testing.T) {
 	n.take = func(p *uint16) string { taken++; return take(p) }
 	b.receive(520)
 	in := host.requests[0]
-	if in.Header != nil || in.MetadataSize <= 200 || taken != 2 {
-		t.Fatalf("oversized request: headers %v size %d converted %d", in.Header, in.MetadataSize, taken)
+	// Only the URI and method, within the limit, were converted; no header was.
+	if in.Header != nil || in.MetadataSize <= 200 || taken != 2 || len(f.unfreed()) != 0 {
+		t.Fatalf("oversized request: headers %v size %d converted %d unfreed %v", in.Header, in.MetadataSize, taken, f.unfreed())
 	}
 }
 
@@ -783,6 +1047,78 @@ func TestProcessFailuresAreClassified(t *testing.T) {
 	b2.onBrowserProcessExited(1)
 	if len(host2.failed) != 1 || !strings.Contains(host2.failed[0].Error(), "browser process 4242 exited") {
 		t.Fatalf("unexpected exit not fatal: %v", host2.failed)
+	}
+}
+
+// The browser process's exit during close: a normal exit is the expected
+// end; a failed one, or one whose kind cannot be read, reaches host.Failed
+// before teardown proceeds. One browser-process failure is reported once,
+// whichever callback brings it first; a renderer failure is its own report.
+func TestBrowserProcessFailuresDuringClose(t *testing.T) {
+	const exitKindFailed = 1 // COREWEBVIEW2_BROWSER_PROCESS_EXIT_KIND_FAILED
+	for _, tc := range []struct {
+		name     string
+		run      func(f *fakeNative, b *browser)
+		failures []string // substrings, one per expected report, in order
+	}{
+		{"failed exit during close", func(f *fakeNative, b *browser) {
+			b.Close() // removes the ProcessFailed handler: the exit is the only report
+			b.onBrowserProcessExited(exitKindFailed)
+		}, []string{"browser process 4242 exited during close (kind 1)"}},
+		{"normal exit during close", func(f *fakeNative, b *browser) {
+			b.Close()
+			b.onBrowserProcessExited(exitKindNormal)
+		}, nil},
+		{"ProcessFailed before close, failed exit during close", func(f *fakeNative, b *browser) {
+			b.onProcessFailed(failedBrowserProcess)
+			b.Close()
+			b.onBrowserProcessExited(exitKindFailed)
+		}, []string{"browser process exited"}},
+		{"exit before ProcessFailed", func(f *fakeNative, b *browser) {
+			b.onBrowserProcessExited(exitKindFailed)
+			b.onProcessFailed(failedBrowserProcess)
+			b.Close()
+		}, []string{"browser process 4242 exited (kind 1)"}},
+		{"renderer failure stays distinct", func(f *fakeNative, b *browser) {
+			b.onProcessFailed(failedRenderProcess)
+			b.Close()
+			b.onBrowserProcessExited(exitKindFailed)
+		}, []string{"render process", "browser process 4242 exited during close"}},
+		{"exit kind unreadable during close", func(f *fakeNative, b *browser) {
+			b.Close()
+			f.exitKindHR = eFail
+			b.onBrowserProcessExited(exitKindNormal) // the zeroed output reads as normal
+		}, []string{"exit kind unreadable", "E_FAIL"}},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			host := &fakeHost{ready: true}
+			f, b := newTestBrowser(t, host, platform.BrowserInProcess)
+			started(t, f, b)
+			tc.run(f, b)
+			got := fmt.Sprint(host.failed)
+			want := 0
+			for _, w := range tc.failures {
+				if !strings.Contains(got, w) {
+					t.Fatalf("failures %v lack %q", host.failed, w)
+				}
+			}
+			if len(tc.failures) > 0 {
+				want = len(tc.failures)
+				if tc.name == "exit kind unreadable during close" {
+					want = 1 // one report naming both
+				}
+			}
+			if len(host.failed) != want {
+				t.Fatalf("%d failures, want %d: %v", len(host.failed), want, host.failed)
+			}
+			if released := host.released; released != 0 {
+				t.Fatalf("released before the exit was handled: %d", released)
+			}
+			f.flush()
+			if host.released != 1 {
+				t.Fatalf("release did not proceed after the exit: %d", host.released)
+			}
+		})
 	}
 }
 

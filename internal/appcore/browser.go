@@ -400,7 +400,14 @@ func (h endpointHost) Fail(err error) {
 	a := w.app
 	a.mu.Lock()
 	defer a.mu.Unlock()
-	a.failLocked(fmt.Errorf("dfx2 webview window %d endpoint: %w", w.id, err))
+	err = fmt.Errorf("dfx2 webview window %d endpoint: %w", w.id, err)
+	if a.failure == nil {
+		a.failLocked(err)
+	} else {
+		// As for browser failures: a listener failure or handler panic after
+		// an earlier failure is still kept; Run joins it as a distinct record.
+		a.cleanupLocked(err)
+	}
 	a.notifyLocked()
 }
 

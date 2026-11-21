@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"sync/atomic"
 	"time"
 
 	"github.com/michaelquigley/dfx2/internal/origin"
@@ -31,6 +32,47 @@ type eventRegistration struct {
 // thread until Respond or Close settles them.
 type nativeRequest struct {
 	args, deferral uintptr
+}
+
+// bodyRead is one admitted request body, read on its own worker. The UI
+// thread owns every field but grant's sends and state; the worker touches
+// only the stream, grant's receives, state and post.
+//
+// The read has one buffer, allocated within the endpoint's read reservation
+// and passed by hand: in a queued grant, with the worker for one read, in a
+// posted result, back on the UI thread until the next grant. No one keeps it
+// between, so once the endpoint's final decision drops the result, or close
+// discards a grant or result, nothing holds it. Until the worker finishes the
+// endpoint's release is owed, which keeps that reservation.
+type bodyRead struct {
+	id             platform.ID
+	args, deferral uintptr      // held until the endpoint's final decision or close settles them
+	stream         uintptr      // the worker's reference; released by the worker after a successful COM initialization
+	grant          chan []byte  // the buffer, sliced to the next chunk; closed to stop the worker
+	state          atomic.Int32 // readIdle, readClaimed or readStopped
+	owed           bool         // native ownership ended first: the endpoint's release waits for the worker
+}
+
+// A read's claim state. The worker claims each grant, idle to claimed, before
+// it calls Read, and returns claimed to idle by compare-and-swap after posting
+// the result. Stopping stores readStopped from any state, and nothing leaves
+// it: a grant queued but unclaimed when the read stops is never read, while a
+// claimed read is the one in flight, still owned until the worker returns.
+const (
+	readIdle int32 = iota
+	readClaimed
+	readStopped
+)
+
+func (r *bodyRead) stopped() bool { return r.state.Load() == readStopped }
+
+// errUnsupportedStream is a request-local failure: the body stream does not
+// declare IAgileObject, so the host can neither read it off the UI thread nor
+// wait on it there.
+type errUnsupportedStream hresult
+
+func (e errUnsupportedStream) Error() string {
+	return fmt.Sprintf("request body stream is not agile (QueryInterface(IAgileObject): HRESULT %v): not read", hresult(e))
 }
 
 // browser is one attachment. Every field except stats is UI-thread state.
@@ -64,7 +106,8 @@ type browser struct {
 	errorPending bool   // the error document's own navigation is in flight
 	errorNavID   uint64 // and its NavigationId, once known
 	requests     map[platform.ID]*nativeRequest
-	streams      int // response bodies the engine still holds
+	reads        map[platform.ID]*bodyRead // request bodies on their workers
+	streams      int                       // response bodies the engine still holds
 
 	cookieReady, navigated       bool
 	closing, controllerClosed    bool
@@ -112,6 +155,7 @@ func (b *browser) sync() {
 	defer b.mu.Unlock()
 	b.stats.Navigated, b.stats.Closing, b.stats.Destroyed, b.stats.Released = b.navigated, b.closing, b.controllerClosed, b.released
 	b.stats.Requests, b.stats.Copies, b.stats.Asyncs, b.stats.Runtime = len(b.requests), b.streams, asyncs, b.runtime
+	b.stats.Reads = len(b.reads)
 }
 
 // New extracts and loads the pinned loader on the first attachment, checks
@@ -126,7 +170,7 @@ func (f Factory) New(parent platform.BrowserParent, config platform.BrowserConfi
 
 func newBrowser(parent platform.BrowserParent, config platform.BrowserConfig, host platform.BrowserHost) (*browser, error) {
 	b := &browser{host: host, devtool: config.DevTools, parent: parent.Handle, surface: parent.Surface, mode: config.Mode,
-		requests: make(map[platform.ID]*nativeRequest), metadata: int64(config.RequestMetadata)}
+		requests: make(map[platform.ID]*nativeRequest), reads: make(map[platform.ID]*bodyRead), metadata: int64(config.RequestMetadata)}
 	switch config.Mode {
 	case platform.BrowserInProcess:
 		b.start, b.allowed, b.owned = startURL, []string{Origin}, Origin
@@ -526,8 +570,8 @@ func (b *browser) Diagnostics() string {
 	b.mu.Lock()
 	defer b.mu.Unlock()
 	s := b.stats
-	return fmt.Sprintf("webview2 %s navigated=%t closing=%t controller-closed=%t released=%t native-requests=%d response-streams=%d async=%d",
-		s.Runtime, s.Navigated, s.Closing, s.Destroyed, s.Released, s.Requests, s.Copies, s.Asyncs)
+	return fmt.Sprintf("webview2 %s navigated=%t closing=%t controller-closed=%t released=%t native-requests=%d body-readers=%d response-streams=%d async=%d",
+		s.Runtime, s.Navigated, s.Closing, s.Destroyed, s.Released, s.Requests, s.Reads, s.Copies, s.Asyncs)
 }
 
 func (b *browser) onNavigationStarting(args uintptr) {
@@ -655,12 +699,22 @@ func (b *browser) onProcessFailed(args uintptr) {
 	detail := fmt.Sprintf("%s (reason %s, exit code %d, %s)", name, pick(processFailedReasonNames, int(reason), strconv.Itoa(int(reason))), exitCode, description)
 	b.event(platform.BrowserEvent{Kind: "process-failed", Detail: detail}, nil)
 	switch kind {
-	case failedBrowserProcess, failedRenderProcess, failedFrameRenderProcess:
-		if kind == failedBrowserProcess {
-			b.browserFailed = true
-		}
-		b.host.Failed(errors.New("WebView2 " + detail))
+	case failedBrowserProcess:
+		b.browserFailure(errors.New("WebView2 " + detail))
+	case failedRenderProcess, failedFrameRenderProcess:
+		b.host.Failed(errors.New("WebView2 " + detail)) // a renderer's failure is its own report
 	}
+}
+
+// browserFailure reports the browser process's failure once: ProcessFailed
+// and BrowserProcessExited may each bring it, in either order. nil reports
+// nothing.
+func (b *browser) browserFailure(err error) {
+	if err == nil || b.browserFailed {
+		return
+	}
+	b.browserFailed = true
+	b.host.Failed(err)
 }
 
 func pick(names string, i int, fallback string) string {
@@ -672,17 +726,33 @@ func pick(names string, i int, fallback string) string {
 }
 
 func (b *browser) onBrowserProcessExited(args uintptr) {
-	kind, pid := n.exitedArgs(args)
+	kind, pid, kindHR := n.exitedArgs(args)
+	// The notification itself establishes the exit, whatever its kind says.
 	b.browserExited, b.exitKind = true, kind
 	since := ""
 	if !b.closed.IsZero() {
 		since = " " + time.Since(b.closed).Round(time.Millisecond).String() + " after close"
 	}
-	b.event(platform.BrowserEvent{Kind: "browser-process-exited", Detail: fmt.Sprintf("pid %d kind %d closing %t%s", pid, kind, b.closing, since)}, nil)
-	if !b.closing && !b.browserFailed {
-		b.browserFailed = true
-		b.host.Failed(fmt.Errorf("WebView2 browser process %d exited (kind %d)", pid, kind))
+	detail := fmt.Sprintf("pid %d kind %d closing %t%s", pid, kind, b.closing, since)
+	if kindHR.failed() {
+		detail = fmt.Sprintf("pid %d kind unreadable (%v) closing %t%s", pid, kindHR, b.closing, since)
 	}
+	b.event(platform.BrowserEvent{Kind: "browser-process-exited", Detail: detail}, nil)
+	// Before close every exit is unexpected; during close only a confirmed
+	// normal exit is the expected end. A failure is reported before teardown
+	// proceeds.
+	var failure error
+	switch {
+	case kindHR.failed():
+		// A failed getter leaves its zeroed output reading as normal.
+		failure = fmt.Errorf("WebView2 browser process %d exited, exit kind unreadable: %w", pid,
+			kindHR.err("ICoreWebView2BrowserProcessExitedEventArgs::get_BrowserProcessExitKind"))
+	case !b.closing:
+		failure = fmt.Errorf("WebView2 browser process %d exited (kind %d)", pid, kind)
+	case kind != exitKindNormal:
+		failure = fmt.Errorf("WebView2 browser process %d exited during close (kind %d)", pid, kind)
+	}
+	b.browserFailure(failure)
 	b.sync()
 	if b.closing {
 		b.maybeRelease()
@@ -692,13 +762,33 @@ func (b *browser) onBrowserProcessExited(args uintptr) {
 // receive handles one intercepted request on the UI thread. Requests outside
 // an owned window's origin are answered here and never leave the browser.
 // In-process requests on the origin are measured, admitted and read within
-// the endpoint's limits; the request strings are Go copies.
+// the endpoint's limits. Their method, URI and headers arrive as native
+// UTF-16 strings, which must be converted to Go strings: each is measured in
+// place first, by its exact UTF-8 length, and nothing is converted for a
+// request past the metadata limit, which the endpoint refuses with 431. The
+// accepted copies, and the header slice built at its exact size, are bounded
+// by that limit and covered by the endpoint's transfer reserve for the one
+// synchronous request call in progress.
 func (b *browser) receive(args uintptr) {
-	req, uri, method, context := n.requestInfo(args)
+	req, uriP, methodP, context := n.requestInfo(args)
 	if req == 0 {
 		return
 	}
 	defer n.release(req)
+	if b.mode == platform.BrowserInProcess && !b.closing {
+		methodLen := wideUTF8(methodP, n.wlen(methodP))
+		if methodLen == 0 {
+			methodLen = len("GET")
+		}
+		if size := int64(platform.RequestRecordOverhead + methodLen + wideUTF8(uriP, n.wlen(uriP))); size > b.metadata {
+			n.free(uriP)
+			n.free(methodP)
+			b.act(args, 0, nil, b.host.Request(platform.BrowserRequest{MetadataSize: size}))
+			b.sync()
+			return
+		}
+	}
+	uri, method := n.take(uriP), n.take(methodP)
 	if context == resourceContextDocument {
 		b.nav.document(uri, method)
 		b.event(platform.BrowserEvent{Kind: "document-request", URI: uri, Method: method}, nil)
@@ -724,99 +814,262 @@ func (b *browser) receive(args uintptr) {
 	}
 	size := int64(platform.RequestRecordOverhead + len(in.Method) + len(in.URL))
 	length := int64(-1)
+	// First pass: measure every header in place, converting nothing, and
+	// stop once the limit is passed. Each GetCurrentHeader returns fresh
+	// native copies, freed at once.
+	count := 0
 	if it, hr := n.requestHeaders(req); !hr.failed() && it != 0 {
-		// Measure first, converting nothing past the limit: a UTF-16 unit is at
-		// least one UTF-8 byte, so an over-limit count needs no conversion.
 		for size <= b.metadata && n.iterHas(it) {
 			name, value, ok := n.iterCurrent(it)
 			if !ok {
 				break
 			}
-			units := int64(n.wlen(name) + n.wlen(value) + platform.RequestHeaderOverhead)
-			if size+units > b.metadata {
-				n.free(name)
-				n.free(value)
-				size += units
-				break
-			}
-			h := platform.Header{Name: n.take(name), Value: n.take(value)}
-			size += int64(len(h.Name) + len(h.Value) + platform.RequestHeaderOverhead)
-			if strings.EqualFold(h.Name, "Content-Length") {
-				if v, err := strconv.ParseInt(strings.TrimSpace(h.Value), 10, 64); err == nil && v >= 0 {
-					length = v
-				}
-			}
-			in.Header = append(in.Header, h)
+			size += int64(wideUTF8(name, n.wlen(name)) + wideUTF8(value, n.wlen(value)) + platform.RequestHeaderOverhead)
+			n.free(name)
+			n.free(value)
+			count++
 			n.iterNext(it)
 		}
 		n.release(it)
 	}
+	// Second pass, within the limit only: convert into a slice of exactly the
+	// counted size.
+	if size <= b.metadata && count > 0 {
+		if it, hr := n.requestHeaders(req); !hr.failed() && it != 0 {
+			in.Header = make([]platform.Header, 0, count)
+			for len(in.Header) < count && n.iterHas(it) {
+				name, value, ok := n.iterCurrent(it)
+				if !ok {
+					break
+				}
+				h := platform.Header{Name: n.take(name), Value: n.take(value)}
+				if strings.EqualFold(h.Name, "Content-Length") {
+					if v, err := strconv.ParseInt(strings.TrimSpace(h.Value), 10, 64); err == nil && v >= 0 {
+						length = v
+					}
+				}
+				in.Header = append(in.Header, h)
+				n.iterNext(it)
+			}
+			n.release(it)
+		}
+	}
 	in.MetadataSize = size
-	if size > b.metadata {
-		in.Header = nil
+	// A failed getter is not an empty body: the request is admitted with an
+	// unknown length and its read fails, so it is aborted, never served empty.
+	content, hr := n.requestContent(req)
+	if content == 0 && in.Method != "GET" && in.Method != "HEAD" {
+		// Evidence for which streaming uploads arrive without content: the
+		// getter's result, distinguished from a successful null stream. Only
+		// that: the event outlives the request call, so it keeps no request
+		// string (the transfer reserve covers those only during the call).
+		b.event(platform.BrowserEvent{Kind: "request-content", Detail: fmt.Sprintf("get_Content %v null=true", hr)}, nil)
 	}
-	content := n.requestContent(req)
-	if content != 0 {
-		defer n.release(content)
-	}
+	var contentErr error
+	// The declaration and the stream are separate facts; the endpoint
+	// refuses their disagreement.
 	switch {
-	case content == 0, length == 0:
-		in.BodyLength = 0
+	case hr.failed():
+		// Request-local abort: a read is owed and fails at once, never an
+		// empty body.
+		contentErr = hr.err("ICoreWebView2WebResourceRequest::get_Content")
+		content, in.BodyLength = 0, -1
+	case content == 0:
+		in.BodyLength, in.NoBody = length, true // the getter succeeded with no stream
 	default:
 		in.BodyLength = length
 	}
 	d := b.host.Request(in)
-	b.act(args, content, d)
+	if !b.act(args, content, contentErr, d) && content != 0 {
+		n.release(content)
+	}
 	b.sync()
 }
 
-// act carries out the endpoint's decision for an intercepted request.
-func (b *browser) act(args, content uintptr, d platform.RequestDecision) {
+// act carries out the endpoint's first decision for an intercepted request.
+// A body to read goes to its own worker, which then owns content; act
+// reports whether it took content.
+func (b *browser) act(args, content uintptr, contentErr error, d platform.RequestDecision) (taken bool) {
 	id := d.ID // body-read decisions may abort without repeating the admitted ID
-	for d.Action == platform.RequestRead {
-		// Bounded synchronous reads of the engine's buffered request body, in
-		// the chunks the endpoint grants, until it ends or the endpoint decides.
-		if content == 0 {
-			d = b.host.RequestBodyEnd(d.ID, nil)
-			continue
-		}
-		buf := make([]byte, max(d.ReadChunk, 1))
-		read, end, hr := n.streamRead(content, buf)
+	if d.Action == platform.RequestRead {
 		switch {
-		case hr.failed():
-			d = b.host.RequestBodyEnd(d.ID, hr.err("IStream::Read"))
-		case read > 0:
-			id := d.ID
-			d = b.host.RequestBody(id, buf[:read])
-			if d.Action == platform.RequestRead && end {
-				d = b.host.RequestBodyEnd(id, nil)
-			}
+		case contentErr != nil:
+			d = b.host.RequestBodyEnd(id, contentErr)
+		case content == 0:
+			d = b.host.RequestBodyEnd(id, nil)
 		default:
-			d = b.host.RequestBodyEnd(d.ID, nil)
+			return b.startRead(args, content, id, d.ReadChunk)
 		}
+	}
+	b.decide(args, 0, id, d)
+	return false
+}
+
+// decide carries out a final decision. A deferral already taken, by a body
+// read, is used; otherwise Wait takes one.
+func (b *browser) decide(args, deferral uintptr, id platform.ID, d platform.RequestDecision) {
+	if d.ID == 0 {
+		d.ID = id // the original admission still needs releasing
 	}
 	switch d.Action {
 	case platform.RequestWait:
-		def, hr := n.deferral(args)
-		if hr.failed() || def == 0 {
-			b.host.RequestReleased(d.ID) // the engine proceeds without a response
-			return
+		if deferral == 0 {
+			def, hr := n.deferral(args)
+			if hr.failed() || def == 0 {
+				b.release(d.ID) // the engine proceeds without a response
+				return
+			}
+			n.addRef(args)
+			deferral = def
 		}
-		n.addRef(args)
-		b.requests[d.ID] = &nativeRequest{args: args, deferral: def}
+		b.requests[d.ID] = &nativeRequest{args: args, deferral: deferral}
 	case platform.RequestRespond:
-		b.deliver(d.ID, args, 0, d.Response)
+		b.deliver(d.ID, args, deferral, d.Response)
 	default:
 		// Abort: no response is installed, so the engine's request proceeds to
-		// its unresolvable host and fails there. The original admission still
-		// needs releasing even when the abort decision omits its ID.
-		if d.ID == 0 {
-			d.ID = id
+		// its unresolvable host and fails there.
+		if deferral != 0 {
+			n.deferralDone(deferral)
+			n.release(deferral)
+			n.release(args)
 		}
 		if d.ID != 0 {
-			b.host.RequestReleased(d.ID)
+			b.release(d.ID)
 		}
 	}
+}
+
+// release reports the endpoint's request released once both native
+// ownership and the request's body worker have finished, whichever is later:
+// a worker still unfinished takes it as owed and readFinished reports it.
+func (b *browser) release(id platform.ID) {
+	if r := b.reads[id]; r != nil {
+		r.owed = true
+		return
+	}
+	b.host.RequestReleased(id)
+}
+
+// startRead checks that the body stream is agile, takes the request's
+// deferral and registers the read before starting its worker, which then
+// owns content. Anything else fails the request locally and leaves content to
+// the caller. The worker reads one granted chunk at a time; the UI thread
+// alone talks to the endpoint and to WebView2.
+func (b *browser) startRead(args, content uintptr, id platform.ID, chunk int) bool {
+	if hr := n.agile(content); hr.failed() {
+		b.event(platform.BrowserEvent{Kind: "body-unsupported", Detail: hr.String()}, nil)
+		b.decide(args, 0, id, b.host.RequestBodyEnd(id, errUnsupportedStream(hr)))
+		return false
+	}
+	def, hr := n.deferral(args)
+	if hr.failed() || def == 0 {
+		b.decide(args, 0, id, b.host.RequestBodyEnd(id, hr.err("ICoreWebView2WebResourceRequestedEventArgs::GetDeferral")))
+		return false
+	}
+	n.addRef(args)
+	if b.reads == nil {
+		b.reads = make(map[platform.ID]*bodyRead)
+	}
+	r := &bodyRead{id: id, args: args, deferral: def, stream: content, grant: make(chan []byte, 1)}
+	b.reads[id] = r
+	r.grant <- make([]byte, chunk) // the read's one buffer
+	n.startWorker(func() { readBody(b, r) }, func(initErr error) {
+		n.post(func() { b.readFinished(r, initErr) })
+	})
+	return true
+}
+
+// readResult is one chunk's outcome, passed from the worker to the UI thread
+// with the read's buffer, which the worker no longer holds.
+type readResult struct {
+	buf   []byte // the granted buffer
+	count int    // bytes read into it
+	end   bool
+	hr    hresult
+}
+
+// readBody runs on the worker, a locked OS thread in COM's multithreaded
+// apartment, only after COM initialized. It reads only when granted, posts
+// each result, and releases its stream reference before returning; the
+// worker's wrapper reports it finished after leaving COM. After a failed
+// initialization readBody never runs, and the UI thread releases the stream.
+func readBody(b *browser, r *bodyRead) {
+	stream := r.stream
+	for buf := range r.grant {
+		if !r.state.CompareAndSwap(readIdle, readClaimed) {
+			break // stopped: a grant still queued is not read, and its buffer is dropped
+		}
+		count, end, hr := n.streamRead(stream, buf)
+		res := readResult{buf: buf, count: count, end: end, hr: hr}
+		// Back to idle before the result can prompt a new grant; a stop that
+		// came meanwhile stays.
+		r.state.CompareAndSwap(readClaimed, readIdle)
+		n.post(func() { b.readDone(r, res) })
+	}
+	n.release(stream)
+}
+
+// readDone takes one chunk to the endpoint, on the UI thread. A result that
+// arrives after close or after the final decision is dropped.
+func (b *browser) readDone(r *bodyRead, res readResult) {
+	if r.stopped() {
+		return
+	}
+	var d platform.RequestDecision
+	switch {
+	case res.hr.failed():
+		d = b.host.RequestBodyEnd(r.id, res.hr.err("IStream::Read"))
+	case res.count > 0:
+		d = b.host.RequestBody(r.id, res.buf[:res.count])
+		if d.Action == platform.RequestRead && res.end {
+			d = b.host.RequestBodyEnd(r.id, nil)
+		}
+	default:
+		d = b.host.RequestBodyEnd(r.id, nil)
+	}
+	if d.Action == platform.RequestRead {
+		r.grant <- res.buf[:min(max(d.ReadChunk, 1), cap(res.buf))]
+		return
+	}
+	b.stopRead(r) // the buffer goes with res
+	args, def := r.args, r.deferral
+	r.args, r.deferral = 0, 0
+	b.decide(args, def, r.id, d)
+	b.sync()
+}
+
+// stopRead ends a read on the UI thread, never waiting: an unclaimed grant
+// is withdrawn, a claimed read finishes as the one in flight. It reports
+// whether this stop found the read claimed: a Read in flight now.
+func (b *browser) stopRead(r *bodyRead) (claimed bool) {
+	prev := r.state.Swap(readStopped)
+	if prev != readStopped {
+		close(r.grant)
+	}
+	return prev == readClaimed
+}
+
+// readFinished runs on the UI thread once the worker has left COM. Only now
+// may the window release, and a request release owed because native
+// ownership ended first (close, an abort, a delivered response) is reported:
+// the stream, the read buffer's reservation and the endpoint's admission were
+// the worker's until here.
+func (b *browser) readFinished(r *bodyRead, initErr error) {
+	delete(b.reads, r.id)
+	if initErr != nil {
+		n.release(r.stream) // agile: released here, as the worker never joined COM
+		if !r.stopped() {
+			b.stopRead(r)
+			args, def := r.args, r.deferral
+			r.args, r.deferral = 0, 0
+			b.decide(args, def, r.id, b.host.RequestBodyEnd(r.id, initErr))
+		}
+	}
+	if r.owed {
+		b.host.RequestReleased(r.id)
+	}
+	b.sync()
+	b.maybeRelease()
 }
 
 // refuse answers a request natively with a fixed failure, holding nothing.
@@ -870,13 +1123,20 @@ func (b *browser) deliver(id platform.ID, args, deferral uintptr, resp platform.
 			n.post(func() { b.streamReleased(id) })
 		})
 	}
+	if stream != 0 {
+		// Counted from creation: its final release, wherever and whenever it
+		// comes, is the one decrement. That release may be our own below,
+		// when the response failed and nothing else took a reference.
+		b.streams++
+	}
 	native, hr := n.envCreateResponse(b.env, stream, resp.Status, reasonPhrase(resp.Status), sb.String())
 	if stream != 0 {
 		n.release(stream) // the response holds its own reference, or none on failure
 	}
-	installed := false
 	if !hr.failed() && native != 0 {
-		installed = !n.putResponse(args, native).failed()
+		// Installed or not, releasing the response drops its reference to
+		// the stream, whose final release then reports.
+		n.putResponse(args, native)
 		n.release(native)
 	}
 	if deferral != 0 {
@@ -887,15 +1147,11 @@ func (b *browser) deliver(id platform.ID, args, deferral uintptr, resp platform.
 	b.mu.Lock()
 	b.stats.Delivered++
 	b.mu.Unlock()
-	if stream == 0 || !installed && hr.failed() {
-		// Nothing of ours is held: released now. (A stream the engine never
-		// took is released by our own release above, which also reports.)
-		if stream == 0 {
-			b.host.RequestReleased(id)
-		}
-		return
+	if stream == 0 {
+		// Nothing of ours is held: released now. A stream's final release,
+		// ours above if the engine never took it, reports instead.
+		b.release(id)
 	}
-	b.streams++
 }
 
 func reasonPhrase(status int) string {
@@ -916,8 +1172,11 @@ func reasonPhrase(status int) string {
 // body.
 func (b *browser) streamReleased(id platform.ID) {
 	b.streams--
-	b.host.RequestReleased(id)
+	b.release(id)
 	b.sync()
+	if b.closing {
+		b.maybeRelease() // the last response body may have been all teardown waited for
+	}
 }
 
 // Close stops the page, settles every waiting request without a response,
@@ -934,8 +1193,29 @@ func (b *browser) Close() {
 		n.deferralDone(r.deferral)
 		n.release(r.deferral)
 		n.release(r.args)
-		b.host.RequestReleased(id)
+		b.release(id)
 	}
+	// Body reads: settle native interception now, stop further reads, and
+	// keep the worker, its stream and buffer, and the endpoint's admission
+	// until the read in flight actually returns.
+	claimed := 0
+	for _, r := range b.reads {
+		if r.stopped() {
+			continue
+		}
+		if b.stopRead(r) {
+			claimed++
+		}
+		r.owed = true // the deferral settles now; the release, when the worker finishes
+		n.deferralDone(r.deferral)
+		n.release(r.deferral)
+		n.release(r.args)
+		r.args, r.deferral = 0, 0
+	}
+	// The reads this close stopped while claimed: a Read in flight at the
+	// close boundary. A reader leaving COM, or one with a grant queued but
+	// unclaimed, is not counted.
+	b.event(platform.BrowserEvent{Kind: "close", Detail: fmt.Sprintf("claimed-reads=%d", claimed)}, nil)
 	if b.wv != 0 {
 		n.wvStop(b.wv)
 	}
@@ -965,7 +1245,11 @@ func (b *browser) Close() {
 // process ever served this profile, its exit observed. There is no timeout:
 // an exit that never arrives is visible in diagnostics, never assumed.
 func (b *browser) maybeRelease() {
-	if !b.closing || b.releasing || b.envPending || b.ctlPending || b.owed > 0 || b.browserStarted && !b.browserExited {
+	// Response streams: the engine may hold one past the browser process's
+	// exit (the controller is already closed, so it can drop them); the
+	// environment, the loader and the profile wait for its final release.
+	if !b.closing || b.releasing || b.envPending || b.ctlPending || b.owed > 0 || len(b.reads) != 0 || b.streams != 0 ||
+		b.browserStarted && !b.browserExited {
 		return
 	}
 	b.releasing = true

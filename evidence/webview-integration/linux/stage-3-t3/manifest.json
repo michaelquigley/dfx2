@@ -1,0 +1,182 @@
+{
+ "revision": "5b8b88aaca0d8cf215fc1aaa2c5aff265c961305",
+ "working_tree": " M docs/current/webview.md\n M docs/journal/2026-11-16.md\n M evidence/webview-integration/stage-3.md\n M evidence/webview-integration/windows/drive/cases.go\n M evidence/webview-integration/windows/drive/main.go\n M examples/webview/main.go\n M examples/webview/static/probe.js\n M internal/endpoint/finite.go\n M internal/endpoint/finite_test.go\n M internal/endpoint/limits.go\n M internal/platform/browser.go\n M internal/platform/webkit/browser_linux_amd64.go\n M internal/platform/webkit/endpoint_linux_amd64_test.go\n M internal/platform/webview2/browser.go\n M internal/platform/webview2/browser_test.go\n M internal/platform/webview2/endpoint_test.go\n M internal/platform/webview2/native.go\n M internal/platform/webview2/native_windows_amd64.go\n M webview/webview_test.go\n?? docs/future/roadmap/bound-page-controlled-uris-retained-in-browser-audit-events.md\n?? docs/journal/2026-11-19.md\n?? docs/journal/2026-11-20.md\n?? evidence/webview-integration/linux/stage-3-corrections/\n?? evidence/webview-integration/linux/stage-3-triage/\n?? internal/platform/webview2/body_test.go\n?? internal/platform/webview2/metadata.go\n?? internal/platform/webview2/metadata_test.go\n?? internal/platform/webview2/notices_test.go\n?? internal/platform/webview2/worker.go\n",
+ "webview_sha256": "5a0a5b180630a7bcb20040cd9950de2b20c1aae75c735acc147c2b33e6c4c245",
+ "kernel": "7.0.0-43-generic",
+ "go": "go version go1.27.4 linux/amd64",
+ "packages": {
+  "libwebkit2gtk-4.1-0": "2.52.6-0ubuntu0.26.04.1",
+  "libjavascriptcoregtk-4.1-0": "2.52.6-0ubuntu0.26.04.1",
+  "libgtk-3-0t64": "3.24.52-0ubuntu1",
+  "libsoup-3.0-0": "3.6.6-1ubuntu0.3",
+  "libglib2.0-0t64": "2.88.0-1ubuntu0.1",
+  "bubblewrap": "0.11.1-1ubuntu0.3",
+  "gnome-shell": "50.1-0ubuntu1.5"
+ },
+ "started": "2026-11-20T14:14:49-05:00",
+ "runs": [
+  {
+   "name": "wayland",
+   "started": "2026-11-20T14:14:49-05:00",
+   "finished": "2026-11-20T14:15:40-05:00",
+   "exit_code": 0,
+   "cases": [
+    [
+     "owned_basics",
+     true
+    ],
+    [
+     "in_process_alone",
+     true
+    ],
+    [
+     "confinement",
+     true
+    ],
+    [
+     "storage",
+     true
+    ],
+    [
+     "error_pages_loopback",
+     true
+    ],
+    [
+     "error_actions_same_uri",
+     true
+    ],
+    [
+     "attachment",
+     true
+    ],
+    [
+     "close_cases",
+     true
+    ],
+    [
+     "close_one_keep_one",
+     true
+    ],
+    [
+     "lazy_loading",
+     true
+    ],
+    [
+     "browser_failure",
+     true
+    ]
+   ]
+  },
+  {
+   "name": "x11",
+   "started": "2026-11-20T14:15:40-05:00",
+   "finished": "2026-11-20T14:16:35-05:00",
+   "exit_code": 0,
+   "cases": [
+    [
+     "owned_basics",
+     true
+    ],
+    [
+     "in_process_alone",
+     true
+    ],
+    [
+     "confinement",
+     true
+    ],
+    [
+     "storage",
+     true
+    ],
+    [
+     "error_pages_loopback",
+     true
+    ],
+    [
+     "error_actions_same_uri",
+     true
+    ],
+    [
+     "attachment",
+     true
+    ],
+    [
+     "close_cases",
+     true
+    ],
+    [
+     "close_one_keep_one",
+     true
+    ],
+    [
+     "lazy_loading",
+     true
+    ],
+    [
+     "browser_failure",
+     true
+    ]
+   ]
+  },
+  {
+   "name": "x11-scale2",
+   "started": "2026-11-20T14:16:35-05:00",
+   "finished": "2026-11-20T14:17:30-05:00",
+   "exit_code": 0,
+   "cases": [
+    [
+     "owned_basics",
+     true
+    ],
+    [
+     "in_process_alone",
+     true
+    ],
+    [
+     "confinement",
+     true
+    ],
+    [
+     "storage",
+     true
+    ],
+    [
+     "error_pages_loopback",
+     true
+    ],
+    [
+     "error_actions_same_uri",
+     true
+    ],
+    [
+     "attachment",
+     true
+    ],
+    [
+     "close_cases",
+     true
+    ],
+    [
+     "close_one_keep_one",
+     true
+    ],
+    [
+     "lazy_loading",
+     true
+    ],
+    [
+     "browser_failure",
+     true
+    ]
+   ]
+  },
+  {
+   "name": "regression",
+   "started": "2026-11-20T14:17:30-05:00",
+   "finished": "2026-11-20T14:25:17-05:00",
+   "exit_code": 0
+  }
+ ],
+ "finished": "2026-11-20T14:25:17-05:00"
+}
