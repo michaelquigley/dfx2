@@ -1,0 +1,90 @@
+{
+ "case": "attachment",
+ "ok": true,
+ "checks": [
+  {
+   "check": "refused navigations leave the window on its service",
+   "ok": true,
+   "detail": {
+    "outside": {
+     "kind": "navigation-refused",
+     "seq": 6,
+     "uri": "http://127.0.0.1:52296/outside"
+    },
+    "redirect": {
+     "detail": "redirect",
+     "kind": "navigation-refused",
+     "seq": 10,
+     "uri": "http://127.0.0.1:52296/redirected"
+    },
+    "uri": "http://127.0.0.1:52297/"
+   }
+  },
+  {
+   "check": "attached GET failure offers Retry",
+   "ok": true,
+   "detail": {
+    "event": {
+     "detail": "status 8 http 0",
+     "kind": "error-page",
+     "method": "GET",
+     "retry": true,
+     "seq": 16,
+     "uri": "http://127.0.0.1:52297/fail"
+    }
+   }
+  },
+  {
+   "check": "attached POST failure withholds Retry",
+   "ok": true,
+   "detail": {
+    "event": {
+     "detail": "status 8 http 0",
+     "kind": "error-page",
+     "method": "POST",
+     "seq": 28,
+     "uri": "http://127.0.0.1:52297/fail-post"
+    }
+   }
+  },
+  {
+   "check": "Return to start resubmitted no POST",
+   "ok": true,
+   "detail": {
+    "posts_delivered_by_transport": 3
+   }
+  },
+  {
+   "check": "the service is still answering after its window closed",
+   "ok": true
+  }
+ ],
+ "detail": {
+  "collector_hits_after_refused_navigations": [
+   {
+    "method": "GET",
+    "path": "/outside",
+    "dest": "document",
+    "remote": "127.0.0.1:52301",
+    "t": "23:26:17.584"
+   },
+   {
+    "method": "GET",
+    "path": "/redirected",
+    "dest": "document",
+    "remote": "127.0.0.1:52305",
+    "t": "23:26:17.785"
+   }
+  ],
+  "service_requests": 16
+ },
+ "hosts": [
+  {
+   "host": "attachment-host",
+   "exit": 0,
+   "error": "\u003cnil\u003e",
+   "temp_leftovers": null
+  }
+ ],
+ "seconds": 4
+}

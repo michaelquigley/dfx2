@@ -1,0 +1,15 @@
+{
+ "dirty": [
+  ""
+ ],
+ "exe": "C:\\Cygwin64\\tmp\\dfx2-webview.exe",
+ "exe_sha256": "498a67ba1c5c8d9e94e5b30d3e863efc61009780da3a992c4c45a801ba5a698a",
+ "go": "go version go1.27.4 windows/amd64",
+ "os": "Microsoft Windows [Version 10.0.19045.6466]",
+ "revision": "ad2e37bdd7e2e2109d254168a0697bf84134ab1c",
+ "screen": "3840x1600",
+ "session": "RDP-Tcp#1",
+ "session_state": "Active",
+ "system_dpi": 96,
+ "time": "2026-11-20T23:25:21-05:00"
+}

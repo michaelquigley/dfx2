@@ -818,3 +818,36 @@ Run on the Windows host at the revision Michael commits from the U4 tree, with `
    - **`body-unsupported` events:** none are expected.
    - **Timing limits:** keep the probe's. Its "32 ms after close" measured result handling on the UI thread, not stream lifetime, and these runs don't measure post-deferral stream lifetime either.
 5. **Return** the results and the run directory for Michael's commit, as in the stage 3 return. The Linux return then reviews them, and the V4 fix follows there.
+
+### Windows validation of the committed corrections — 2026-11-20
+
+Run on the Windows host at **`ad2e37bdd7e2e2109d254168a0697bf84134ab1c`** (Michael's commit of the U4 tree), clean tree, `CGO_ENABLED=0` throughout, no production code changed. Host: Windows 10 Pro 10.0.19045.6466, amd64, **Go 1.27.4** (the earlier Windows runs used 1.27.3), Evergreen WebView2 Runtime **151.0.4129.93**, SDK 1.0.4129.50 (the embedded loader's digest `a9a09232…` unchanged), Remote Desktop session `Active` (`rdp-tcp#2`; the driver's environment file records the stale `SESSIONNAME` `RDP-Tcp#1`), 3840×1600 at 96 DPI. Raw run: [`windows/stage-3/corrections/`](windows/stage-3/corrections/), host executable SHA-256 `498a67ba1c5c8d9e94e5b30d3e863efc61009780da3a992c4c45a801ba5a698a`, driver `c44d8c67…`, built with the commands in [Native Windows matrix](#native-windows-matrix) and run with the handoff's `-out`.
+
+**Checks.** `go test ./... -count=1 -timeout=900s` passes for every package; `go vet ./...` passes. The IDL check against the pinned `WebView2.idl` passes. `TestWindowsExecutableCarriesLoaderNotices` passes on this host, cross-building `examples/webview` here: the shipping executable carries the DLL and both complete notice texts. **The race repetitions were not run**: this host has no C toolchain (`-race requires cgo`); the Linux return's ×10 race runs stand as the race evidence.
+
+**Native matrix: 17 of 18 pass; `body_close` is untested.** Every host exited as expected (`browser_failure` and `missing_runtime` with their expected errors), no browser process survived its host, no `dfx2-webview2-*` directory remained, and nothing but the supervisor's shutdown diagnostic reached stderr. The sixteen stage 3 regressions all pass, including `size_move` by caption drag. `close_cases-reading` is, as the handoff says, not evidence of a close during a read.
+
+| New case | Result |
+| --- | --- |
+| `body_reader` | A 900,000-byte in-process upload was echoed intact (status 200, length and SHA-256 equal) and no body reader remained afterwards (`Reads` 0). The empty POST was answered as an empty body. The `get_Content` comparison is below |
+| `body_close` | **Untested.** Six attempts closed a fresh host's window 0, 5, 10, 20, 40 and 80 ms after the page was told to upload 900 KB; every `closed` reply carried a well-formed `claimed-reads=0`, every host exited 0 with no leftover, and every stderr was empty. No close landed on a claimed read, so the native close-during-read ordering is still covered only by the modeled tests |
+
+Per-attempt `claimed-reads` for `body_close`: 0 ms → 0, 5 ms → 0, 10 ms → 0, 20 ms → 0, 40 ms → 0, 80 ms → 0. All six drains clean (exit 0, no temp leftovers, empty stderr).
+
+**Targeted `get_Content` comparison** (`body_reader`, window A, in-process; the handler counts are the window's cumulative counts when each run finished, after the 900 KB `uploadEcho` had already added one `POST /api/echo`):
+
+| Run | Page's report | `request-content` events after the run's mark | Handler counts |
+| --- | --- | --- | --- |
+| `emptyPost` | status 200, echo length 0, SHA-256 of the empty body | one: `get_Content S_OK null=true` (seq 14) | `POST /api/echo` 2, `POST /api/report` 2 |
+| `streamUpload` | status 200, echo length 0, SHA-256 of the empty body | one: `get_Content S_OK null=true` (seq 19) | `POST /api/echo` 3, `POST /api/report` 3 |
+
+Reading: on this Runtime a `ReadableStream` upload arrives at interception as a **successful null stream**, exactly as an empty POST does. The getter does not fail, so the request is served as an empty body, the handler runs, and the page sees 200 with nothing delivered. Interception cannot tell the two apart (the stage 3 probe also found no `Content-Length` on intercepted requests). This matches the model's handling of a successful null; the streaming-upload contract remains the Linux review's decision, and nothing here contradicts the implementation.
+
+**Observations the handoff asked for:**
+
+- **T1, release after the browser process exited:** no window's release observably waited on a response stream. The three hosts that printed the five-second shutdown diagnostic (`in_process_alone`, `storage`, `response_race`, the same quit-with-window-open pattern as before) each listed `response-streams=0` and `body-readers=0`; the only `closing=true` status strings captured show `response-streams=0`. The `browser-process-exited` audit events themselves are not in the driver's status snapshots (a closed window leaves `status` before they could be sampled), so the comparison rests on the diagnostics and the `closed` replies, all of which arrived; the explicit close in `profile_lifecycle` took 320 ms.
+- **T2, a crash during close:** none observed. The only browser-process failure is `browser_failure`'s deliberate kill, reported once as "WebView2 browser process exited (reason unexpected, exit code 1, )", with the application draining and exiting 1.
+- **`body-unsupported` events:** none in any host log, as expected.
+- **Timing limits:** unchanged. These runs measured no post-deferral stream lifetime; the body reads were too fast for any close to land on a claimed read.
+
+**What this does and does not establish.** The committed body reader, metadata bound and notice retention execute natively on this Runtime without regression across the eighteen cases; the worker path handled every in-process body and left nothing behind. It does not establish the close-during-read ordering natively (untested, above), and the race detector did not run here. Nothing is committed from this validation; Michael commits the run directory and this record, and the Linux return reviews them with V4 first.

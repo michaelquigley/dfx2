@@ -1,0 +1,106 @@
+{
+ "case": "storage",
+ "ok": true,
+ "checks": [
+  {
+   "check": "A stored cookie, local and session storage",
+   "ok": true,
+   "detail": {
+    "result": {
+     "cookie": "vis=a",
+     "local": "a",
+     "session": "a"
+    }
+   }
+  },
+  {
+   "check": "B sees none of A's storage",
+   "ok": true,
+   "detail": {
+    "result": {
+     "cookie": "",
+     "local": null,
+     "session": null
+    }
+   }
+  },
+  {
+   "check": "A keeps its session across navigation",
+   "ok": true,
+   "detail": {
+    "result": {
+     "cookie": "vis=a",
+     "local": "a",
+     "session": "a"
+    }
+   }
+  },
+  {
+   "check": "loopback page cookie kept across navigation",
+   "ok": true,
+   "detail": {
+    "reread": {
+     "cookie": "vis=l1",
+     "local": "l1",
+     "session": "l1"
+    },
+    "set": {
+     "cookie": "vis=l1",
+     "local": "l1",
+     "session": "l1"
+    }
+   }
+  },
+  {
+   "check": "loopback windows share no cookies across ports",
+   "ok": true,
+   "detail": {
+    "result": {
+     "cookie": "",
+     "local": null,
+     "session": null
+    }
+   }
+  },
+  {
+   "check": "a reopened window starts empty",
+   "ok": true,
+   "detail": {
+    "result": {
+     "cookie": "",
+     "local": null,
+     "session": null
+    }
+   }
+  }
+ ],
+ "detail": {
+  "cache_observation": {
+   "A-first": {
+    "count": "1"
+   },
+   "A-handler": 2,
+   "A-second": {
+    "count": "2"
+   },
+   "B-first": {
+    "count": "1"
+   }
+  }
+ },
+ "hosts": [
+  {
+   "host": "storage-host",
+   "exit": 0,
+   "error": "\u003cnil\u003e",
+   "shutdown_diagnostics": [
+    "2026/11/20 23:26:08 dfx2 shutdown outstanding: windows=1 app-tasks=0 native-completions=0 wake-pending=false wake-failures=0 release-pending=false failure=\u003cnil\u003e; window=54 state=closing native=true creating=false content-release-pending=false; window=54 browser attached=true attaching=false ready=true close-started=true released=false endpoint-started=true endpoint-drained=true cleanups=[] endpoint=[in-process admitted=0/16 native=0 handlers=0 reading=0 refusals=0/16 reserved=0/67026944 closed=true drained=true] native=[webview2 151.0.4129.93 navigated=true closing=true controller-closed=true released=false native-requests=0 body-readers=0 response-streams=0 async=1]; dispatch-targets=1 native-problem=\"\""
+   ],
+   "temp_leftovers": null,
+   "browser_pids": [
+    9608
+   ]
+  }
+ ],
+ "seconds": 10.9
+}

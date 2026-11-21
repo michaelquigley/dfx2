@@ -1,0 +1,50 @@
+{
+ "case": "close_one_keep_one",
+ "ok": true,
+ "checks": [
+  {
+   "check": "the closed window's browser process exited while the host continues",
+   "ok": true,
+   "detail": {
+    "pid": 9296
+   }
+  },
+  {
+   "check": "B kept working",
+   "ok": true,
+   "detail": {
+    "result": {
+     "cookie": "",
+     "css": true,
+     "echo": {
+      "length": 1005,
+      "method": "POST",
+      "sha256": "a5903776f0c8d72f5b1e8689519fc8d9d6317785a20e31659786c8d8703a6b8c"
+     },
+     "img": true,
+     "imgWidth": 48,
+     "missing": 404,
+     "origin": "http://127.0.0.1:52411",
+     "query": "é\u0026ü"
+    }
+   }
+  },
+  {
+   "check": "the native window remains",
+   "ok": true
+  }
+ ],
+ "hosts": [
+  {
+   "host": "close_one_keep_one-host",
+   "exit": 0,
+   "error": "\u003cnil\u003e",
+   "temp_leftovers": null,
+   "browser_pids": [
+    8816,
+    9296
+   ]
+  }
+ ],
+ "seconds": 3.8
+}
