@@ -157,7 +157,12 @@ func newBrowser(parent platform.BrowserParent, config platform.BrowserConfig, ho
 		w.schemeAsCORS(security, scheme)
 		w.registerScheme(b.context, scheme, callbacks.two, b.route(kindScheme), 0)
 	}
-	b.connect(b.context, "download-started", callbacks.three, kindDownload)
+	// Download cancellation is a guarantee: without its signal, creation
+	// fails and unwinds like the required view signals below.
+	if !b.connect(b.context, "download-started", callbacks.three, kindDownload) {
+		b.abandon()
+		return nil, errors.New("WebKitGTK could not connect download-started")
+	}
 	b.view = w.viewNew(b.context)
 	if b.view == 0 {
 		b.abandon()

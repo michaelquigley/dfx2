@@ -615,3 +615,52 @@ func TestOnlyPolicyInterruptionsAreStoppedLoads(t *testing.T) {
 		})
 	}
 }
+
+// Download cancellation is a guarantee, so a download-started signal that
+// cannot be connected fails browser creation, unwound as for the required
+// view signals: the context released, no view made, every routing token
+// dropped and nothing left connected.
+func TestUnconnectableDownloadSignalUnwindsCreation(t *testing.T) {
+	for name, mode := range map[string]platform.BrowserMode{"in-process": platform.BrowserInProcess, "attach": platform.BrowserAttach} {
+		t.Run(name, func(t *testing.T) {
+			f := install(t)
+			loadOnce.Do(func() {})
+			var connected, disconnected int
+			w.connect = func(_ uintptr, name string, _, _, _ uintptr, _ int32) uint64 {
+				if name == "download-started" {
+					return 0
+				}
+				connected++
+				f.nextObj++
+				return uint64(f.nextObj)
+			}
+			w.disconnect = func(uintptr, uint64) { disconnected++ }
+			registry.Lock()
+			tokens := len(registry.targets)
+			registry.Unlock()
+			config := platform.BrowserConfig{Mode: mode, GCSignal: 60, RequestMetadata: 64 << 10}
+			if mode == platform.BrowserAttach {
+				config.StartURL, config.Origins = "http://127.0.0.1:9/", []string{"http://127.0.0.1:9"}
+			}
+			b, err := newBrowser(platform.BrowserParent{Window: 1, Handle: 77}, config, &fakeHost{})
+			if err == nil || b != nil || !strings.Contains(err.Error(), "download-started") {
+				t.Fatalf("creation not refused: browser %v, error %v", b != nil, err)
+			}
+			registry.Lock()
+			left := len(registry.targets) - tokens
+			registry.Unlock()
+			if left != 0 {
+				t.Fatalf("%d routing tokens left registered", left)
+			}
+			unrefs := 0
+			for _, c := range f.calls {
+				if c == "unref" {
+					unrefs++
+				}
+			}
+			if unrefs != 1 || f.did("view-destroy") || f.did("container-add") || connected != disconnected {
+				t.Fatalf("partial attachment not unwound: %v (connected %d, disconnected %d)", f.calls, connected, disconnected)
+			}
+		})
+	}
+}

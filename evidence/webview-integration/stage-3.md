@@ -785,7 +785,7 @@ Known limits, recorded where they apply:
 ### Before stage acceptance
 
 1. **Windows native validation** of the committed U4 revision, as described in the [Windows handoff](#windows-handoff) below.
-2. **V4 on the Linux return.** If `download-started` cannot be connected, browser creation unwinds as it does for the required view signals. The fix needs an injected-failure test, and the affected Linux browser matrix must rerun.
+2. **V4 on the Linux return.** If `download-started` cannot be connected, browser creation unwinds as it does for the required view signals. The fix needs an injected-failure test, and the affected Linux browser matrix must rerun. *Done 2026-11-21; see [Linux return — V4](#linux-return--v4-2026-11-21).*
 3. **Linux review of the Windows return.** That includes the `get_Content` comparison, which settles the `ReadableStream` upload contract.
 4. **Open decisions** from these corrections:
    - the transfer reserve at one metadata limit, which costs 32 KiB of `Buffers` at the defaults and raises `Normalize`'s minimum;
@@ -812,7 +812,9 @@ Run on the Windows host at the revision Michael commits from the U4 tree, with `
    - the `request-content` events (HRESULT and `null=true`), or "no event observed";
    - the handler counts.
 
-   Only these readings establish whether a `ReadableStream` upload arrives as a successful null stream (served as an empty body), as a failed getter (now a network error) or with content. They also show whether the host can tell it from an empty POST. 4. **Observations to record from these runs:**
+   Only these readings establish whether a `ReadableStream` upload arrives as a successful null stream (served as an empty body), as a failed getter (now a network error) or with content. They also show whether the host can tell it from an empty POST.
+
+4. **Observations to record from these runs:**
    - **Release after the browser process exited (T1):** whether any window's release waited on a response stream. Compare the `browser-process-exited` event with the `closed` reply, and note any response streams that diagnostics still list.
    - **A crash during close (T2), if one is observed:** its `browser-process-exited` event and the reported failure. The modeled test supplies the controlled ordering.
    - **`body-unsupported` events:** none are expected.
@@ -851,3 +853,35 @@ Reading: on this Runtime a `ReadableStream` upload arrives at interception as a 
 - **Timing limits:** unchanged. These runs measured no post-deferral stream lifetime; the body reads were too fast for any close to land on a claimed read.
 
 **What this does and does not establish.** The committed body reader, metadata bound and notice retention execute natively on this Runtime without regression across the eighteen cases; the worker path handled every in-process body and left nothing behind. It does not establish the close-during-read ordering natively (untested, above), and the race detector did not run here. Nothing is committed from this validation; Michael commits the run directory and this record, and the Linux return reviews them with V4 first.
+
+### Linux return — V4, 2026-11-21
+
+Implemented on Linux at `fdf7f47` (Michael's commit of the Windows validation). It is the only production change on this return. The Windows result above is unchanged: **17 of 18 pass, `body_close` untested.**
+
+**The fix.** `newBrowser` in `internal/platform/webkit/browser_linux_amd64.go` now checks the result of connecting the context's `download-started` signal. If it fails, creation calls `abandon` and returns an error naming the signal, the same initialization-failure path the required view signals use. The connection is attempted before the view exists, so the unwind releases the context and drops every routing token registered so far: the in-process scheme handler's and the signal's own. Nothing else is held. Before the fix, the result was discarded: creation succeeded, and that window would have let downloads proceed uncancelled.
+
+**Regression.** `TestUnconnectableDownloadSignalUnwindsCreation` injects a `g_signal_connect` failure for `download-started` only, in in-process and attach modes. It checks that `newBrowser` returns no browser and an error naming the signal. It also checks that no routing token stays registered, that the context is unreferenced once, that no view is destroyed or added to the shell, and that every connection made was disconnected. Before the fix, both modes created the browser. A mutation that refuses creation without `abandon` fails the test, leaving two tokens registered in-process and one in attach mode.
+
+**Portable checks.** All pass:
+- the full no-cgo suite;
+- the V4, policy-failure and declaration tests ×50;
+- `webkit` ×3 under the race detector, and `webview` and `appcore` ×5;
+- vet for linux, windows/amd64 and darwin/arm64;
+- the Windows and linux/arm64 builds.
+
+**Linux native.** Only the browser binary changed (unstamped `44057cb4…`). Mixer (`db2b1653…`) and lifetime (`80abb433…`) are identical to [`linux/stage-3-u4/`](linux/stage-3-u4/), so its 8/8 stage 4 regression carries forward. The browser matrix reran into [`linux/stage-3-v4/`](linux/stage-3-v4/), with stamped SHA-256 `86ba9ad6991587eb7a923e7e0f420c277c2a6f28c73ed56a1d5f8a11ae0797d9`.
+- **Result:** 33/33. Every host matched its expected exit, `browser_failure` with its expected exit 1. Child-exit coverage is as in N6: none unobserved on Wayland, and the same 8 hosts per X11 session with no child exit status observed, where the final check found no remaining descendants.
+- **Logs:** no panic, race report or GLib critical.
+- **What it establishes natively:** only the success path. `download-started` connected on WebKitGTK 2.52.6 for every browser the 33 cases created, since a failed connection would now have refused creation.
+- **What it does not:** the matrix has no download case. Every audit records `Downloads: 0`, and no response was refused as undisplayable. So neither the failure path nor download cancellation itself ran natively here. The failure path has modeled coverage only.
+
+This is now the current Linux browser evidence, with the stage 4 regression from `stage-3-u4`.
+
+| Run | Session | Hosts with reaped children | Hosts with no child exit status observed |
+| --- | --- | --- | --- |
+| V4 | Wayland | 15 | none |
+| V4 | X11 | 7 | the same 8 as in N6 |
+| V4 | X11 at scale 2 | 7 | the same 8 as in N6 |
+
+Next on this return: review of the Windows validation above and the open decisions.
+
