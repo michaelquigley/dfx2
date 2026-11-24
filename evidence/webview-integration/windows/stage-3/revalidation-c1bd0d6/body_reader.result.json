@@ -1,0 +1,172 @@
+{
+ "case": "body_reader",
+ "ok": true,
+ "checks": [
+  {
+   "check": "a 900000-byte upload is echoed intact",
+   "ok": true,
+   "detail": {
+    "result": {
+     "echo": {
+      "length": 900000,
+      "method": "POST",
+      "sha256": "53eef6246186f58559356c069c97663557e7c70bb2884eaa010da4944eee6d8f"
+     },
+     "status": 200
+    }
+   }
+  },
+  {
+   "check": "no body reader remains after the upload",
+   "ok": true,
+   "detail": {
+    "browser": {
+     "Actions": 0,
+     "Allowed": 2,
+     "Asyncs": 1,
+     "Closing": false,
+     "Copies": 0,
+     "Delivered": 11,
+     "Destroyed": false,
+     "Downloads": 0,
+     "ErrorPages": 0,
+     "Events": [
+      {
+       "detail": "browser process 4716",
+       "kind": "controller",
+       "seq": 1
+      },
+      {
+       "kind": "navigation-allowed",
+       "seq": 2,
+       "uri": "https://dfx2.invalid/"
+      },
+      {
+       "kind": "document-request",
+       "method": "GET",
+       "seq": 3,
+       "uri": "https://dfx2.invalid/"
+      },
+      {
+       "detail": "200",
+       "kind": "resource-response",
+       "seq": 4,
+       "uri": "https://dfx2.invalid/"
+      },
+      {
+       "kind": "navigation-allowed",
+       "seq": 5,
+       "uri": "https://dfx2.invalid/?run=uploadEcho\u0026id=uploadEcho-74500\u0026size=900000"
+      },
+      {
+       "kind": "document-request",
+       "method": "GET",
+       "seq": 6,
+       "uri": "https://dfx2.invalid/?run=uploadEcho\u0026id=uploadEcho-74500\u0026size=900000"
+      },
+      {
+       "detail": "200",
+       "kind": "resource-response",
+       "seq": 7,
+       "uri": "https://dfx2.invalid/?run=uploadEcho\u0026id=uploadEcho-74500\u0026size=900000"
+      },
+      {
+       "detail": "status 0 http 200",
+       "kind": "load",
+       "method": "GET",
+       "seq": 8,
+       "uri": "https://dfx2.invalid/?run=uploadEcho\u0026id=uploadEcho-74500\u0026size=900000"
+      }
+     ],
+     "Navigated": true,
+     "Permissions": 0,
+     "Popups": 0,
+     "Reads": 0,
+     "Refused": 0,
+     "Released": false,
+     "Requests": 0,
+     "Runtime": "151.0.4129.93",
+     "Signal": 0,
+     "Start": "https://dfx2.invalid/"
+    }
+   }
+  },
+  {
+   "check": "an empty POST is answered as an empty body",
+   "ok": true,
+   "detail": {
+    "page": {
+     "echo": {
+      "length": 0,
+      "method": "POST",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+     },
+     "status": 200
+    }
+   }
+  }
+ ],
+ "detail": {
+  "emptyPost": {
+   "handler": {
+    "GET /": 3,
+    "GET /favicon.ico": 1,
+    "GET /logo.svg": 3,
+    "GET /probe.css": 3,
+    "GET /probe.js": 3,
+    "POST /api/echo": 2,
+    "POST /api/report": 2
+   },
+   "page": {
+    "echo": {
+     "length": 0,
+     "method": "POST",
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "status": 200
+   },
+   "request_content": [
+    {
+     "detail": "get_Content S_OK null=true",
+     "kind": "request-content",
+     "seq": 13
+    }
+   ]
+  },
+  "streamUpload": {
+   "handler": {
+    "GET /": 4,
+    "GET /favicon.ico": 1,
+    "GET /logo.svg": 4,
+    "GET /probe.css": 4,
+    "GET /probe.js": 4,
+    "POST /api/echo": 3,
+    "POST /api/report": 3
+   },
+   "page": {
+    "echo": {
+     "length": 0,
+     "method": "POST",
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "status": 200
+   },
+   "request_content": [
+    {
+     "detail": "get_Content S_OK null=true",
+     "kind": "request-content",
+     "seq": 18
+    }
+   ]
+  }
+ },
+ "hosts": [
+  {
+   "host": "body_reader-body",
+   "exit": 0,
+   "error": "\u003cnil\u003e",
+   "temp_leftovers": null
+  }
+ ],
+ "seconds": 7.3
+}

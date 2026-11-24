@@ -1,0 +1,291 @@
+{
+ "case": "close_cases",
+ "ok": true,
+ "checks": [
+  {
+   "check": "close during credential confirmation and before navigation were reachable natively",
+   "ok": true,
+   "detail": {
+    "reachable": {
+     "inprocess": [
+      "controller",
+      "navigation"
+     ],
+     "loopback": [
+      "controller",
+      "cookie",
+      "navigation"
+     ]
+    }
+   }
+  },
+  {
+   "check": "inprocess: the held handler was entered",
+   "ok": true
+  },
+  {
+   "check": "inprocess: the window stays pending while its handler runs",
+   "ok": true,
+   "detail": {
+    "status": {
+     "endpoint": "in-process admitted=1/16 native=0 handlers=1 reading=0 refusals=0/16 reserved=2230310/66764736 closed=true drained=false",
+     "handler": {
+      "GET /": 2,
+      "GET /api/hold": 1,
+      "GET /favicon.ico": 1,
+      "GET /logo.svg": 2,
+      "GET /probe.css": 2,
+      "GET /probe.js": 2,
+      "POST /api/report": 1
+     },
+     "mode": "inprocess",
+     "native": "webview2 151.0.4129.93 navigated=true closing=true controller-closed=true released=false native-requests=0 body-readers=0 response-streams=0 async=1",
+     "released": false
+    }
+   }
+  },
+  {
+   "check": "loopback: the held handler was entered",
+   "ok": true
+  },
+  {
+   "check": "loopback: the window stays pending while its handler runs",
+   "ok": true,
+   "detail": {
+    "status": {
+     "endpoint": "loopback origin=http://127.0.0.1:60417 connections=0/32 handlers=1/16 serving=false closed=true drained=false refused-connections=0 busy=0 unauthorized=0 upgrades=0",
+     "handler": {
+      "GET /": 2,
+      "GET /api/hold": 1,
+      "GET /favicon.ico": 1,
+      "GET /logo.svg": 2,
+      "GET /probe.css": 2,
+      "GET /probe.js": 2,
+      "POST /api/report": 1
+     },
+     "mode": "loopback",
+     "native": "webview2 151.0.4129.93 navigated=true closing=true controller-closed=true released=true native-requests=0 body-readers=0 response-streams=0 async=0",
+     "released": true
+    }
+   }
+  }
+ ],
+ "detail": {
+  "inprocess-controller": {
+   "closed": {
+    "close": "claimed-reads=0",
+    "event": "closed",
+    "mode": "inprocess",
+    "time": "2026-11-24T12:55:01.248389-05:00",
+    "window": "A"
+   },
+   "opened": {
+    "asyncs_at_open": 1,
+    "close_at": "controller",
+    "close_at_error": "",
+    "error": "\u003cnil\u003e",
+    "event": "opened",
+    "events_at_open": 0,
+    "mode": "inprocess",
+    "start": "https://dfx2.invalid/",
+    "time": "2026-11-24T12:55:00.676331-05:00",
+    "window": "A"
+   },
+   "second_window_events": 9
+  },
+  "inprocess-environment": {
+   "opened": {
+    "asyncs_at_open": 1,
+    "close_at": "environment",
+    "close_at_error": "stage \"environment\" already passed",
+    "error": "\u003cnil\u003e",
+    "event": "opened",
+    "events_at_open": 0,
+    "mode": "inprocess",
+    "start": "https://dfx2.invalid/",
+    "time": "2026-11-24T12:54:53.0100766-05:00",
+    "window": "A"
+   },
+   "second_window_events": 8,
+   "unreachable": "stage \"environment\" already passed"
+  },
+  "inprocess-navigation": {
+   "closed": {
+    "close": "claimed-reads=0",
+    "event": "closed",
+    "mode": "inprocess",
+    "time": "2026-11-24T12:55:09.1356189-05:00",
+    "window": "A"
+   },
+   "opened": {
+    "asyncs_at_open": 1,
+    "close_at": "navigation",
+    "close_at_error": "",
+    "error": "\u003cnil\u003e",
+    "event": "opened",
+    "events_at_open": 0,
+    "mode": "inprocess",
+    "start": "https://dfx2.invalid/",
+    "time": "2026-11-24T12:55:08.5330861-05:00",
+    "window": "A"
+   },
+   "second_window_events": 8
+  },
+  "loopback-controller": {
+   "closed": {
+    "close": "claimed-reads=0",
+    "event": "closed",
+    "mode": "loopback",
+    "time": "2026-11-24T12:54:48.9119474-05:00",
+    "window": "A"
+   },
+   "opened": {
+    "asyncs_at_open": 1,
+    "close_at": "controller",
+    "close_at_error": "",
+    "error": "\u003cnil\u003e",
+    "event": "opened",
+    "events_at_open": 0,
+    "mode": "loopback",
+    "start": "http://127.0.0.1:60373/",
+    "time": "2026-11-24T12:54:48.3393689-05:00",
+    "window": "A"
+   },
+   "second_window_events": 9
+  },
+  "loopback-cookie": {
+   "closed": {
+    "close": "claimed-reads=0",
+    "event": "closed",
+    "mode": "loopback",
+    "time": "2026-11-24T12:54:50.4290781-05:00",
+    "window": "A"
+   },
+   "opened": {
+    "asyncs_at_open": 1,
+    "close_at": "cookie",
+    "close_at_error": "",
+    "error": "\u003cnil\u003e",
+    "event": "opened",
+    "events_at_open": 0,
+    "mode": "loopback",
+    "start": "http://127.0.0.1:60381/",
+    "time": "2026-11-24T12:54:49.8132871-05:00",
+    "window": "A"
+   },
+   "second_window_events": 9
+  },
+  "loopback-environment": {
+   "opened": {
+    "asyncs_at_open": 1,
+    "close_at": "environment",
+    "close_at_error": "stage \"environment\" already passed",
+    "error": "\u003cnil\u003e",
+    "event": "opened",
+    "events_at_open": 0,
+    "mode": "loopback",
+    "start": "http://127.0.0.1:60366/",
+    "time": "2026-11-24T12:54:46.673295-05:00",
+    "window": "A"
+   },
+   "second_window_events": 10,
+   "unreachable": "stage \"environment\" already passed"
+  },
+  "loopback-navigation": {
+   "closed": {
+    "close": "claimed-reads=0",
+    "event": "closed",
+    "mode": "loopback",
+    "time": "2026-11-24T12:54:51.9363679-05:00",
+    "window": "A"
+   },
+   "opened": {
+    "asyncs_at_open": 1,
+    "close_at": "navigation",
+    "close_at_error": "",
+    "error": "\u003cnil\u003e",
+    "event": "opened",
+    "events_at_open": 0,
+    "mode": "loopback",
+    "start": "http://127.0.0.1:60387/",
+    "time": "2026-11-24T12:54:51.3339236-05:00",
+    "window": "A"
+   },
+   "second_window_events": 10
+  },
+  "reachable_stages": {
+   "inprocess": [
+    "controller",
+    "navigation"
+   ],
+   "loopback": [
+    "controller",
+    "cookie",
+    "navigation"
+   ]
+  }
+ },
+ "hosts": [
+  {
+   "host": "close_cases-init-loopback-environment",
+   "exit": 0,
+   "error": "\u003cnil\u003e",
+   "temp_leftovers": null
+  },
+  {
+   "host": "close_cases-init-loopback-controller",
+   "exit": 0,
+   "error": "\u003cnil\u003e",
+   "temp_leftovers": null
+  },
+  {
+   "host": "close_cases-init-loopback-cookie",
+   "exit": 0,
+   "error": "\u003cnil\u003e",
+   "temp_leftovers": null
+  },
+  {
+   "host": "close_cases-init-loopback-navigation",
+   "exit": 0,
+   "error": "\u003cnil\u003e",
+   "temp_leftovers": null
+  },
+  {
+   "host": "close_cases-init-inprocess-environment",
+   "exit": 0,
+   "error": "\u003cnil\u003e",
+   "temp_leftovers": null
+  },
+  {
+   "host": "close_cases-init-inprocess-controller",
+   "exit": 0,
+   "error": "\u003cnil\u003e",
+   "temp_leftovers": null
+  },
+  {
+   "host": "close_cases-init-inprocess-navigation",
+   "exit": 0,
+   "error": "\u003cnil\u003e",
+   "temp_leftovers": null
+  },
+  {
+   "host": "close_cases-handler-inprocess",
+   "exit": 0,
+   "error": "\u003cnil\u003e",
+   "temp_leftovers": null
+  },
+  {
+   "host": "close_cases-handler-loopback",
+   "exit": 0,
+   "error": "\u003cnil\u003e",
+   "temp_leftovers": null
+  },
+  {
+   "host": "close_cases-reading",
+   "exit": 0,
+   "error": "\u003cnil\u003e",
+   "temp_leftovers": null
+  }
+ ],
+ "seconds": 46.5
+}

@@ -1,0 +1,18 @@
+ok  	github.com/michaelquigley/dfx2	3.977s
+?   	github.com/michaelquigley/dfx2/evidence/webview-integration/windows/drive	[no test files]
+?   	github.com/michaelquigley/dfx2/examples/lifetime	[no test files]
+ok  	github.com/michaelquigley/dfx2/examples/mixer	2.484s
+?   	github.com/michaelquigley/dfx2/examples/webview	[no test files]
+ok  	github.com/michaelquigley/dfx2/internal/appcore	1.229s
+ok  	github.com/michaelquigley/dfx2/internal/endpoint	2.266s
+ok  	github.com/michaelquigley/dfx2/internal/origin	0.551s
+ok  	github.com/michaelquigley/dfx2/internal/platform	0.505s
+?   	github.com/michaelquigley/dfx2/internal/platform/fake	[no test files]
+ok  	github.com/michaelquigley/dfx2/internal/platform/webkit	0.737s
+ok  	github.com/michaelquigley/dfx2/internal/platform/webview2	3.661s
+ok  	github.com/michaelquigley/dfx2/internal/platform/win32	0.676s
+ok  	github.com/michaelquigley/dfx2/internal/render	0.567s
+ok  	github.com/michaelquigley/dfx2/internal/text	0.571s
+ok  	github.com/michaelquigley/dfx2/internal/text/gotext	0.735s
+ok  	github.com/michaelquigley/dfx2/ui	0.909s
+ok  	github.com/michaelquigley/dfx2/webview	1.024s

@@ -1053,3 +1053,75 @@ The runtime overview advisory is corrected: it now names both built browser host
 The remaining two findings were assessed by code inspection. Retry can inherit an earlier hop's GET until a new document request supplies its method, but the action still issues GET and does not replay a POST. Synchronous startup failure can give Open `ErrClosed`, while the underlying failure still reaches Run. The recommendation is to track these as follow-up work without blocking Windows transfer. That is the assessment of this review session, not a claim that Michael separately approved both dispositions.
 
 Terminus remains **not clean**. No stage acceptance is claimed. The recommended next milestone is native Windows revalidation of the candidate Michael commits, followed by review of that evidence.
+
+### Windows revalidation of `c1bd0d6` — 2026-11-24
+
+Run on the Windows host at **`c1bd0d6510dacbf855f271dae261de02e6c86473`** (Michael's commit of the Linux-side corrections: readiness, dispatch-window lifetime, stream-clone allocation, navigation completion, frame presentation, text capacity, response serialization reserve). The worktree was clean before the run (`git status --porcelain` empty); afterwards it holds only the three untracked run directories named below. `CGO_ENABLED=0` throughout; no production code, test, driver or runner changed. Host: Windows 10 Pro 10.0.19045.6466, amd64, Go 1.27.4, Windows PowerShell 5.1.19041.6456 (not elevated), Evergreen WebView2 Runtime **151.0.4129.93** (also recorded by the driver in `summary.json`), SDK 1.0.4129.50, Remote Desktop session `rdp-tcp#3` (session 2) `Active` before and after every run (the drivers' environment files record the agent shell's stale `SESSIONNAME` `RDP-Tcp#1`), one Microsoft Remote Display Adapter at 3440×1440 and 96 DPI (scale 1; every `first_surface` of every process is `@1`). The display differs from the 2026-11-20 run's 3840×1600; both 760-wide mixer windows fit side by side.
+
+**Binaries.** Built from the clean tree before any evidence existed:
+
+| Binary | SHA-256 |
+| --- | --- |
+| `examples/webview` → `dfx2-webview.exe` (host of the browser matrix) | `6cea568dbec8f37534335fce95f3929f7777954704d7be5bc35fc21c06824465` |
+| `evidence/webview-integration/windows/drive` → `dfx2-wvdrive.exe` | `66b9735dbeb2014cbb4055847860ac2efb33892d965f6d904e1d06bc942b54cf` |
+| `examples/mixer` → `dfx2-mixer.exe` (reference and manual-audition binary) | `4b15d057aa17f88acf32f35b81d5604b0e773b386c0fda7c59cf97352be79bcf` |
+| `examples/lifetime` → `dfx2-lifetime.exe` (reference) | `8292e3f63135aa0d925f042d2bc951b65ecbd972a47a86690c357dc49f54a773` |
+
+The mixer and foundation runners build their own copies after the first run directory exists, so Go stamps `vcs.modified` and those hash differently from the same source: `mixer.exe` `4668a34d…`, `desk.exe` `60a0909b…`, `controlsdrive4.exe` `8fd1b940…`, `lifetime.exe` `a34561e9…`, `ctrlbreak.exe` `998edd2a…`. Compare revisions, not hashes, with Linux.
+
+**Checks (all pass).**
+
+- `go test ./... -count=1 -timeout=900s`: all 14 packages with tests ok. `go vet ./...` and `go build ./...` clean.
+- The IDL check: `TestBindingsMatchIDL` PASS with `WEBVIEW2_IDL` at the pinned SDK's `WebView2.idl`.
+- `TestWindowsExecutableCarriesLoaderNotices` PASS (1.84 s), cross-building `examples/webview` on this host.
+- **Windows-only tests executed here for the first time** (they were cross-compiled on Linux): `TestStreamCloneAllocationFailure`, `TestStreamCloneHasIndependentPositionAndSharesBody`, `TestHandlerAllocationFailureKeepsRegistryEmpty`, `TestResponseStreamAllocationFailureKeepsRegistryEmpty`, `TestNativeDispatchWindowClosesInsideDispatchAndReopens` and `TestWithinWindowsPaths`, all PASS; the dispatch-window test also passed `-count=10`. Only the dispatch-window test exercises real Win32: it creates the message-only window, dispatches through User32 and checks the HWND is gone before reopening with the same class. The clone and allocation tests run the real COM callbacks over Windows-allocated memory with an injected allocation failure; no Runtime is involved. The rest of the suite, including the readiness, frame-presentation, text-capacity, navigation and endpoint-budget regressions (`TestBrowserReadyRefusesNavigationAfterContextCancellation`, `TestSurfaceBecomesIneligibleDuringItsOwnFrame`, `TestWrapBudgetsIncludeSpareCapacity`, `TestParagraphBudgetChargesRunArrayCapacity`, `TestNavigationMethodAndErrorPageActions`, `TestNavigationHTTPResponsesDisplayWithoutResourceEvents`, `TestLateSameURLResponseCannotSuppressTheErrorPage`, the serialization-reserve extension of `TestFiniteDeliveryStaysWithinTheAdmissionReservation`, `TestHandlerAllocationFailureStopsInitialization`, `TestResponseStreamAllocationFailureDrainsEndpoint`), is modeled even when it runs on Windows.
+- **Race detector: not run.** `-race` needs cgo and this host has no C compiler (`gcc` not found); nothing was installed. The Linux race runs recorded above stand as the race evidence.
+
+**Native browser matrix: 17 of 18 pass; `body_close` is untested.** Raw run: [`windows/stage-3/revalidation-c1bd0d6/`](windows/stage-3/revalidation-c1bd0d6/) (88 files), run with the handoff's command. Every host exited as expected (`browser_failure` and `missing_runtime` with their expected errors), no browser process survived its host, no `dfx2-webview2-*` directory remained in TEMP, and nothing but the supervisor's five-second shutdown diagnostic reached stderr. The driver's response audit expectation is now `resource-response`, and the events arrived under that name.
+
+| Case | Checks | Result |
+| --- | --- | --- |
+| `owned_basics` | 8 | pass |
+| `in_process_alone` | 1 | pass |
+| `confinement` | 11 | pass |
+| `storage` | 6 | pass; closes all four browser windows of a resident host and reopens one, which starts empty |
+| `error_pages_loopback` | 10 | pass: GET failure offers Retry and Retry repeats the GET; POST failure withholds Retry and no action replays the POST; a 303 target is a retryable GET and Retry after it resubmits no POST; a 307 keeps the POST and withholds Retry; 404 and 500 display as ordinary pages |
+| `error_actions_same_uri` | 3 | pass |
+| `attachment` | 5 | pass (attached GET failure offers Retry, attached POST failure withholds it) |
+| `response_race` | 4 | pass, see below |
+| `close_cases` | 5 | pass |
+| `close_one_keep_one` | 3 | pass: the closed window's browser process exited while the host continued, B kept working, the native window remained |
+| `lazy_loading` | 3 | pass: the last close unloads the loader and removes its directory |
+| `profile_lifecycle` | 5 | pass: browser process exited when the window reported closed, profile gone, nothing framework-owned left in TEMP |
+| `size_move` | 6 | pass by caption drag: `ModalLoops` 1, `ModalTurns` 8, the page's request completed while the loop ran, the shell moved |
+| `browser_failure` | 2 | pass: the deliberate kill reported once as "WebView2 browser process exited (reason unexpected, exit code 1, )", application failed and drained |
+| `missing_runtime` | 3 | pass |
+| `exe_only` | 4 | pass |
+| `body_reader` | 3 | pass: the 900,000-byte in-process upload echoed intact, no body reader remained, the empty POST answered as an empty body |
+| `body_close` | 0 | **untested** |
+
+Per-attempt `claimed-reads` for `body_close`: 0 ms → 0, 5 ms → 0, 10 ms → 0, 20 ms → 0, 40 ms → 0, 80 ms → 0. Every `closed` reply was well formed, every host exited 0 with `<nil>`, no TEMP leftovers, empty stderr. Six valid zeros with clean drains is untested by the handoff's rule: no close landed on a claimed read, so the native close-during-read ordering is still covered only by the modeled tests, exactly as on 2026-11-20.
+
+**`response_race`.** The page's fetch of the race URL was held at the service, the navigation to the same URL failed with Retry (`error-page`, `status 8 http 0`), the held older response was then released and produced no `resource-response` or `load` event while the error page was pending (`events_after_error_page` null), and the error page's Retry was still the current action. This is the delayed-response-after-the-error-page ordering only. The other ordering, a same-URL response arriving before the failed navigation completes, is covered by the modeled regression (`TestNavigationHTTPResponsesDisplayWithoutResourceEvents`) and not by this native case.
+
+**Request bodies and `get_Content`.** The production `request-content` event is emitted only for a null getter result, so the seven events in `body_reader-body.jsonl` all read `get_Content S_OK null=true` and the 900 KB upload has none. Side by side, handler counts cumulative for window A when each run finished:
+
+| Run | Page's report | `request-content` after the run's mark | Handler counts |
+| --- | --- | --- | --- |
+| `emptyPost` | status 200, echo length 0, SHA-256 of the empty body | one: `get_Content S_OK null=true` (seq 13) | `POST /api/echo` 2, `POST /api/report` 2 |
+| `streamUpload` | status 200, echo length 0, SHA-256 of the empty body | one: `get_Content S_OK null=true` (seq 18) | `POST /api/echo` 3, `POST /api/report` 3 |
+
+Unchanged from 2026-11-20 and consistent with the accepted in-process upload contract: a `ReadableStream` upload arrives as the same successful null stream as an empty POST. **No `body-unsupported` event** appears in any host log.
+
+**Response-stream release and shutdown.** Three hosts printed the shutdown diagnostic (`in_process_alone`, `storage`, `response_race`, the quit-with-window-open pattern as before); each lists `native-requests=0 body-readers=0 response-streams=0` with `controller-closed=true`, the endpoint `closed=true drained=true` where one existed, and `native-problem=""`. No crash during close: the only browser-process failure is `browser_failure`'s deliberate kill. The explicit closes in `profile_lifecycle`, `close_one_keep_one` and `storage` completed with the browser process gone.
+
+**Captures.** `screen-loopback.png` shows the loopback start page (origin, blue square, "stylesheet loaded", the buttons and form) and `screen-error-page.png` the framework's "This page did not load" page with the failing URI, "Nothing was submitted." and both actions; both complete and crisp.
+
+**Native regressions rerun on this revision.** All pass, into fresh directories; no runner, test or example changed.
+
+- **Synthetic mixer stage 4**, [`evidence/synthetic-mixer/windows/stage-4/run-c1bd0d6/`](../synthetic-mixer/windows/stage-4/run-c1bd0d6/) (`stage4.ps1`, 12:57:28 to 13:03:11 local, exit 0; console in `stage4-console.log`). Gates: `examples/mixer` ×100 (59.4 s), `ui` ×50, `internal/text/...` ×50 and the `controlsdrive` vet, all ok. The stage 2 regression matrix passed all 17 cases, each exit 0 with no failures and empty stderr, and its nested foundation matrix passed its 9 cases (`failure` with its expected exit 1). `modal-move`: 12 s in the loop, 363/362 frames for A/B (least 30/s each), 122 title updates each, 393 modal turns, 392 timers, 0 refusals; `modal-size`: 388/366 frames (least 31/30), 429 turns, 429 timers, 0 refusals; "show window contents while dragging" on. Fonts: Verdana for Latin, Greek and Cyrillic, Arial for Hebrew and Arabic, MS Gothic for Japanese, as before. The 17 stage 4 controls and command cases passed: clean, `commands_conserved`, 119 edits, first surface `760x520@1`, 114 accepted of which 107 applied, 2 rejected by the device (`#38 d gain 0.56 rejected: device refused`) and 5 canceled at shutdown (sequences 115 to 119), 5 refused as `queue full` at the 60 s delay; delayed latencies 700, 1390, 2084, 2561 ms at a 700 ms device delay. Timing: 68.3 frames/evaluations/presents per second with the feed running, 67.9 with 36 churn words, 0 settled; the process CPU column again reads 0% through every interval, the known measurement failure on this host, not a cost. Text cache: small budget (`49152:65536:48` at scale 1) A evicted 5,799 glyphs and 912 paragraphs with no sample over budget and A's retained image equal to fresh C's pixel for pixel (final A 34,500 glyph bytes in 224 entries and 27,201 paragraph bytes in 17; C 37,690 and 61,413); default budget 650 paragraph evictions, no glyph evictions, A equal to C. Process inspection: 28 modules, no descendants. I looked at the six desktop captures of window A: six crisp strips, the pending line (`pending 0.53 #34, mute #35`), the rejection error line, the overload line (`65 outstanding`, `5 refused`, `queue full`), live meters with three lines of Greek, Cyrillic and Latin churn and the settled text-cache state; nothing off screen or covered. The `fonts` capture shows the fallback line with its emoji as boxes, as in every earlier Windows run.
+- **Foundation lifetime matrix**, [`evidence/foundation/windows/run-c1bd0d6/`](../foundation/windows/run-c1bd0d6/) (`audition.ps1`, 13:03:11 to 13:03:28 local, exit 0; `audition-console.log`): tests, vet and builds ok; all 9 cases with their expected exits (`failure` 1, the rest 0), none timed out, no failures, every final `drained` record at zero with no native problem, empty stderr, 28 modules and no descendants in the inspection.
+
+**Manual auditions: not yet performed.** No operator was present during this session, and the agent cannot drive the desktop. The webview checklist in `examples/webview/README.md` and the mixer inspection (ordinary controls, resizing, closing one window while another continues, shutdown) remain for Michael with the clean-tree binaries above (`C:\Cygwin64\tmp\dfx2-webview.exe -open native,inprocess,loopback -devtools`, then `-open native,loopback`; `C:\Cygwin64\tmp\dfx2-mixer.exe -controls`). Record the performer and the observations here when done; this run's DPI remains a single 96 DPI display with no scale change possible.
+
+**What this establishes.** The committed corrections execute natively on Runtime 151.0.4129.93 without regression across the eighteen browser cases, the seventeen mixer regression cases, the seventeen controls cases, both text-cache runs and the nine lifetime cases, and the first native execution of the Windows-only dispatch-window, clone and allocation tests passes. It does not establish the close-during-read ordering (untested), the response-before-failed-completion ordering (modeled only), the race detector on Windows, or the manual checklist. No fixture, driver or runner changed. Nothing contradicts the implementation or its recorded claims. Terminus remains not clean and stage 3 is not accepted; the deferred findings from `af5151522c39` are unchanged.

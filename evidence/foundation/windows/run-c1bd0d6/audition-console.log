@@ -1,0 +1,10 @@
+{"name":"lifecycle-window","exit_code":0,"timed_out":false,"events":23,"failures":[]}
+{"name":"lifecycle-resident","exit_code":0,"timed_out":false,"events":33,"failures":[]}
+{"name":"idle-window","exit_code":0,"timed_out":false,"events":27,"failures":[]}
+{"name":"idle-resident","exit_code":0,"timed_out":false,"events":26,"failures":[]}
+{"name":"failure","exit_code":1,"timed_out":false,"events":20,"failures":[]}
+{"name":"cancel","exit_code":0,"timed_out":false,"events":20,"failures":[]}
+{"name":"create-close","exit_code":0,"timed_out":false,"events":6,"failures":[]}
+{"name":"signal","exit_code":0,"timed_out":false,"events":20,"failures":[]}
+{"name":"inspection","exit_code":0,"timed_out":false,"events":13,"failures":[]}
+Automated Windows matrix passed. Manual controls/keyboard-signal/DPI observation still required.

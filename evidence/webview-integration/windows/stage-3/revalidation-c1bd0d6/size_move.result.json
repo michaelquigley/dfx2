@@ -1,0 +1,101 @@
+{
+ "case": "size_move",
+ "ok": true,
+ "checks": [
+  {
+   "check": "the browser shell was found by title",
+   "ok": true
+  },
+  {
+   "check": "the caption drag was injected",
+   "ok": true,
+   "detail": {
+    "error": "\u003cnil\u003e"
+   }
+  },
+  {
+   "check": "the size/move loop was established",
+   "ok": true,
+   "detail": {
+    "counters": {
+     "DispatchTargets": 1,
+     "Dispatches": 20,
+     "ModalActive": false,
+     "ModalLoops": 1,
+     "ModalRefusals": 0,
+     "ModalTimers": 8,
+     "ModalTurns": 8,
+     "PaintFailures": 0,
+     "Paints": 0,
+     "Presents": 0,
+     "Problem": "",
+     "Retired": 0,
+     "Wakes": 20,
+     "Windows": 2
+    }
+   }
+  },
+  {
+   "check": "the page's request completed while the loop ran",
+   "ok": true,
+   "detail": {
+    "counters": {
+     "DispatchTargets": 1,
+     "Dispatches": 20,
+     "ModalActive": false,
+     "ModalLoops": 1,
+     "ModalRefusals": 0,
+     "ModalTimers": 8,
+     "ModalTurns": 8,
+     "PaintFailures": 0,
+     "Paints": 0,
+     "Presents": 0,
+     "Problem": "",
+     "Retired": 0,
+     "Wakes": 20,
+     "Windows": 2
+    },
+    "report": {
+     "href": "https://dfx2.invalid/?run=checks\u0026id=checks-31600",
+     "id": "checks-31600",
+     "result": {
+      "cookie": "",
+      "css": true,
+      "echo": {
+       "length": 1005,
+       "method": "POST",
+       "sha256": "a5903776f0c8d72f5b1e8689519fc8d9d6317785a20e31659786c8d8703a6b8c"
+      },
+      "img": true,
+      "imgWidth": 48,
+      "missing": 404,
+      "origin": "https://dfx2.invalid",
+      "query": "é\u0026ü"
+     },
+     "run": "checks"
+    }
+   }
+  },
+  {
+   "check": "the shell moved",
+   "ok": true,
+   "detail": {
+    "after": 211,
+    "before": 52
+   }
+  },
+  {
+   "check": "the loop is no longer active",
+   "ok": true
+  }
+ ],
+ "hosts": [
+  {
+   "host": "size_move-host",
+   "exit": 0,
+   "error": "\u003cnil\u003e",
+   "temp_leftovers": null
+  }
+ ],
+ "seconds": 5.3
+}

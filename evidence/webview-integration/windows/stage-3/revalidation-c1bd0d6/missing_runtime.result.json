@@ -1,0 +1,51 @@
+{
+ "case": "missing_runtime",
+ "ok": true,
+ "checks": [
+  {
+   "check": "a native-only application runs without the runtime",
+   "ok": true
+  },
+  {
+   "check": "Open fails naming the missing runtime",
+   "ok": true,
+   "detail": {
+    "error": {
+     "command": "open A inprocess",
+     "error": "dfx2 webview.Open: browser: WebView2 Runtime not found (HRESULT ERROR_FILE_NOT_FOUND (0x80070002)): install the Evergreen WebView2 Runtime from https://developer.microsoft.com/microsoft-edge/webview2/ (Windows 11 includes it)",
+     "event": "error",
+     "time": "2026-11-24T12:55:54.8867586-05:00"
+    }
+   }
+  },
+  {
+   "check": "the failure is fatal and reaches Run",
+   "ok": true,
+   "detail": {
+    "return": {
+     "error": "dfx2 webview.Open: browser: WebView2 Runtime not found (HRESULT ERROR_FILE_NOT_FOUND (0x80070002)): install the Evergreen WebView2 Runtime from https://developer.microsoft.com/microsoft-edge/webview2/ (Windows 11 includes it)",
+     "event": "return",
+     "time": "2026-11-24T12:55:54.8955022-05:00"
+    }
+   }
+  }
+ ],
+ "hosts": [
+  {
+   "host": "missing_runtime-native-only",
+   "exit": 0,
+   "error": "\u003cnil\u003e",
+   "temp_leftovers": null
+  },
+  {
+   "host": "missing_runtime-browser",
+   "exit": 1,
+   "error": "dfx2 webview.Open: browser: WebView2 Runtime not found (HRESULT ERROR_FILE_NOT_FOUND (0x80070002)): install the Evergreen WebView2 Runtime from https://developer.microsoft.com/microsoft-edge/webview2/ (Windows 11 includes it)",
+   "stderr": [
+    "dfx2 webview.Open: browser: WebView2 Runtime not found (HRESULT ERROR_FILE_NOT_FOUND (0x80070002)): install the Evergreen WebView2 Runtime from https://developer.microsoft.com/microsoft-edge/webview2/ (Windows 11 includes it)"
+   ],
+   "temp_leftovers": null
+  }
+ ],
+ "seconds": 1.1
+}
