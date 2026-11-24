@@ -1,0 +1,17 @@
+{"event":"start","pause_after":"0s","resident":false,"script":"","time":"2026-11-24T16:33:22.539716048-05:00"}
+{"event":"opened","time":"2026-11-24T16:33:22.658357823-05:00","window":"A"}
+{"dispatch_targets":1,"dispatches":0,"event":"ownership","native_completions":0,"native_problem":"","native_retired":0,"native_windows":1,"queued":0,"release_pending":false,"tasks":1,"terminal":false,"time":"2026-11-24T16:33:22.658387761-05:00","wakes":1,"windows":1}
+{"event":"opened","time":"2026-11-24T16:33:22.659988958-05:00","window":"B"}
+{"dispatch_targets":1,"dispatches":0,"event":"ownership","native_completions":0,"native_problem":"","native_retired":0,"native_windows":2,"queued":0,"release_pending":false,"tasks":2,"terminal":false,"time":"2026-11-24T16:33:22.659998554-05:00","wakes":1,"windows":2}
+{"count":1,"event":"update","time":"2026-11-24T16:33:22.767926971-05:00","window":"A"}
+{"count":1,"event":"update","time":"2026-11-24T16:33:22.767982176-05:00","window":"B"}
+{"count":2,"event":"update","time":"2026-11-24T16:33:22.869959991-05:00","window":"A"}
+{"count":2,"event":"update","time":"2026-11-24T16:33:22.870008062-05:00","window":"B"}
+{"event":"task-ended","task":"counter-B","time":"2026-11-24T16:33:22.870186255-05:00"}
+{"event":"task-ended","task":"counter-A","time":"2026-11-24T16:33:22.870317276-05:00"}
+{"applied":2,"event":"closed","time":"2026-11-24T16:33:22.872324145-05:00","window":"B"}
+{"applied":2,"event":"closed","time":"2026-11-24T16:33:22.872433232-05:00","window":"A"}
+{"dispatch_targets":0,"dispatches":5,"event":"ownership","native_completions":0,"native_problem":"","native_retired":0,"native_windows":0,"queued":0,"release_pending":false,"tasks":0,"terminal":true,"time":"2026-11-24T16:33:22.872615144-05:00","wakes":5,"windows":0}
+{"dispatch_targets":1,"dispatches":5,"event":"ownership","native_completions":0,"native_problem":"","native_retired":0,"native_windows":0,"queued":0,"release_pending":true,"tasks":0,"terminal":true,"time":"2026-11-24T16:33:22.872442212-05:00","wakes":5,"windows":0}
+{"dispatch_targets":0,"dispatches":5,"event":"drained","native_completions":0,"native_problem":"","native_retired":0,"native_windows":0,"queued":0,"release_pending":false,"tasks":0,"terminal":true,"time":"2026-11-24T16:33:22.872722442-05:00","wakes":5,"windows":0}
+{"error":"context canceled","event":"return","time":"2026-11-24T16:33:22.872750039-05:00"}

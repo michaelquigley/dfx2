@@ -1,0 +1,13 @@
+body { font: 14px sans-serif; margin: 12px; background: #f4f4f2; color: #222; }
+h1 { font-size: 16px; margin: 0 0 10px; }
+#strips { display: flex; gap: 12px; }
+.strip { width: 120px; padding: 8px; background: #fff; border: 1px solid #ccc; border-radius: 4px; }
+.strip .name { font-weight: bold; }
+.strip input[type=range] { width: 110px; }
+.meter { height: 8px; background: #ddd; margin: 6px 0; }
+.meter div { height: 100%; width: 0; background: #3a7; }
+.small { font-size: 12px; color: #555; }
+.pending { color: #a60; }
+#commands { margin-top: 12px; font-size: 13px; }
+#error { color: #b22; min-height: 1.2em; }
+#net { font-size: 12px; color: #555; min-height: 1.2em; }

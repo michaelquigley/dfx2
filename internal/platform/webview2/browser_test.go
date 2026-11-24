@@ -1353,3 +1353,27 @@ func TestHandlerAllocationFailureStopsInitialization(t *testing.T) {
 		})
 	}
 }
+
+// The response body copy handed to the engine is exactly the accounted size:
+// its capacity is the body's length, not a rounded-up allocation.
+func TestResponseCopyIsAllocatedAtTheAccountedSize(t *testing.T) {
+	host := &fakeHost{ready: true, decisions: []platform.RequestDecision{{ID: 1, Action: platform.RequestWait}}}
+	f, b := newTestBrowser(t, host, platform.BrowserInProcess)
+	started(t, f, b)
+	f.request.uri, f.request.method = startURL+"api/a", "GET"
+	b.receive(501)
+	body := []byte(strings.Repeat("x", 1000)) // a length append would round up
+	if !b.Respond(1, platform.BrowserResponse{Status: 200, Body: body}) {
+		t.Fatal("response refused")
+	}
+	f.mu.Lock()
+	defer f.mu.Unlock()
+	if len(f.streams) != 1 {
+		t.Fatalf("streams %d", len(f.streams))
+	}
+	for _, st := range f.streams {
+		if len(st.body) != 1000 || cap(st.body) != 1000 || string(st.body) != string(body) {
+			t.Fatalf("copy length %d capacity %d", len(st.body), cap(st.body))
+		}
+	}
+}

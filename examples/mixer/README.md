@@ -20,13 +20,16 @@ CGO_ENABLED=0 go run ./examples/mixer -resident
 CGO_ENABLED=0 go run ./examples/mixer -controls
 CGO_ENABLED=0 go run ./examples/mixer -controls -delay 300ms -churn 24
 CGO_ENABLED=0 go run ./examples/mixer -font "Ubuntu Sans,sans-serif"
+CGO_ENABLED=0 go run ./examples/mixer -browser inprocess
+CGO_ENABLED=0 go run ./examples/mixer -browser loopback -delay 800ms
+CGO_ENABLED=0 go run ./examples/mixer -browser attach
 ```
 
 An application task samples a deterministic synthetic level at 30 Hz, publishes it under a mutex and calls `Invalidate` on each subscribed window. The view reads a snapshot: a title, a numeric readout that changes every sample, the meter, a line of fallback text (Greek, Cyrillic, Hebrew, Arabic, Japanese, color emoji, a mixed-direction phrase) and a paragraph that rewraps as the window resizes. Pausing the feed lets the meter's peak fall at 0.5 per second; once it reaches the level, the window does no further work until something changes.
 
 `-paused` starts with the feed paused and `-pause-after` pauses it after an interval, for idle checks. In resident mode the console accepts `open`, `close` (the newest window), `pause`, `resume`, `status` and `quit`. Ctrl+C or SIGTERM cancels and drains, then exits 0. The first run indexes system fonts into the user cache directory, which can delay the first frame.
 
-Output is JSON lines: `opened`, `closed`, `feed`, `edit`, `command`, `external`, `fixture`, ownership/status snapshots and final `return`/`drained` records. Status includes frames rendered by live windows, windows with a pending animation deadline, deadline timers armed, application wakes and dispatches, and the backend's presents, exposure paints, paint failures and, on Windows, size/move loops, modal turns, timers and refusals.
+Output is JSON lines: `opened`, `closed`, `feed`, `edit`, `command`, `external`, `fixture`, with `-browser` also `fixture-server` and, with `-audition`, `page`, ownership/status snapshots and final `return`/`drained` records. Status includes frames rendered by live windows, windows with a pending animation deadline, deadline timers armed, application wakes and dispatches, and the backend's presents, exposure paints, paint failures and, on Windows, size/move loops, modal turns, timers and refusals.
 
 ## The mixer (`-controls`)
 
@@ -63,6 +66,29 @@ These operate the fixture:
 `status` adds view evaluations, command totals, each channel's device and pending values, process CPU seconds and, from the UI thread, each window's text cache counters and budget. `-text-budget small` (or explicit `GLYPH_BYTES:PARAGRAPH_BYTES:ENTRIES`) shrinks every window's text caches for eviction auditions. A budget below the view's steady working set evicts nothing: the excess is served transiently every frame.
 
 A strip's fader and checkbox come first, so the [input auditions](../../evidence/synthetic-mixer/stage-4.md) can press them at computed positions; strips are 110 logical units wide and 12 apart.
+
+## Mixed views (`-browser`)
+
+`-browser inprocess`, `-browser loopback` or `-browser attach` opens native window A and a browser view B over the same model, the [webview stage 4](../../evidence/webview-integration/stage-4.md) demonstration. It implies `-controls`, and every console command above works unchanged. Without `-browser` the mixer is native-only, as before; browser support is loaded only when the first browser view opens.
+
+- **`inprocess`** serves the page through the browser's request interception, with no listener.
+- **`loopback`** serves it from a window-owned server on 127.0.0.1, behind that window's credential cookie.
+- **`attach`** starts a fixture server owned by the application, not by any window: on `-attach-addr` (default `127.0.0.1:0`, printed as `fixture-server`), without authentication or the framework's policy, because it is an audition fixture, not a production service. The browser view attaches to it, closing that view leaves it serving, and it stops when the application drains. Its shutdown waits for every handler. A 10 s read timeout, covering headers and body, keeps a stalled client from holding one open forever.
+
+On Linux, `-gc-signal` (default 60) is the real-time signal this application reserves for JavaScriptCore; nothing else in the example uses it. It is inert elsewhere.
+
+The page shows what the native strips show: each channel's name, level, gain fader and Mute box, the device's own gain and mute, any pending edit with its sequence number, the command totals, the device delay and pending rejections, and the latest error. Strips follow the model's order, and removed channels disappear.
+
+**Data flow.** The page's handlers are thin and live in `browser.go`; the model and the command queue know nothing of HTTP.
+
+- **Polls.** `GET /api/state` returns the latest snapshot as JSON. The page keeps exactly one poll outstanding, waiting 100 ms after each before the next.
+- **Edits.** `POST /api/edit` submits one user edit through the same ordered command path, the same `edit` record and the same pending-value policy as a native edit, attributed to the view by name. A page submits its edits one at a time, in input order: each starts only after the previous one is answered or has failed. The answer is only the submission's outcome; the device's answer arrives in later snapshots.
+- **Reconciliation.** Showing a snapshot never submits anything: the page assigns values to its controls, which fires no events, and it leaves alone a fader the pointer is holding or that still has an edit queued or unanswered. A fader edit is sent when the drag is released or on each key press; a Mute edit on each toggle.
+- **No retries.** A failed or refused edit is shown and never retried.
+
+The console adds `browser`, which opens another browser view in the same mode, and `close NAME` closes either kind of window. The sampler, the command worker and the attach fixture server are application tasks, so they outlive every request and window. Closing the last window ends a window application and cancels whatever is still queued; `-resident` keeps it running for `open` and `browser`.
+
+`-audition` makes each page also report what it shows and where its controls are (`page` lines), for the [automated mixed-view audition](../../evidence/webview-integration/linux/mixed_drive.py). `-devtools` enables the browser's inspector.
 
 ## Bounded scripts
 

@@ -1,6 +1,6 @@
 # Webview content
 
-The `webview` package opens browser windows that share the application lifetime with native windows, in explicit in-process, owned loopback or attached-URL modes. Linux/amd64 hosts them in WebKitGTK 4.1 ([below](#linux-host)), validated natively in [stage 2](../../evidence/webview-integration/stage-2.md). Windows/amd64 hosts them in the system WebView2 Runtime through a loader embedded in the executable ([below](#windows-host)). The Windows stage 3 corrections were revalidated natively at `c1bd0d6`. Seventeen cases passed. Six clean closes each recorded zero claimed body reads, so close during a claimed read has modeled coverage only. [Windows matrix](../../evidence/webview-integration/windows/stage-3/revalidation-c1bd0d6/summary.json) Michael reported that the Windows webview and mixer manual auditions worked reasonably well. Stage 3 is not yet accepted.
+The `webview` package opens browser windows that share the application lifetime with native windows, in explicit in-process, owned loopback or attached-URL modes. Linux/amd64 hosts them in WebKitGTK 4.1 ([below](#linux-host)), validated natively in [stage 2](../../evidence/webview-integration/stage-2.md). Windows/amd64 hosts them in the system WebView2 Runtime through a loader embedded in the executable ([below](#windows-host)). The Windows stage 3 corrections were revalidated natively at `c1bd0d6`. Seventeen cases passed. Six clean closes each recorded zero claimed body reads, so close during a claimed read has modeled coverage only. [Windows matrix](../../evidence/webview-integration/windows/stage-3/revalidation-c1bd0d6/summary.json) Michael reported that the Windows webview and mixer manual auditions worked reasonably well. Stage 3 is accepted with the recorded coverage limits and deferred findings.
 
 Every other target refuses with `webview.ErrUnsupportedContent` before any native work, and nothing is latched. The portable contracts (modes, attachment boundary, core ownership, the finite in-process adapter and the owned loopback server) are tested against fake native seams in [stage 1](../../evidence/webview-integration/stage-1.md).
 
@@ -27,6 +27,12 @@ Every window chooses one mode, and nothing falls back between them:
 | `Attach` | `URL` (absolute http or https, no user information) and `Origins` including the URL's own | `Handler`, `Limits`, `Server` | The browser only; never the service |
 
 `LinuxGCSignal` names the real-time signal the application reserves for WebKit's garbage collector; Linux requires it ([below](#the-reserved-gc-signal)) and other platforms ignore it. The zero `Mode` is invalid. Origin entries are origins alone (scheme, host, optional port); a path, query or fragment is rejected. Origins are parsed and canonicalized with explicit effective ports, then compared as parsed origins, never by string prefix. `DevTools` enables the engine's inspector, for auditions; it is off by default.
+
+### Native and browser views of one model
+
+The [synthetic mixer](../../examples/mixer/README.md#mixed-views--browser) shows the intended shape: `-browser` opens a native window and a browser view over one application-owned model, in any of the three modes. The browser view's handlers are thin. They read the model's immutable snapshots and submit edits through the application's own ordered command path, the same one native edits use. The model, its snapshots and its commands carry no browser or HTTP types.
+
+The page keeps one request outstanding, polling for the next snapshot after the last one is answered. Showing a snapshot submits nothing, and an edit is sent once, never retried. The application's workers are its own tasks, so they outlive every request and window. In attach mode the service the view attaches to is the application's too, not the window's: closing the view leaves it serving. None of this needs framework support beyond the contracts below.
 
 ## Opening, readiness and closing
 
@@ -169,6 +175,8 @@ Requirements: Windows/amd64 with the Evergreen WebView2 Runtime installed (Windo
 Native-only applications touch none of it: the first `webview.Open` initializes COM on the UI thread (apartment-threaded; a thread already in another apartment is an initialization failure), writes the embedded loader into a fresh `dfx2-webview2-loader-*` directory under the temporary directory, verifies the written file's digest, loads it by that absolute path alone, and asks it for the Runtime version. The loader stays loaded while any browser window lives. The last window's release unloads it and removes its directory through the same off-UI-thread cleanup, bounded attempts and named residue as profiles; a later window extracts a fresh copy. The dependency test keeps the browser package out of the root's imports.
 
 WebView2 attachments share a hidden message-only window that delivers worker completions and stream releases on the UI thread. The first attachment creates the window. The last attachment destroys it and unregisters its class after the browser callbacks have drained. Reopening a browser in a resident application creates a fresh dispatch window and callback queue. Only the Go callback entry points are reused across those lifetimes.
+
+Two development-stage limitations remain follow-ups. During a redirect, Retry eligibility can inherit the previous document request's GET until the new request reports its method; the action still issues GET and never replays a POST. A synchronous browser startup failure can make `webview.Open` return `ErrClosed`, while the underlying cause is preserved in `Run` and shutdown drains normally.
 
 ### Sessions and profiles
 

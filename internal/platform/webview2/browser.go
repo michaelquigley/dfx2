@@ -1159,7 +1159,8 @@ func (b *browser) deliver(id platform.ID, args, deferral uintptr, resp platform.
 	}
 	var stream uintptr
 	if len(resp.Body) > 0 {
-		body := append([]byte(nil), resp.Body...) // borrowed for the call
+		body := make([]byte, len(resp.Body)) // the accounted size exactly; append could round its capacity up
+		copy(body, resp.Body)
 		stream = n.newBodyStream(body, func() {
 			n.post(func() { b.streamReleased(id) })
 		})

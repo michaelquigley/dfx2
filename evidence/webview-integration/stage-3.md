@@ -1,6 +1,6 @@
 # Webview integration stage 3: Windows browser integration
 
-**Current state (2026-11-24):** candidate `c1bd0d6` has returned Windows automated validation (17 browser cases passed, `body_close` untested), passing native mixer/lifetime regressions, passing Linux return checks, and Michael's reported manual pass for both Windows auditions. The latest Terminus verdict remains not clean with the dispositions below. Stage acceptance and deliberate canon alignment remain pending. Earlier sections retain their historical state.
+**Current state (2026-11-24):** candidate `c1bd0d6` has returned Windows automated validation (17 browser cases passed, `body_close` untested), passing native mixer/lifetime regressions, passing Linux return checks, and Michael's reported manual pass for both Windows auditions. The latest Terminus verdict remains not clean with the dispositions below. Stage 3 is accepted with the recorded limits and follow-ups following canon alignment `76e1f94`. Earlier sections retain their historical state.
 
 Stage 3 of the [work order](../../docs/future/webview-integration-work-order.md) hosts `webview` windows on Windows/amd64 in the system WebView2 Runtime, inside the Win32 backend's message loop, in all three modes, from one executable with the pinned loader embedded. Built behavior is in [webview.md](../../docs/current/webview.md#windows-host). Implemented on the Windows host at `59ff40e` plus the uncommitted tree recorded in the [run's environment](windows/stage-3/run-connected/environment.json); returned here as commit `d328fbb`. Linux evidence is unchanged by this stage except where the shared example and the audit type changed (below); the Linux return rebuilds and reruns.
 
@@ -1141,3 +1141,9 @@ Michael confirmed that the Windows manual auditions have not yet been performed.
 After the Linux return review and the request to perform both Windows auditions, Michael reported: "all seemed to work reasonably well." This records an operator-reported manual pass for the webview checklist and the mixer controls/resize/close audition on the returned candidate. No specific defect or measurement was supplied, so no new performance, DPI or timing claim is made.
 
 The manual prerequisite is closed. The disclosed `body_close` and response-ordering coverage limits remain, as do the recorded review dispositions. The recommendation is to accept stage 3 with those limits and follow-up dispositions, deliberately align the canon, then proceed to the mixed native/browser mixer in stage 4. This manual result does not itself change the Terminus verdict or record formal stage acceptance.
+
+### Stage 3 closeout — canon `76e1f94`
+
+Michael committed the deliberate canon alignment after the automated return, Linux checks and his manual pass. This closes stage 3 with the documented coverage limits and development-stage follow-ups. The alignment accepts inherited GET eligibility during a redirect and Open's local startup-error limitation as follow-up work, alongside the previously deferred blocking-response failure and loader-unload machinery. The historical Terminus verdict remains not clean; acceptance reflects the recorded dispositions, not a rewritten verdict.
+
+The implementation target was `c1bd0d6`, the Windows evidence returned in `bbff57c`, and the Linux review/manual record was committed as `e0adfd2`. Stage 4 is the mixed native/browser mixer described in the existing work order. The overall webview arc remains open; its intent documents are not retired at this stage boundary.

@@ -1,0 +1,20 @@
+{"event":"start","pause_after":"0s","resident":false,"script":"failure","time":"2026-11-24T15:30:15.093638697-05:00"}
+{"event":"opened","time":"2026-11-24T15:30:15.22531956-05:00","window":"A"}
+{"dispatch_targets":1,"dispatches":0,"event":"ownership","native_completions":0,"native_problem":"","native_retired":0,"native_windows":1,"queued":0,"release_pending":false,"tasks":1,"terminal":false,"time":"2026-11-24T15:30:15.225378421-05:00","wakes":1,"windows":1}
+{"event":"opened","time":"2026-11-24T15:30:15.226875824-05:00","window":"B"}
+{"dispatch_targets":1,"dispatches":0,"event":"ownership","native_completions":0,"native_problem":"","native_retired":0,"native_windows":2,"queued":0,"release_pending":false,"tasks":2,"terminal":false,"time":"2026-11-24T15:30:15.226884017-05:00","wakes":1,"windows":2}
+{"count":1,"event":"update","time":"2026-11-24T15:30:15.325839597-05:00","window":"A"}
+{"count":1,"event":"update","time":"2026-11-24T15:30:15.328135307-05:00","window":"B"}
+{"count":2,"event":"update","time":"2026-11-24T15:30:15.426484353-05:00","window":"A"}
+{"count":2,"event":"update","time":"2026-11-24T15:30:15.42768976-05:00","window":"B"}
+{"count":3,"event":"update","time":"2026-11-24T15:30:15.526776232-05:00","window":"A"}
+{"count":3,"event":"update","time":"2026-11-24T15:30:15.528320272-05:00","window":"B"}
+{"event":"inject-failure","time":"2026-11-24T15:30:15.528396669-05:00"}
+{"event":"task-ended","task":"counter-A","time":"2026-11-24T15:30:15.528503041-05:00"}
+{"event":"task-ended","task":"counter-B","time":"2026-11-24T15:30:15.528519694-05:00"}
+{"applied":3,"event":"closed","time":"2026-11-24T15:30:15.529837568-05:00","window":"B"}
+{"dispatch_targets":0,"dispatches":9,"event":"ownership","native_completions":0,"native_problem":"","native_retired":0,"native_windows":0,"queued":0,"release_pending":false,"tasks":0,"terminal":true,"time":"2026-11-24T15:30:15.529879598-05:00","wakes":9,"windows":0}
+{"applied":3,"event":"closed","time":"2026-11-24T15:30:15.529847624-05:00","window":"A"}
+{"dispatch_targets":0,"dispatches":9,"event":"ownership","native_completions":0,"native_problem":"","native_retired":0,"native_windows":0,"queued":0,"release_pending":false,"tasks":0,"terminal":true,"time":"2026-11-24T15:30:15.530003473-05:00","wakes":9,"windows":0}
+{"dispatch_targets":0,"dispatches":9,"event":"drained","native_completions":0,"native_problem":"","native_retired":0,"native_windows":0,"queued":0,"release_pending":false,"tasks":0,"terminal":true,"time":"2026-11-24T15:30:15.530055697-05:00","wakes":9,"windows":0}
+{"error":"controlled lifetime task failure","event":"return","time":"2026-11-24T15:30:15.530079412-05:00"}

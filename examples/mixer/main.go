@@ -24,6 +24,7 @@ import (
 	"github.com/michaelquigley/dfx2/internal/text"
 	"github.com/michaelquigley/dfx2/internal/text/gotext"
 	"github.com/michaelquigley/dfx2/ui"
+	"github.com/michaelquigley/dfx2/webview"
 )
 
 type config struct {
@@ -37,6 +38,11 @@ type config struct {
 	delay      time.Duration
 	textBudget string
 	churn      int
+	browser    string // "", inprocess, loopback or attach: a browser view beside a native one
+	gcSignal   int    // the real-time signal reserved for JavaScriptCore (Linux)
+	attachAddr string // the attachment fixture server's listen address
+	audition   bool   // browser pages report what they show, for the automated audition
+	devtools   bool
 }
 
 func main() {
@@ -51,8 +57,20 @@ func main() {
 	flag.DurationVar(&c.delay, "delay", 0, "initial synthetic device delay before each command reaches the device (-controls)")
 	flag.StringVar(&c.textBudget, "text-budget", "default", "per-window text cache budget for auditions: default, small, or GLYPH_BYTES:PARAGRAPH_BYTES:PARAGRAPH_ENTRIES")
 	flag.IntVar(&c.churn, "churn", 0, "words of changing text in a churn label, to exercise the text caches (-controls)")
+	flag.StringVar(&c.browser, "browser", "", "mixed views: a native window and a browser window over one model, served inprocess, loopback, or attach (an independently owned fixture server); implies -controls")
+	flag.IntVar(&c.gcSignal, "gc-signal", 60, "real-time signal this application reserves for JavaScriptCore's garbage collector, with -browser on Linux; inert elsewhere")
+	flag.StringVar(&c.attachAddr, "attach-addr", "127.0.0.1:0", "listen address of the -browser attach fixture server")
+	flag.BoolVar(&c.audition, "audition", false, "browser pages report what they show, for the automated audition")
+	flag.BoolVar(&c.devtools, "devtools", false, "enable the browser inspector (-browser)")
 	fonts := flag.String("font", "sans-serif", "font families, comma-separated, in order of preference")
 	flag.Parse()
+	if !validBrowserMode(c.browser) {
+		fmt.Fprintln(os.Stderr, "-browser takes inprocess, loopback or attach")
+		os.Exit(2)
+	}
+	if c.browser != "" {
+		c.controls = true
+	}
 	gotext.Families = strings.Split(*fonts, ",")
 	budget, err := parseBudget(c.textBudget)
 	if err != nil {
@@ -150,7 +168,9 @@ type mixer struct {
 	cmds     *commands
 	watchers sync.WaitGroup
 	opened   int
-	windows  map[string]named // windows by name; UI thread
+	windows  map[string]named           // windows by name; UI thread
+	browsers map[string]*webview.Window // browser views by name; UI thread
+	fixture  string                     // the attach fixture server's base URL
 	initial  []*ui.Window
 	titles   []*titleCounter
 	trace    trace
@@ -159,7 +179,7 @@ type mixer struct {
 }
 
 func newMixer(c config, o *output, in io.Reader) *mixer {
-	m := &mixer{c: c, o: o, in: in, model: newModel(!c.paused), windows: make(map[string]named)}
+	m := &mixer{c: c, o: o, in: in, model: newModel(!c.paused), windows: make(map[string]named), browsers: make(map[string]*webview.Window)}
 	m.model.stats.Delay, m.model.churn = c.delay, c.churn
 	m.model.current = m.model.snapshotLocked()
 	m.cmds = newCommands(m.model, func(r Record) {
@@ -253,8 +273,21 @@ func (m *mixer) setup(a *dfx2.App) error {
 			return err
 		}
 	}
+	if m.c.browser == browserAttach {
+		if err := m.startFixture(a); err != nil {
+			return err
+		}
+	}
 	switch m.c.script {
 	case "":
+		if m.c.browser != "" {
+			// Mixed views: native window A and a browser view B.
+			if _, err := m.open(); err != nil {
+				return err
+			}
+			_, err := m.openBrowser()
+			return err
+		}
 		if m.c.controls {
 			for range 2 {
 				if _, err := m.open(); err != nil {
@@ -379,11 +412,21 @@ func (m *mixer) command(ctx context.Context, line string) {
 				m.o.event("open-error", "error", err.Error())
 			}
 		})
+	case line == "browser" && m.c.browser != "":
+		m.post(func() {
+			if _, err := m.openBrowser(); err != nil {
+				m.o.event("open-error", "error", err.Error())
+			}
+		})
 	case fields[0] == "close" && len(fields) <= 2:
 		m.post(func() {
 			if len(fields) == 2 {
 				if w, ok := m.windows[fields[1]]; ok {
 					w.ui.Close()
+					return
+				}
+				if w, ok := m.browsers[fields[1]]; ok {
+					w.Close()
 					return
 				}
 				m.o.event("command-error", "command", line, "error", "no such window")

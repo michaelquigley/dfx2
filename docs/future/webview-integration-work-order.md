@@ -1,6 +1,6 @@
 # Webview integration work order
 
-Production plan paired with [webview-integration.md](webview-integration.md). Mercurius session `s_zlCzh4NrFu3w`, round 1, returned `ready_to_build` with no blocking findings; Michael accepted its one advisory, now included in stage 3's response-correlation test, and the review is closed. This translates the agreed browser behavior into the existing runtime. Stage 1 is accepted and committed. Michael approved the Linux signal mechanism below on 2026-11-13, clearing the remaining design prerequisite for stage 2. Later stages retain their review and acceptance gates.
+Production plan paired with [webview-integration.md](webview-integration.md). Mercurius session `s_zlCzh4NrFu3w`, round 1, returned `ready_to_build` with no blocking findings; Michael accepted its one advisory, now included in stage 3's response-correlation test, and the review is closed. This translates the agreed browser behavior into the existing runtime. Stages 1–3 are accepted and committed, with stage 3 coverage limits and deferred findings recorded in its evidence and canon alignment `76e1f94`. Stage 4 is the next implementation slice. Michael approved the Linux signal mechanism below on 2026-11-13, clearing the remaining design prerequisite for stage 2. Later stages retain their review and acceptance gates.
 
 ## Result and boundaries
 

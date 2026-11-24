@@ -1,0 +1,6 @@
+SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry
+{"case": "inprocess", "ok": true, "failure": null}
+{"case": "loopback", "ok": true, "failure": null}
+{"case": "attach", "ok": false, "failure": "Failure: the release sends exactly one gain edit, of the held value: {'edit': {'channel': 'c', 'control': 'gain', 'event': 'edit', 'refused': '', 'sequence': 2, 'time': '2026-11-24T15:55:42.074315112-05:00', 'value': 0.19, 'window': 'B'}, 'held': 0.23, 'edits': 1}"}
+{"case": "resident", "ok": true, "failure": null}
+gnome-shell-calendar-server[2229017]: Lost (or failed to acquire) the name org.gnome.Shell.CalendarServer - exiting

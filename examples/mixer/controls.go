@@ -152,13 +152,15 @@ func churnLines(version uint64, n int) []string {
 
 // submit hands one user edit to the command queue and logs it. The other
 // window learns of it through the published pending value.
-func (m *mixer) submit(cmd Command) {
+// Any goroutine: browser views submit from their handlers.
+func (m *mixer) submit(cmd Command) (uint64, error) {
 	seq, err := m.cmds.Submit(cmd)
 	reason := ""
 	if err != nil {
 		reason = err.Error()
 	}
 	m.o.event("edit", "window", cmd.Window, "channel", cmd.Channel, "control", cmd.Control, "value", cmd.Value(), "sequence", seq, "refused", reason)
+	return seq, err
 }
 
 // snapshotWindow writes a window's retained image, the first open window's

@@ -1,0 +1,1000 @@
+{
+  "binary": "/tmp/dfx2-s4-mixer",
+  "gdk_backend": null,
+  "gdk_scale": "2",
+  "passed": true,
+  "cases": [
+    {
+      "case": "inprocess",
+      "ok": true,
+      "commands": {
+        "accepted": 12,
+        "applied": 11,
+        "canceled": 0,
+        "delay_ms": 0,
+        "outstanding": 0,
+        "refused": 0,
+        "reject_next": 0,
+        "rejected": 1
+      },
+      "checks": [
+        {
+          "check": "browser view shows the model",
+          "ok": true,
+          "order": [
+            "a",
+            "b",
+            "c",
+            "d",
+            "e",
+            "f"
+          ]
+        },
+        {
+          "check": "external change reaches the browser view without a command",
+          "ok": true
+        },
+        {
+          "check": "browser click is a command the device applies, seen by the model",
+          "ok": true,
+          "edit": {
+            "channel": "b",
+            "control": "mute",
+            "event": "edit",
+            "refused": "",
+            "sequence": 1,
+            "time": "2026-11-24T16:07:16.280372671-05:00",
+            "value": true,
+            "window": "B"
+          },
+          "record": {
+            "channel": "b",
+            "control": "mute",
+            "event": "command",
+            "latency_ms": 0.057,
+            "sequence": 1,
+            "state": "applied",
+            "time": "2026-11-24T16:07:16.280405001-05:00",
+            "value": true,
+            "window": "B"
+          }
+        },
+        {
+          "check": "a held fader drag sends nothing",
+          "ok": true,
+          "held": 0.19
+        },
+        {
+          "check": "the release sends exactly one gain edit, of the held value",
+          "ok": true,
+          "edit": {
+            "channel": "c",
+            "control": "gain",
+            "event": "edit",
+            "refused": "",
+            "sequence": 2,
+            "time": "2026-11-24T16:07:18.26330866-05:00",
+            "value": 0.19,
+            "window": "B"
+          },
+          "held": 0.19,
+          "edits": 1
+        },
+        {
+          "check": "browser keyboard step is one gain edit",
+          "ok": true,
+          "edit": {
+            "channel": "c",
+            "control": "gain",
+            "event": "edit",
+            "refused": "",
+            "sequence": 3,
+            "time": "2026-11-24T16:07:18.830057687-05:00",
+            "value": 0.2,
+            "window": "B"
+          },
+          "first": 0.19
+        },
+        {
+          "check": "five quick key presses submit in key order and the last applies",
+          "ok": true,
+          "values": [
+            0.21,
+            0.22,
+            0.23,
+            0.24,
+            0.25
+          ],
+          "sequences": [
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "accepted": [
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "last": "applied"
+        },
+        {
+          "check": "native edit reaches the browser view",
+          "ok": true,
+          "edit": {
+            "channel": "a",
+            "control": "mute",
+            "event": "edit",
+            "refused": "",
+            "sequence": 9,
+            "time": "2026-11-24T16:07:20.390677457-05:00",
+            "value": true,
+            "window": "A"
+          }
+        },
+        {
+          "check": "a delayed browser edit is pending in the model and the page",
+          "ok": true,
+          "channel": {
+            "gain": 0.25,
+            "gain_pending": true,
+            "id": "c",
+            "mute_pending": false,
+            "muted": false,
+            "pending_gain": 0.26,
+            "pending_mute": false
+          }
+        },
+        {
+          "check": "the pending value clears once applied",
+          "ok": true,
+          "record": {
+            "channel": "c",
+            "control": "gain",
+            "event": "command",
+            "latency_ms": 1500.362,
+            "sequence": 10,
+            "state": "applied",
+            "time": "2026-11-24T16:07:22.523601277-05:00",
+            "value": 0.26,
+            "window": "B"
+          }
+        },
+        {
+          "check": "a rejected browser edit shows in both views",
+          "ok": true,
+          "record": {
+            "channel": "c",
+            "control": "gain",
+            "event": "command",
+            "latency_ms": 0.161,
+            "reason": "device refused",
+            "sequence": 11,
+            "state": "rejected",
+            "time": "2026-11-24T16:07:23.147342583-05:00",
+            "value": 0.27,
+            "window": "B"
+          },
+          "error": "latest error: #11 c gain 0.27 rejected: device refused"
+        },
+        {
+          "check": "reorder and removal reach the browser view without commands",
+          "ok": true
+        },
+        {
+          "check": "after the browser closed, the sampler runs and native edits apply",
+          "ok": true
+        },
+        {
+          "check": "browser descendants ended acceptably and none remain",
+          "ok": true,
+          "reaped": [],
+          "remaining": [],
+          "problems": []
+        },
+        {
+          "check": "the last window's close ends the application cleanly, commands conserved",
+          "ok": true,
+          "exit": 0,
+          "ret": {
+            "commands": {
+              "accepted": 12,
+              "applied": 11,
+              "canceled": 0,
+              "delay_ms": 0,
+              "outstanding": 0,
+              "refused": 0,
+              "reject_next": 0,
+              "rejected": 1
+            },
+            "commands_conserved": true,
+            "error": "<nil>",
+            "event": "return",
+            "invalidations_refused_after_close": 0,
+            "time": "2026-11-24T16:07:25.769698471-05:00"
+          }
+        }
+      ],
+      "clicks": [
+        {
+          "title": "dfx2 mixer B (inprocess)",
+          "at": [
+            177,
+            107
+          ],
+          "screen": [
+            1374,
+            729
+          ],
+          "frame": {
+            "title": "dfx2 mixer B (inprocess)",
+            "x": 1020,
+            "y": 478,
+            "w": 1800,
+            "h": 1237,
+            "focused": true
+          },
+          "viewport": [
+            900,
+            600
+          ],
+          "scale": 2
+        },
+        {
+          "title": "dfx2 mixer B (inprocess)",
+          "drag": [
+            [
+              374,
+              84
+            ],
+            [
+              346.5,
+              84
+            ]
+          ],
+          "screen": [
+            [
+              1768,
+              683
+            ],
+            [
+              1713.0,
+              683
+            ]
+          ]
+        }
+      ],
+      "stage": "[3840,2160]",
+      "reaped": [],
+      "stderr": []
+    },
+    {
+      "case": "loopback",
+      "ok": true,
+      "commands": {
+        "accepted": 13,
+        "applied": 11,
+        "canceled": 1,
+        "delay_ms": 10000,
+        "outstanding": 0,
+        "refused": 0,
+        "reject_next": 0,
+        "rejected": 1
+      },
+      "checks": [
+        {
+          "check": "browser view shows the model",
+          "ok": true,
+          "order": [
+            "a",
+            "b",
+            "c",
+            "d",
+            "e",
+            "f"
+          ]
+        },
+        {
+          "check": "external change reaches the browser view without a command",
+          "ok": true
+        },
+        {
+          "check": "browser click is a command the device applies, seen by the model",
+          "ok": true,
+          "edit": {
+            "channel": "b",
+            "control": "mute",
+            "event": "edit",
+            "refused": "",
+            "sequence": 1,
+            "time": "2026-11-24T16:07:27.519542139-05:00",
+            "value": true,
+            "window": "B"
+          },
+          "record": {
+            "channel": "b",
+            "control": "mute",
+            "event": "command",
+            "latency_ms": 0.062,
+            "sequence": 1,
+            "state": "applied",
+            "time": "2026-11-24T16:07:27.5195518-05:00",
+            "value": true,
+            "window": "B"
+          }
+        },
+        {
+          "check": "a held fader drag sends nothing",
+          "ok": true,
+          "held": 0.19
+        },
+        {
+          "check": "the release sends exactly one gain edit, of the held value",
+          "ok": true,
+          "edit": {
+            "channel": "c",
+            "control": "gain",
+            "event": "edit",
+            "refused": "",
+            "sequence": 2,
+            "time": "2026-11-24T16:07:29.447276857-05:00",
+            "value": 0.19,
+            "window": "B"
+          },
+          "held": 0.19,
+          "edits": 1
+        },
+        {
+          "check": "browser keyboard step is one gain edit",
+          "ok": true,
+          "edit": {
+            "channel": "c",
+            "control": "gain",
+            "event": "edit",
+            "refused": "",
+            "sequence": 3,
+            "time": "2026-11-24T16:07:30.037035308-05:00",
+            "value": 0.2,
+            "window": "B"
+          },
+          "first": 0.19
+        },
+        {
+          "check": "five quick key presses submit in key order and the last applies",
+          "ok": true,
+          "values": [
+            0.21,
+            0.22,
+            0.23,
+            0.24,
+            0.25
+          ],
+          "sequences": [
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "accepted": [
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "last": "applied"
+        },
+        {
+          "check": "native edit reaches the browser view",
+          "ok": true,
+          "edit": {
+            "channel": "a",
+            "control": "mute",
+            "event": "edit",
+            "refused": "",
+            "sequence": 9,
+            "time": "2026-11-24T16:07:31.568864375-05:00",
+            "value": true,
+            "window": "A"
+          }
+        },
+        {
+          "check": "a delayed browser edit is pending in the model and the page",
+          "ok": true,
+          "channel": {
+            "gain": 0.25,
+            "gain_pending": true,
+            "id": "c",
+            "mute_pending": false,
+            "muted": false,
+            "pending_gain": 0.26,
+            "pending_mute": false
+          }
+        },
+        {
+          "check": "the pending value clears once applied",
+          "ok": true,
+          "record": {
+            "channel": "c",
+            "control": "gain",
+            "event": "command",
+            "latency_ms": 1500.116,
+            "sequence": 10,
+            "state": "applied",
+            "time": "2026-11-24T16:07:33.695288069-05:00",
+            "value": 0.26,
+            "window": "B"
+          }
+        },
+        {
+          "check": "a rejected browser edit shows in both views",
+          "ok": true,
+          "record": {
+            "channel": "c",
+            "control": "gain",
+            "event": "command",
+            "latency_ms": 0.107,
+            "reason": "device refused",
+            "sequence": 11,
+            "state": "rejected",
+            "time": "2026-11-24T16:07:34.382110005-05:00",
+            "value": 0.27,
+            "window": "B"
+          },
+          "error": "latest error: #11 c gain 0.27 rejected: device refused"
+        },
+        {
+          "check": "reorder and removal reach the browser view without commands",
+          "ok": true
+        },
+        {
+          "check": "after the native window closed, browser edits apply",
+          "ok": true
+        },
+        {
+          "check": "browser descendants ended acceptably and none remain",
+          "ok": true,
+          "reaped": [
+            {
+              "pid": 2289869,
+              "name": "WebKitNetworkPr",
+              "exit": 0
+            },
+            {
+              "pid": 2289894,
+              "name": "WebKitWebProces",
+              "exit": 0
+            }
+          ],
+          "remaining": [],
+          "problems": []
+        },
+        {
+          "check": "the last window's close ends the application cleanly, commands conserved",
+          "ok": true,
+          "exit": 0,
+          "ret": {
+            "commands": {
+              "accepted": 13,
+              "applied": 11,
+              "canceled": 1,
+              "delay_ms": 10000,
+              "outstanding": 0,
+              "refused": 0,
+              "reject_next": 0,
+              "rejected": 1
+            },
+            "commands_conserved": true,
+            "error": "<nil>",
+            "event": "return",
+            "invalidations_refused_after_close": 0,
+            "time": "2026-11-24T16:07:37.723502904-05:00"
+          }
+        },
+        {
+          "check": "last-window cancellation cancels the outstanding edit",
+          "ok": true,
+          "commands": {
+            "accepted": 13,
+            "applied": 11,
+            "canceled": 1,
+            "delay_ms": 10000,
+            "outstanding": 0,
+            "refused": 0,
+            "reject_next": 0,
+            "rejected": 1
+          }
+        }
+      ],
+      "clicks": [
+        {
+          "title": "dfx2 mixer B (loopback)",
+          "at": [
+            177,
+            107
+          ],
+          "screen": [
+            1884,
+            251
+          ],
+          "frame": {
+            "title": "dfx2 mixer B (loopback)",
+            "x": 1530,
+            "y": 0,
+            "w": 1800,
+            "h": 1237,
+            "focused": true
+          },
+          "viewport": [
+            900,
+            600
+          ],
+          "scale": 2
+        },
+        {
+          "title": "dfx2 mixer B (loopback)",
+          "drag": [
+            [
+              374,
+              84
+            ],
+            [
+              346.5,
+              84
+            ]
+          ],
+          "screen": [
+            [
+              2278,
+              205
+            ],
+            [
+              2223.0,
+              205
+            ]
+          ]
+        },
+        {
+          "title": "dfx2 mixer B (loopback)",
+          "at": [
+            473,
+            107
+          ],
+          "screen": [
+            2476,
+            251
+          ],
+          "frame": {
+            "title": "dfx2 mixer B (loopback)",
+            "x": 1530,
+            "y": 0,
+            "w": 1800,
+            "h": 1237,
+            "focused": true
+          },
+          "viewport": [
+            900,
+            600
+          ],
+          "scale": 2
+        },
+        {
+          "title": "dfx2 mixer B (loopback)",
+          "at": [
+            621,
+            107
+          ],
+          "screen": [
+            2772,
+            251
+          ],
+          "frame": {
+            "title": "dfx2 mixer B (loopback)",
+            "x": 1530,
+            "y": 0,
+            "w": 1800,
+            "h": 1237,
+            "focused": true
+          },
+          "viewport": [
+            900,
+            600
+          ],
+          "scale": 2
+        }
+      ],
+      "stage": "[3840,2160]",
+      "reaped": [
+        {
+          "pid": 2289869,
+          "name": "WebKitNetworkPr",
+          "exit": 0
+        },
+        {
+          "pid": 2289894,
+          "name": "WebKitWebProces",
+          "exit": 0
+        }
+      ],
+      "stderr": []
+    },
+    {
+      "case": "attach",
+      "ok": true,
+      "fixture_url": "http://127.0.0.1:43263",
+      "commands": {
+        "accepted": 12,
+        "applied": 11,
+        "canceled": 0,
+        "delay_ms": 0,
+        "outstanding": 0,
+        "refused": 0,
+        "reject_next": 0,
+        "rejected": 1
+      },
+      "checks": [
+        {
+          "check": "browser view shows the model",
+          "ok": true,
+          "order": [
+            "a",
+            "b",
+            "c",
+            "d",
+            "e",
+            "f"
+          ]
+        },
+        {
+          "check": "external change reaches the browser view without a command",
+          "ok": true
+        },
+        {
+          "check": "browser click is a command the device applies, seen by the model",
+          "ok": true,
+          "edit": {
+            "channel": "b",
+            "control": "mute",
+            "event": "edit",
+            "refused": "",
+            "sequence": 1,
+            "time": "2026-11-24T16:07:39.625837202-05:00",
+            "value": true,
+            "window": "B"
+          },
+          "record": {
+            "channel": "b",
+            "control": "mute",
+            "event": "command",
+            "latency_ms": 0.153,
+            "sequence": 1,
+            "state": "applied",
+            "time": "2026-11-24T16:07:39.62590833-05:00",
+            "value": true,
+            "window": "B"
+          }
+        },
+        {
+          "check": "a held fader drag sends nothing",
+          "ok": true,
+          "held": 0.19
+        },
+        {
+          "check": "the release sends exactly one gain edit, of the held value",
+          "ok": true,
+          "edit": {
+            "channel": "c",
+            "control": "gain",
+            "event": "edit",
+            "refused": "",
+            "sequence": 2,
+            "time": "2026-11-24T16:07:41.583394111-05:00",
+            "value": 0.19,
+            "window": "B"
+          },
+          "held": 0.19,
+          "edits": 1
+        },
+        {
+          "check": "browser keyboard step is one gain edit",
+          "ok": true,
+          "edit": {
+            "channel": "c",
+            "control": "gain",
+            "event": "edit",
+            "refused": "",
+            "sequence": 3,
+            "time": "2026-11-24T16:07:42.172808852-05:00",
+            "value": 0.2,
+            "window": "B"
+          },
+          "first": 0.19
+        },
+        {
+          "check": "five quick key presses submit in key order and the last applies",
+          "ok": true,
+          "values": [
+            0.21,
+            0.22,
+            0.23,
+            0.24,
+            0.25
+          ],
+          "sequences": [
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "accepted": [
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "last": "applied"
+        },
+        {
+          "check": "native edit reaches the browser view",
+          "ok": true,
+          "edit": {
+            "channel": "a",
+            "control": "mute",
+            "event": "edit",
+            "refused": "",
+            "sequence": 9,
+            "time": "2026-11-24T16:07:43.695261802-05:00",
+            "value": true,
+            "window": "A"
+          }
+        },
+        {
+          "check": "a delayed browser edit is pending in the model and the page",
+          "ok": true,
+          "channel": {
+            "gain": 0.25,
+            "gain_pending": true,
+            "id": "c",
+            "mute_pending": false,
+            "muted": false,
+            "pending_gain": 0.26,
+            "pending_mute": false
+          }
+        },
+        {
+          "check": "the pending value clears once applied",
+          "ok": true,
+          "record": {
+            "channel": "c",
+            "control": "gain",
+            "event": "command",
+            "latency_ms": 1500.128,
+            "sequence": 10,
+            "state": "applied",
+            "time": "2026-11-24T16:07:45.826885965-05:00",
+            "value": 0.26,
+            "window": "B"
+          }
+        },
+        {
+          "check": "a rejected browser edit shows in both views",
+          "ok": true,
+          "record": {
+            "channel": "c",
+            "control": "gain",
+            "event": "command",
+            "latency_ms": 0.149,
+            "reason": "device refused",
+            "sequence": 11,
+            "state": "rejected",
+            "time": "2026-11-24T16:07:46.488148649-05:00",
+            "value": 0.27,
+            "window": "B"
+          },
+          "error": "latest error: #11 c gain 0.27 rejected: device refused"
+        },
+        {
+          "check": "reorder and removal reach the browser view without commands",
+          "ok": true
+        },
+        {
+          "check": "the fixture server survives its attached window",
+          "ok": true
+        },
+        {
+          "check": "a reopened attached view edits through the surviving server",
+          "ok": true
+        },
+        {
+          "check": "browser descendants ended acceptably and none remain",
+          "ok": true,
+          "reaped": [
+            {
+              "pid": 2291347,
+              "name": "WebKitNetworkPr",
+              "exit": 0
+            },
+            {
+              "pid": 2291350,
+              "name": "WebKitWebProces",
+              "exit": 0
+            }
+          ],
+          "remaining": [],
+          "problems": []
+        },
+        {
+          "check": "the last window's close ends the application cleanly, commands conserved",
+          "ok": true,
+          "exit": 0,
+          "ret": {
+            "commands": {
+              "accepted": 12,
+              "applied": 11,
+              "canceled": 0,
+              "delay_ms": 0,
+              "outstanding": 0,
+              "refused": 0,
+              "reject_next": 0,
+              "rejected": 1
+            },
+            "commands_conserved": true,
+            "error": "<nil>",
+            "event": "return",
+            "invalidations_refused_after_close": 0,
+            "time": "2026-11-24T16:07:49.974403202-05:00"
+          }
+        },
+        {
+          "check": "the fixture server stopped with the application",
+          "ok": true
+        }
+      ],
+      "clicks": [
+        {
+          "title": "dfx2 mixer B (attach)",
+          "at": [
+            177,
+            107
+          ],
+          "screen": [
+            1884,
+            251
+          ],
+          "frame": {
+            "title": "dfx2 mixer B (attach)",
+            "x": 1530,
+            "y": 0,
+            "w": 1800,
+            "h": 1237,
+            "focused": true
+          },
+          "viewport": [
+            900,
+            600
+          ],
+          "scale": 2
+        },
+        {
+          "title": "dfx2 mixer B (attach)",
+          "drag": [
+            [
+              374,
+              84
+            ],
+            [
+              346.5,
+              84
+            ]
+          ],
+          "screen": [
+            [
+              2278,
+              205
+            ],
+            [
+              2223.0,
+              205
+            ]
+          ]
+        },
+        {
+          "title": "dfx2 mixer C (attach)",
+          "at": [
+            769,
+            107
+          ],
+          "screen": [
+            2558,
+            729
+          ],
+          "frame": {
+            "title": "dfx2 mixer C (attach)",
+            "x": 1020,
+            "y": 478,
+            "w": 1800,
+            "h": 1237,
+            "focused": true
+          },
+          "viewport": [
+            900,
+            600
+          ],
+          "scale": 2
+        }
+      ],
+      "stage": "[3840,2160]",
+      "reaped": [
+        {
+          "pid": 2291347,
+          "name": "WebKitNetworkPr",
+          "exit": 0
+        },
+        {
+          "pid": 2291350,
+          "name": "WebKitWebProces",
+          "exit": 0
+        }
+      ],
+      "stderr": []
+    },
+    {
+      "case": "resident",
+      "ok": true,
+      "checks": [
+        {
+          "check": "resident with no window",
+          "ok": true,
+          "windows": 0
+        },
+        {
+          "check": "reopened views share the model and command path",
+          "ok": true,
+          "native": "C",
+          "browser": "D"
+        },
+        {
+          "check": "browser descendants ended acceptably and none remain",
+          "ok": true,
+          "reaped": [
+            {
+              "pid": 2291517,
+              "name": "WebKitNetworkPr",
+              "exit": 0
+            },
+            {
+              "pid": 2291520,
+              "name": "WebKitWebProces",
+              "exit": 0
+            }
+          ],
+          "remaining": [],
+          "problems": []
+        },
+        {
+          "check": "quit drains cleanly",
+          "ok": true,
+          "exit": 0
+        }
+      ],
+      "reaped": [
+        {
+          "pid": 2291517,
+          "name": "WebKitNetworkPr",
+          "exit": 0
+        },
+        {
+          "pid": 2291520,
+          "name": "WebKitWebProces",
+          "exit": 0
+        }
+      ]
+    }
+  ]
+}

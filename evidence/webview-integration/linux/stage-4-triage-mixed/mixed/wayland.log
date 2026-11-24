@@ -1,0 +1,6 @@
+SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry
+{"case": "inprocess", "ok": true, "failure": null}
+{"case": "loopback", "ok": true, "failure": null}
+{"case": "attach", "ok": true, "failure": null}
+{"case": "resident", "ok": true, "failure": null}
+gnome-shell-calendar-server[2277523]: Lost (or failed to acquire) the name org.gnome.Shell.CalendarServer - exiting
