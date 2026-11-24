@@ -97,70 +97,30 @@ func errorAction(uri string) (action, nonce string, ok bool) {
 	return action, nonce, ok && (action == "retry" || action == "start") && nonce != ""
 }
 
-// navigation follows the current top-level navigation so that its completion
-// can be classified. WebView2 reports a failed navigation after a redirect
-// with the redirect's HTTP status, and reports no method at all; the method
-// comes from the document-context request the host intercepts, and "the
-// server answered" from a response received for that very request.
-//
-// Correlation is by generation: each top-level NavigationStarting (redirect
-// hops included) begins one, a document request records the generation it was
-// made in, and a response counts only when its URI's latest document request
-// belongs to the current generation. A fetch of the same URL is never a
-// document request, and an older navigation's document request belongs to an
-// earlier generation, so neither can turn a failed load into a success.
+// navigation follows the current top-level navigation. Only its completion
+// supplies response evidence: resource-response events have no NavigationId
+// and cannot distinguish a document from another request to the same URI.
+// The method comes from the intercepted document-context request.
 type navigation struct {
-	generation uint64
-	id         uint64 // WebView2's NavigationId
-	uri        string
-	method     string // from the document request; "" until seen
-	responded  bool
-	documents  map[string]uint64 // document-request URI -> generation
+	id     uint64 // WebView2's NavigationId
+	uri    string
+	method string // from the document request; "" until seen
 }
-
-const documentMemory = 16
 
 // start begins a navigation or redirect hop. A redirect keeps the method of
 // the navigation it continues until the next document request reports one.
 func (n *navigation) start(id uint64, uri string, redirected bool) {
-	n.generation++
-	n.id, n.uri, n.responded = id, uri, false
+	n.id, n.uri = id, uri
 	if !redirected {
 		n.method = ""
 	}
 }
 
-// document records a document-context request and its method.
+// document records the current document-context request's method.
 func (n *navigation) document(uri, method string) {
-	if n.documents == nil {
-		n.documents = make(map[string]uint64)
-	}
-	if len(n.documents) >= documentMemory {
-		for k := range n.documents { // bounded: forget one older entry
-			if n.documents[k] != n.generation {
-				delete(n.documents, k)
-				break
-			}
-		}
-		if len(n.documents) >= documentMemory {
-			clear(n.documents)
-		}
-	}
-	n.documents[uri] = n.generation
 	if uri == n.uri {
 		n.method = strings.ToUpper(method)
 	}
-}
-
-// response records a response received for uri. It counts for the current
-// navigation only when the latest document request for that URI was made in
-// the current generation.
-func (n *navigation) response(uri string) bool {
-	if g, ok := n.documents[uri]; ok && g == n.generation && uri == n.uri {
-		n.responded = true
-		return true
-	}
-	return false
 }
 
 // loadOutcome classifies a completed top-level navigation.
@@ -172,15 +132,18 @@ const (
 	loadFailed                     // no response: the error page follows
 )
 
-// completed classifies NavigationCompleted: a response to the document
-// request means an ordinary page, whatever its status; a cancellation is a
-// policy refusal or a superseded navigation, never a load failure.
-func (n *navigation) completed(success bool, status int32, closing bool) loadOutcome {
+// completed uses only the matching NavigationCompleted event. Final HTTP
+// responses display normally, including 404/500 and a page that called stop().
+// A 1xx/3xx status is not evidence that the final document answered: WebView2
+// can retain a redirect's status when its destination fails to load.
+func (n *navigation) completed(success bool, status, httpStatus int32, closing bool) loadOutcome {
 	switch {
-	case success || n.responded:
+	case success:
 		return loaded
 	case status == webErrorCanceled || closing:
 		return loadStopped
+	case httpStatus >= 200 && httpStatus < 300, httpStatus >= 400 && httpStatus < 600:
+		return loaded
 	}
 	return loadFailed
 }

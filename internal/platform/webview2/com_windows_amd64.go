@@ -80,13 +80,17 @@ func initObjects() {
 	})
 }
 
-func allocObject(vtbl *uintptr, id uintptr) *comObject {
+var allocateCOMObject = func() *comObject {
 	p, _, _ := pCoTaskMemAlloc.Call(unsafe.Sizeof(comObject{}))
-	if p == 0 {
-		panic("CoTaskMemAlloc failed")
+	return (*comObject)(unsafe.Add(unsafe.Pointer(nil), p))
+}
+
+func allocObject(vtbl *uintptr) *comObject {
+	obj := allocateCOMObject()
+	if obj == nil {
+		return nil
 	}
-	obj := (*comObject)(unsafe.Add(unsafe.Pointer(nil), p))
-	*obj = comObject{vtbl: uintptr(unsafe.Pointer(vtbl)), refs: 1, id: id}
+	*obj = comObject{vtbl: uintptr(unsafe.Pointer(vtbl)), refs: 1}
 	return obj
 }
 
@@ -96,12 +100,16 @@ func allocObject(vtbl *uintptr, id uintptr) *comObject {
 // invoking it: the two cannot both settle one completion.
 func newHandlerObject(name string, iid guid, invoke func(a, b uintptr) hresult, dropped func()) handler {
 	initObjects()
+	obj := allocObject(&objects.handlerVtbl[0])
+	if obj == nil {
+		return nil
+	}
 	objects.mu.Lock()
 	objects.next++
-	h := &handlerObject{id: objects.next, name: name, iid: iid, invoke: invoke, dropped: dropped}
+	obj.id = objects.next
+	h := &handlerObject{id: obj.id, obj: obj, name: name, iid: iid, invoke: invoke, dropped: dropped}
 	objects.handlers[h.id] = h
 	objects.mu.Unlock()
-	h.obj = allocObject(&objects.handlerVtbl[0], h.id)
 	return h
 }
 
@@ -192,16 +200,25 @@ func liveObjects() (handlers, streams int) {
 // holds its one reference and passes it to the engine, which takes its own.
 func newStreamObject(body []byte, released func()) uintptr {
 	initObjects()
-	return newStream(&streamBody{data: body, streams: 1, released: released}).ptr()
+	s := newStream(&streamBody{data: body, released: released}, 0)
+	if s == nil {
+		return 0
+	}
+	return s.ptr()
 }
 
-func newStream(body *streamBody) *streamObject {
+func newStream(body *streamBody, pos int64) *streamObject {
+	obj := allocObject(&objects.streamVtbl[0])
+	if obj == nil {
+		return nil
+	}
 	objects.mu.Lock()
 	objects.next++
-	s := &streamObject{id: objects.next, body: body}
+	obj.id = objects.next
+	s := &streamObject{id: obj.id, obj: obj, pos: pos, body: body}
+	atomic.AddInt32(&body.streams, 1)
 	objects.streams[s.id] = s
 	objects.mu.Unlock()
-	s.obj = allocObject(&objects.streamVtbl[0], s.id)
 	return s
 }
 
@@ -328,15 +345,21 @@ func streamStatEntry(this *comObject, pstat *statstg, flags uint32) uintptr {
 }
 
 func streamCloneEntry(this *comObject, ppstm *uintptr) uintptr {
-	s := lookupStream(this)
-	if s == nil || ppstm == nil {
+	if ppstm == nil {
 		return uintptr(ePointer)
 	}
-	atomic.AddInt32(&s.body.streams, 1)
-	c := newStream(s.body)
+	*ppstm = 0
+	s := lookupStream(this)
+	if s == nil {
+		return uintptr(ePointer)
+	}
 	s.mu.Lock()
-	c.pos = s.pos
+	pos := s.pos
 	s.mu.Unlock()
+	c := newStream(s.body, pos)
+	if c == nil {
+		return uintptr(eOutOfMemory)
+	}
 	atomic.StoreInt32(&c.obj.taken, 1)
 	*ppstm = c.ptr()
 	return uintptr(sOK)

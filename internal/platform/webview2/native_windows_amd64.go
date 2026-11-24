@@ -42,6 +42,8 @@ var (
 	ole32    = syscall.NewLazyDLL("ole32.dll")
 
 	pRegisterClassExW   = user32.NewProc("RegisterClassExW")
+	pUnregisterClassW   = user32.NewProc("UnregisterClassW")
+	pDestroyWindow      = user32.NewProc("DestroyWindow")
 	pCreateWindowExW    = user32.NewProc("CreateWindowExW")
 	pDefWindowProcW     = user32.NewProc("DefWindowProcW")
 	pPostMessageW       = user32.NewProc("PostMessageW")
@@ -75,29 +77,22 @@ type wndClassEx struct {
 
 type rect struct{ left, top, right, bottom int32 }
 
-// hop is the UI-thread message-only window that runs functions posted from
-// other threads (stream releases, dropped handlers) and from the UI thread
-// itself one message later. It lives for the process.
-var hop struct {
-	hwnd    uintptr
-	queue   *callbackQueue
-	wndProc uintptr
-}
+var hop dispatchWindow
 
 var installOnce struct {
 	sync.Once
 	err error
 }
 
-// install binds the native surface, creates the callback vtables and the hop
-// window, and records the UI thread. Once per process, on the UI thread.
+// install binds the native surface, creates the permanent callbacks,
+// and records the UI thread. Once per process, on the UI thread.
 func install() error {
 	installOnce.Do(func() { installOnce.err = bind() })
 	return installOnce.err
 }
 
 func bind() error {
-	for _, p := range []*syscall.LazyProc{pRegisterClassExW, pCreateWindowExW, pDefWindowProcW, pPostMessageW, pGetModuleHandleW,
+	for _, p := range []*syscall.LazyProc{pRegisterClassExW, pUnregisterClassW, pCreateWindowExW, pDestroyWindow, pDefWindowProcW, pPostMessageW, pGetModuleHandleW,
 		pGetCurrentThreadID, pCoInitializeEx, pCoUninitialize, pCoTaskMemAlloc, pCoTaskMemFree} {
 		if err := p.Find(); err != nil {
 			return fmt.Errorf("WebView2 host requires %s: %w", p.Name, err)
@@ -110,20 +105,37 @@ func bind() error {
 	if inst == 0 {
 		return fmt.Errorf("GetModuleHandleW: %w", err)
 	}
-	hop.wndProc = syscall.NewCallback(hopProc)
+	wndProc := syscall.NewCallback(hopProc)
 	class := utf16z(hopClass)
-	wc := wndClassEx{wndProc: hop.wndProc, instance: inst, className: class}
-	wc.size = uint32(unsafe.Sizeof(wc))
-	if atom, _, err := pRegisterClassExW.Call(uintptr(unsafe.Pointer(&wc))); atom == 0 {
-		return fmt.Errorf("RegisterClassExW(%s): %w", hopClass, err)
-	}
-	hwnd, _, err := pCreateWindowExW.Call(0, uintptr(unsafe.Pointer(class)), uintptr(unsafe.Pointer(utf16z("dfx2 WebView2"))), 0, 0, 0, 0, 0, hwndMsg, 0, inst, 0)
-	if hwnd == 0 {
-		return fmt.Errorf("CreateWindowExW(%s): %w", hopClass, err)
-	}
-	hop.hwnd = hwnd
-	hop.queue = &callbackQueue{
-		wake: func() bool {
+	hop = dispatchWindow{
+		register: func() error {
+			wc := wndClassEx{wndProc: wndProc, instance: inst, className: class}
+			wc.size = uint32(unsafe.Sizeof(wc))
+			if atom, _, err := pRegisterClassExW.Call(uintptr(unsafe.Pointer(&wc))); atom == 0 {
+				return fmt.Errorf("RegisterClassExW(%s): %w", hopClass, err)
+			}
+			return nil
+		},
+		create: func() (uintptr, error) {
+			hwnd, _, err := pCreateWindowExW.Call(0, uintptr(unsafe.Pointer(class)), uintptr(unsafe.Pointer(utf16z("dfx2 WebView2"))), 0, 0, 0, 0, 0, hwndMsg, 0, inst, 0)
+			if hwnd == 0 {
+				return 0, fmt.Errorf("CreateWindowExW(%s): %w", hopClass, err)
+			}
+			return hwnd, nil
+		},
+		destroy: func(hwnd uintptr) error {
+			if ok, _, err := pDestroyWindow.Call(hwnd); ok == 0 {
+				return fmt.Errorf("DestroyWindow(%s): %w", hopClass, err)
+			}
+			return nil
+		},
+		unregister: func() error {
+			if ok, _, err := pUnregisterClassW.Call(uintptr(unsafe.Pointer(class)), inst); ok == 0 {
+				return fmt.Errorf("UnregisterClassW(%s): %w", hopClass, err)
+			}
+			return nil
+		},
+		wake: func(hwnd uintptr) bool {
 			ok, _, _ := pPostMessageW.Call(hwnd, wmHop, 0, 0)
 			return ok != 0
 		},
@@ -268,6 +280,8 @@ func realAPI() api {
 			}
 			return version, nil
 		},
+		openHop:    hop.open,
+		closeHop:   hop.close,
 		post:       post,
 		newHandler: newHandlerObject,
 		queryInterface: func(obj uintptr, iid *guid) (uintptr, hresult) {

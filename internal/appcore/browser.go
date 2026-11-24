@@ -254,7 +254,7 @@ func (h browserHost) Ready() bool {
 	a.mu.Lock()
 	defer a.mu.Unlock()
 	br := w.browser
-	if w.state != open || br.closeStarted || br.released {
+	if w.state != open || w.ctx.Err() != nil || br.closeStarted || br.released {
 		return false
 	}
 	br.ready = true

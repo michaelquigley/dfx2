@@ -1,0 +1,666 @@
+{
+  "binary": "/tmp/dfx2-header-budget/dfx2-s2-webview",
+  "gdk_backend": "wayland",
+  "gdk_scale": null,
+  "passed": true,
+  "cases": [
+    {
+      "case": "owned_basics",
+      "inprocess": {
+        "origin": "dfx2://app",
+        "start": "dfx2://app/"
+      },
+      "loopback": {
+        "origin": "http://127.0.0.1:41413",
+        "start": "http://127.0.0.1:41413/"
+      },
+      "exit": {
+        "host": "owned-basics",
+        "exit": 0,
+        "error": "<nil>",
+        "children": [
+          {
+            "pid": 1789428,
+            "name": "?",
+            "exit": 0
+          },
+          {
+            "pid": 1789432,
+            "name": "bwrap",
+            "signal": 9
+          },
+          {
+            "pid": 1789431,
+            "name": "bwrap",
+            "signal": 9
+          }
+        ],
+        "stderr_lines": 0
+      },
+      "ok": true,
+      "seconds": 0.9
+    },
+    {
+      "case": "in_process_alone",
+      "listeners": [],
+      "exit": {
+        "host": "inprocess-alone",
+        "exit": 0,
+        "error": "<nil>",
+        "children": [
+          {
+            "pid": 1790360,
+            "name": "?",
+            "exit": 0
+          },
+          {
+            "pid": 1790364,
+            "name": "bwrap",
+            "signal": 9
+          },
+          {
+            "pid": 1790363,
+            "name": "bwrap",
+            "signal": 9
+          },
+          {
+            "pid": 1790526,
+            "name": "WebKitNetworkPr",
+            "exit": 0
+          },
+          {
+            "pid": 1790548,
+            "name": "WebKitWebProces",
+            "exit": 0
+          }
+        ],
+        "stderr_lines": 0
+      },
+      "ok": true,
+      "seconds": 0.5
+    },
+    {
+      "case": "confinement",
+      "page_views": {
+        "loopback": {
+          "img": "added",
+          "script": "added",
+          "css": "added",
+          "fetch": "threw TypeError",
+          "xhr": "0",
+          "beacon": "true",
+          "websocket": "threw SecurityError",
+          "eventsource": "threw SecurityError",
+          "iframe": "added",
+          "iframe-same": "no load",
+          "redirect-img": "added",
+          "redirect-fetch": "threw TypeError",
+          "worker": "threw SecurityError",
+          "other-endpoint": "threw TypeError"
+        },
+        "inprocess": {
+          "img": "added",
+          "script": "added",
+          "css": "added",
+          "fetch": "threw TypeError",
+          "xhr": "0",
+          "beacon": "true",
+          "websocket": "threw SecurityError",
+          "eventsource": "threw SecurityError",
+          "iframe": "added",
+          "iframe-same": "no load",
+          "redirect-img": "added",
+          "redirect-fetch": "302",
+          "worker": "threw SecurityError"
+        }
+      },
+      "refused": {
+        "L-location": {
+          "seq": 4,
+          "kind": "navigation-refused",
+          "uri": "http://127.0.0.1:46113/nav",
+          "method": "GET"
+        },
+        "L-redirect": [
+          {
+            "seq": 7,
+            "kind": "navigation-refused",
+            "uri": "http://127.0.0.1:46113/redirect-nav",
+            "method": "GET"
+          }
+        ],
+        "L-popup": "stopped before navigation policy",
+        "L-form": "stopped before navigation policy",
+        "P-location": {
+          "seq": 4,
+          "kind": "navigation-refused",
+          "uri": "http://127.0.0.1:46113/nav",
+          "method": "GET"
+        },
+        "P-redirect": "stopped before navigation policy",
+        "P-popup": "stopped before navigation policy",
+        "P-form": "stopped before navigation policy"
+      },
+      "collector_hits": 0,
+      "exit": {
+        "host": "confinement",
+        "exit": 0,
+        "error": "<nil>",
+        "children": [
+          {
+            "pid": 1790614,
+            "name": "?",
+            "exit": 0
+          },
+          {
+            "pid": 1790618,
+            "name": "bwrap",
+            "signal": 9
+          },
+          {
+            "pid": 1790617,
+            "name": "bwrap",
+            "signal": 9
+          },
+          {
+            "pid": 1790804,
+            "name": "WebKitWebProces",
+            "exit": 0
+          }
+        ],
+        "stderr_lines": 0
+      },
+      "ok": true,
+      "seconds": 20.7
+    },
+    {
+      "case": "storage",
+      "set": {
+        "cookie": "",
+        "local": "a",
+        "session": "a"
+      },
+      "other": {
+        "cookie": "",
+        "local": null,
+        "session": null
+      },
+      "reload": {
+        "cookie": "",
+        "local": "a",
+        "session": "a"
+      },
+      "loopback": {
+        "cookie": "vis=l1",
+        "local": "l1",
+        "session": "l1"
+      },
+      "other_port": {
+        "cookie": "",
+        "local": null,
+        "session": null
+      },
+      "reopened": {
+        "cookie": "",
+        "local": null,
+        "session": null
+      },
+      "exit": {
+        "host": "storage",
+        "exit": 0,
+        "error": "<nil>",
+        "children": [
+          {
+            "pid": 1791675,
+            "name": "?",
+            "exit": 0
+          },
+          {
+            "pid": 1791678,
+            "name": "bwrap",
+            "signal": 9
+          },
+          {
+            "pid": 1791679,
+            "name": "bwrap",
+            "signal": 9
+          },
+          {
+            "pid": 1793231,
+            "name": "WebKitNetworkPr",
+            "exit": 0
+          },
+          {
+            "pid": 1793234,
+            "name": "WebKitWebProces",
+            "exit": 0
+          }
+        ],
+        "stderr_lines": 0
+      },
+      "ok": true,
+      "seconds": 2.0
+    },
+    {
+      "case": "error_pages_loopback",
+      "get": [
+        {
+          "seq": 4,
+          "kind": "error-page",
+          "uri": "http://127.0.0.1:43867/api/fail",
+          "method": "GET",
+          "retry": true,
+          "detail": "g-io-error-quark 34: Connection terminated unexpectedly"
+        },
+        {
+          "seq": 7,
+          "kind": "error-page",
+          "uri": "http://127.0.0.1:43867/api/fail",
+          "method": "GET",
+          "retry": true,
+          "detail": "g-io-error-quark 34: Connection terminated unexpectedly"
+        }
+      ],
+      "post": {
+        "event": {
+          "seq": 12,
+          "kind": "error-page",
+          "uri": "http://127.0.0.1:43867/api/fail",
+          "method": "POST",
+          "detail": "g-io-error-quark 34: Connection terminated unexpectedly"
+        },
+        "posts_seen_by_handler": 1
+      },
+      "see_other": {
+        "seq": 19,
+        "kind": "error-page",
+        "uri": "http://127.0.0.1:43867/api/fail",
+        "method": "GET",
+        "retry": true,
+        "detail": "g-io-error-quark 34: Connection terminated unexpectedly"
+      },
+      "temporary": {
+        "seq": 26,
+        "kind": "error-page",
+        "uri": "http://127.0.0.1:43867/api/fail",
+        "method": "POST",
+        "detail": "g-io-error-quark 34: Connection terminated unexpectedly"
+      },
+      "handler": {
+        "GET /": 7,
+        "GET /api/fail": 9,
+        "GET /api/status": 2,
+        "GET /logo.svg": 7,
+        "GET /probe.css": 7,
+        "GET /probe.js": 7,
+        "POST /api/fail": 2,
+        "POST /api/report": 4,
+        "POST /api/see-other": 1,
+        "POST /api/temporary": 1
+      },
+      "exit": {
+        "host": "errors-loopback",
+        "exit": 0,
+        "error": "<nil>",
+        "children": [
+          {
+            "pid": 1793298,
+            "name": "?",
+            "exit": 0
+          },
+          {
+            "pid": 1793301,
+            "name": "bwrap",
+            "signal": 9
+          },
+          {
+            "pid": 1793488,
+            "name": "WebKitWebProces",
+            "exit": 0
+          },
+          {
+            "pid": 1793302,
+            "name": "bwrap",
+            "signal": 9
+          }
+        ],
+        "stderr_lines": 0
+      },
+      "ok": true,
+      "seconds": 3.8
+    },
+    {
+      "case": "error_actions_same_uri",
+      "failure": {
+        "seq": 3,
+        "kind": "error-page",
+        "uri": "http://127.0.0.1:37605/recover",
+        "method": "GET",
+        "retry": true,
+        "detail": "g-io-error-quark 34: Connection terminated unexpectedly"
+      },
+      "recovered": "http://127.0.0.1:37605/recover",
+      "exit": {
+        "host": "same-uri-actions",
+        "exit": 0,
+        "error": "<nil>",
+        "children": [
+          {
+            "pid": 1793556,
+            "name": "?",
+            "exit": 0
+          },
+          {
+            "pid": 1793559,
+            "name": "bwrap",
+            "signal": 9
+          },
+          {
+            "pid": 1793744,
+            "name": "WebKitWebProces",
+            "exit": 0
+          },
+          {
+            "pid": 1793560,
+            "name": "bwrap",
+            "signal": 9
+          }
+        ],
+        "stderr_lines": 0
+      },
+      "ok": true,
+      "seconds": 1.1
+    },
+    {
+      "case": "attachment",
+      "start": "http://127.0.0.1:44871/",
+      "outside": {
+        "seq": 2,
+        "kind": "navigation-refused",
+        "uri": "http://127.0.0.1:37775/outside",
+        "method": "GET"
+      },
+      "redirect": {
+        "seq": 4,
+        "kind": "navigation-refused",
+        "uri": "http://127.0.0.1:37775/redirected",
+        "method": "GET"
+      },
+      "get": {
+        "seq": 7,
+        "kind": "error-page",
+        "uri": "http://127.0.0.1:44871/fail",
+        "method": "GET",
+        "retry": true,
+        "detail": "g-io-error-quark 34: Connection terminated unexpectedly"
+      },
+      "post": {
+        "seq": 13,
+        "kind": "error-page",
+        "uri": "http://127.0.0.1:44871/fail-post",
+        "method": "POST",
+        "detail": "g-io-error-quark 34: Connection terminated unexpectedly"
+      },
+      "posts_delivered": 1,
+      "exit": {
+        "host": "attachment",
+        "exit": 0,
+        "error": "<nil>",
+        "children": [
+          {
+            "pid": 1793821,
+            "name": "?",
+            "exit": 0
+          },
+          {
+            "pid": 1793825,
+            "name": "bwrap",
+            "signal": 9
+          },
+          {
+            "pid": 1793824,
+            "name": "bwrap",
+            "signal": 9
+          }
+        ],
+        "stderr_lines": 0
+      },
+      "service_requests": 9,
+      "ok": true,
+      "seconds": 3.4
+    },
+    {
+      "case": "close_cases",
+      "init-inprocess": {
+        "host": "close-init-inprocess",
+        "exit": 0,
+        "error": "<nil>",
+        "children": [
+          {
+            "pid": 1794076,
+            "name": "?",
+            "exit": 0
+          },
+          {
+            "pid": 1794079,
+            "name": "bwrap",
+            "signal": 9
+          },
+          {
+            "pid": 1794080,
+            "name": "bwrap",
+            "signal": 9
+          }
+        ],
+        "stderr_lines": 0
+      },
+      "init-loopback": {
+        "host": "close-init-loopback",
+        "exit": 0,
+        "error": "<nil>",
+        "children": [
+          {
+            "pid": 1794290,
+            "name": "?",
+            "exit": 0
+          },
+          {
+            "pid": 1794293,
+            "name": "bwrap",
+            "signal": 9
+          },
+          {
+            "pid": 1794294,
+            "name": "bwrap",
+            "signal": 9
+          }
+        ],
+        "stderr_lines": 0
+      },
+      "handler-inprocess": {
+        "host": "close-handler-inprocess",
+        "exit": 0,
+        "error": "<nil>",
+        "children": [
+          {
+            "pid": 1794501,
+            "name": "?",
+            "exit": 0
+          },
+          {
+            "pid": 1794505,
+            "name": "bwrap",
+            "signal": 9
+          },
+          {
+            "pid": 1794504,
+            "name": "bwrap",
+            "signal": 9
+          }
+        ],
+        "stderr_lines": 0
+      },
+      "handler-loopback": {
+        "host": "close-handler-loopback",
+        "exit": 0,
+        "error": "<nil>",
+        "children": [
+          {
+            "pid": 1794755,
+            "name": "?",
+            "exit": 0
+          },
+          {
+            "pid": 1794758,
+            "name": "bwrap",
+            "signal": 9
+          },
+          {
+            "pid": 1794759,
+            "name": "bwrap",
+            "signal": 9
+          }
+        ],
+        "stderr_lines": 0
+      },
+      "reading": {
+        "host": "close-reading",
+        "exit": 0,
+        "error": "<nil>",
+        "children": [
+          {
+            "pid": 1795046,
+            "name": "?",
+            "exit": 0
+          },
+          {
+            "pid": 1795049,
+            "name": "bwrap",
+            "signal": 9
+          },
+          {
+            "pid": 1795050,
+            "name": "bwrap",
+            "signal": 9
+          }
+        ],
+        "stderr_lines": 0
+      },
+      "ok": true,
+      "seconds": 6.0
+    },
+    {
+      "case": "close_one_keep_one",
+      "engines_before_close": [
+        "WebKitNetworkPr",
+        "WebKitNetworkPr",
+        "WebKitWebProces",
+        "WebKitWebProces"
+      ],
+      "engines_after_close": [
+        "WebKitNetworkPr",
+        "WebKitWebProces"
+      ],
+      "exit": {
+        "host": "close-one",
+        "exit": 0,
+        "error": "<nil>",
+        "children": [
+          {
+            "pid": 1795297,
+            "name": "?",
+            "exit": 0
+          },
+          {
+            "pid": 1795301,
+            "name": "bwrap",
+            "signal": 9
+          },
+          {
+            "pid": 1795991,
+            "name": "WebKitWebProces",
+            "exit": 0
+          },
+          {
+            "pid": 1795300,
+            "name": "bwrap",
+            "signal": 9
+          }
+        ],
+        "stderr_lines": 0
+      },
+      "ok": true,
+      "seconds": 3.4
+    },
+    {
+      "case": "lazy_loading",
+      "before": {
+        "libwebkit2gtk": false,
+        "libjavascriptcoregtk": false
+      },
+      "after": {
+        "libwebkit2gtk": true,
+        "libjavascriptcoregtk": true
+      },
+      "exit": {
+        "host": "lazy-loading",
+        "exit": 0,
+        "error": "<nil>",
+        "children": [
+          {
+            "pid": 1796121,
+            "name": "?",
+            "exit": 0
+          },
+          {
+            "pid": 1796125,
+            "name": "bwrap",
+            "signal": 9
+          },
+          {
+            "pid": 1796124,
+            "name": "bwrap",
+            "signal": 9
+          },
+          {
+            "pid": 1796315,
+            "name": "WebKitWebProces",
+            "exit": 0
+          }
+        ],
+        "stderr_lines": 0
+      },
+      "ok": true,
+      "seconds": 2.5
+    },
+    {
+      "case": "browser_failure",
+      "killed": 1796974,
+      "exit": {
+        "host": "browser-failure",
+        "exit": 1,
+        "error": "dfx2 webview window 3: WebKit web process terminated (reason 0)",
+        "children": [
+          {
+            "pid": 1796785,
+            "name": "?",
+            "exit": 0
+          },
+          {
+            "pid": 1796789,
+            "name": "bwrap",
+            "signal": 9
+          },
+          {
+            "pid": 1796788,
+            "name": "bwrap",
+            "signal": 9
+          }
+        ],
+        "stderr_lines": 1
+      },
+      "ok": true,
+      "seconds": 0.5
+    }
+  ]
+}

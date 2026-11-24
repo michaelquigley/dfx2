@@ -208,6 +208,13 @@ func newBrowser(parent platform.BrowserParent, config platform.BrowserConfig, ho
 		return nil, fmt.Errorf("browser profile directory: %w", err)
 	}
 	b.profile = dir
+	if loader.users == 1 {
+		if err := n.openHop(host); err != nil {
+			b.dropLoader()
+			b.cleanupProfile()
+			return nil, err
+		}
+	}
 	b.sync()
 	return b, nil
 }
@@ -250,6 +257,10 @@ func (b *browser) Start() {
 		b.onEnvironment(hresult(uint32(a)), env)
 		return sOK
 	}, func() { b.dropped("EnvironmentCompleted", func() { b.envPending = false }) })
+	if cb == nil {
+		b.host.Failed(eOutOfMemory.err("allocate EnvironmentCompleted"))
+		return
+	}
 	b.envPending = true
 	hr := n.createEnvironment(loader.lib, b.profile, cb)
 	cb.release()
@@ -309,6 +320,10 @@ func (b *browser) onEnvironment(hr hresult, env uintptr) {
 		b.onBrowserProcessExited(args)
 		return sOK
 	}, nil)
+	if exited == nil {
+		b.host.Failed(eOutOfMemory.err("allocate BrowserProcessExited"))
+		return
+	}
 	token, hr := n.env5AddExited(env5, exited)
 	exited.release()
 	if hr.failed() {
@@ -326,6 +341,10 @@ func (b *browser) onEnvironment(hr hresult, env uintptr) {
 		b.onController(hresult(uint32(a)), ctl)
 		return sOK
 	}, func() { b.dropped("ControllerCompleted", func() { b.ctlPending = false }) })
+	if cb == nil {
+		b.host.Failed(eOutOfMemory.err("allocate ControllerCompleted"))
+		return
+	}
 	b.ctlPending = true
 	hr = n.envCreateCtrl(env, b.parent, cb)
 	cb.release()
@@ -424,6 +443,9 @@ func (b *browser) addHandlers() error {
 	}
 	for _, r := range regs {
 		cb := n.newHandler(r.name, r.iid, r.fn, nil)
+		if cb == nil {
+			return eOutOfMemory.err("allocate " + r.name)
+		}
 		token, hr := n.wvAddEvent(b.wv, r.add, cb)
 		cb.release() // the engine holds its own until remove_
 		if hr.failed() {
@@ -437,6 +459,9 @@ func (b *browser) addHandlers() error {
 	}
 	b.wv2 = wv2
 	cb := n.newHandler("WebResourceResponseReceived", iidResponseReceived, func(_, args uintptr) hresult { b.onResponseReceived(args); return sOK }, nil)
+	if cb == nil {
+		return eOutOfMemory.err("allocate WebResourceResponseReceived")
+	}
 	token, hr := n.wvAddEvent(wv2, wv2AddWebResourceResponseReceived, cb)
 	cb.release()
 	if hr.failed() {
@@ -449,6 +474,9 @@ func (b *browser) addHandlers() error {
 	}
 	b.wv4 = wv4
 	cb = n.newHandler("DownloadStarting", iidDownloadStarting, func(_, args uintptr) hresult { b.onDownloadStarting(args); return sOK }, nil)
+	if cb == nil {
+		return eOutOfMemory.err("allocate DownloadStarting")
+	}
 	token, hr = n.wvAddEvent(wv4, wv4AddDownloadStarting, cb)
 	cb.release()
 	if hr.failed() {
@@ -498,6 +526,10 @@ func (b *browser) installCookie() {
 		b.onCookies(hresult(uint32(a)), list, name)
 		return sOK
 	}, func() { b.dropped("GetCookiesCompleted", func() { b.owed-- }) })
+	if cb == nil {
+		b.host.Failed(eOutOfMemory.err("allocate GetCookiesCompleted"))
+		return
+	}
 	b.owed++
 	hr = n.cookieList(cm, b.cookie.Origin+"/", cb)
 	cb.release()
@@ -621,13 +653,15 @@ func (b *browser) onDownloadStarting(args uintptr) {
 	b.event(platform.BrowserEvent{Kind: "download-canceled"}, func(a *platform.BrowserAudit) { a.Downloads++ })
 }
 
+// Resource responses are audit observations only; URI equality cannot tie
+// them to a navigation. Completion determines whether to show the error page.
 func (b *browser) onResponseReceived(args uintptr) {
 	uri, status := n.responseReceived(args)
 	if b.errorPending {
 		return
 	}
-	if b.nav.response(uri) {
-		b.event(platform.BrowserEvent{Kind: "document-response", URI: uri, Detail: strconv.Itoa(int(status))}, nil)
+	if uri == b.nav.uri {
+		b.event(platform.BrowserEvent{Kind: "resource-response", URI: uri, Detail: strconv.Itoa(int(status))}, nil)
 	}
 }
 
@@ -641,7 +675,7 @@ func (b *browser) onNavigationCompleted(args uintptr) {
 		return // superseded, or the completion of a refused navigation
 	}
 	detail := fmt.Sprintf("status %d http %d", status, httpStatus)
-	switch b.nav.completed(success, status, b.closing) {
+	switch b.nav.completed(success, status, httpStatus, b.closing) {
 	case loaded:
 		b.event(platform.BrowserEvent{Kind: "load", URI: b.nav.uri, Method: b.nav.method, Detail: detail}, nil)
 	case loadStopped:
@@ -1110,6 +1144,13 @@ func (b *browser) Respond(id platform.ID, resp platform.BrowserResponse) bool {
 // the request released; a bodiless response releases it at once.
 func (b *browser) deliver(id platform.ID, args, deferral uintptr, resp platform.BrowserResponse) {
 	var sb strings.Builder
+	// One allocation keeps serialization within the endpoint's fixed delivery
+	// reserve, including the UTF-16 conversion in envCreateResponse.
+	headerBytes := 0
+	for _, h := range resp.Header {
+		headerBytes += len(h.Name) + len(h.Value) + 4 // ": " and CRLF
+	}
+	sb.Grow(headerBytes)
 	for _, h := range resp.Header {
 		sb.WriteString(h.Name)
 		sb.WriteString(": ")
@@ -1122,6 +1163,13 @@ func (b *browser) deliver(id platform.ID, args, deferral uintptr, resp platform.
 		stream = n.newBodyStream(body, func() {
 			n.post(func() { b.streamReleased(id) })
 		})
+		if stream == 0 {
+			// No response owns the request. Use the existing abort path to
+			// settle any deferral and release the endpoint's reservation.
+			b.decide(args, deferral, id, platform.RequestDecision{Action: platform.RequestAbort})
+			b.host.Failed(eOutOfMemory.err("allocate response stream"))
+			return
+		}
 	}
 	if stream != 0 {
 		// Counted from creation: its final release, wherever and whenever it
@@ -1271,13 +1319,26 @@ func (b *browser) afterRelease() {
 		n.release(b.env)
 		b.env = 0
 	}
+	last := b.loaderHeld && loader.users == 1
 	b.dropLoader()
+	b.cleanupProfile()
+	if last {
+		n.closeHop(b.host, b.finishRelease)
+		return
+	}
+	b.finishRelease()
+}
+
+func (b *browser) cleanupProfile() {
 	if dir := b.profile; dir != "" && !b.cleaned {
 		b.cleaned = true
 		if err := b.host.Cleanup("browser profile "+dir, func() error { return removeAfterRelease(dir) }); err != nil {
 			b.host.Failed(err)
 		}
 	}
+}
+
+func (b *browser) finishRelease() {
 	b.released = true
 	b.sync()
 	b.host.Released()

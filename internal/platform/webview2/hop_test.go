@@ -1,6 +1,8 @@
 package webview2
 
 import (
+	"errors"
+	"slices"
 	"sync"
 	"testing"
 	"time"
@@ -187,5 +189,136 @@ func TestHopTeardownStaysDeferredAfterFailedWake(t *testing.T) {
 	c.q.dispatch()
 	if h.released != 1 {
 		t.Fatalf("released=%d", h.released)
+	}
+}
+
+func TestDispatchWindowSharedUntilLastReleaseAndRecreated(t *testing.T) {
+	installFake(t)
+	var calls []string
+	var retry func()
+	wakeOK := true
+	const handle = 73 // Windows can reuse the same value after destruction.
+	h := dispatchWindow{
+		register: func() error { calls = append(calls, "register"); return nil },
+		create:   func() (uintptr, error) { calls = append(calls, "create"); return handle, nil },
+		destroy: func(hwnd uintptr) error {
+			if hwnd != handle {
+				t.Fatalf("destroy HWND %d", hwnd)
+			}
+			calls = append(calls, "destroy")
+			return nil
+		},
+		unregister: func() error { calls = append(calls, "unregister"); return nil },
+		wake: func(hwnd uintptr) bool {
+			if hwnd != handle {
+				t.Fatalf("wake HWND %d", hwnd)
+			}
+			calls = append(calls, "wake")
+			return wakeOK
+		},
+		after: func(_ time.Duration, fn func()) { retry = fn },
+	}
+	n.openHop, n.closeHop = h.open, h.close
+	n.post = func(fn func()) { h.queue.post(fn) }
+	open := func(host *fakeHost) *browser {
+		t.Helper()
+		b, err := newBrowser(platform.BrowserParent{Handle: 1}, platform.BrowserConfig{Mode: platform.BrowserInProcess}, host)
+		if err != nil {
+			t.Fatal(err)
+		}
+		return b
+	}
+	first, second := &fakeHost{}, &fakeHost{}
+	a, b := open(first), open(second)
+	a.Close()
+	h.queue.dispatch()
+	if first.released != 1 || !slices.Equal(calls, []string{"register", "create", "wake"}) {
+		t.Fatalf("first close: releases=%d native calls=%v", first.released, calls)
+	}
+
+	// The other attachment can still dispatch its final callback. Let an
+	// already queued native message beat the retry for its failed wake.
+	wakeOK = false
+	b.Close()
+	if retry == nil {
+		t.Fatal("failed wake did not schedule a retry")
+	}
+	h.queue.dispatch()
+	if second.released != 1 || h.hwnd != 0 || h.queue != nil ||
+		!slices.Equal(calls, []string{"register", "create", "wake", "wake", "destroy", "unregister"}) {
+		t.Fatalf("last close: releases=%d HWND=%d native calls=%v", second.released, h.hwnd, calls)
+	}
+
+	wakeOK = true
+	calls = nil
+	third := &fakeHost{}
+	open(third).Close()
+	retry() // old queue, with work pending on the reused HWND's new queue
+	h.queue.dispatch()
+	if third.released != 1 || !slices.Equal(calls, []string{"register", "create", "wake", "destroy", "unregister"}) {
+		t.Fatalf("resident reopen: releases=%d native calls=%v", third.released, calls)
+	}
+}
+
+func TestDispatchWindowCreateFailureUnregistersClass(t *testing.T) {
+	f := installFake(t)
+	createErr := errors.New("window creation failed")
+	var calls []string
+	h := dispatchWindow{
+		register:   func() error { calls = append(calls, "register"); return nil },
+		create:     func() (uintptr, error) { calls = append(calls, "create"); return 0, createErr },
+		unregister: func() error { calls = append(calls, "unregister"); return nil },
+	}
+	n.openHop = h.open
+	host := &fakeHost{}
+	b, err := newBrowser(platform.BrowserParent{Handle: 1}, platform.BrowserConfig{Mode: platform.BrowserInProcess}, host)
+	if b != nil || !errors.Is(err, createErr) || !slices.Equal(calls, []string{"register", "create", "unregister"}) {
+		t.Fatalf("browser=%v error=%v native calls=%v", b, err, calls)
+	}
+	if loader.users != 0 || f.freed != 1 || len(host.cleanups) != 2 || h.queue != nil {
+		t.Fatalf("users=%d unloaded=%d cleanups=%v queue=%p", loader.users, f.freed, host.cleanups, h.queue)
+	}
+}
+
+func TestDispatchWindowCleanupFailuresRetainOwnership(t *testing.T) {
+	var retry func()
+	host := &fakeHost{}
+	destroys, unregisters := 0, 0
+	destroyErr, unregisterErr := errors.New("destroy"), errors.New("unregister")
+	h := dispatchWindow{
+		hwnd: 7, queue: &callbackQueue{wake: func() bool { return true }},
+		destroy: func(uintptr) error {
+			destroys++
+			if destroys == 1 {
+				return destroyErr
+			}
+			return nil
+		},
+		unregister: func() error {
+			unregisters++
+			if unregisters == 1 {
+				return unregisterErr
+			}
+			return nil
+		},
+		after: func(d time.Duration, fn func()) {
+			if d != hopRetryDelay {
+				t.Fatalf("delay %v", d)
+			}
+			retry = fn
+		},
+	}
+	h.close(host, host.Released)
+	if h.hwnd != 7 || retry == nil || unregisters != 0 || host.released != 0 || !slices.Equal(host.failed, []error{destroyErr}) {
+		t.Fatalf("failed destroy: HWND=%d unregisters=%d released=%d errors=%v", h.hwnd, unregisters, host.released, host.failed)
+	}
+	retry()
+	if destroys != 1 {
+		t.Fatal("retry ran native cleanup outside UI dispatch")
+	}
+	h.queue.dispatch()
+	if destroys != 2 || unregisters != 2 || host.released != 1 || len(host.cleanups) != 1 ||
+		!slices.Equal(host.failed, []error{destroyErr, unregisterErr}) {
+		t.Fatalf("retry: destroys=%d unregisters=%d released=%d cleanups=%v errors=%v", destroys, unregisters, host.released, host.cleanups, host.failed)
 	}
 }

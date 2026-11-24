@@ -4,7 +4,7 @@ Stage 3 of the [work order](../../docs/future/webview-integration-work-order.md)
 
 Host: Windows 10 Pro 10.0.19045.6466, amd64, Go 1.27.3 (module language 1.26), Evergreen WebView2 Runtime 151.0.4129.93, over Remote Desktop. The session was **disconnected** while the host was implemented and first validated (`query session` state `Disc`, reporting 1920×1080 at 96 DPI) and **connected** for the final runs (`Active`, 3840×1600 at 96 DPI). Every build, test and vet uses `CGO_ENABLED=0`. Terminus is not installed on this host; review runs on the Linux return.
 
-**Result for the returned revision `d328fbb`: the native matrix passes 16 of 16 cases in the connected session**, with the Win32 size/move loop established by a title-bar drag and both screen captures written, the spike's adjusted `error-pages` scenario passes its targeted rerun, and Michael's manual audition passed by his report (below). The earlier disconnected run, 15 of 16 with the size/move case untested, is kept beside it. *That validation predates the [return corrections](#return-corrections--2026-11-20) and the triage that followed, which have modeled tests and Windows cross-builds only; native revalidation of the current tree is pending ([Windows handoff](#windows-handoff)).*
+**Result for the returned revision `d328fbb`: the native matrix passes 16 of 16 cases in the connected session**, with the Win32 size/move loop established by a title-bar drag and both screen captures written, the spike's adjusted `error-pages` scenario passes its targeted rerun, and Michael's manual audition passed by his report (below). The earlier disconnected run, 15 of 16 with the size/move case untested, is kept beside it. *That validation predates the [return corrections](#return-corrections--2026-11-20) and the triage that followed, validated on Windows at `ad2e37b` with 17 cases passed and `body_close` untested. [Windows return](#windows-validation-of-the-committed-corrections--2026-11-20).*
 
 ## What was added
 
@@ -784,15 +784,7 @@ Known limits, recorded where they apply:
 
 ### Before stage acceptance
 
-1. **Windows native validation** of the committed U4 revision, as described in the [Windows handoff](#windows-handoff) below.
-2. **V4 on the Linux return.** If `download-started` cannot be connected, browser creation unwinds as it does for the required view signals. The fix needs an injected-failure test, and the affected Linux browser matrix must rerun. *Done 2026-11-21; see [Linux return — V4](#linux-return--v4-2026-11-21).*
-3. **Linux review of the Windows return.** That includes the `get_Content` comparison, which settles the `ReadableStream` upload contract.
-4. **Open decisions** from these corrections:
-   - the transfer reserve at one metadata limit, which costs 32 KiB of `Buffers` at the defaults and raises `Normalize`'s minimum;
-   - aborting the request, a network error for the page, as the response to an unsupported stream or a failed getter;
-   - the streaming-upload contract.
-5. **Canon alignment**, by deliberate review.
-6. **Michael's acceptance.**
+Windows ran the committed corrections at `ad2e37b`, and the Linux return fixed V4 in `f00df33`. Michael accepted the three endpoint and upload decisions on 2026-11-21. Stage acceptance still requires review of the returned tree, deliberate canon alignment and Michael's acceptance. [Contract decisions](#contract-decisions-on-the-linux-return)
 
 ### Windows handoff
 
@@ -883,5 +875,181 @@ This is now the current Linux browser evidence, with the stage 4 regression from
 | V4 | X11 | 7 | the same 8 as in N6 |
 | V4 | X11 at scale 2 | 7 | the same 8 as in N6 |
 
-Next on this return: review of the Windows validation above and the open decisions.
+### Contract decisions on the Linux return
 
+Michael accepted all three on 2026-11-21.
+
+- Each in-process endpoint reserves one metadata limit for the browser's temporary request data during synchronous admission. At default limits this increases the reserve from 32 KiB to 64 KiB per endpoint. Custom `Buffers` must cover that reserve, the refusal slots and one maximal request.
+- If WebView2 fails to obtain the request body or a supplied stream lacks the agility required by the reader, the admitted request aborts locally. The page sees a network error, the handler is skipped and the application continues. A successful null stream follows the ordinary absent-stream rules, including the declared-length checks.
+- WebView2 in-process windows support buffered uploads, including a `Uint8Array`. JavaScript `ReadableStream` request bodies are unsupported in this mode. On Runtime 151.0.4129.93 the host received exactly the same getter result for the streaming upload and the empty POST. The handler received zero bytes in both cases. [Windows comparison](windows/stage-3/corrections/body_reader.result.json)
+
+The Windows matrix remains 17 passed with `body_close` untested. The Linux browser matrix passed 33/33 after V4 and the eight foundation and mixer regression runs carry forward from U4.
+
+
+### Full-rubric review after the contract decisions
+
+Terminus round `73e31fc4d23e` reviewed the full tracked tree against all 11 qualities. Verdict **not clean**, with seven blocking findings and zero advisories. The same nine files lack project-local quality coverage (four webview example assets, the WebView2 loader and its two notices, and the Hebrew font fixture and licence).
+
+| Finding | Area |
+| --- | --- |
+| Readiness can authorize the first navigation after context cancellation | Shared browser lifetime |
+| The message-only dispatch window can outlive the application | WebView2 native ownership |
+| Response-stream cloning can panic on allocation failure | WebView2 COM callbacks |
+| Reload and history navigation with an unknown method can offer Retry | WebKitGTK, previously tracked as V5 |
+| A surface can become ineligible during its own frame and still receive a presentation | Immediate-mode scheduling |
+| Wrap accounting uses slice length while larger backing arrays remain allocated | Text cache budgets |
+| Host exit can race the stdout reader's final event | Linux webview audition driver |
+
+Michael approved the readiness fix. The core now checks the window context under the same lock as the window and attachment state before granting first navigation. The modeled regression cancels the application context after browser creation while the window is still open, then delivers readiness on the UI thread. The old guard granted navigation and failed the test. The corrected gate refused it. The existing live-window and closing-window controls also passed, across 200 repetitions of the three cases.
+
+The full no-cgo suite, Linux vet, ten race-enabled appcore runs and the Windows/amd64 cross-build passed. The native matrices above predate this shared-core change. The remaining six findings await disposition.
+
+#### WebView2 dispatch-window lifetime
+
+The second finding in round `73e31fc4d23e` was confirmed by inspection. The original one-time binding created a message-only HWND and registered its class. Neither had a release path, and a failed window creation left the class registered. Michael approved using the existing attachment lifetime to own both.
+
+The first live attachment creates the dispatch window before browser initialization starts. The final attachment destroys it on the UI thread after all browser callback producers have finished. A failed creation unregisters its class and unwinds the loader and profile. If destruction fails, that attachment reports the error and remains pending through a paced retry on the UI thread. If unregistration fails after the HWND is gone or creation failed, the host reports the error and tracks class cleanup through shutdown.
+
+The portable tests exercise callback delivery with two attachments, final destruction, reopening with a reused numeric HWND, a delayed wake retry belonging to the old queue, and cleanup after failed creation or destruction. For the Windows return, run `go test ./internal/platform/webview2 -run '^TestNativeDispatchWindowClosesInsideDispatchAndReopens$' -count=10`. It uses User32 to dispatch the last callback, checks the HWND is gone, and runs another full open/close cycle with the same class name. This test was cross-compiled on Linux. Native execution on the new tree is pending.
+
+The full no-cgo suite, 100 repetitions of the modeled dispatcher and sharing tests, ten race-enabled WebView2 and appcore runs, Linux and Windows vet, and the Windows/amd64 cross-build passed. With last-close cleanup removed in a test overlay, the sharing test found the HWND still live. Removing the failed-create rollback separately exposed the missing class unregistration. Five findings from the round remain for triage.
+
+#### WebView2 response-stream clone allocation
+
+Michael approved the third finding in round `73e31fc4d23e`. When the engine calls `IStream::Clone`, the callback clears the output pointer and returns `E_OUTOFMEMORY` if the native COM header allocation fails. Only a successfully allocated stream enters the object registry and acquires a reference to the shared body. A successful clone starts at the original's current offset and advances independently. The initial response-stream and handler constructors retain their existing allocation-failure behavior.
+
+The failure regression starts at a nonzero offset and injects a null allocation into the COM callback. It checks the HRESULT, null output, registry size, body reference count, next byte read from the original, and single release of the body. The companion success case releases the original and continues reading the clone. On Linux a temporary Go overlay ran the Windows callback and tests with stand-ins for native allocation, free and callback registration. The old callback panicked on the injected failure. Both corrected cases passed 200 repetitions and 50 race-enabled repetitions using native-memory stand-ins for the COM headers and the read destination. The full no-cgo suite, Windows/amd64 build, WebView2 package vet for Windows and Windows test cross-compilation also passed. Run `go test ./internal/platform/webview2 -run '^TestStreamClone' -count=10` on the Windows return for coverage with the native allocation and free bindings. Four findings from this round remain for triage.
+
+#### WebKitGTK Retry on reload and history navigation
+
+Michael approved the fourth finding in round `73e31fc4d23e`. On a reload or history traversal, the classifier now withholds Retry when WebKit omits the method. A reported GET still permits Retry, and Return to start remains available. The error-page test covers missing, GET and POST methods for both navigation types. Both missing-method cases offered Retry with the old classifier.
+
+A separate instrumented example on nested Wayland recorded the raw method and navigation type before classification. It submitted a form, reloaded its POST result using WebKit's reload operation, navigated away, then went Back and Forward. WebKitGTK 2.52.6 reported a form resubmission (type 4) for the reload in both transports. Back and Forward to the POST result were history traversals (type 2). All three omitted the method in-process and reported POST on loopback. The reload sent another POST in each transport. The history traversals restored the result without another handler call. These successful navigations establish what the engine supplied. The error-page button assertions ran in the Go tests. [Native observations](linux/stage-3-retry-method/post-history.json)
+
+The ordinary browser binary passed all 33 cases across Wayland, XWayland and XWayland at scale 2. The mixer and lifetime matrices were not repeated in this run. Three findings from this round remain for triage. [Matrix manifest](linux/stage-3-retry-method/manifest.json)
+
+#### Surface eligibility at presentation
+
+Michael approved the fifth finding in round `73e31fc4d23e`. A view can receive a synchronous surface change during its own frame. The core now checks eligibility before presenting the result. If the open window has become hidden or zero-sized, it retains a redraw for restoration. The frame still accounts for the input it consumed and can release capture.
+
+The fake backend delivers each surface change inside an input-only frame with no outstanding invalidation or animation. Both cases presented an extra image with the old guard. The hidden case also lost its redraw. The corrected cases check zero presentations while suspended, one capture release, one new image on restore and no replay of consumed input. Independently restoring the open-only guard, dropping the redraw mark or tying capture release to presentation each failed the new test. The focused frame and capture tests passed 200 repetitions. The new test also passed 300 repetitions at `GOMAXPROCS=1`. The appcore suite passed ten race-enabled runs. The full no-cgo suite, Linux and Windows vet, the Windows/amd64 build and appcore test cross-compilation passed.
+
+The [native Linux browser matrix](linux/stage-3-frame-presentation/manifest.json) passed 33/33 across Wayland, XWayland and XWayland at scale 2. All [eight mixer and lifetime regression runs](linux/stage-3-frame-presentation/regression/manifest.json) passed. The audit found clean drains in 55 process logs and decoded all 78 PNGs. The synchronous change during a window's own frame was exercised with the fake backend. Native Windows validation of the corrected core is pending. Two findings in this round remain for triage.
+
+#### Retained wrap capacity
+
+Michael approved the sixth finding in round `73e31fc4d23e`. On this Linux/amd64 build, wrapping 100 repetitions of `"ab "` with the test engine used 100 of 146 line slots and 300 of 400 positioned-glyph slots. The arrays held 20,976 bytes while the old accounting charged 15,200. Paragraph-cache and transient-scratch decisions now charge both backing arrays by capacity.
+
+The regression measures those arrays independently and uses their combined size to set three boundaries. The wrap fits an exact cache budget, goes to scratch if the cache is one byte short, and is refused if both limits are one byte short. All three failed with the old calculation. Reverting either capacity charge alone also failed all three. The full no-cgo suite, 100 repetitions of the text suite, ten race-enabled runs of text and UI, Linux vet and the Windows/amd64 cross-build passed.
+
+All [eight native Linux mixer and lifetime runs](linux/stage-3-wrap-capacity/manifest.json) passed. The audit found clean drains in 55 process logs and decoded all 78 PNGs. The rebuilt browser example matched the [previous 33-case Linux browser run](linux/stage-3-frame-presentation/manifest.json) byte for byte. The corrected accounting awaits native Windows execution. The Linux audition driver's stdout reader is the last outstanding finding in this round.
+
+#### Drain host stdout before reading the exit result
+
+The seventh finding in round `73e31fc4d23e` concerned the Linux audition driver. After the host exited, a 200 ms sleep allowed the driver to inspect an incomplete event list and close the log while its reader could still write. The driver now waits for that thread within the original exit deadline. A timeout or reader error fails the case. The log stays open while a reader is still draining.
+
+Two regression tests cover a held return event and a read error following a return. Both failed with the old driver and passed 200 repetitions each after the change. The [Linux browser matrix](linux/stage-3-stdout-drain/manifest.json) passed all 33 cases. Each of the 45 host logs contains exactly one return as its final host event. Commands share the same logs and can appear after that event. The browser binary matches the prior run byte for byte. The eight mixer and lifetime runs from the wrap-capacity correction still apply.
+
+All seven findings from this round have now received fixes. A fresh Terminus verdict and native Windows validation of the corrected tree remain pending.
+
+#### Full-rubric review after the seven corrections
+
+Terminus round `0a080a023bed` reviewed the staged candidate on `f00df33` against canon `3a7c821` and all 11 qualities. Verdict **not clean**, with five blocking findings and zero advisories. Of 8,304 files in scope, 7,094 were covered, 1,201 excluded and the same nine assets and fixtures uncovered.
+
+| Finding | Status at review |
+| --- | --- |
+| WebView2 handler allocation can panic inside a COM callback | Confirmed by inspection. Environment completion allocates the exit and controller handlers, and the COM invocation entry calls the handler directly. The earlier allocation fix covered response-stream cloning. |
+| A task calling `runtime.Goexit` can strand its owner | Completion bookkeeping currently follows the call to the task. |
+| A newer pointer move can replace a deferred move | Re-raises the coalescing behavior Michael accepted at T4 and V2. |
+| The paragraph budget omits spare slots in the shaped-run array | The Go text engine appends runs. The paragraph charge counts populated runs. The previous correction covered the arrays retained by a wrap. |
+| Sampled browser descendants without an observed exit status are absent from the per-host record | Revisits N6 and U5. Even a host with some observed statuses may have others the driver missed. |
+
+The first finding is up for disposition. Native Windows execution of the corrected candidate is still pending.
+
+#### Scope decisions and narrow corrections for `0a080a023bed`
+
+On 2026-11-24 Michael approved the allocation-error and shaped-run accounting corrections, with emphasis on completing the framework's rough implementation. General callback panic containment and `runtime.Goexit` support are deferred. Tasks using `runtime.Goexit` currently strand completion bookkeeping, as disclosed in `runtime.md`. Deferred pointer motion keeps the T4/V2 decision. The child-exit observer keeps the N6/U5 coverage limit, including potentially unobserved exits among hosts with some observed child statuses.
+
+WebView2's handler allocator now returns nil on a failed native allocation. Every constructor call checks before using the handler or registering an owed completion and reports the existing out-of-memory HRESULT with the handler name. The modeled regression injects failure at all seven construction sites and checks failure reporting, no navigation and release after close. It failed against the old code and passes with the correction. A Windows-only allocator/registry test is cross-compiled and awaits host execution.
+
+Paragraph accounting now charges the shaped-run backing array's capacity. A test engine supplies one populated run in eight slots. Tests for a cached entry, admission falling back to scratch, and insufficient scratch all failed against the old calculation and pass with the correction.
+
+The full no-cgo suite, race checks for WebView2, text and UI, Linux and Windows vet, Windows build and WebView2 test cross-compilation pass. Windows execution of this candidate remains pending.
+
+
+The [targeted Wayland controls and text-cache audition](linux/stage-3-run-capacity/manifest.json) passed. Its audit covered three process logs and 15 PNGs. The rebuilt Linux browser binary matches the latest 33-case stdout-drain matrix, so that evidence carries forward. The full mixer matrix predates the shaped-run correction; this run validates the affected text-cache behavior on Wayland.
+
+#### Review of the narrow corrections
+
+Terminus `fd12d66d3b4c` returned **not clean**, with five blocking findings and one advisory. All 11 qualities reviewed 8,332 files against canon `3a7c821`. Coverage was 7,122 covered, 1,201 excluded and the same nine uncovered assets and fixtures. Neither corrected allocation handling nor shaped-run accounting was raised.
+
+| Finding | Inspection and scope |
+| --- | --- |
+| Cross-owner callback order restarts each turn | Confirmed. Each pass services one callback per owner, so one busy application cannot starve an ordinary small set of windows. Cross-turn fairness becomes material with more than 64 simultaneously busy owners. The record establishes the ordering limitation, without a reproduced native starvation case. |
+| Input overflow can leave native capture while the view has no captured control | Confirmed in code. Input loss clears UI gesture state, but requests capture release only when that state held a control. Win32 takes capture before the view sees a press. Native button-up and focus loss still release it. |
+| WebKitGTK Retry lacks reliable final-method correlation in every case | Generic missing-method navigation still defaults to GET, and records are keyed by URI. This extends the earlier reload/history correction. A failed top-level load and a subframe using the same URI can compete for the recorded method. Retry loads a GET. No new native reproduction was run in this review turn. |
+| GTK has multiple permanent trampolines of the same signature | Confirmed. The set is created once for the process and does not grow with windows. This conflicts with the one-per-signature convention. |
+| Body-refusal tests rely on elapsed time | Confirmed. Two fixtures wait 20 ms to infer that a handler never started. The reviewer proposes observing synchronous completion registration instead. |
+| Future integration document describes built contracts | Advisory. This is the existing arc-closeout documentation work. |
+
+These findings await disposition under Michael's narrowed scope. The recommendation is to transfer this candidate for native Windows validation and track the remaining items as scoped follow-up work. This review result is recorded as not clean; the proposal does not change the verdict or claim stage acceptance.
+
+#### Review under the calibrated canon
+
+Terminus `6b8257f2c523` reviewed the candidate against committed canon `8efb2f4` and all 11 qualities. Verdict **not clean**, with three blocking findings and zero advisories. The development-stage boundary appeared in all nine dfx2 quality bodies in the generated reviewer prompt. The same nine assets and fixtures remain uncovered. The review did not execute native tests.
+
+| Finding | Verification and disposition |
+| --- | --- |
+| Initial response-stream allocation panics on failure | Confirmed in `newStreamObject`. Unlike the corrected handler and clone allocation paths, this constructor still panics. A deferred response has already left the request map before delivery. No new allocation-failure reproduction was run. Awaiting disposition. |
+| WebView2 response serialization exceeds its metadata charge | Inspection confirms that the response headers coexist with a UTF-8 header block and its UTF-16 conversion, while the endpoint charges two metadata copies. The extra storage remains bounded by the metadata limit and synchronous delivery. No measured peak-memory reproduction was run. Awaiting disposition under the development-stage scope. |
+| Same-URL response can suppress a later navigation's error page | Reproduced with a test overlay that delivers the older response before the current navigation's failed completion. `TestLateSameURLResponseCannotSuppressTheErrorPage` fails with `no error page for the failed navigation`. The existing test delivers that response after the error page is pending. No native Windows reproduction was run. Recommended as the next narrow correction. |
+
+The overlay lived in `/tmp` and changed no repository source. These findings are recorded without accepting their proposed fixes or claiming stage acceptance. Native Windows revalidation remains pending.
+
+#### Navigation-response correction for `6b8257f2c523`
+
+Michael approved the navigation finding. The regression now delivers the older same-URL response before the newer navigation's failed completion. It failed against the previous implementation with `no error page for the failed navigation` and passes after the correction.
+
+The host classifies only the matching `NavigationCompleted` event, using its existing navigation ID, success and HTTP status. It no longer keeps a generation map or a response flag inferred from resource URLs. Successful navigations and final 2xx/4xx/5xx responses display normally. Failed cancellations and closing remain suppressed. Failed completions with no final HTTP status, including a retained 1xx/3xx status, show the error page. Microsoft's [completion HTTP-status contract](https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2navigationcompletedeventargs2) identifies this status with the navigation and documents the successful-response case where `window.stop()` leaves `IsSuccess` false. The existing native evidence establishes that a failed redirect destination can retain the redirect's 3xx status.
+
+Resource responses remain audit-only, named `resource-response` rather than `document-response`. The Windows driver follows the name change. Its existing native race case still covers a response arriving after the error page is pending; the before-completion ordering is covered by the modeled regression, not claimed as native evidence.
+
+The focused navigation tests passed 100 repetitions. They cover the late response, superseded completions, failed redirect targets, HTTP 404/500 and cancellations. A browser-level test also checks that final 200/404/500 statuses display without any resource-response event. The full no-cgo suite, three race-enabled WebView2 runs, Linux and Windows vet, Windows build and WebView2 test cross-compilation passed. The Linux browser binary remains byte-identical to the 33-case stdout-drain run (`b07c9b8f…`), so that evidence carries forward. Native Windows execution and a fresh Terminus review remain pending. The allocation and serialization findings remain unchanged and await disposition.
+
+#### Response-stream allocation correction for `6b8257f2c523`
+
+Michael approved the allocation finding. `newStreamObject` now returns zero when its native allocation fails. Delivery detects that result, settles the deferral and request through the existing abort path, reports the out-of-memory error, and returns without creating or installing a response. No general callback recovery was added.
+
+A regression joins the browser to the real finite endpoint for an immediate 413 refusal and a deferred handler response. The modeled allocator returns zero. Both cases failed against the previous delivery logic, which installed an empty response without reporting a failure. They now check one allocation failure, no response creation or installation, the expected deferral completion, one request release and a completed endpoint/window drain. Both passed 100 repetitions. A Windows-only allocator test additionally checks zero returned, an unchanged stream registry and no final-release callback for an object that was never created. That test is cross-compiled, not executed here; the old constructor's panic was confirmed by inspection.
+
+The full no-cgo suite, three race-enabled WebView2 runs, Linux and Windows vet, Windows build and WebView2 test cross-compilation pass. The Linux browser binary still matches the stdout-drain matrix (`b07c9b8f…`). No native matrix reran. Native Windows execution and the next Terminus review remain pending. Response serialization accounting is the remaining finding from this round and is unchanged.
+
+#### Response-serialization reserve for `6b8257f2c523`
+
+Michael approved a conservative allowance within the existing budget. Each endpoint now keeps four metadata limits plus 64 bytes aside for the one synchronous response serialization on the UI thread. It covers admitted responses and fixed refusals. This is separate from the existing request-transfer and refusal reserves. WebView2 pre-sizes its UTF-8 header block; the allowance covers its capacity with allocation rounding, the UTF-16 conversion and the short native reason phrase. The reserve remains unavailable to admissions for the endpoint's lifetime. Per-request response accounting and public default limits are unchanged. At the defaults the added reserve is 256 KiB plus 64 bytes, and sixteen maximal requests still fit. Custom buffers must also cover the new reserve.
+
+The tight-budget delivery regression models the simultaneous serialized header block and UTF-16 conversion beside the charged response. It failed before the fix with 5,152 serialization bytes and no separate reserve. It now passes, including 100 repetitions. The full no-cgo suite, three race-enabled runs of endpoint and WebView2, Linux and Windows vet, Windows build and WebView2 test cross-compilation pass. The [Linux browser matrix](linux/stage-3-response-budget/manifest.json) passed 33/33 across Wayland, XWayland and XWayland at scale 2, on browser binary `d3c8d8dc4f14ff577acd5db756747ac10c4001eaee936ed53fe79b44aa033c42`. Every host matched its expected exit. The existing N6 child-status observation limit remains. The mixer and lifetime binaries match the current run-capacity evidence byte for byte, so their recorded evidence carries forward. Native Windows validation and the next Terminus verdict remain pending.
+
+#### Review after the three corrections
+
+Terminus `af5151522c39` reviewed the staged candidate under canon `8efb2f4` and all 11 qualities. Verdict **not clean**, with four blocking findings and one advisory. The same nine assets and fixtures remain uncovered. None of the three findings from `6b8257f2c523` was repeated. The reviewer did not run tests or native auditions.
+
+| Finding | Inspection and next disposition |
+| --- | --- |
+| WebView2's blocking response can fail to install | Confirmed unchecked results: `refuse` silently returns on failed response creation and ignores `put_Response` failure. The caller then records `blocked`. No native request-escape reproduction was run. Recommended for the next narrow investigation because an unsuccessful interception may leave the request on the network path. |
+| Retry can inherit a prior redirect hop's method | Confirmed that `start` preserves the previous method until a matching document request arrives. The new response-correlation fix did not change this policy. Whether this produces a material problem under the accepted GET-only Retry behavior needs assessment; no reproduction was run. |
+| Loader unload failure loses ownership tracking | Confirmed that loader state is cleared before `freeLibrary`, and its error is returned through cleanup. The review proposes retaining ownership with paced retries. No real unload failure was reproduced. Disposition must weigh that additional mechanism against the agreed development-stage scope. |
+| Synchronous browser startup returns `ErrClosed` from Open | Confirmed that `Start` has no error result and reports failure through the host. `Run` retains the underlying cause; Open can observe the closing state. No new regression was run. Awaiting disposition. |
+| Runtime overview omits Windows browser support | Advisory. The overview still says only Linux hosts browser windows. The current webview guide describes Windows hosting and its pending native revalidation. |
+
+The findings are recorded for disposition, without authorizing their proposed fixes or claiming acceptance. The new Linux browser evidence remains 33/33. Native Windows revalidation remains pending.
+
+#### Disposition after `af5151522c39`
+
+On 2026-11-24 Michael approved recording and deferring the failed blocking-response risk and loader-unload retry machinery. Neither native failure has been observed in this work. The potential consequences remain recorded; the deferral does not establish safe behavior on those paths. Follow-up prompts are [failed blocking responses](../../docs/future/roadmap/investigate-failed-webview2-blocking-responses.md) and [loader unload](../../docs/future/roadmap/revisit-webview2-loader-unload-failure.md). No production code changed for either finding.
+
+The runtime overview advisory is corrected: it now names both built browser hosts and distinguishes Windows support from the pending native revalidation of corrections.
+
+The remaining two findings were assessed by code inspection. Retry can inherit an earlier hop's GET until a new document request supplies its method, but the action still issues GET and does not replay a POST. Synchronous startup failure can give Open `ErrClosed`, while the underlying failure still reaches Run. The recommendation is to track these as follow-up work without blocking Windows transfer. That is the assessment of this review session, not a claim that Michael separately approved both dispositions.
+
+Terminus remains **not clean**. No stage acceptance is claimed. The recommended next milestone is native Windows revalidation of the candidate Michael commits, followed by review of that evidence.

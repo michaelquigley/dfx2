@@ -1,0 +1,224 @@
+[
+  {
+    "mode": "inprocess",
+    "step": "submit POST",
+    "title": "/v5/receipt",
+    "events": [
+      {
+        "kind": 5,
+        "raw": "",
+        "path": "v5/form"
+      },
+      {
+        "kind": 1,
+        "raw": "",
+        "path": "v5/receipt"
+      }
+    ],
+    "handler": {
+      "GET /v5/form": 1,
+      "GET /v5/submit.js": 1,
+      "POST /v5/receipt": 1
+    }
+  },
+  {
+    "mode": "inprocess",
+    "step": "reload POST result",
+    "title": "/v5/receipt",
+    "events": [
+      {
+        "kind": 4,
+        "raw": "",
+        "path": "v5/receipt"
+      }
+    ],
+    "handler": {
+      "GET /v5/form": 1,
+      "GET /v5/submit.js": 1,
+      "POST /v5/receipt": 2
+    }
+  },
+  {
+    "mode": "inprocess",
+    "step": "visit next page",
+    "title": "/v5/away",
+    "events": [
+      {
+        "kind": 5,
+        "raw": "",
+        "path": "v5/away"
+      }
+    ],
+    "handler": {
+      "GET /v5/away": 1,
+      "GET /v5/form": 1,
+      "GET /v5/submit.js": 1,
+      "POST /v5/receipt": 2
+    }
+  },
+  {
+    "mode": "inprocess",
+    "step": "back to POST result",
+    "title": "/v5/receipt",
+    "events": [
+      {
+        "kind": 2,
+        "raw": "",
+        "path": "v5/receipt"
+      }
+    ],
+    "handler": {
+      "GET /v5/away": 1,
+      "GET /v5/form": 1,
+      "GET /v5/submit.js": 1,
+      "POST /v5/receipt": 2
+    }
+  },
+  {
+    "mode": "inprocess",
+    "step": "back past POST result",
+    "title": "form",
+    "events": [
+      {
+        "kind": 2,
+        "raw": "",
+        "path": "v5/form"
+      }
+    ],
+    "handler": {
+      "GET /v5/away": 1,
+      "GET /v5/form": 1,
+      "GET /v5/submit.js": 1,
+      "POST /v5/receipt": 2
+    }
+  },
+  {
+    "mode": "inprocess",
+    "step": "forward to POST result",
+    "title": "/v5/receipt",
+    "events": [
+      {
+        "kind": 2,
+        "raw": "",
+        "path": "v5/receipt"
+      }
+    ],
+    "handler": {
+      "GET /v5/away": 1,
+      "GET /v5/form": 1,
+      "GET /v5/submit.js": 1,
+      "POST /v5/receipt": 2
+    }
+  },
+  {
+    "mode": "loopback",
+    "step": "submit POST",
+    "title": "/v5/receipt",
+    "events": [
+      {
+        "kind": 5,
+        "raw": "GET",
+        "path": "v5/form"
+      },
+      {
+        "kind": 1,
+        "raw": "POST",
+        "path": "v5/receipt"
+      }
+    ],
+    "handler": {
+      "GET /v5/form": 1,
+      "GET /v5/submit.js": 1,
+      "POST /v5/receipt": 1
+    }
+  },
+  {
+    "mode": "loopback",
+    "step": "reload POST result",
+    "title": "/v5/receipt",
+    "events": [
+      {
+        "kind": 4,
+        "raw": "POST",
+        "path": "v5/receipt"
+      }
+    ],
+    "handler": {
+      "GET /v5/form": 1,
+      "GET /v5/submit.js": 1,
+      "POST /v5/receipt": 2
+    }
+  },
+  {
+    "mode": "loopback",
+    "step": "visit next page",
+    "title": "/v5/away",
+    "events": [
+      {
+        "kind": 5,
+        "raw": "GET",
+        "path": "v5/away"
+      }
+    ],
+    "handler": {
+      "GET /v5/away": 1,
+      "GET /v5/form": 1,
+      "GET /v5/submit.js": 1,
+      "POST /v5/receipt": 2
+    }
+  },
+  {
+    "mode": "loopback",
+    "step": "back to POST result",
+    "title": "/v5/receipt",
+    "events": [
+      {
+        "kind": 2,
+        "raw": "POST",
+        "path": "v5/receipt"
+      }
+    ],
+    "handler": {
+      "GET /v5/away": 1,
+      "GET /v5/form": 1,
+      "GET /v5/submit.js": 1,
+      "POST /v5/receipt": 2
+    }
+  },
+  {
+    "mode": "loopback",
+    "step": "back past POST result",
+    "title": "form",
+    "events": [
+      {
+        "kind": 2,
+        "raw": "GET",
+        "path": "v5/form"
+      }
+    ],
+    "handler": {
+      "GET /v5/away": 1,
+      "GET /v5/form": 1,
+      "GET /v5/submit.js": 1,
+      "POST /v5/receipt": 2
+    }
+  },
+  {
+    "mode": "loopback",
+    "step": "forward to POST result",
+    "title": "/v5/receipt",
+    "events": [
+      {
+        "kind": 2,
+        "raw": "POST",
+        "path": "v5/receipt"
+      }
+    ],
+    "handler": {
+      "GET /v5/away": 1,
+      "GET /v5/form": 1,
+      "GET /v5/submit.js": 1,
+      "POST /v5/receipt": 2
+    }
+  }
+]

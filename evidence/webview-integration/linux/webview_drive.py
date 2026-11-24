@@ -123,7 +123,9 @@ class Host:
         args = [binary, "-gc-signal", str(SIGNAL)] + (["-resident"] if resident else []) + list(flags)
         self.process = subprocess.Popen(args, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
                                         stderr=open(self.stderr_path, "w"), text=True, env=env)
-        threading.Thread(target=self._read, daemon=True).start()
+        self.read_error = None
+        self.reader = threading.Thread(target=self._read, daemon=True)
+        self.reader.start()
         self.names = {}
         threading.Thread(target=self._sample, daemon=True).start()
         self.ready = self.expect("ready", timeout=60)
@@ -136,15 +138,18 @@ class Host:
             time.sleep(0.25)
 
     def _read(self):
-        for line in self.process.stdout:
-            self.log.write(line)
-            self.log.flush()
-            try:
-                event = json.loads(line)
-            except ValueError:
-                continue
-            self.events.append(event)
-            self.queue.put(event)
+        try:
+            for line in self.process.stdout:
+                self.log.write(line)
+                self.log.flush()
+                try:
+                    event = json.loads(line)
+                except ValueError:
+                    continue
+                self.events.append(event)
+                self.queue.put(event)
+        except Exception as err:
+            self.read_error = err
 
     def send(self, line):
         self.log.write(json.dumps({"command": line}) + "\n")
@@ -215,15 +220,20 @@ class Host:
         raise Failure(f"{self.name}/{label}: no {kind} policy event")
 
     def finish(self, timeout=30):
-        """Waits for exit; returns (code, Run's error, stderr)."""
+        """Waits for host exit and the end of its stdout within one deadline."""
+        deadline = time.monotonic() + timeout
         try:
             code = self.process.wait(timeout=timeout)
         except subprocess.TimeoutExpired:
             self.process.kill()
             raise Failure(f"{self.name}: host did not exit within {timeout}s")
-        time.sleep(0.2)
-        returned = [e for e in self.events if e["event"] == "return"]
+        self.reader.join(max(0, deadline - time.monotonic()))
+        if self.reader.is_alive():
+            raise Failure(f"{self.name}: stdout still draining after host exit ({timeout}s timeout)")
         self.log.close()
+        if self.read_error is not None:
+            raise Failure(f"{self.name}: stdout reader failed: {self.read_error}") from self.read_error
+        returned = [e for e in self.events if e["event"] == "return"]
         return code, returned[-1]["error"] if returned else None, self.stderr_path.read_text()
 
 

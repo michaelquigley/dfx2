@@ -36,18 +36,20 @@ const errorScheme = "dfx2-error:"
 const (
 	navigationLinkClicked   = 0
 	navigationFormSubmitted = 1
+	navigationBackForward   = 2
+	navigationReload        = 3
 	navigationFormResubmit  = 4
 )
 
 // navigationMethod classifies a top-level navigation's method for Retry.
-// Custom schemes report no HTTP method: a form submission or resubmission is
-// then unknown, which withholds Retry, while other in-process navigations are
-// GETs. An explicit method is upper-cased.
+// A form, reload or history traversal can target a POST result. When WebKit
+// omits the method for one of these actions, the failed page gets no Retry.
 func navigationMethod(method string, navigationType int32) string {
 	if method != "" {
 		return strings.ToUpper(method)
 	}
-	if navigationType == navigationFormSubmitted || navigationType == navigationFormResubmit {
+	switch navigationType {
+	case navigationFormSubmitted, navigationFormResubmit, navigationReload, navigationBackForward:
 		return ""
 	}
 	return "GET"

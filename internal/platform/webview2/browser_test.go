@@ -124,6 +124,8 @@ func installFake(t *testing.T) *fakeNative {
 	removeAll = func(path string) error { call("remove " + path); return nil }
 	n = api{
 		initCOM:    func() error { return nil },
+		openHop:    func(platform.BrowserHost) error { call("open-hop"); return nil },
+		closeHop:   func(_ platform.BrowserHost, finished func()) { call("close-hop"); finished() },
 		loaderBlob: func() []byte { return blob },
 		loadLibrary: func(path string) (uintptr, error) {
 			if _, err := os.Stat(path); err != nil {
@@ -607,7 +609,7 @@ func TestFirstNavigationWaitsForCredentialAndReadiness(t *testing.T) {
 	host := &fakeHost{ready: true}
 	f, b := newTestBrowser(t, host, platform.BrowserLoopback)
 	b.Start()
-	if !strings.HasPrefix(f.calls[0], "create-environment "+b.profile) || f.did("navigate http://127.0.0.1:4000/") {
+	if !slices.Equal(f.calls, []string{"open-hop", "create-environment " + b.profile}) {
 		t.Fatalf("calls %v", f.calls)
 	}
 	f.invoke("EnvironmentCompleted", 0, 100)
@@ -961,7 +963,7 @@ func TestNewNavigationInvalidatesSameURIErrorActions(t *testing.T) {
 
 // An older same-URL response arriving after a newer navigation to that URL
 // failed cannot suppress the error page or change its actions: it belongs to
-// an earlier generation (a fetch is never a document request at all).
+// a request that cannot be correlated by URI alone.
 func TestLateSameURLResponseCannotSuppressTheErrorPage(t *testing.T) {
 	f, b := newTestBrowser(t, &fakeHost{ready: true}, platform.BrowserLoopback)
 	started(t, f, b)
@@ -978,6 +980,9 @@ func TestLateSameURLResponseCannotSuppressTheErrorPage(t *testing.T) {
 	b.receive(561)
 	f.completion(false, webErrorCanceled, 1, 0)
 	b.onNavigationCompleted(3) // the superseded navigation's cancellation
+	// The older response arrives before the new navigation completes.
+	f.response(race, 200)
+	b.onResponseReceived(5)
 	f.completion(false, 3, 2, 0)
 	b.onNavigationCompleted(4)
 	nonce := b.failure.nonce
@@ -989,8 +994,8 @@ func TestLateSameURLResponseCannotSuppressTheErrorPage(t *testing.T) {
 	b.onResponseReceived(5)
 	f.response(race, 303)
 	b.onResponseReceived(6)
-	if b.nav.responded || b.failure.nonce != nonce || !b.errorPending {
-		t.Fatalf("late response changed the failure: responded %t nonce %q pending %t", b.nav.responded, b.failure.nonce, b.errorPending)
+	if b.failure.nonce != nonce || !b.errorPending {
+		t.Fatalf("late response changed the failure: nonce %q pending %t", b.failure.nonce, b.errorPending)
 	}
 	// Even a completion for the superseded navigation, arriving now, is not
 	// the current one's.
@@ -1014,6 +1019,32 @@ func TestLateSameURLResponseCannotSuppressTheErrorPage(t *testing.T) {
 	b.onNavigationCompleted(11)
 	if b.failure.uri != "http://127.0.0.1:4000/broken" || b.failure.method != "GET" || !retryable(b.failure.method) {
 		t.Fatalf("303 after POST: %+v", b.failure)
+	}
+}
+
+// HTTP response evidence is supplied by the matching navigation completion,
+// even when WebView2 labels an HTTP error page unsuccessful.
+func TestNavigationHTTPResponsesDisplayWithoutResourceEvents(t *testing.T) {
+	for _, code := range []int32{200, 404, 500} {
+		t.Run(fmt.Sprint(code), func(t *testing.T) {
+			f, b := newTestBrowser(t, &fakeHost{ready: true}, platform.BrowserLoopback)
+			started(t, f, b)
+			f.invoke("GetCookiesCompleted", 0, 402)
+			const uri = "http://127.0.0.1:4000/page"
+			f.navigation(uri, 7, false)
+			b.onNavigationStarting(1)
+			f.request.uri, f.request.method, f.request.context = uri, "GET", resourceContextDocument
+			b.receive(570)
+			f.completion(false, 9, 7, code)
+			b.onNavigationCompleted(2)
+			if b.errorPending || f.did("error-page") {
+				t.Fatal("an HTTP response was replaced by the framework error page")
+			}
+			events := b.AuditionState().Events
+			if len(events) == 0 || events[len(events)-1].Kind != "load" {
+				t.Fatal("HTTP response was not recorded as loaded")
+			}
+		})
 	}
 }
 
@@ -1279,5 +1310,46 @@ func TestStagedCloseDuringAnInFlightCreationClosesNow(t *testing.T) {
 	f.invoke("ControllerCompleted", 0, 200)
 	if !f.did("controller-close") || f.did("settings") {
 		t.Fatalf("late controller not closed unattached: %v", f.calls)
+	}
+}
+
+func TestHandlerAllocationFailureStopsInitialization(t *testing.T) {
+	for _, name := range []string{"EnvironmentCompleted", "BrowserProcessExited", "ControllerCompleted",
+		"NavigationStarting", "WebResourceResponseReceived", "DownloadStarting", "GetCookiesCompleted"} {
+		t.Run(name, func(t *testing.T) {
+			host := &fakeHost{ready: true}
+			f, b := newTestBrowser(t, host, platform.BrowserLoopback)
+			newHandler := n.newHandler
+			n.newHandler = func(got string, iid guid, invoke func(uintptr, uintptr) hresult, dropped func()) handler {
+				if got == name {
+					return nil
+				}
+				return newHandler(got, iid, invoke, dropped)
+			}
+			b.Start()
+			if name != "EnvironmentCompleted" {
+				f.invoke("EnvironmentCompleted", 0, 100)
+			}
+			if name != "EnvironmentCompleted" && name != "BrowserProcessExited" && name != "ControllerCompleted" {
+				f.invoke("ControllerCompleted", 0, 200)
+			}
+			if len(host.failed) != 1 || !strings.Contains(host.failed[0].Error(), name) ||
+				!strings.Contains(host.failed[0].Error(), "0x8007000E") {
+				t.Fatalf("allocation failure: %v", host.failed)
+			}
+			if b.navigated || b.envPending || b.ctlPending || b.owed != 0 {
+				t.Fatalf("initialization still pending or navigated: env=%v ctl=%v owed=%d navigated=%v",
+					b.envPending, b.ctlPending, b.owed, b.navigated)
+			}
+			b.Close()
+			if b.browserStarted {
+				b.onBrowserProcessExited(exitKindNormal)
+			}
+			f.flush()
+			if host.released != 1 || b.env != 0 || b.env5 != 0 || loader.users != 0 {
+				t.Fatalf("failed initialization did not drain: released=%d env=%d env5=%d users=%d",
+					host.released, b.env, b.env5, loader.users)
+			}
+		})
 	}
 }

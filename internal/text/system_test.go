@@ -270,6 +270,63 @@ func widths(lines []Line) []Fixed {
 	return out
 }
 
+// Set limits from the actual arrays of a real wrap, independently of linesBytes.
+func TestWrapBudgetsIncludeSpareCapacity(t *testing.T) {
+	const width = 20 * 64
+	input := strings.Repeat("ab ", 100)
+	probe := NewSystem(&gridEngine{}, DefaultBudget)
+	probe.BeginFrame()
+	p, err := probe.Paragraph(input, 640)
+	if err != nil {
+		t.Fatal(err)
+	}
+	shaped := p.bytes
+	lines, err := probe.Lines(p, width)
+	if err != nil {
+		t.Fatal(err)
+	}
+	backing := cap(lines) * int(unsafe.Sizeof(Line{}))
+	for _, line := range lines {
+		backing += cap(line.Glyphs) * int(unsafe.Sizeof(Placed{}))
+	}
+	probe.EndFrame()
+
+	for _, tc := range []struct {
+		name           string
+		cache, scratch int // bytes available to the wrap
+	}{
+		{"cache fits exactly", backing, 0},
+		{"scratch fits exactly", backing - 1, backing},
+		{"one byte short in both", backing - 1, backing - 1},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			s := NewSystem(&gridEngine{}, Budget{ParagraphEntries: 1, ParagraphBytes: shaped + tc.cache, Transient: tc.scratch})
+			s.BeginFrame()
+			defer s.EndFrame()
+			p, err := s.Paragraph(input, 640)
+			if err != nil || !p.admitted {
+				t.Fatalf("paragraph admission: %v, err=%v", p, err)
+			}
+			got, err := s.Lines(p, width)
+			st := s.Stats()
+			switch {
+			case tc.cache == backing:
+				if err != nil || !p.wrapped || st.ParagraphBytes != shaped+backing || st.TransientBytes != 0 {
+					t.Fatalf("cached wrap: wrapped=%v stats=%+v err=%v", p.wrapped, st, err)
+				}
+			case tc.scratch == backing:
+				if err != nil || len(got) == 0 || p.wrapped || st.ParagraphBytes != shaped || st.TransientBytes != backing {
+					t.Fatalf("scratch wrap: wrapped=%v stats=%+v err=%v", p.wrapped, st, err)
+				}
+			default:
+				if !errors.Is(err, errTransientLimit) || got != nil || p.wrapped || st.ParagraphBytes != shaped || st.TransientBytes != 0 {
+					t.Fatalf("refused wrap: wrapped=%v stats=%+v err=%v", p.wrapped, st, err)
+				}
+			}
+		})
+	}
+}
+
 func TestAdmittedWrapGrowthStaysWithinBudget(t *testing.T) {
 	shaped, wideBytes, narrowBytes := payloads(t, wrapInput)
 	if !(shaped < wideBytes && wideBytes <= 2*shaped && 2*shaped < narrowBytes) {
@@ -543,6 +600,55 @@ func TestCachedWrapDisplacementOnlyChargesCurrentFrameReferences(t *testing.T) {
 				t.Fatalf("an unused prior-frame wrap needs no scratch: %v", err)
 			}
 			s.EndFrame()
+		})
+	}
+}
+
+// The engine may return a run array with spare capacity after append growth.
+type spareRunsEngine struct{ gridEngine }
+
+func (e *spareRunsEngine) Shape(input []rune, size Fixed) (Shaped, error) {
+	sh, err := e.gridEngine.Shape(input, size)
+	runs := make([]Run, len(sh.Runs), len(sh.Runs)+7)
+	copy(runs, sh.Runs)
+	sh.Runs = runs
+	return sh, err
+}
+
+func TestParagraphBudgetChargesRunArrayCapacity(t *testing.T) {
+	// "a" has one rune, two break bytes, one glyph and eight run slots.
+	payload := int(unsafe.Sizeof(Paragraph{})) + 4 + 2 +
+		int(unsafe.Sizeof(Glyph{})) + 8*int(unsafe.Sizeof(Run{}))
+	for _, tc := range []struct {
+		name              string
+		cache, scratch    int
+		admitted, refused bool
+	}{
+		{"admitted", 2*payload + 1, 0, true, false},
+		{"admission shortfall", 2 * payload, payload, false, false},
+		{"scratch shortfall", 0, payload - 1, false, true},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			s := NewSystem(&spareRunsEngine{}, Budget{ParagraphEntries: 1, ParagraphBytes: tc.cache, Transient: tc.scratch})
+			s.BeginFrame()
+			defer s.EndFrame()
+			p, err := s.Paragraph("a", 640)
+			if tc.refused {
+				if !errors.Is(err, errTransientLimit) || s.Stats().TransientBytes != 0 {
+					t.Fatalf("short scratch accepted: err=%v stats=%+v", err, s.Stats())
+				}
+				return
+			}
+			if err != nil || p.admitted != tc.admitted {
+				t.Fatalf("admission: paragraph=%+v err=%v", p, err)
+			}
+			if tc.admitted {
+				if s.Stats().ParagraphBytes != payload+1 {
+					t.Fatalf("cached bytes %d, want %d", s.Stats().ParagraphBytes, payload+1)
+				}
+			} else if s.Stats().TransientBytes != payload {
+				t.Fatalf("scratch bytes %d, want %d", s.Stats().TransientBytes, payload)
+			}
 		})
 	}
 }

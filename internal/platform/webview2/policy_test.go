@@ -63,10 +63,7 @@ func TestWithinComparesPathsCaseInsensitively(t *testing.T) {
 	}
 }
 
-// A response counts for the current navigation only when its URI's latest
-// document request belongs to the current generation: a redirect's status, a
-// fetch of the same URL and an older navigation's response cannot turn a
-// failed load into a success.
+// Completion evidence belongs to its NavigationId, never to a resource URL.
 func TestNavigationCorrelation(t *testing.T) {
 	var nav navigation
 	const a, b = "http://127.0.0.1:1/a", "http://127.0.0.1:1/b"
@@ -75,49 +72,44 @@ func TestNavigationCorrelation(t *testing.T) {
 	if nav.method != "POST" {
 		t.Fatalf("method %q", nav.method)
 	}
-	if !nav.response(a) || nav.completed(false, 0, false) != loaded {
-		t.Fatal("an answered document request is an ordinary page")
-	}
-	// The 303 redirects to b, whose request fails: the redirect's status must
-	// not count.
 	nav.start(1, b, true)
-	if nav.responded || nav.method != "POST" {
-		t.Fatalf("redirect hop kept the response (%t) or lost the method (%q)", nav.responded, nav.method)
+	if nav.method != "POST" {
+		t.Fatal("redirect lost the method before its request")
+	}
+	nav.document(a, "PUT")
+	if nav.method != "POST" {
+		t.Fatal("another URI changed the current method")
 	}
 	nav.document(b, "GET")
-	if nav.method != "GET" || nav.response(a) || nav.responded {
-		t.Fatal("the earlier hop's response counted for the redirect target")
+	if nav.method != "GET" {
+		t.Fatal("redirect request did not update the method")
 	}
-	if nav.completed(false, 7, false) != loadFailed {
-		t.Fatal("unanswered document request not a failure")
-	}
-	// A fetch of b is not a document request; a later navigation to b must not
-	// be credited with an earlier generation's document request either.
 	nav.start(2, b, false)
-	if nav.response(b) {
-		t.Fatal("an older generation's document request answered the new navigation")
+	if nav.method != "" {
+		t.Fatal("new navigation kept the old method")
 	}
-	nav.document(b, "GET")
-	if !nav.response(b) {
-		t.Fatal("the current document request's response not counted")
-	}
-	// Cancellation and closing are not failures.
-	nav.start(3, a, false)
-	if nav.completed(false, webErrorCanceled, false) != loadStopped || nav.completed(false, 3, true) != loadStopped {
-		t.Fatal("cancellation classified as a failure")
-	}
-	if nav.completed(true, 0, false) != loaded {
-		t.Fatal("success not loaded")
-	}
-}
-
-func TestNavigationDocumentMemoryIsBounded(t *testing.T) {
-	var nav navigation
-	nav.start(1, "http://h/0", false)
-	for i := range 100 {
-		nav.document("http://h/"+strings.Repeat("x", i), "GET")
-	}
-	if len(nav.documents) > documentMemory {
-		t.Fatalf("%d document requests remembered", len(nav.documents))
+	for _, tc := range []struct {
+		name         string
+		success      bool
+		status, http int32
+		closing      bool
+		want         loadOutcome
+	}{
+		{"success without HTTP", true, 0, 0, false, loaded},
+		{"stopped page with response", false, 9, 200, false, loaded},
+		{"404", false, 16, 404, false, loaded},
+		{"500", false, 16, 500, false, loaded},
+		{"no response", false, 3, 0, false, loadFailed},
+		{"interim response", false, 3, 103, false, loadFailed},
+		{"failed 303 target", false, 3, 303, false, loadFailed},
+		{"failed 307 target", false, 3, 307, false, loadFailed},
+		{"canceled", false, webErrorCanceled, 200, false, loadStopped},
+		{"closing", false, 3, 200, true, loadStopped},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			if got := nav.completed(tc.success, tc.status, tc.http, tc.closing); got != tc.want {
+				t.Fatalf("outcome %v, want %v", got, tc.want)
+			}
+		})
 	}
 }

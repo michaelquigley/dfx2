@@ -79,8 +79,8 @@ func (l Limits) Normalize() (Limits, error) {
 	if l.Metadata < minMetadata {
 		return l, fmt.Errorf("metadata limit %d cannot carry the framework's own response headers (minimum %d)", l.Metadata, minMetadata)
 	}
-	if need := l.reserveRefusals() + l.reserveTransfer() + l.worstCase(); l.Buffers < need {
-		return l, fmt.Errorf("buffer limit %d cannot hold one maximal request (%d bytes with the refusal and transfer reserves)", l.Buffers, need)
+	if need := l.reserveRefusals() + l.reserveTransfer() + l.reserveDelivery() + l.worstCase(); l.Buffers < need {
+		return l, fmt.Errorf("buffer limit %d cannot hold one maximal request (%d bytes with the refusal, transfer and delivery reserves)", l.Buffers, need)
 	}
 	return l, nil
 }
@@ -104,6 +104,15 @@ func (l Limits) worstCase() int64 {
 func (l Limits) responseAllowance() int64 { return 2 * (l.ResponseBody + int64(l.Metadata)) }
 
 func (l Limits) reserveRefusals() int64 { return Refusals * refusalReserve }
+
+// reserveDelivery covers the one synchronous response serialization on the UI
+// thread, for admitted responses and fixed refusals alike. In addition to the
+// request's own response charge, WebView2 holds a pre-sized UTF-8 header block
+// (allow up to twice the metadata limit for allocation rounding) and a UTF-16
+// conversion (at most twice its UTF-8 length plus the terminator). The fixed
+// margin covers the terminators and the short native reason phrase. This
+// reserve stays unavailable to admissions for the endpoint's whole lifetime.
+func (l Limits) reserveDelivery() int64 { return 4*int64(l.Metadata) + 64 }
 
 // reserveTransfer covers the browser's transient request metadata for the
 // one synchronous Request call in progress: requests arrive one at a time on

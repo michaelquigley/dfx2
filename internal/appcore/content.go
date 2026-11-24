@@ -272,7 +272,12 @@ func (a *App) frame(w *Window) {
 	}
 	if err == nil {
 		a.mu.Lock()
-		present := w.state == open
+		present := eligibleLocked(w)
+		if !present && w.state == open && at.generation == generation {
+			// An input-only or animation frame may have no outstanding
+			// invalidation. Its edits still need a fresh image on restore.
+			at.generation++
+		}
 		a.mu.Unlock()
 		// The native window cannot be destroyed concurrently: destruction is
 		// initiated only by this UI thread after content work is sealed.
@@ -281,14 +286,15 @@ func (a *App) frame(w *Window) {
 				err = fmt.Errorf("present: %w", perr)
 			}
 		}
-		if err == nil && present && result.ReleaseCapture {
+		if err == nil && result.ReleaseCapture {
 			a.mu.Lock()
 			// A press still queued has its own capture, taken after the gesture
 			// this request ended. Native input cannot arrive before the call below.
 			newer := at.inputLent > 0 && slices.ContainsFunc(at.input[result.Consumed:], isLeftPress) ||
 				at.inputLent == 0 && slices.ContainsFunc(at.input, isLeftPress)
+			release := w.state == open && !newer
 			a.mu.Unlock()
-			if !newer {
+			if release {
 				if rerr := a.backend.ReleaseCapture(w.id); rerr != nil {
 					err = fmt.Errorf("release capture: %w", rerr)
 				}

@@ -616,3 +616,68 @@ func TestDeclaredLengthAndStreamReachTheEndpointSeparately(t *testing.T) {
 		})
 	}
 }
+
+// A failed response-body allocation must settle both immediate refusals and
+// deferred responses, without substituting a successful empty response.
+func TestResponseStreamAllocationFailureDrainsEndpoint(t *testing.T) {
+	for _, immediate := range []bool{true, false} {
+		name := "deferred response"
+		if immediate {
+			name = "immediate refusal"
+		}
+		t.Run(name, func(t *testing.T) {
+			fe, err := endpoint.NewFinite(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				w.Write([]byte("response"))
+			}), endpoint.Limits{})
+			if err != nil {
+				t.Fatal(err)
+			}
+			h := &servingHost{t: t, f: fe}
+			ctx, cancel := context.WithCancel(context.Background())
+			defer cancel()
+			if err := fe.Start(ctx, h, &platform.BrowserConfig{Mode: platform.BrowserInProcess}); err != nil {
+				t.Fatal(err)
+			}
+			fe.Bind("https://dfx2.invalid:443")
+			f, b := newTestBrowser(t, &h.fakeHost, platform.BrowserInProcess)
+			h.fakeHost.ready = true
+			b.host, h.b = h, b
+			started(t, f, b)
+			allocations := 0
+			n.newBodyStream = func(body []byte, released func()) uintptr {
+				allocations++
+				if len(body) == 0 {
+					t.Fatal("empty body at allocation")
+				}
+				return 0
+			}
+			f.request.uri, f.request.method = startURL+"api/test", "GET"
+			if immediate {
+				f.request.headers = [][2]string{{"Content-Length", strconv.Itoa(endpoint.DefaultRequestBody + 1)}}
+			}
+			b.receive(610)
+			f.pump(func() bool { return len(h.releasedR) != 0 })
+			if allocations != 1 || len(h.failed) != 1 || !strings.Contains(h.failed[0].Error(), "allocate response stream") {
+				t.Fatalf("allocations %d failures %v", allocations, h.failed)
+			}
+			if f.did("put-response") || len(f.responses) != 0 || b.stats.Delivered != 0 || b.streams != 0 || len(b.requests) != 0 {
+				t.Fatalf("failed allocation delivered or retained a response: calls %v streams %d requests %d", f.calls, b.streams, len(b.requests))
+			}
+			wantDeferrals := 1
+			if immediate {
+				wantDeferrals = 0
+			}
+			if len(f.deferrals) != 0 || f.count("deferral-complete") != wantDeferrals || len(h.releasedR) != 1 {
+				t.Fatalf("deferrals %v completed %d releases %v", f.deferrals, f.count("deferral-complete"), h.releasedR)
+			}
+			cancel()
+			fe.Close()
+			b.Close()
+			f.invoke("BrowserProcessExited", 0, exitKindNormal)
+			f.flush()
+			if h.drained != 1 || h.released != 1 || len(h.releasedR) != 1 {
+				t.Fatalf("drained %d window releases %d request releases %v", h.drained, h.released, h.releasedR)
+			}
+		})
+	}
+}

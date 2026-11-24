@@ -916,3 +916,61 @@ func TestASelectedWindowMadeIneligibleMidTurnDoesNotRender(t *testing.T) {
 		})
 	}
 }
+
+func TestSurfaceBecomesIneligibleDuringItsOwnFrame(t *testing.T) {
+	for name, suspended := range map[string]platform.Surface{
+		"hidden":     {Width: 4, Height: 3, Scale: 1},
+		"zero-sized": {Visible: true, Scale: 1},
+	} {
+		t.Run(name, func(t *testing.T) {
+			b, c := &fake.Backend{}, newFakeContent()
+			h, ws, r := openContent(t, b, newFrameClock(t), c)
+			w := ws[0]
+			defer closeAll(t, h, w)
+			r.show(t, true, w)
+			r.turn(t, h.app)
+			receive(t, c.frames)
+			before, _ := b.Window(w.id)
+			input := platform.Input{Kind: platform.KeyDown, Key: platform.KeyTab}
+
+			// Start a frame from input alone with the previous image clean.
+			// Consuming the input leaves no independent reason to redraw.
+			r.dispatch(t, h.app, func() {
+				c.onFrame = func(req FrameRequest) error {
+					if len(req.Input) > 0 {
+						b.Emit(surfaceOf(w, suspended))
+					}
+					return nil
+				}
+				c.capture = func(req FrameRequest) bool { return len(req.Input) > 0 }
+				b.Emit(platform.Event{Kind: platform.InputReceived, Window: w.id, Input: input})
+			})
+			if req := receive(t, c.frames); !slices.Equal(req.Input, []platform.Input{input}) {
+				t.Fatalf("frame received input %v", req.Input)
+			}
+			r.turn(t, h.app)
+			noFrame(t, c)
+			if current, _ := b.Window(w.id); current.Presents != before.Presents {
+				t.Errorf("presented while suspended: %d -> %d", before.Presents, current.Presents)
+			}
+			status, _ := InspectContent(w)
+			if status.InputQueued != 0 || status.Generation == status.Consumed {
+				t.Fatalf("expected consumed input and a pending redraw: %+v", status)
+			}
+			if got := b.CaptureReleases(w.id); got != 1 {
+				t.Errorf("capture releases after frame = %d, want 1", got)
+			}
+
+			r.show(t, true, w)
+			r.turn(t, h.app)
+			if req := receive(t, c.frames); len(req.Input) != 0 || !req.Surface.Visible || req.Surface.Width != 4 || req.Surface.Height != 3 {
+				t.Fatalf("restored frame: %+v", req)
+			}
+			r.turn(t, h.app)
+			noFrame(t, c)
+			if current, _ := b.Window(w.id); current.Presents != before.Presents+1 {
+				t.Fatalf("expected exactly one new presentation, got %d", current.Presents-before.Presents)
+			}
+		})
+	}
+}

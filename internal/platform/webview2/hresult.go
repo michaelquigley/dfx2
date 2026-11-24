@@ -13,6 +13,7 @@ const (
 	eAbort       hresult = 0x80004004
 	eFail        hresult = 0x80004005
 	eNotImpl     hresult = 0x80004001
+	eOutOfMemory hresult = 0x8007000E
 	eInvalidArg  hresult = 0x80070057
 	// rpcChangedMode: CoInitializeEx found the thread in another apartment.
 	rpcChangedMode hresult = 0x80010106

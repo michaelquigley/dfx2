@@ -133,7 +133,7 @@ func (f *Finite) Status() string {
 }
 
 func (f *Finite) budget() int64 {
-	return f.limits.Buffers - f.limits.reserveRefusals() - f.limits.reserveTransfer()
+	return f.limits.Buffers - f.limits.reserveRefusals() - f.limits.reserveTransfer() - f.limits.reserveDelivery()
 }
 
 // set changes one reservation of a live request.

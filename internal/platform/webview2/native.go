@@ -14,6 +14,10 @@ type api struct {
 	loadLibrary    func(path string) (uintptr, error)
 	freeLibrary    func(lib uintptr) error
 	runtimeVersion func(lib uintptr) (string, error)
+	// The first attachment opens the dispatch window. The last closes it after
+	// all producers have drained, then calls finished on the UI thread.
+	openHop  func(platform.BrowserHost) error
+	closeHop func(host platform.BrowserHost, finished func())
 	// post retains fn until a later UI-thread dispatch, retrying failed wakes.
 	// It is available only after installation; it never runs fn inline.
 	post func(fn func())
@@ -21,6 +25,7 @@ type api struct {
 	// Handler objects the host implements. invoke runs on whichever thread the
 	// engine calls on; dropped runs when the engine releases the object without
 	// ever invoking it, on any thread. Either settles a completion once.
+	// newHandler returns nil when the COM header cannot be allocated.
 	newHandler func(name string, iid guid, invoke func(a, b uintptr) hresult, dropped func()) handler
 
 	// IUnknown.

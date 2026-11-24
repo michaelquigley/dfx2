@@ -160,6 +160,29 @@ func TestBrowserWindowIsLiveWhileInitializingAndNavigatesOnlyWhenReady(t *testin
 	noViolations(t, b, br)
 }
 
+func TestBrowserReadyRefusesNavigationAfterContextCancellation(t *testing.T) {
+	f := &fake.BrowserFactory{}
+	b := &fake.Backend{}
+	h := launch(t, quietOptions(WindowApplication), b, newClock(), func(a *App) error {
+		w, err := openBrowserWindow(a, "browser", attachSpec(f, nil))
+		if err != nil {
+			return err
+		}
+		// Cancel the inherited context without waking the supervisor on the
+		// caller's Done channel. The window is still open when Ready runs.
+		a.cancel()
+		br := <-f.Created()
+		if br.Ready() {
+			t.Error("canceled window allowed its first navigation")
+		}
+		w.Close()
+		return nil
+	})
+	if err := receive(t, h.done); err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestCloseDuringShellCreationNeverCreatesTheBrowser(t *testing.T) {
 	f := &fake.BrowserFactory{}
 	e := newEndpoint()

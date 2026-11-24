@@ -336,16 +336,17 @@ func (s *System) evict(all bool) {
 // breaks, the admitted key's UTF-8 copy and the current wrap.
 func paragraphBytes(p *Paragraph) int {
 	n := int(unsafe.Sizeof(Paragraph{})) + len(p.text)*4 + len(p.shaped.Breaks) + p.keyBytes
+	n += cap(p.shaped.Runs) * int(unsafe.Sizeof(Run{}))
 	for _, r := range p.shaped.Runs {
-		n += int(unsafe.Sizeof(r)) + len(r.Glyphs)*int(unsafe.Sizeof(Glyph{}))
+		n += len(r.Glyphs) * int(unsafe.Sizeof(Glyph{}))
 	}
 	return n + linesBytes(p.lines)
 }
 
 func linesBytes(lines []Line) int {
-	n := 0
+	n := cap(lines) * int(unsafe.Sizeof(Line{}))
 	for _, l := range lines {
-		n += int(unsafe.Sizeof(l)) + len(l.Glyphs)*int(unsafe.Sizeof(Placed{}))
+		n += cap(l.Glyphs) * int(unsafe.Sizeof(Placed{}))
 	}
 	return n
 }

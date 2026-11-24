@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestNavigationMethodWithholdsRetryFromUnknownForms(t *testing.T) {
+func TestNavigationMethodAndErrorPageActions(t *testing.T) {
 	for _, tc := range []struct {
 		method string
 		kind   int32
@@ -19,10 +19,20 @@ func TestNavigationMethodWithholdsRetryFromUnknownForms(t *testing.T) {
 		{"", 5, "GET", true},                     // other: a load or Return to start
 		{"", navigationFormSubmitted, "", false}, // an in-process form: unknown method
 		{"", navigationFormResubmit, "", false},
+		{"", navigationReload, "", false},
+		{"", navigationBackForward, "", false},
+		{"get", navigationReload, "GET", true},
+		{"get", navigationBackForward, "GET", true},
+		{"post", navigationReload, "POST", false},
+		{"post", navigationBackForward, "POST", false},
 	} {
 		got := navigationMethod(tc.method, tc.kind)
 		if got != tc.want || retryable(got) != tc.retry {
 			t.Errorf("%q/%d: %q retry %t", tc.method, tc.kind, got, retryable(got))
+		}
+		page := errorPage(Origin+"/receipt", got, "n")
+		if strings.Contains(page, errorScheme+"retry/n") != tc.retry || !strings.Contains(page, errorScheme+"start/n") {
+			t.Errorf("%q/%d: wrong error-page actions", tc.method, tc.kind)
 		}
 	}
 }

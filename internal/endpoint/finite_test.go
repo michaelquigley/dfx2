@@ -237,7 +237,7 @@ func TestFiniteAdmissionAndAggregatePressureRefuseWithoutQueueing(t *testing.T) 
 	// A near-limit URL and full body reservation fill enough of a one-worst-
 	// case budget to refuse a second request despite a free admission slot.
 	limits, _ := Limits{RequestBody: 1000, ResponseBody: 1000, Metadata: 1024}.Normalize()
-	limits.Buffers = limits.reserveRefusals() + limits.reserveTransfer() + limits.worstCase()
+	limits.Buffers = limits.reserveRefusals() + limits.reserveTransfer() + limits.reserveDelivery() + limits.worstCase()
 	h2 := newHeld(t)
 	y := newFinite(t, h2, limits)
 	first := y.f.Request(platform.BrowserRequest{Method: "PUT", URL: testOrigin + "/" + strings.Repeat("p", 850), BodyLength: -1})
@@ -505,7 +505,7 @@ func TestLimitsNormalize(t *testing.T) {
 		t.Fatalf("defaults %+v %v", l, err)
 	}
 	// Sixteen worst-case requests fit the default budget alongside the reserve.
-	if 16*l.worstCase()+l.reserveRefusals()+l.reserveTransfer() > l.Buffers {
+	if 16*l.worstCase()+l.reserveRefusals()+l.reserveTransfer()+l.reserveDelivery() > l.Buffers {
 		t.Fatal("defaults cannot hold their own admission limit")
 	}
 	for _, bad := range []Limits{{RequestBody: -1}, {Buffers: -1}, {Metadata: 1023}, {Buffers: 1 << 20},
@@ -608,7 +608,7 @@ func TestFiniteDeliveryStaysWithinTheAdmissionReservation(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	limits.Buffers = limits.reserveRefusals() + limits.reserveTransfer() + limits.worstCase()
+	limits.Buffers = limits.reserveRefusals() + limits.reserveTransfer() + limits.reserveDelivery() + limits.worstCase()
 	x := newFinite(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Near-limit metadata and a body grown in small writes, so its buffer's
 		// capacity exceeds its length.
@@ -623,6 +623,22 @@ func TestFiniteDeliveryStaysWithinTheAdmissionReservation(t *testing.T) {
 		x.f.mu.Lock()
 		during, charged, capacity = x.f.reserved, x.f.requests[id].resp, int64(cap(r.Body))
 		x.f.mu.Unlock()
+		// WebView2 holds a serialized UTF-8 block and its UTF-16 copy
+		// beside the two response representations charged to the request.
+		var block strings.Builder
+		length := 0
+		for _, h := range r.Header {
+			length += len(h.Name) + len(h.Value) + 4
+		}
+		block.Grow(length)
+		for _, h := range r.Header {
+			block.WriteString(h.Name + ": " + h.Value + "\r\n")
+		}
+		scratch := int64(block.Cap() + 2*(block.Len()+1) + 2*len("Response") + 2)
+		available := limits.Buffers - x.f.budget() - limits.reserveRefusals() - limits.reserveTransfer()
+		if scratch > available {
+			t.Errorf("response serialization needs %d bytes, only %d reserved outside admitted requests", scratch, available)
+		}
 		return true
 	}
 	d := x.f.Request(get("/"))
@@ -716,7 +732,7 @@ func TestFiniteAggregateAdmissionPrecedesURLParsing(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	limits.Buffers = limits.reserveRefusals() + limits.reserveTransfer() + limits.worstCase()
+	limits.Buffers = limits.reserveRefusals() + limits.reserveTransfer() + limits.reserveDelivery() + limits.worstCase()
 	x := newFinite(t, http.NotFoundHandler(), limits)
 	var ids []platform.ID
 	for range 100 {
@@ -772,7 +788,7 @@ func TestFiniteBodyIsAllocatedOnceWithinItsReservation(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	limits.Buffers = limits.reserveRefusals() + limits.reserveTransfer() + limits.worstCase()
+	limits.Buffers = limits.reserveRefusals() + limits.reserveTransfer() + limits.reserveDelivery() + limits.worstCase()
 	got := make(chan int, 1)
 	x := newFinite(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		body, _ := io.ReadAll(r.Body)
