@@ -1,5 +1,7 @@
 # Linux cgo webview comparison
 
+Historical spike material, retained for comparison. The integration arc is now accepted; [current browser behavior](../current/webview.md) and the [stage 4 record](../../evidence/webview-integration/stage-4.md) supersede this document's planning status. Earlier investigation instructions do not authorize new work.
+
 Status (2026-11-12): the comparison returned the same signal conflicts under cgo and purego on 2.52.6 and stopped before the conditional browser-policy work. See the [result](../../experiments/webkitgtk-cgo-spike/README.md). Michael chose monitoring during representative application work instead of extending this investigation. No further accommodation experiment is authorized by this brief. The result does not establish production signal safety or require adopting cgo.
 
 Determine whether a narrow cgo webview backend can give dfx2 one distributed executable, the distribution's installed WebKitGTK, and correct coexistence with Go with less machinery than the purego approach. Michael authorized this comparison on 2026-11-12. This is a feasibility experiment, not production implementation or approval of signal-handler changes.
@@ -10,7 +12,7 @@ Single-executable distribution is a primary requirement. Use the installed Linux
 
 Create a separate module under `experiments/webkitgtk-cgo-spike/`. It may use `import "C"`, native headers and `CGO_ENABLED=1`. This is the explicit exception to the repository's no-cgo instruction. Keep root Go code, dependencies, canon, existing purego implementations and their evidence unchanged. Immediate-mode-only consumers must still build with `CGO_ENABLED=0`; a mixed application importing a future cgo webview package would require cgo at build time. Windows gains no cgo requirement from this experiment.
 
-Read the recent journal, [integration draft](webview-integration.md), and the original [feasibility record](../../experiments/webkitgtk-spike/evidence/linux/integration-feasibility/README.md), particularly the reservation, handler-safety, VM-free and SIGXCPU investigations. Inspect dfw's cgo entry points and signal probes as leads, not a proven compatibility contract. Do not copy its inferred signal-selection policy.
+Read the recent journal, integration draft (retired; git `a889a10:docs/future/webview-integration.md`), and the original [feasibility record](../../experiments/webkitgtk-spike/evidence/linux/integration-feasibility/README.md), particularly the reservation, handler-safety, VM-free and SIGXCPU investigations. Inspect dfw's cgo entry points and signal probes as leads, not a proven compatibility contract. Do not copy its inferred signal-selection policy.
 
 ## First answer: does cgo change the obstacle?
 

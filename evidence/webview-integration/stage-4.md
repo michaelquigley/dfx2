@@ -1,6 +1,6 @@
 # Webview integration stage 4: the mixed mixer
 
-Stage 4 of the [work order](../../docs/future/webview-integration-work-order.md) connects browser views to the synthetic mixer's existing model and ordered command path, beside its native windows. Stage 3 was accepted with documented limits and follow-ups under canon commit `76e1f94`. This stage builds on `e0adfd2` and its staged stage 3 closeout documentation, which is preserved unchanged. Built behavior is in the [mixer README](../../examples/mixer/README.md#mixed-views--browser) and [webview.md](../../docs/current/webview.md#native-and-browser-views-of-one-model). **Stage 4 is not yet accepted.** Candidate `ebfc7ab` and Windows return `e775bf5` are committed. Automated validation and Michael's manual auditions on both hosts are complete, with the limits below; Linux return review found no new implementation issue. Canon alignment and final acceptance remain.
+Stage 4 connects browser views to the synthetic mixer's application-owned model and ordered command path, beside native windows. **Accepted at `a889a10` on 2026-11-25**, closing the webview integration arc. Candidate `ebfc7ab` has Linux and Windows automated validation and Michael's manual passes; Windows evidence returned in `e775bf5`. The final checkbox correction in `a889a10` has focused Node coverage only. Canon alignment is `00086c5`; the final Terminus verdict remains not clean, with all findings dispositioned below. Built behavior is in the [mixer README](../../examples/mixer/README.md#mixed-views--browser) and [webview.md](../../docs/current/webview.md#native-and-browser-views-of-one-model). The realized spec and work order are retired from `docs/future/`, preserved in git history at `a889a10`.
 
 ## What was built
 
@@ -22,9 +22,9 @@ The change is confined to `examples/mixer`; no framework package changed.
 
 Not built, as directed: generic deduplication, reconnection, device integration, a production Sessionmixer server, or any change for the recorded signal risks, the blocking-response failure, loader unload, Retry-method inheritance or Open's startup-error reporting.
 
-## Current status after Windows return
+## Acceptance and evidence
 
-The candidate is `ebfc7ab`, with Windows evidence and driver changes returned in `e775bf5`. No Go source changed on Windows. The later one-line checkbox reconciliation correction has the focused Node regression below; the native runs remain evidence for ebfc7ab, not a native run of that correction. Stage acceptance remains pending.
+The candidate is `ebfc7ab`, with Windows evidence and driver changes returned in `e775bf5`. No Go source changed on Windows. The later one-line checkbox reconciliation correction has the focused Node regression below; the native runs remain evidence for ebfc7ab, not a native run of that correction. Stage 4 is accepted with this distinction and the deferred findings below.
 
 - **Current Linux evidence**, all at this candidate's mixer unless noted:
   - **Mixed-view audition:** 12/12, in `linux/stage-4-x/`.
@@ -315,4 +315,10 @@ Michael approved the narrow checkbox fix and deferred the read-buffer investigat
 - **Read-buffer accounting, deferred:** [investigation item](../../docs/future/roadmap/investigate-finite-read-buffer-reservation-lifetime.md). The early credit is recorded, but no material application failure was demonstrated; do not expand this closeout into new ownership machinery.
 - **PNG gate, deferred:** [driver item](../../docs/future/roadmap/decode-windows-large-image-audition-snapshots.md). The actual five retained images fully decoded; no new native run is needed solely to strengthen the validator.
 
-Canon `00086c5` remains unchanged. Final stage acceptance and retirement of realized intent documents remain for closeout; the review loop is complete under these dispositions.
+Canon `00086c5` remains unchanged. Michael committed the dispositions and checkbox correction as `a889a10`, accepting stage 4. The review loop is complete under these dispositions; no clean verdict is claimed. The realized intent documents are retired in the documentation closeout.
+
+## Arc closeout — 2026-11-25
+
+The operator's `a889a10` commit accepts stage 4 and closes the integration arc. The accepted limits remain explicit: native results describe `ebfc7ab`, the later checkbox fix has focused Node coverage, manual results are operator reports, and the timing and descendant-observation gaps are not manufactured into passes. The deferred findings remain roadmap work rather than prerequisites to start the next design discussion.
+
+The fulfilled `docs/future/webview-integration.md` and `docs/future/webview-integration-work-order.md` are removed. Their realized behavior and accepted residuals live in current docs; remaining product and browser capability questions are synthesized in `docs/future/foundation.md` and the roadmap. Earlier evidence and journal entries retain their historical status. Sessionmixer integration planning is next; no device implementation is authorized by this closeout.

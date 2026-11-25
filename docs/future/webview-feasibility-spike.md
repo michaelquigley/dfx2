@@ -1,8 +1,10 @@
 # Webview integration feasibility spike
 
+Historical spike material, retained for comparison. The integration arc is now accepted; [current browser behavior](../current/webview.md) and the [stage 4 record](../../evidence/webview-integration/stage-4.md) supersede this document's planning status. Earlier investigation instructions do not authorize new work.
+
 Current direction (2026-11-12): the [isolated cgo comparison](webview-cgo-spike.md) found the same signal conflicts with both bindings. Michael chose to stop expanding the signal investigation and monitor the compatibility risk during representative dfx2 and dfw development/use. Single-executable distribution remains primary. Retain the findings and existing probes; do not add signal patches, a helper or a newer-runtime requirement on their account. This decision accepts continued development with an unresolved risk, not a claim of signal safety or approval of a new GC-signal policy. Earlier investigation instructions below are historical; they do not authorize another round. Windows work remains unstarted.
 
-Prove the native mechanisms that the [webview integration draft](webview-integration.md) depends on, before writing its production work order. Michael approved this Linux-first spike, followed by a Windows host handoff. The result is evidence and a mechanism recommendation, not root-framework browser integration.
+Prove the native mechanisms that the webview integration draft (retired; git `a889a10:docs/future/webview-integration.md`) depends on, before writing its production work order. Michael approved this Linux-first spike, followed by a Windows host handoff. The result is evidence and a mechanism recommendation, not root-framework browser integration.
 
 The agreed target is a native mixer and a webview over one application model. This spike does not build that target. It answers four narrower questions: can we provision the browser's loopback credential safely, isolate and retire temporary sessions, show a useful load-error page with safe retry, and coexist with Go's signal handling on Linux without cgo?
 
@@ -21,7 +23,7 @@ Run the affected portable tests/vet and driver tests. Run `unfurl -i` separately
 
 Extend `experiments/webkitgtk-spike` and `experiments/webview2-spike`, which remain separate modules. The Linux module imports the Windows experiment's portable adapter/fixture through a local module replacement; keep both directories in the checkout. Shared changes must still compile for both hosts. Reuse the existing callback routing, copied-data worker boundary, dispatcher and lifecycle instrumentation. Add only the native interfaces and fixture operations needed here.
 
-Read the project `AGENTS.md`, recent journal entries, [the integration draft](webview-integration.md), [the retained webview findings](webview.md), and both experiment READMEs. Linux must also read the [shutdown investigation](../../experiments/webkitgtk-spike/evidence/linux/shutdown/README.md) and its observer limits. Windows needs no grimoire checkout: this brief and the repository documents supply the task.
+Read the project `AGENTS.md`, recent journal entries, the integration draft (retired; git `a889a10:docs/future/webview-integration.md`), [the retained webview findings](webview.md), and both experiment READMEs. Linux must also read the [shutdown investigation](../../experiments/webkitgtk-spike/evidence/linux/shutdown/README.md) and its observer limits. Windows needs no grimoire checkout: this brief and the repository documents supply the task.
 
 No root Go code, public API, mixer refactor, canon edits, new frontend toolchain, JavaScript RPC layer or production transport implementation. Keep `CGO_ENABLED=0`. Do not copy mygo code or add it as a dependency. Native callbacks are permanent shared trampolines; route by numeric IDs and retain native ownership explicitly. Do not add a cgo helper to make the proof pass.
 

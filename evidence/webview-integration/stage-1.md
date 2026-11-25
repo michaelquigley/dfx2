@@ -1,6 +1,6 @@
 # Webview integration stage 1: portable lifetime and endpoint contracts
 
-Stage 1 of the [work order](../../docs/future/webview-integration-work-order.md) builds the public `webview` package, the private browser attachment contract, browser ownership in the core, the finite in-process adapter and the owned loopback server, all against fake native seams. No platform hosts a browser: GTK and Win32 refuse browser shells, and `webview.Open` refuses with `ErrUnsupportedContent` before native work on every target. Built behavior is in [webview.md](../../docs/current/webview.md). Implemented on `5f807d4` plus the uncommitted tree; nothing here is native browser evidence.
+Stage 1 of the work order (retired; git `a889a10:docs/future/webview-integration-work-order.md`) builds the public `webview` package, the private browser attachment contract, browser ownership in the core, the finite in-process adapter and the owned loopback server, all against fake native seams. No platform hosts a browser: GTK and Win32 refuse browser shells, and `webview.Open` refuses with `ErrUnsupportedContent` before native work on every target. Built behavior is in [webview.md](../../docs/current/webview.md). Implemented on `5f807d4` plus the uncommitted tree; nothing here is native browser evidence.
 
 Host: Linux 7.0.0-43-generic amd64, Go 1.27.1 (module language 1.26). Every build, test and vet uses `CGO_ENABLED=0`, except the race-detector repetitions, which need cgo for the detector itself and say so.
 

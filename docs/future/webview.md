@@ -1,5 +1,7 @@
 # The system webview in dfx2
 
+Historical spike material, retained for comparison. The integration arc is now accepted; [current browser behavior](../current/webview.md) and the [stage 4 record](../../evidence/webview-integration/stage-4.md) supersede this document's planning status. Earlier investigation instructions do not authorize new work.
+
 This page holds findings, not a design. The first are from the [Windows WebView2 spike](windows-webview2-spike.md), `experiments/webview2-spike`. It hosted WebView2 from Go with `CGO_ENABLED=0`, and served one embedded page through one `http.Handler` two ways: a loopback HTTP server, and socket-free interception into the handler. The bindings and the adapter are experimental. The adapter carries finite, buffered HTTP only, and is not a replacement for `net/http` serving.
 
 The evidence is in [`experiments/webview2-spike/evidence/windows/`](../../experiments/webview2-spike/evidence/windows/): the driver's [summary](../../experiments/webview2-spike/evidence/windows/drive-summary.txt), per-run [logs](../../experiments/webview2-spike/evidence/windows/logs/), and three captures. The [README](../../experiments/webview2-spike/README.md) has setup, commands, routes and controls.

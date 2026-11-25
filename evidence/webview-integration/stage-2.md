@@ -1,6 +1,6 @@
 # Webview integration stage 2: Linux browser integration
 
-Stage 2 of the [work order](../../docs/future/webview-integration-work-order.md) hosts `webview` windows on Linux/amd64 in the system WebKitGTK 4.1, inside the GTK backend's main loop, in all three modes, with the GC-signal reservation Michael approved on 2026-11-13. Built behavior is in [webview.md](../../docs/current/webview.md#linux-host). Implemented on `a4dac69` plus the uncommitted tree. Windows still refuses browser windows; nothing here is Windows evidence.
+Stage 2 of the work order (retired; git `a889a10:docs/future/webview-integration-work-order.md`) hosts `webview` windows on Linux/amd64 in the system WebKitGTK 4.1, inside the GTK backend's main loop, in all three modes, with the GC-signal reservation Michael approved on 2026-11-13. Built behavior is in [webview.md](../../docs/current/webview.md#linux-host). Implemented on `a4dac69` plus the uncommitted tree. Windows still refuses browser windows; nothing here is Windows evidence.
 
 Host: Ubuntu 26.04.1 LTS, Linux 7.0.0-43-generic amd64, Go 1.27.1 (module language 1.26), installed WebKitGTK and JavaScriptCore 2.52.6, GTK 3.24.52, libsoup 3.6.6, GLib 2.88.0; exact package versions are in the [run manifest](linux/stage-2/manifest.json). Every build, test and vet uses `CGO_ENABLED=0`, except the race-detector repetitions, which need cgo for the detector only.
 

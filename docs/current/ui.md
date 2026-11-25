@@ -154,6 +154,8 @@ The application's values stay the application's. Each window keeps only interact
 
 Backends report motion only while the left button is held, and only the keys widgets use. Hovering and other typing therefore request no frames, and other keys keep their native meaning. A settled window stays idle under them.
 
+The Win32 pre-dispatch pass peeks keyboard messages before pointer messages. A click queued before a key can therefore arrive after it, potentially sending the key to the old focus. This known defect is an accepted [input-order follow-up](../future/roadmap/preserve-win32-click-and-key-order-in-the-pre-dispatch-pass.md), not a claim that cross-kind native input order is preserved.
+
 ## Frames and scheduling
 
 A frame is one evaluation of the view: the framework calls `draw` once, measures the record, renders it and presents the image. Layout, rewrapping and exposure never call `draw` again. Frames arise from input, `Invalidate`, a changed surface size or scale, and active animation. An exposed window whose image is still valid only repaints the retained image.
