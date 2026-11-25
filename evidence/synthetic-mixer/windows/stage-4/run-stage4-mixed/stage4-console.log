@@ -1,0 +1,330 @@
+started 2026-11-24 21:18:13 (rerun after raising the mixer-repeated gate timeout to 1800s)
+{"name":"fonts","exit_code":0,"timed_out":false,"events":15,"failures":[]}
+{"name":"animate","exit_code":0,"timed_out":false,"events":14,"failures":[]}
+{"name":"resize","exit_code":0,"timed_out":false,"events":17,"failures":[]}
+{"name":"minimize","exit_code":0,"timed_out":false,"events":13,"failures":[]}
+{"name":"expose","exit_code":0,"timed_out":false,"events":12,"failures":[]}
+{"name":"large","exit_code":0,"timed_out":false,"events":29,"failures":[]}
+{"name":"close-sample","exit_code":0,"timed_out":false,"events":8,"failures":[]}
+{"name":"reopen","exit_code":0,"timed_out":false,"events":23,"failures":[]}
+{"name":"two","exit_code":0,"timed_out":false,"events":14,"failures":[]}
+{"name":"modal-move","exit_code":0,"timed_out":false,"events":29,"failures":[]}
+{"name":"modal-size","exit_code":0,"timed_out":false,"events":29,"failures":[]}
+{"name":"modal-idle","exit_code":0,"timed_out":false,"events":21,"failures":[]}
+{"name":"modal-close-self","exit_code":0,"timed_out":false,"events":17,"failures":[]}
+{"name":"modal-close-other","exit_code":0,"timed_out":false,"events":17,"failures":[]}
+{"name":"modal-quit","exit_code":0,"timed_out":false,"events":14,"failures":[]}
+{"name":"signal","exit_code":0,"timed_out":false,"events":15,"failures":[]}
+{"name":"inspection","exit_code":0,"timed_out":false,"events":5,"failures":[]}
+foundation matrix: exit 0; see foundation/ and foundation.log
+Automated Windows matrix passed. The manual audition in README.md is still required.
+{
+  "cases": [
+    {
+      "case": "drag_outside_window",
+      "ok": true,
+      "seconds": 2.375118
+    },
+    {
+      "case": "checkbox",
+      "ok": true,
+      "seconds": 1.2246163
+    },
+    {
+      "case": "keyboard",
+      "ok": true,
+      "seconds": 3.7407554
+    },
+    {
+      "case": "independent_focus",
+      "ok": true,
+      "seconds": 1.6691401
+    },
+    {
+      "case": "external_during_drag",
+      "ok": true,
+      "seconds": 1.3005637
+    },
+    {
+      "case": "reorder_during_drag",
+      "ok": true,
+      "seconds": 1.9243606
+    },
+    {
+      "case": "remove_during_drag",
+      "ok": true,
+      "seconds": 2.2500049
+    },
+    {
+      "case": "focus_loss_during_drag",
+      "ok": true,
+      "seconds": 2.0618882
+    },
+    {
+      "case": "hover_is_idle",
+      "ok": true,
+      "seconds": 4.2957487
+    },
+    {
+      "case": "delayed_commands",
+      "latencies_ms": [
+        700.477,
+        1390.524,
+        2080.813,
+        2557.676
+      ],
+      "ok": true,
+      "seconds": 3.6662613
+    },
+    {
+      "case": "rejected_commands",
+      "last_error": "#38 d gain 0.56 rejected: device refused",
+      "ok": true,
+      "seconds": 3.4317916
+    },
+    {
+      "accepted": 65,
+      "case": "overloaded_commands",
+      "ok": true,
+      "refused": 5,
+      "seconds": 2.0026318
+    },
+    {
+      "case": "external_while_pending",
+      "ok": true,
+      "seconds": 1.4317446999999999
+    },
+    {
+      "case": "timing",
+      "churn": {
+        "cpu_percent": 28.7,
+        "evaluations_per_s": 119.5,
+        "frames_per_s": 119.5,
+        "presents_per_s": 119.5,
+        "seconds": 5.0008917,
+        "ticks": 150
+      },
+      "ok": true,
+      "quiet": {
+        "cpu_percent": 0,
+        "evaluations_per_s": 0,
+        "frames_per_s": 0,
+        "presents_per_s": 0,
+        "seconds": 3.0012775,
+        "ticks": 0
+      },
+      "running": {
+        "cpu_percent": 22.4,
+        "evaluations_per_s": 119.7,
+        "frames_per_s": 119.9,
+        "presents_per_s": 119.9,
+        "seconds": 5.0035385,
+        "ticks": 151
+      },
+      "seconds": 16.6849248,
+      "text": {
+        "A": {
+          "glyph_bytes": 94752,
+          "glyph_entries": 588,
+          "glyph_evictions": 0,
+          "paragraph_bytes": 995074,
+          "paragraph_entries": 197,
+          "paragraph_evictions": 1648,
+          "rasterized": 588,
+          "shapes": 2807,
+          "transient_glyphs": 0,
+          "transient_paragraphs": 962
+        },
+        "B": {
+          "glyph_bytes": 94752,
+          "glyph_entries": 588,
+          "glyph_evictions": 0,
+          "paragraph_bytes": 985202,
+          "paragraph_entries": 196,
+          "paragraph_evictions": 1642,
+          "rasterized": 588,
+          "shapes": 2790,
+          "transient_glyphs": 0,
+          "transient_paragraphs": 952
+        }
+      }
+    },
+    {
+      "case": "close_first_window",
+      "ok": true,
+      "seconds": 1.8311117000000001
+    },
+    {
+      "case": "close_during_drag",
+      "ok": true,
+      "seconds": 1.1879145
+    },
+    {
+      "canceled": [
+        115,
+        116,
+        117,
+        118,
+        119
+      ],
+      "case": "shutdown_outstanding",
+      "ok": true,
+      "seconds": 0.9388697
+    }
+  ],
+  "clean": true,
+  "commands": {
+    "accepted": 114,
+    "applied": 107,
+    "canceled": 5,
+    "delay_ms": 60000,
+    "outstanding": 0,
+    "refused": 5,
+    "reject_next": 0,
+    "rejected": 2
+  },
+  "commands_conserved": true,
+  "edits": 119,
+  "exit": 0,
+  "first_surface": "760x520@1 visible=true",
+  "ownership_problems": [],
+  "passed": true,
+  "returned": "\u003cnil\u003e",
+  "stderr": "",
+  "text": [
+    {
+      "a_matches_fresh_c": true,
+      "budget": "small",
+      "budget_limits": {
+        "glyph_bytes": 49152,
+        "glyph_entries": 0,
+        "glyph_evictions": 0,
+        "paragraph_bytes": 65536,
+        "paragraph_entries": 48,
+        "paragraph_evictions": 0,
+        "rasterized": 0,
+        "shapes": 0,
+        "transient_glyphs": 0,
+        "transient_paragraphs": 0
+      },
+      "exit_error": "\u003cnil\u003e",
+      "final": {
+        "A": {
+          "glyph_bytes": 48929,
+          "glyph_entries": 312,
+          "glyph_evictions": 8872,
+          "paragraph_bytes": 51316,
+          "paragraph_entries": 20,
+          "paragraph_evictions": 1051,
+          "rasterized": 18026,
+          "shapes": 1596,
+          "transient_glyphs": 8842,
+          "transient_paragraphs": 525
+        },
+        "B": {
+          "glyph_bytes": 48909,
+          "glyph_entries": 312,
+          "glyph_evictions": 8918,
+          "paragraph_bytes": 51316,
+          "paragraph_entries": 20,
+          "paragraph_evictions": 1056,
+          "rasterized": 18104,
+          "shapes": 1604,
+          "transient_glyphs": 8874,
+          "transient_paragraphs": 528
+        },
+        "C": {
+          "glyph_bytes": 36041,
+          "glyph_entries": 232,
+          "glyph_evictions": 0,
+          "paragraph_bytes": 51316,
+          "paragraph_entries": 20,
+          "paragraph_evictions": 0,
+          "rasterized": 232,
+          "shapes": 21,
+          "transient_glyphs": 0,
+          "transient_paragraphs": 1
+        }
+      },
+      "flag": "49152:65536:48",
+      "glyph_evictions": 8872,
+      "over_budget": null,
+      "paragraph_evictions": 1051,
+      "passed": true,
+      "returned": "\u003cnil\u003e",
+      "scale": 1,
+      "size": [
+        760,
+        520
+      ]
+    },
+    {
+      "a_matches_fresh_c": true,
+      "budget": "default",
+      "budget_limits": {
+        "glyph_bytes": 16777216,
+        "glyph_entries": 0,
+        "glyph_evictions": 0,
+        "paragraph_bytes": 1048576,
+        "paragraph_entries": 256,
+        "paragraph_evictions": 0,
+        "rasterized": 0,
+        "shapes": 0,
+        "transient_glyphs": 0,
+        "transient_paragraphs": 0
+      },
+      "exit_error": "\u003cnil\u003e",
+      "final": {
+        "A": {
+          "glyph_bytes": 90482,
+          "glyph_entries": 561,
+          "glyph_evictions": 0,
+          "paragraph_bytes": 1032629,
+          "paragraph_entries": 199,
+          "paragraph_evictions": 656,
+          "rasterized": 561,
+          "shapes": 1138,
+          "transient_glyphs": 0,
+          "transient_paragraphs": 283
+        },
+        "B": {
+          "glyph_bytes": 90482,
+          "glyph_entries": 561,
+          "glyph_evictions": 0,
+          "paragraph_bytes": 1031662,
+          "paragraph_entries": 198,
+          "paragraph_evictions": 660,
+          "rasterized": 561,
+          "shapes": 1142,
+          "transient_glyphs": 0,
+          "transient_paragraphs": 284
+        },
+        "C": {
+          "glyph_bytes": 36041,
+          "glyph_entries": 232,
+          "glyph_evictions": 0,
+          "paragraph_bytes": 64643,
+          "paragraph_entries": 21,
+          "paragraph_evictions": 0,
+          "rasterized": 232,
+          "shapes": 21,
+          "transient_glyphs": 0,
+          "transient_paragraphs": 0
+        }
+      },
+      "flag": "default",
+      "glyph_evictions": 0,
+      "over_budget": null,
+      "paragraph_evictions": 656,
+      "passed": true,
+      "returned": "\u003cnil\u003e",
+      "scale": 1,
+      "size": [
+        760,
+        520
+      ]
+    }
+  ]
+}
+Stage 4 automated audition passed. The manual audition in README.md is still required.
+STAGE4_EXIT=0 finished 2026-11-24 21:33:07

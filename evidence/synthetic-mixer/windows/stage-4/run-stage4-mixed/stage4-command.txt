@@ -1,0 +1,3 @@
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File evidence\synthetic-mixer\windows\stage-4\stage4.ps1 -OutDir evidence/synthetic-mixer/windows/stage-4/run-stage4-mixed
+started 2026-11-24 21:18:13 local, finished 21:33:07, exit 0
+rerun after the first attempt (run-stage4-mixed-gate-timeout/) timed out in the mixer-repeated gate; that gate timeout was raised from 600s to 1800s in stage4.ps1

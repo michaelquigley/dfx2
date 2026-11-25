@@ -1,0 +1,39 @@
+{
+    "mixer":  "C:\\Cygwin64\\tmp\\dfx2-mixer.exe",
+    "mixer_sha256":  "5f24319376a8c5bca627b1a45dcfdf0412283255d5b4544192defeccd80751c2",
+    "revision":  "ebfc7ab2909709655d2d71c195a4940610ecf49f",
+    "worktree_dirty":  true,
+    "runs":  [
+                 {
+                     "name":  "inprocess",
+                     "exit_code":  0,
+                     "checks":  17,
+                     "failed":  1,
+                     "diagnostics":  0
+                 },
+                 {
+                     "name":  "loopback",
+                     "exit_code":  0,
+                     "checks":  17,
+                     "failed":  0,
+                     "diagnostics":  0
+                 },
+                 {
+                     "name":  "attach",
+                     "exit_code":  0,
+                     "checks":  22,
+                     "failed":  0,
+                     "diagnostics":  0
+                 },
+                 {
+                     "name":  "resident",
+                     "exit_code":  0,
+                     "checks":  16,
+                     "failed":  0,
+                     "diagnostics":  1
+                 }
+             ],
+    "checks":  72,
+    "failed":  1,
+    "finished":  "2026-11-24T21:38:22.0499727-05:00"
+}

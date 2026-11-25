@@ -1,0 +1,155 @@
+{
+    "name":  "loopback",
+    "flags":  "-browser loopback -audition -paused",
+    "log":  "C:\\Repos\\q\\products\\dfx2\\evidence\\webview-integration\\windows\\stage-4\\mixed\\loopback.jsonl",
+    "err":  "C:\\Repos\\q\\products\\dfx2\\evidence\\webview-integration\\windows\\stage-4\\mixed\\loopback.stderr",
+    "tmp":  "C:\\Repos\\q\\products\\dfx2\\evidence\\webview-integration\\windows\\stage-4\\mixed\\tmp-loopback",
+    "cursor":  17,
+    "checks":  [
+                   {
+                       "check":  "native window A opened",
+                       "ok":  true,
+                       "detail":  ""
+                   },
+                   {
+                       "check":  "browser view B opened in mode loopback",
+                       "ok":  true,
+                       "detail":  ""
+                   },
+                   {
+                       "check":  "six channels a-f (page line from B)",
+                       "ok":  true,
+                       "detail":  "order abcdef; commands: 0 accepted, 0 applied, 0 rejected, 0 refused, 0 canceled, 0 outstanding · device delay 0 ms"
+                   },
+                   {
+                       "check":  "channel a\u0027s fader at 0.25 after an external gain (page line from B)",
+                       "ok":  true,
+                       "detail":  "order abcdef; commands: 0 accepted, 0 applied, 0 rejected, 0 refused, 0 canceled, 0 outstanding · device delay 0 ms"
+                   },
+                   {
+                       "check":  "reversed order after reorder (page line from B)",
+                       "ok":  true,
+                       "detail":  "order fedcba; commands: 0 accepted, 0 applied, 0 rejected, 0 refused, 0 canceled, 0 outstanding · device delay 0 ms"
+                   },
+                   {
+                       "check":  "channel c gone after remove c (page line from B)",
+                       "ok":  true,
+                       "detail":  "order fedba; commands: 0 accepted, 0 applied, 0 rejected, 0 refused, 0 canceled, 0 outstanding · device delay 0 ms"
+                   },
+                   {
+                       "check":  "channel c last after insert c (page line from B)",
+                       "ok":  true,
+                       "detail":  "order fedbac; commands: 0 accepted, 0 applied, 0 rejected, 0 refused, 0 canceled, 0 outstanding · device delay 0 ms"
+                   },
+                   {
+                       "check":  "commands text shows the 1500 ms delay (page line from B)",
+                       "ok":  true,
+                       "detail":  "order fedbac; commands: 0 accepted, 0 applied, 0 rejected, 0 refused, 0 canceled, 0 outstanding · device delay 1500 ms"
+                   },
+                   {
+                       "check":  "external changes and reconciliation submitted no edit or command",
+                       "ok":  true,
+                       "detail":  "0 edit/command record(s) so far"
+                   },
+                   {
+                       "check":  "native window A closed first",
+                       "ok":  true,
+                       "detail":  ""
+                   },
+                   {
+                       "check":  "browser view B still follows the model after the native close (page line from B)",
+                       "ok":  true,
+                       "detail":  "order fedbac; commands: 0 accepted, 0 applied, 0 rejected, 0 refused, 0 canceled, 0 outstanding · device delay 1500 ms"
+                   },
+                   {
+                       "check":  "exit code 0",
+                       "ok":  true,
+                       "detail":  "exit 0"
+                   },
+                   {
+                       "check":  "return record with commands_conserved",
+                       "ok":  true,
+                       "detail":  "{\"accepted\":0,\"applied\":0,\"canceled\":0,\"delay_ms\":1500,\"outstanding\":0,\"refused\":0,\"reject_next\":0,\"rejected\":0}"
+                   },
+                   {
+                       "check":  "canceled count is 0",
+                       "ok":  true,
+                       "detail":  "canceled 0"
+                   },
+                   {
+                       "check":  "stderr empty apart from the shutdown diagnostic",
+                       "ok":  true,
+                       "detail":  "0 other line(s), 0 diagnostic(s)"
+                   },
+                   {
+                       "check":  "no browser process survived the mixer",
+                       "ok":  true,
+                       "detail":  "0 msedgewebview2 process(es) with the mixer as parent"
+                   },
+                   {
+                       "check":  "no temporary storage left",
+                       "ok":  true,
+                       "detail":  ""
+                   }
+               ],
+    "console":  [
+                    {
+                        "time":  "2026-11-24T21:39:49.7856635-05:00",
+                        "command":  "gain a 0.25"
+                    },
+                    {
+                        "time":  "2026-11-24T21:39:50.1676416-05:00",
+                        "command":  "reorder"
+                    },
+                    {
+                        "time":  "2026-11-24T21:39:50.4319659-05:00",
+                        "command":  "remove c"
+                    },
+                    {
+                        "time":  "2026-11-24T21:39:50.7953685-05:00",
+                        "command":  "insert c"
+                    },
+                    {
+                        "time":  "2026-11-24T21:39:51.1581980-05:00",
+                        "command":  "delay 1500ms"
+                    },
+                    {
+                        "time":  "2026-11-24T21:39:51.5310391-05:00",
+                        "command":  "close A"
+                    },
+                    {
+                        "time":  "2026-11-24T21:39:51.6667225-05:00",
+                        "command":  "gain b 0.75"
+                    },
+                    {
+                        "time":  "2026-11-24T21:39:51.8081652-05:00",
+                        "command":  "close B"
+                    }
+                ],
+    "mixer_pid":  5140,
+    "started":  "2026-11-24T21:39:49.1279706-05:00",
+    "mode":  "loopback",
+    "exit_code":  0,
+    "commands":  {
+                     "accepted":  0,
+                     "applied":  0,
+                     "canceled":  0,
+                     "delay_ms":  1500,
+                     "outstanding":  0,
+                     "refused":  0,
+                     "reject_next":  0,
+                     "rejected":  0
+                 },
+    "edit_records":  0,
+    "command_records":  0,
+    "shutdown_diagnostics":  [
+
+                             ],
+    "stderr":  [
+
+               ],
+    "leftovers":  [
+
+                  ],
+    "finished":  "2026-11-24T21:39:52.2215468-05:00"
+}

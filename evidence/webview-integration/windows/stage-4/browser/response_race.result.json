@@ -1,0 +1,108 @@
+{
+ "case": "response_race",
+ "ok": true,
+ "checks": [
+  {
+   "check": "the page's fetch of the race URL is held at the service",
+   "ok": true,
+   "detail": {
+    "hits": [
+     {
+      "method": "GET",
+      "path": "/api/race",
+      "dest": "empty",
+      "remote": "127.0.0.1:63923",
+      "t": "21:34:31.945"
+     }
+    ]
+   }
+  },
+  {
+   "check": "the navigation to the race URL failed with Retry",
+   "ok": true,
+   "detail": {
+    "event": {
+     "detail": "status 8 http 0",
+     "kind": "error-page",
+     "method": "GET",
+     "retry": true,
+     "seq": 15,
+     "uri": "http://127.0.0.1:63907/api/race"
+    }
+   }
+  },
+  {
+   "check": "the released older response produced no resource response or load while the error page was pending",
+   "ok": true,
+   "detail": {
+    "events_after_error_page": null
+   }
+  },
+  {
+   "check": "the error page's Retry is still the current one",
+   "ok": true,
+   "detail": {
+    "event": {
+     "detail": "retry",
+     "kind": "error-action",
+     "seq": 16,
+     "uri": "http://127.0.0.1:63907/api/race"
+    }
+   }
+  }
+ ],
+ "detail": {
+  "race_hits": [
+   {
+    "method": "GET",
+    "path": "/api/race",
+    "dest": "empty",
+    "remote": "127.0.0.1:63923",
+    "t": "21:34:31.945"
+   },
+   {
+    "method": "GET",
+    "path": "/api/race",
+    "dest": "document",
+    "remote": "127.0.0.1:63927",
+    "t": "21:34:52.034"
+   },
+   {
+    "method": "GET",
+    "path": "/api/race",
+    "dest": "document",
+    "remote": "127.0.0.1:63928",
+    "t": "21:34:54.168"
+   },
+   {
+    "method": "GET",
+    "path": "/api/race",
+    "dest": "document",
+    "remote": "127.0.0.1:63929",
+    "t": "21:34:54.168"
+   },
+   {
+    "method": "GET",
+    "path": "/api/race",
+    "dest": "document",
+    "remote": "127.0.0.1:63930",
+    "t": "21:34:54.169"
+   }
+  ]
+ },
+ "hosts": [
+  {
+   "host": "response_race-host",
+   "exit": 0,
+   "error": "\u003cnil\u003e",
+   "shutdown_diagnostics": [
+    "2026/11/24 21:34:59 dfx2 shutdown outstanding: windows=1 app-tasks=0 native-completions=0 wake-pending=false wake-failures=0 release-pending=false failure=\u003cnil\u003e; window=2 state=closing native=true creating=false content-release-pending=false; window=2 browser attached=true attaching=false ready=true close-started=true released=false endpoint-started=false endpoint-drained=false cleanups=[] endpoint=[] native=[webview2 151.0.4129.93 navigated=true closing=true controller-closed=true released=false native-requests=0 body-readers=0 response-streams=0 async=1]; dispatch-targets=1 native-problem=\"\""
+   ],
+   "temp_leftovers": null,
+   "browser_pids": [
+    9124
+   ]
+  }
+ ],
+ "seconds": 29.7
+}

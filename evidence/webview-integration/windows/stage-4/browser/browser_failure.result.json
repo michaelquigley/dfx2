@@ -1,0 +1,39 @@
+{
+ "case": "browser_failure",
+ "ok": true,
+ "checks": [
+  {
+   "check": "the browser process is known",
+   "ok": true,
+   "detail": {
+    "pid": 9656
+   }
+  },
+  {
+   "check": "the application failed and drained",
+   "ok": true,
+   "detail": {
+    "return": {
+     "error": "dfx2 webview window 3: WebView2 browser process exited (reason unexpected, exit code 1, )",
+     "event": "return",
+     "time": "2026-11-24T21:36:08.6985238-05:00"
+    }
+   }
+  }
+ ],
+ "hosts": [
+  {
+   "host": "browser_failure-host",
+   "exit": 1,
+   "error": "dfx2 webview window 3: WebView2 browser process exited (reason unexpected, exit code 1, )",
+   "stderr": [
+    "dfx2 webview window 3: WebView2 browser process exited (reason unexpected, exit code 1, )"
+   ],
+   "temp_leftovers": null,
+   "browser_pids": [
+    9656
+   ]
+  }
+ ],
+ "seconds": 0.8
+}

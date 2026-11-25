@@ -1,0 +1,142 @@
+{
+    "name":  "resident",
+    "flags":  "-browser inprocess -resident -audition -paused",
+    "log":  "C:\\Repos\\q\\products\\dfx2\\evidence\\webview-integration\\windows\\stage-4\\mixed\\resident.jsonl",
+    "err":  "C:\\Repos\\q\\products\\dfx2\\evidence\\webview-integration\\windows\\stage-4\\mixed\\resident.stderr",
+    "tmp":  "C:\\Repos\\q\\products\\dfx2\\evidence\\webview-integration\\windows\\stage-4\\mixed\\tmp-resident",
+    "cursor":  12,
+    "checks":  [
+                   {
+                       "check":  "native window A opened",
+                       "ok":  true,
+                       "detail":  ""
+                   },
+                   {
+                       "check":  "browser view B opened",
+                       "ok":  true,
+                       "detail":  ""
+                   },
+                   {
+                       "check":  "six channels a-f (page line from B)",
+                       "ok":  true,
+                       "detail":  "order abcdef; commands: 0 accepted, 0 applied, 0 rejected, 0 refused, 0 canceled, 0 outstanding · device delay 0 ms"
+                   },
+                   {
+                       "check":  "browser view B closed",
+                       "ok":  true,
+                       "detail":  ""
+                   },
+                   {
+                       "check":  "native window A closed",
+                       "ok":  true,
+                       "detail":  ""
+                   },
+                   {
+                       "check":  "process stays with zero windows",
+                       "ok":  true,
+                       "detail":  ""
+                   },
+                   {
+                       "check":  "open brings native window C",
+                       "ok":  true,
+                       "detail":  ""
+                   },
+                   {
+                       "check":  "browser brings view D",
+                       "ok":  true,
+                       "detail":  ""
+                   },
+                   {
+                       "check":  "new page lines from D (page line from D)",
+                       "ok":  true,
+                       "detail":  "order abcdef; commands: 0 accepted, 0 applied, 0 rejected, 0 refused, 0 canceled, 0 outstanding · device delay 0 ms"
+                   },
+                   {
+                       "check":  "view D follows the shared model (page line from D)",
+                       "ok":  true,
+                       "detail":  "order abcdef; commands: 0 accepted, 0 applied, 0 rejected, 0 refused, 0 canceled, 0 outstanding · device delay 0 ms"
+                   },
+                   {
+                       "check":  "exit code 0",
+                       "ok":  true,
+                       "detail":  "exit 0"
+                   },
+                   {
+                       "check":  "return record with commands_conserved",
+                       "ok":  true,
+                       "detail":  "{\"accepted\":0,\"applied\":0,\"canceled\":0,\"delay_ms\":0,\"outstanding\":0,\"refused\":0,\"reject_next\":0,\"rejected\":0}"
+                   },
+                   {
+                       "check":  "canceled count is 0",
+                       "ok":  true,
+                       "detail":  "canceled 0"
+                   },
+                   {
+                       "check":  "stderr empty apart from the shutdown diagnostic",
+                       "ok":  true,
+                       "detail":  "0 other line(s), 1 diagnostic(s)"
+                   },
+                   {
+                       "check":  "no browser process survived the mixer",
+                       "ok":  true,
+                       "detail":  "0 msedgewebview2 process(es) with the mixer as parent"
+                   },
+                   {
+                       "check":  "no temporary storage left",
+                       "ok":  true,
+                       "detail":  ""
+                   }
+               ],
+    "console":  [
+                    {
+                        "time":  "2026-11-24T21:38:03.9724542-05:00",
+                        "command":  "close B"
+                    },
+                    {
+                        "time":  "2026-11-24T21:38:10.6931048-05:00",
+                        "command":  "close A"
+                    },
+                    {
+                        "time":  "2026-11-24T21:38:13.8261567-05:00",
+                        "command":  "open"
+                    },
+                    {
+                        "time":  "2026-11-24T21:38:13.9566177-05:00",
+                        "command":  "browser"
+                    },
+                    {
+                        "time":  "2026-11-24T21:38:14.5724646-05:00",
+                        "command":  "gain a 0.4"
+                    },
+                    {
+                        "time":  "2026-11-24T21:38:14.8373519-05:00",
+                        "command":  "quit"
+                    }
+                ],
+    "mixer_pid":  9552,
+    "started":  "2026-11-24T21:38:03.2752151-05:00",
+    "mode":  "inprocess",
+    "exit_code":  0,
+    "commands":  {
+                     "accepted":  0,
+                     "applied":  0,
+                     "canceled":  0,
+                     "delay_ms":  0,
+                     "outstanding":  0,
+                     "refused":  0,
+                     "reject_next":  0,
+                     "rejected":  0
+                 },
+    "edit_records":  0,
+    "command_records":  0,
+    "shutdown_diagnostics":  [
+                                 "2026/11/24 21:38:19 dfx2 shutdown outstanding: windows=1 app-tasks=0 native-completions=0 wake-pending=false wake-failures=0 release-pending=false failure=\u003cnil\u003e; window=16 state=closing native=true creating=false content-release-pending=false; window=16 browser attached=true attaching=false ready=true close-started=true released=false endpoint-started=true endpoint-drained=true cleanups=[] endpoint=[in-process admitted=0/16 native=0 handlers=0 reading=0 refusals=0/16 reserved=0/66764736 closed=true drained=true] native=[webview2 151.0.4129.93 navigated=true closing=true controller-closed=true released=false native-requests=0 body-readers=0 response-streams=0 async=1]; dispatch-targets=1 native-problem=\"\""
+                             ],
+    "stderr":  [
+
+               ],
+    "leftovers":  [
+
+                  ],
+    "finished":  "2026-11-24T21:38:21.5573985-05:00"
+}

@@ -1,0 +1,98 @@
+{
+ "case": "lazy_loading",
+ "ok": true,
+ "checks": [
+  {
+   "check": "native-only startup maps no WebView2 module and extracts nothing",
+   "ok": true,
+   "detail": {
+    "before": {
+     "client_mapped": false,
+     "loader_mapped": false,
+     "temp": null
+    }
+   }
+  },
+  {
+   "check": "the first browser window extracts and maps the loader and the runtime client",
+   "ok": true,
+   "detail": {
+    "after": {
+     "client_mapped": true,
+     "loader_mapped": true,
+     "temp": [
+      "dfx2-webview2-loader-1605983936",
+      "dfx2-webview2-profile-1554183748"
+     ]
+    }
+   }
+  },
+  {
+   "check": "the last close unloads the loader and removes its directory",
+   "ok": true,
+   "detail": {
+    "closed": {
+     "client_mapped": true,
+     "loader_mapped": false,
+     "temp": null
+    }
+   }
+  }
+ ],
+ "detail": {
+  "modules_with_browser": [
+   "advapi32.dll",
+   "bcrypt.dll",
+   "bcryptprimitives.dll",
+   "clbcatq.dll",
+   "combase.dll",
+   "coremessaging.dll",
+   "coreuicomponents.dll",
+   "dfx2-webview.exe",
+   "edputil.dll",
+   "embeddedbrowserwebview.dll",
+   "gdi32.dll",
+   "gdi32full.dll",
+   "imm32.dll",
+   "kernel.appcore.dll",
+   "kernel32.dll",
+   "kernelbase.dll",
+   "msctf.dll",
+   "msvcp_win.dll",
+   "msvcrt.dll",
+   "ntdll.dll",
+   "ntmarta.dll",
+   "ole32.dll",
+   "oleaut32.dll",
+   "powrprof.dll",
+   "propsys.dll",
+   "rpcrt4.dll",
+   "sechost.dll",
+   "shcore.dll",
+   "shell32.dll",
+   "shlwapi.dll",
+   "textinputframework.dll",
+   "ucrtbase.dll",
+   "umpdc.dll",
+   "user32.dll",
+   "uxtheme.dll",
+   "version.dll",
+   "webview2loader.dll",
+   "win32u.dll",
+   "windows.storage.dll",
+   "wintypes.dll",
+   "wldp.dll",
+   "ws2_32.dll"
+  ],
+  "runtime_client_still_mapped_after_last_close": true
+ },
+ "hosts": [
+  {
+   "host": "lazy_loading-host",
+   "exit": 0,
+   "error": "\u003cnil\u003e",
+   "temp_leftovers": null
+  }
+ ],
+ "seconds": 10.2
+}

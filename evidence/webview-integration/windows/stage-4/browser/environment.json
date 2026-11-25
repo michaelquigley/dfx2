@@ -1,0 +1,18 @@
+{
+ "dirty": [
+  "M evidence/synthetic-mixer/windows/stage-4/stage4.ps1",
+  "?? evidence/synthetic-mixer/windows/stage-4/run-stage4-mixed-gate-timeout/",
+  "?? evidence/synthetic-mixer/windows/stage-4/run-stage4-mixed/",
+  "?? evidence/webview-integration/windows/stage-4/"
+ ],
+ "exe": "C:\\Cygwin64\\tmp\\dfx2-webview.exe",
+ "exe_sha256": "902d419549ed0fa946067ae7d53e1816d374f31d2fb27984fb545bf08f1264ab",
+ "go": "go version go1.27.4 windows/amd64",
+ "os": "Microsoft Windows [Version 10.0.19045.6466]",
+ "revision": "ebfc7ab2909709655d2d71c195a4940610ecf49f",
+ "screen": "3840x1600",
+ "session": "RDP-Tcp#1",
+ "session_state": "Active",
+ "system_dpi": 96,
+ "time": "2026-11-24T21:33:38-05:00"
+}

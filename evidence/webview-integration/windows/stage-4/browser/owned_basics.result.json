@@ -1,0 +1,134 @@
+{
+ "case": "owned_basics",
+ "ok": true,
+ "checks": [
+  {
+   "check": "inprocess page, assets, query, POST echo, 404, no visible cookie",
+   "ok": true,
+   "detail": {
+    "result": {
+     "cookie": "",
+     "css": true,
+     "echo": {
+      "length": 1005,
+      "method": "POST",
+      "sha256": "a5903776f0c8d72f5b1e8689519fc8d9d6317785a20e31659786c8d8703a6b8c"
+     },
+     "img": true,
+     "imgWidth": 48,
+     "missing": 404,
+     "origin": "https://dfx2.invalid",
+     "query": "é\u0026ü"
+    }
+   }
+  },
+  {
+   "check": "loopback page, assets, query, POST echo, 404, no visible cookie",
+   "ok": true,
+   "detail": {
+    "result": {
+     "cookie": "",
+     "css": true,
+     "echo": {
+      "length": 1005,
+      "method": "POST",
+      "sha256": "a5903776f0c8d72f5b1e8689519fc8d9d6317785a20e31659786c8d8703a6b8c"
+     },
+     "img": true,
+     "imgWidth": 48,
+     "missing": 404,
+     "origin": "http://127.0.0.1:63785",
+     "query": "é\u0026ü"
+    }
+   }
+  },
+  {
+   "check": "in-process origin",
+   "ok": true,
+   "detail": {
+    "start": "https://dfx2.invalid/"
+   }
+  },
+  {
+   "check": "only the loopback endpoint listens",
+   "ok": true,
+   "detail": {
+    "listeners": [
+     "127.0.0.1:63785"
+    ]
+   }
+  },
+  {
+   "check": "uncredentialed loopback clients refused with 403",
+   "ok": true,
+   "detail": {
+    "statuses": {
+     "none": 403,
+     "wrong credential": 403,
+     "wrong credential and Origin": 403
+    }
+   }
+  },
+  {
+   "check": "refusals never reached the handler",
+   "ok": true,
+   "detail": {
+    "endpoint": "loopback origin=http://127.0.0.1:63785 connections=2/32 handlers=0/16 serving=true closed=false drained=false refused-connections=0 busy=0 unauthorized=3 upgrades=0",
+    "handler": {
+     "GET /": 2,
+     "GET /api/missing": 1,
+     "GET /api/query": 1,
+     "GET /favicon.ico": 1,
+     "GET /logo.svg": 2,
+     "GET /probe.css": 2,
+     "GET /probe.js": 2,
+     "POST /api/echo": 1,
+     "POST /api/report": 1
+    }
+   }
+  },
+  {
+   "check": "loopback streams the first chunk before the handler returns",
+   "ok": true,
+   "detail": {
+    "stream": {
+     "chunks": [
+      "chunk-1\n",
+      "chunk-2 after ack\n"
+     ],
+     "status": 200
+    }
+   }
+  },
+  {
+   "check": "closing the in-process window leaves the loopback window listening",
+   "ok": true,
+   "detail": {
+    "listeners": [
+     "127.0.0.1:63785"
+    ]
+   }
+  }
+ ],
+ "detail": {
+  "inprocess_origin": "https://dfx2.invalid",
+  "loopback_origin": "http://127.0.0.1:63785",
+  "screen_capture": {
+   "error": "",
+   "file": "screen-loopback.png",
+   "session_state": "Active"
+  }
+ },
+ "hosts": [
+  {
+   "host": "owned_basics-host",
+   "exit": 0,
+   "error": "\u003cnil\u003e",
+   "temp_leftovers": null,
+   "browser_pids": [
+    4600
+   ]
+  }
+ ],
+ "seconds": 3.5
+}

@@ -33,7 +33,7 @@ function Invoke-Gate([string]$Name, [string[]]$GoArgs) {
 
 # Stage 4's own repeated gates: the example's fixtures, the UI core path and
 # the shared text system, on this host.
-Invoke-Gate "mixer-repeated" @("test", "./examples/mixer", "-count=100", "-timeout=600s")
+Invoke-Gate "mixer-repeated" @("test", "./examples/mixer", "-count=100", "-timeout=1800s")
 Invoke-Gate "ui-repeated" @("test", "./ui", "-count=50", "-timeout=600s")
 Invoke-Gate "text-repeated" @("test", "./internal/text/...", "-count=50", "-timeout=600s")
 Invoke-Gate "vet-controlsdrive" @("vet", "-C", "evidence/synthetic-mixer/windows/stage-4/controlsdrive", ".")

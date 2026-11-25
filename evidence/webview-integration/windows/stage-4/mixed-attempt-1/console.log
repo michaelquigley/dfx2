@@ -1,0 +1,111 @@
+started 2026-11-24 21:37:28
+cmd: powershell.exe -NoProfile -ExecutionPolicy Bypass -File evidence\webview-integration\windows\stage-4\mixed.ps1 -Mixer C:\Cygwin64\tmp\dfx2-mixer.exe -OutDir evidence/webview-integration/windows/stage-4/mixed
+== inprocess (-browser inprocess -audition -paused) mixer pid 9288
+   FAIL native window A opened -- 
+   ok   browser view B opened in mode inprocess
+   ok   six channels a-f (page line from B)
+   > gain a 0.25
+   ok   channel a's fader at 0.25 after an external gain (page line from B)
+   > reorder
+   ok   reversed order after reorder (page line from B)
+   > remove c
+   ok   channel c gone after remove c (page line from B)
+   > insert c
+   ok   channel c last after insert c (page line from B)
+   > delay 1500ms
+   ok   commands text shows the 1500 ms delay (page line from B)
+   ok   external changes and reconciliation submitted no edit or command
+   > close B
+   ok   browser view B closed first
+   > gain b 0.75
+   ok   the model still takes external changes with only the native window open
+   > close A
+   ok   exit code 0
+   ok   return record with commands_conserved
+   ok   canceled count is 0
+   ok   stderr empty apart from the shutdown diagnostic
+   ok   no browser process survived the mixer
+   ok   no temporary storage left
+== loopback (-browser loopback -audition -paused) mixer pid 4320
+   ok   native window A opened
+   ok   browser view B opened in mode loopback
+   ok   six channels a-f (page line from B)
+   > gain a 0.25
+   ok   channel a's fader at 0.25 after an external gain (page line from B)
+   > reorder
+   ok   reversed order after reorder (page line from B)
+   > remove c
+   ok   channel c gone after remove c (page line from B)
+   > insert c
+   ok   channel c last after insert c (page line from B)
+   > delay 1500ms
+   ok   commands text shows the 1500 ms delay (page line from B)
+   ok   external changes and reconciliation submitted no edit or command
+   > close A
+   ok   native window A closed first
+   > gain b 0.75
+   ok   browser view B still follows the model after the native close (page line from B)
+   > close B
+   ok   exit code 0
+   ok   return record with commands_conserved
+   ok   canceled count is 0
+   ok   stderr empty apart from the shutdown diagnostic
+   ok   no browser process survived the mixer
+   ok   no temporary storage left
+== attach (-browser attach -audition -paused) mixer pid 9620
+   ok   native window A opened
+   ok   browser view B opened in mode attach
+   ok   six channels a-f (page line from B)
+   > gain a 0.25
+   ok   channel a's fader at 0.25 after an external gain (page line from B)
+   > reorder
+   ok   reversed order after reorder (page line from B)
+   > remove c
+   ok   channel c gone after remove c (page line from B)
+   > insert c
+   ok   channel c last after insert c (page line from B)
+   > delay 1500ms
+   ok   commands text shows the 1500 ms delay (page line from B)
+   ok   external changes and reconciliation submitted no edit or command
+   ok   fixture-server line
+   > close B
+   ok   attached view B closed
+   ok   fixture server answers 200 after its attached view closed
+   > browser
+   ok   view C opened in attach mode
+   ok   view C shows the same model (page line from C)
+   ok   one fixture server for both attached views
+   > close A
+   > close C
+   ok   exit code 0
+   ok   return record with commands_conserved
+   ok   canceled count is 0
+   ok   stderr empty apart from the shutdown diagnostic
+   ok   no browser process survived the mixer
+   ok   no temporary storage left
+   ok   fixture server stopped with the application
+== resident (-browser inprocess -resident -audition -paused) mixer pid 9552
+   ok   native window A opened
+   ok   browser view B opened
+   ok   six channels a-f (page line from B)
+   > close B
+   ok   browser view B closed
+   > close A
+   ok   native window A closed
+   ok   process stays with zero windows
+   > open
+   ok   open brings native window C
+   > browser
+   ok   browser brings view D
+   ok   new page lines from D (page line from D)
+   > gain a 0.4
+   ok   view D follows the shared model (page line from D)
+   > quit
+   ok   exit code 0
+   ok   return record with commands_conserved
+   ok   canceled count is 0
+   ok   stderr empty apart from the shutdown diagnostic
+   ok   no browser process survived the mixer
+   ok   no temporary storage left
+== 72 checks, 1 failed
+MIXED_EXIT=1 finished 2026-11-24 21:38:22

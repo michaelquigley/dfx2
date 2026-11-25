@@ -32,7 +32,7 @@ The candidate is this working tree, ready for Michael's commit and the Windows t
   - **Browser matrix:** 33/33, in `linux/stage-4/integrated/`. No Linux-linked framework file has changed since that run; W3 is Windows-only code.
 - **Review:** the last full-rubric round, `7b428eff75ad`, is not clean. Its dispositions are under [Review](#review).
 - **Manual Linux audition:** Michael reported on 2026-11-24 that everything checked out fine. The browser fader's release-only submission was clarified; no behavior change was requested.
-- **Pending:** the Windows run and Windows manual audition.
+- **Windows run:** done on 2026-11-24 at `ebfc7ab`, see [Windows validation](#windows-validation-of-ebfc7ab--2026-11-24). Michael completed the Windows hands-on checklist the same day and reported that everything worked fine.
 - **Deferred to the roadmap:** W2 (malformed handler headers), X1 (Win32 input order) and X2 (UI-thread COM balance).
 
 ## Validation on Linux
@@ -90,7 +90,7 @@ Portable checks:
 
 ### Manual
 
-Michael completed the Linux hands-on audition on 2026-11-24 and reported that everything checked out fine. He observed that browser fader drags submit only on release; this is intentional for this fixture and remains unchanged. This is an operator report, not additional automated measurement. The Windows manual audition is pending. The checklist is below.
+Michael completed the Linux hands-on audition on 2026-11-24 and reported that everything checked out fine. He observed that browser fader drags submit only on release; this is intentional for this fixture and remains unchanged. This is an operator report, not additional automated measurement. He completed the same checklist on Windows later that day, after the scripted Windows run below, and reported that everything worked fine; again an operator report, with no new measurements and no defect reported. The checklist is below.
 
 The page's submission order also has a deterministic check outside any browser, [`linux/mixer_page_order.js`](linux/mixer_page_order.js), described under S2 below; run it with `node`.
 
@@ -242,3 +242,47 @@ The further full-rubric round is **not clean**: three blocking findings and one 
 - **Not rerun:** the browser matrix, since no Linux-linked framework file changed. Its 33/33 in `stage-4/integrated` stands.
 
 This is the current Linux evidence for the transfer. The earlier runs are kept.
+
+## Windows validation of `ebfc7ab` — 2026-11-24
+
+Run on the Windows host at **`ebfc7ab2909709655d2d71c195a4940610ecf49f`** (Michael's commit of the stage 4 tree), clean tree, `CGO_ENABLED=0` throughout, no production code changed. Host: Windows 10 Pro 10.0.19045.6466, amd64, Go 1.27.4, Evergreen WebView2 Runtime 151.0.4129.93 (the SDK pin 1.0.4129.50 is unchanged), PowerShell 5.1.19041.6456, Remote Desktop session `rdp-tcp#5` (session 2) `Active` throughout (the drivers' environment files record the stale `SESSIONNAME` `RDP-Tcp#1`), one display, 3840×1600 at 96 DPI on the Microsoft Remote Display Adapter. Node is not installed. No person was at the desktop: every result below is scripted, and the hands-on checklist is pending.
+
+**Executables**, built from the clean tree before any run directory existed (`vcs.modified=false`):
+
+| Executable | SHA-256 |
+| --- | --- |
+| `dfx2-mixer.exe` (`examples/mixer`; one file, loader embedded) | `5f24319376a8c5bca627b1a45dcfdf0412283255d5b4544192defeccd80751c2` |
+| `dfx2-webview.exe` (`examples/webview`) | `902d419549ed0fa946067ae7d53e1816d374f31d2fb27984fb545bf08f1264ab` |
+| `dfx2-wvdrive.exe` (the browser matrix driver) | `2bed05ad899cc2e35aa01799f43d92d4e34670dca215b97125e83369cbe45386` |
+
+`stage4.ps1` builds its own mixer, `4c470dc476cb1cbfe96ec647da215add7258b024d11eaab7d6bc0d98d07b1acb` (`vcs.modified=true`, because its run directory already existed), with `desk.exe` `f008feb1…`, `controlsdrive4.exe` `4c21228e…` and `ctrlbreak.exe` `9027a303…`.
+
+**Portable checks.** `go test ./... -count=1 -timeout=900s` passes for all 14 packages, and `go vet ./...` passes. W3's modeled regression, `TestResponseCopyIsAllocatedAtTheAccountedSize`, passes on this host. The Node page-order check, `mixer_page_order.js`, was **not run: Node is not installed**; its Linux result stands. The race detector did not run (no C toolchain), as in every Windows return.
+
+**Mixer stage 4 regression** ([`../synthetic-mixer/windows/stage-4/run-stage4-mixed/`](../synthetic-mixer/windows/stage-4/run-stage4-mixed/)): passed, after one runner correction.
+
+- **The first attempt, kept in [`run-stage4-mixed-gate-timeout/`](../synthetic-mixer/windows/stage-4/run-stage4-mixed-gate-timeout/),** stopped in the `mixer-repeated` gate: `go test ./examples/mixer -count=100 -timeout=600s` timed out at ten minutes with `TestAStalledFixtureBodyCannotHoldShutdownOpen` running. No test failed. Stage 4's three fixture-server tests take about 5.5 s per run of the package (`TestTheAttachFixtureServerWaitsForAHeldHandler` 3.2 s, `TestAStalledFixtureBodyCannotHoldShutdownOpen` 1.2 s, `TestAFailedFixtureServerDrainsItsHandlers` 1.1 s), so a hundred runs need about twelve minutes. This is the runner's budget, not a product failure. **Driver correction:** `stage4.ps1`'s `mixer-repeated` timeout is 1800 s instead of 600 s; nothing else changed.
+- **The rerun:** all four gates pass (the mixer ×100 in 608 s, `ui` ×50, `internal/text/...` ×50, the `controlsdrive` vet). The regression matrix's 18 results are clean: the 16 scripts, the inspection, and the nested foundation matrix's 9 cases, with `failure` exiting 1 as expected. `modal-move`: 362 and 361 frames in 12 s, at least 29 and 30 per second, 395 turns, 394 timers, 0 refusals. `modal-size`: 397 and 370 frames, at least 31 and 30, 457 turns, 457 timers, 0 refusals. Controls: 17 of 17 checks, 119 edits, 114 accepted, 107 applied, 2 rejected, 5 canceled, 5 refused, commands conserved, clean exit, empty stderr. Both text-cache runs pass, with A matching a fresh C. The native-only default is unchanged. That runner's own manual audition is pending.
+
+**Browser matrix, 18 cases** ([`windows/stage-4/browser/`](windows/stage-4/browser/)), host `902d4195…`, driver `2bed05ad…`, 21:33 to 21:37 local: **18 of 18 pass, none untested.** Every host exited as expected (`browser_failure` and `missing_runtime` with their expected errors on stderr), no browser process survived its host, no `dfx2-webview2-*` directory remained, and nothing else reached stderr but the supervisor's five-second shutdown diagnostic in the three quit-with-window-open hosts (`in_process_alone`, `storage`, `response_race`), each listing `response-streams=0`. Stage 3's sixteen regressions pass again. W3's exact-sized response copy is the framework code these hosts ran.
+
+- **`body_close` passed natively for the first time.** The 0 ms attempt's close landed on a claimed body read (`claimed-reads=1`), and that host exited 0 with an empty stderr and no temporary leftovers; the 5, 10, 20, 40 and 80 ms attempts recorded valid zeros and drained clean. By the handoff's rule that is one native observation of a close stopping a claimed read. It differs from stage 3's baseline (untested) in timing, not in behavior: every earlier attempt also drained. It still measures no post-deferral stream lifetime.
+- **An observation, not new to this candidate:** in all six attempts the `closed` reply arrived about 6.5 s after the page reported the upload started, with or without a claimed read. The same interval appears in the `ad2e37b` and `c1bd0d6` runs, while stage 3 measured `profile_lifecycle`'s explicit close, with no upload in flight, at 320 ms. The driver does not measure or judge this; it is read from the hosts' timestamps.
+- **`body_reader` and the `get_Content` comparison:** the 900,000-byte upload was echoed intact (status 200, length and SHA-256 equal), no body reader remained, and the empty POST was answered as an empty body. `emptyPost`: one `request-content` event, `get_Content S_OK null=true` (seq 14), status 200, echo length 0, handlers `POST /api/echo` 2 and `POST /api/report` 2. `streamUpload`: the same event (seq 19), status 200, echo length 0, handlers 3 and 3. Unchanged from stage 3. No `body-unsupported` event in any host.
+- `response_race` again covers only the delayed response after the error page.
+
+**Mixed views through the console** ([`windows/stage-4/mixed/`](windows/stage-4/mixed/), driver [`windows/stage-4/mixed.ps1`](windows/stage-4/mixed.ps1), 21:39 to 21:40 local): **72 of 72 checks pass** across `inprocess`, `loopback`, `attach` and the resident reopen. Each run starts `dfx2-mixer.exe -browser MODE -audition -paused` with its own `TEMP`, writes console commands to its stdin and reads its JSON lines; the mixer's own stdout and stderr are kept as `MODE.jsonl` and `MODE.stderr`, the checks in `MODE.result.json`. No input reached the page.
+
+- **Every mode:** `opened` A (native) and B (`kind: browser`, naming the mode), then `page` lines from B with channels a to f. `gain a 0.25` brought a page with a's fader at 0.25; `reorder` the order f e d c b a; `remove c` f e d b a; `insert c` f e d b a c; `delay 1500ms` a commands text showing `device delay 1500 ms`. **No `edit` or `command` record appears in any run:** external changes and reconciliation submitted nothing.
+- **`inprocess`:** B closed first, the model still took an external change, and closing A ended the process.
+- **`loopback`:** A closed first, `gain b 0.75` then reached B's page, and closing B ended the process.
+- **`attach`:** `fixture-server` `http://127.0.0.1:64098`. After `close B` the fixture answered `GET /api/state?view=probe` with 200 and six channels. `browser` opened C in attach mode, whose pages showed the same reordered model with a at 0.25, on the one fixture server (a single `fixture-server` line). After `close A` and `close C` the process exited and the probe could no longer connect.
+- **Resident:** with both windows closed the process stayed; `open` brought C and `browser` brought D, with new page lines; `gain a 0.4` reached D; `quit` exited 0.
+- **Every exit:** code 0, a `return` record with `commands_conserved: true` and 0 canceled, **an empty stderr (no mixer run printed the shutdown diagnostic)**, no `msedgewebview2` process left with the mixer as its parent, and no temporary storage left.
+- **A first attempt, kept in [`windows/stage-4/mixed-attempt-1/`](windows/stage-4/mixed-attempt-1/),** failed one check of 72, `inprocess`'s "native window A opened", through a driver bug: a log read that returned exactly one line unrolled to a string, so the scan indexed a character and skipped the first record. The mixer's own output there shows A opened 35 ms before B. The script now wraps every read as an array. The product checks were identical in both attempts.
+
+**Hands-on checklist (handoff item 4).** Not performed by the scripted run; console commands are not a substitute. Michael worked through the checklist with real mouse and keyboard on this host afterwards, the same day, with the clean-tree mixer `C:\Cygwin64\tmp\dfx2-mixer.exe`, and reported that everything worked fine. That is an operator report: no `edit` or `command` lines were collected from it, item 4's canceled-edit count was not recorded, and no defect was reported. The mixer stage 4 runner's own manual audition was not separately reported.
+
+**Limits.** No race detector or Node on this host; one display and one DPI. `mixed.ps1`'s browser-process check looks only for `msedgewebview2.exe` processes whose parent is the mixer; the browser matrix driver's fuller descendant accounting applies to the browser matrix alone. The resident check confirms the process alive 3 s after both closes, not a zero-window ownership record.
+
+**Findings.** None against the implementation: nothing native contradicted the modeled or Linux behavior, and W3's copy ran natively through the whole matrix. Two driver changes: the `stage4.ps1` gate budget and the new `mixed.ps1`.

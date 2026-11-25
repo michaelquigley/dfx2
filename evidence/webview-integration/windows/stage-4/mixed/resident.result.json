@@ -1,0 +1,142 @@
+{
+    "name":  "resident",
+    "flags":  "-browser inprocess -resident -audition -paused",
+    "log":  "C:\\Repos\\q\\products\\dfx2\\evidence\\webview-integration\\windows\\stage-4\\mixed\\resident.jsonl",
+    "err":  "C:\\Repos\\q\\products\\dfx2\\evidence\\webview-integration\\windows\\stage-4\\mixed\\resident.stderr",
+    "tmp":  "C:\\Repos\\q\\products\\dfx2\\evidence\\webview-integration\\windows\\stage-4\\mixed\\tmp-resident",
+    "cursor":  12,
+    "checks":  [
+                   {
+                       "check":  "native window A opened",
+                       "ok":  true,
+                       "detail":  ""
+                   },
+                   {
+                       "check":  "browser view B opened",
+                       "ok":  true,
+                       "detail":  ""
+                   },
+                   {
+                       "check":  "six channels a-f (page line from B)",
+                       "ok":  true,
+                       "detail":  "order abcdef; commands: 0 accepted, 0 applied, 0 rejected, 0 refused, 0 canceled, 0 outstanding · device delay 0 ms"
+                   },
+                   {
+                       "check":  "browser view B closed",
+                       "ok":  true,
+                       "detail":  ""
+                   },
+                   {
+                       "check":  "native window A closed",
+                       "ok":  true,
+                       "detail":  ""
+                   },
+                   {
+                       "check":  "process stays with zero windows",
+                       "ok":  true,
+                       "detail":  ""
+                   },
+                   {
+                       "check":  "open brings native window C",
+                       "ok":  true,
+                       "detail":  ""
+                   },
+                   {
+                       "check":  "browser brings view D",
+                       "ok":  true,
+                       "detail":  ""
+                   },
+                   {
+                       "check":  "new page lines from D (page line from D)",
+                       "ok":  true,
+                       "detail":  "order abcdef; commands: 0 accepted, 0 applied, 0 rejected, 0 refused, 0 canceled, 0 outstanding · device delay 0 ms"
+                   },
+                   {
+                       "check":  "view D follows the shared model (page line from D)",
+                       "ok":  true,
+                       "detail":  "order abcdef; commands: 0 accepted, 0 applied, 0 rejected, 0 refused, 0 canceled, 0 outstanding · device delay 0 ms"
+                   },
+                   {
+                       "check":  "exit code 0",
+                       "ok":  true,
+                       "detail":  "exit 0"
+                   },
+                   {
+                       "check":  "return record with commands_conserved",
+                       "ok":  true,
+                       "detail":  "{\"accepted\":0,\"applied\":0,\"canceled\":0,\"delay_ms\":0,\"outstanding\":0,\"refused\":0,\"reject_next\":0,\"rejected\":0}"
+                   },
+                   {
+                       "check":  "canceled count is 0",
+                       "ok":  true,
+                       "detail":  "canceled 0"
+                   },
+                   {
+                       "check":  "stderr empty apart from the shutdown diagnostic",
+                       "ok":  true,
+                       "detail":  "0 other line(s), 0 diagnostic(s)"
+                   },
+                   {
+                       "check":  "no browser process survived the mixer",
+                       "ok":  true,
+                       "detail":  "0 msedgewebview2 process(es) with the mixer as parent"
+                   },
+                   {
+                       "check":  "no temporary storage left",
+                       "ok":  true,
+                       "detail":  ""
+                   }
+               ],
+    "console":  [
+                    {
+                        "time":  "2026-11-24T21:40:00.7357259-05:00",
+                        "command":  "close B"
+                    },
+                    {
+                        "time":  "2026-11-24T21:40:07.3986398-05:00",
+                        "command":  "close A"
+                    },
+                    {
+                        "time":  "2026-11-24T21:40:10.5598689-05:00",
+                        "command":  "open"
+                    },
+                    {
+                        "time":  "2026-11-24T21:40:10.6726464-05:00",
+                        "command":  "browser"
+                    },
+                    {
+                        "time":  "2026-11-24T21:40:11.2602287-05:00",
+                        "command":  "gain a 0.4"
+                    },
+                    {
+                        "time":  "2026-11-24T21:40:11.5238441-05:00",
+                        "command":  "quit"
+                    }
+                ],
+    "mixer_pid":  9208,
+    "started":  "2026-11-24T21:40:00.0814020-05:00",
+    "mode":  "inprocess",
+    "exit_code":  0,
+    "commands":  {
+                     "accepted":  0,
+                     "applied":  0,
+                     "canceled":  0,
+                     "delay_ms":  0,
+                     "outstanding":  0,
+                     "refused":  0,
+                     "reject_next":  0,
+                     "rejected":  0
+                 },
+    "edit_records":  0,
+    "command_records":  0,
+    "shutdown_diagnostics":  [
+
+                             ],
+    "stderr":  [
+
+               ],
+    "leftovers":  [
+
+                  ],
+    "finished":  "2026-11-24T21:40:11.9092855-05:00"
+}

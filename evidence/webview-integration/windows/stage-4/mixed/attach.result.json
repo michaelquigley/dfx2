@@ -1,0 +1,190 @@
+{
+    "name":  "attach",
+    "flags":  "-browser attach -audition -paused",
+    "log":  "C:\\Repos\\q\\products\\dfx2\\evidence\\webview-integration\\windows\\stage-4\\mixed\\attach.jsonl",
+    "err":  "C:\\Repos\\q\\products\\dfx2\\evidence\\webview-integration\\windows\\stage-4\\mixed\\attach.stderr",
+    "tmp":  "C:\\Repos\\q\\products\\dfx2\\evidence\\webview-integration\\windows\\stage-4\\mixed\\tmp-attach",
+    "cursor":  18,
+    "checks":  [
+                   {
+                       "check":  "native window A opened",
+                       "ok":  true,
+                       "detail":  ""
+                   },
+                   {
+                       "check":  "browser view B opened in mode attach",
+                       "ok":  true,
+                       "detail":  ""
+                   },
+                   {
+                       "check":  "six channels a-f (page line from B)",
+                       "ok":  true,
+                       "detail":  "order abcdef; commands: 0 accepted, 0 applied, 0 rejected, 0 refused, 0 canceled, 0 outstanding · device delay 0 ms"
+                   },
+                   {
+                       "check":  "channel a\u0027s fader at 0.25 after an external gain (page line from B)",
+                       "ok":  true,
+                       "detail":  "order abcdef; commands: 0 accepted, 0 applied, 0 rejected, 0 refused, 0 canceled, 0 outstanding · device delay 0 ms"
+                   },
+                   {
+                       "check":  "reversed order after reorder (page line from B)",
+                       "ok":  true,
+                       "detail":  "order fedcba; commands: 0 accepted, 0 applied, 0 rejected, 0 refused, 0 canceled, 0 outstanding · device delay 0 ms"
+                   },
+                   {
+                       "check":  "channel c gone after remove c (page line from B)",
+                       "ok":  true,
+                       "detail":  "order fedba; commands: 0 accepted, 0 applied, 0 rejected, 0 refused, 0 canceled, 0 outstanding · device delay 0 ms"
+                   },
+                   {
+                       "check":  "channel c last after insert c (page line from B)",
+                       "ok":  true,
+                       "detail":  "order fedbac; commands: 0 accepted, 0 applied, 0 rejected, 0 refused, 0 canceled, 0 outstanding · device delay 0 ms"
+                   },
+                   {
+                       "check":  "commands text shows the 1500 ms delay (page line from B)",
+                       "ok":  true,
+                       "detail":  "order fedbac; commands: 0 accepted, 0 applied, 0 rejected, 0 refused, 0 canceled, 0 outstanding · device delay 1500 ms"
+                   },
+                   {
+                       "check":  "external changes and reconciliation submitted no edit or command",
+                       "ok":  true,
+                       "detail":  "0 edit/command record(s) so far"
+                   },
+                   {
+                       "check":  "fixture-server line",
+                       "ok":  true,
+                       "detail":  "http://127.0.0.1:64098"
+                   },
+                   {
+                       "check":  "attached view B closed",
+                       "ok":  true,
+                       "detail":  ""
+                   },
+                   {
+                       "check":  "fixture server answers 200 after its attached view closed",
+                       "ok":  true,
+                       "detail":  "status 200"
+                   },
+                   {
+                       "check":  "view C opened in attach mode",
+                       "ok":  true,
+                       "detail":  ""
+                   },
+                   {
+                       "check":  "view C shows the same model (page line from C)",
+                       "ok":  true,
+                       "detail":  "order fedbac; commands: 0 accepted, 0 applied, 0 rejected, 0 refused, 0 canceled, 0 outstanding · device delay 1500 ms"
+                   },
+                   {
+                       "check":  "one fixture server for both attached views",
+                       "ok":  true,
+                       "detail":  "1 fixture-server line(s)"
+                   },
+                   {
+                       "check":  "exit code 0",
+                       "ok":  true,
+                       "detail":  "exit 0"
+                   },
+                   {
+                       "check":  "return record with commands_conserved",
+                       "ok":  true,
+                       "detail":  "{\"accepted\":0,\"applied\":0,\"canceled\":0,\"delay_ms\":1500,\"outstanding\":0,\"refused\":0,\"reject_next\":0,\"rejected\":0}"
+                   },
+                   {
+                       "check":  "canceled count is 0",
+                       "ok":  true,
+                       "detail":  "canceled 0"
+                   },
+                   {
+                       "check":  "stderr empty apart from the shutdown diagnostic",
+                       "ok":  true,
+                       "detail":  "0 other line(s), 0 diagnostic(s)"
+                   },
+                   {
+                       "check":  "no browser process survived the mixer",
+                       "ok":  true,
+                       "detail":  "0 msedgewebview2 process(es) with the mixer as parent"
+                   },
+                   {
+                       "check":  "no temporary storage left",
+                       "ok":  true,
+                       "detail":  ""
+                   },
+                   {
+                       "check":  "fixture server stopped with the application",
+                       "ok":  true,
+                       "detail":  "status 0 Unable to connect to the remote server"
+                   }
+               ],
+    "console":  [
+                    {
+                        "time":  "2026-11-24T21:39:52.8530114-05:00",
+                        "command":  "gain a 0.25"
+                    },
+                    {
+                        "time":  "2026-11-24T21:39:53.1116059-05:00",
+                        "command":  "reorder"
+                    },
+                    {
+                        "time":  "2026-11-24T21:39:53.4726668-05:00",
+                        "command":  "remove c"
+                    },
+                    {
+                        "time":  "2026-11-24T21:39:53.8476463-05:00",
+                        "command":  "insert c"
+                    },
+                    {
+                        "time":  "2026-11-24T21:39:54.2118129-05:00",
+                        "command":  "delay 1500ms"
+                    },
+                    {
+                        "time":  "2026-11-24T21:39:54.5783662-05:00",
+                        "command":  "close B"
+                    },
+                    {
+                        "time":  "2026-11-24T21:39:55.0046411-05:00",
+                        "command":  "browser"
+                    },
+                    {
+                        "time":  "2026-11-24T21:39:55.5316992-05:00",
+                        "command":  "close A"
+                    },
+                    {
+                        "time":  "2026-11-24T21:39:55.5336979-05:00",
+                        "command":  "close C"
+                    }
+                ],
+    "mixer_pid":  5984,
+    "started":  "2026-11-24T21:39:52.2371920-05:00",
+    "mode":  "attach",
+    "fixture_url":  "http://127.0.0.1:64098",
+    "probe_after_close":  200,
+    "exit_code":  0,
+    "commands":  {
+                     "accepted":  0,
+                     "applied":  0,
+                     "canceled":  0,
+                     "delay_ms":  1500,
+                     "outstanding":  0,
+                     "refused":  0,
+                     "reject_next":  0,
+                     "rejected":  0
+                 },
+    "edit_records":  0,
+    "command_records":  0,
+    "shutdown_diagnostics":  [
+
+                             ],
+    "stderr":  [
+
+               ],
+    "leftovers":  [
+
+                  ],
+    "finished":  "2026-11-24T21:39:55.9405671-05:00",
+    "probe_after_exit":  {
+                             "status":  0,
+                             "error":  "Unable to connect to the remote server"
+                         }
+}

@@ -1,0 +1,17 @@
+{
+    "revision":  "ebfc7ab2909709655d2d71c195a4940610ecf49f",
+    "mixer":  "C:\\Cygwin64\\tmp\\dfx2-mixer.exe",
+    "mixer_sha256":  "5f24319376a8c5bca627b1a45dcfdf0412283255d5b4544192defeccd80751c2",
+    "go":  "go version go1.27.4 windows/amd64",
+    "cgo_enabled":  "0",
+    "os":  "Microsoft Windows [Version 10.0.19045.6466]",
+    "webview2_runtime":  "151.0.4129.93",
+    "powershell":  "5.1.19041.6456",
+    "session":  "\u003erdp-tcp#5 Michael 2 Active",
+    "screen":  "3840x1600",
+    "system_dpi":  96,
+    "node":  "not installed",
+    "driver":  "evidence/webview-integration/windows/stage-4/mixed.ps1",
+    "input":  "console only; no mouse or keyboard reached the page",
+    "time":  "2026-11-24T21:42:29.3024048-05:00"
+}

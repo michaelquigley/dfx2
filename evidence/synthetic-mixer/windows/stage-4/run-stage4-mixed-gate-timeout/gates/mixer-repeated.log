@@ -1,0 +1,79 @@
+go test ./examples/mixer -count=100 -timeout=600s
+exit 1
+panic: test timed out after 10m0s
+	running tests:
+		TestAStalledFixtureBodyCannotHoldShutdownOpen (0s)
+
+goroutine 20799 [running]:
+testing.(*M).startAlarm.func1()
+	C:/Program Files/Go/src/testing/testing.go:2961 +0x34a
+created by time.goFunc
+	C:/Program Files/Go/src/time/sleep.go:182 +0x2d
+
+goroutine 1 [chan receive, locked to thread]:
+testing.(*T).Run(0xdeaa96a0c00, {0x7ff64cc4b2fe?, 0xdeaa8bb7aa8?}, 0x7ff64d1a40d0)
+	C:/Program Files/Go/src/testing/testing.go:2268 +0x4d2
+testing.runTests.func1(0xdeaa96a0c00)
+	C:/Program Files/Go/src/testing/testing.go:2744 +0x37
+testing.tRunner(0xdeaa96a0c00, 0xdeaa8bb7bc8)
+	C:/Program Files/Go/src/testing/testing.go:2195 +0xc3
+testing.runTests({0x7ff64cc3fb2f, 0x1e}, {0x7ff64cc4b32b, 0x2d}, 0xdeaa8afa9c0, {0x7ff64d281508, 0x16, 0x16}, {0xc2b9af21d5757370, 0x8bb30467b5, ...})
+	C:/Program Files/Go/src/testing/testing.go:2742 +0x505
+testing.(*M).Run(0xdeaa8b745a0)
+	C:/Program Files/Go/src/testing/testing.go:2602 +0x6af
+main.main()
+	_testmain.go:88 +0x9b
+
+goroutine 20816 [select]:
+github.com/michaelquigley/dfx2/internal/appcore.(*App).supervise(0xdeaa8f8e2c0)
+	C:/Repos/q/products/dfx2/internal/appcore/supervisor.go:116 +0x6e5
+created by github.com/michaelquigley/dfx2/internal/appcore.run in goroutine 20815
+	C:/Repos/q/products/dfx2/internal/appcore/run.go:72 +0x3c5
+
+goroutine 20798 [sleep]:
+time.Sleep(0x1dcd6500)
+	C:/Program Files/Go/src/runtime/time.go:368 +0x167
+net/http.(*conn).closeWriteAndWait(0xdeaa8f8c1b0)
+	C:/Program Files/Go/src/net/http/server.go:1870 +0x59
+net/http.(*conn).serve(0xdeaa8f8c1b0, {0x7ff64d1a2058, 0xdeaa8b8e1e0})
+	C:/Program Files/Go/src/net/http/server.go:2172 +0x907
+created by net/http.(*Server).Serve in goroutine 20489
+	C:/Program Files/Go/src/net/http/server.go:3608 +0x4fd
+
+goroutine 20753 [select]:
+github.com/michaelquigley/dfx2/examples/mixer.TestAStalledFixtureBodyCannotHoldShutdownOpen(0xdeaa8c62000)
+	C:/Repos/q/products/dfx2/examples/mixer/browser_test.go:390 +0x405
+testing.tRunner(0xdeaa8c62000, 0x7ff64d1a40d0)
+	C:/Program Files/Go/src/testing/testing.go:2195 +0xc3
+created by testing.(*T).Run in goroutine 1
+	C:/Program Files/Go/src/testing/testing.go:2260 +0x4b4
+
+goroutine 20815 [chan receive]:
+github.com/michaelquigley/dfx2/internal/platform/fake.(*Backend).Pump(0xdeaa8f8e000)
+	C:/Repos/q/products/dfx2/internal/platform/fake/fake.go:328 +0x16f
+github.com/michaelquigley/dfx2/internal/appcore.run({0x7ff64d1a2090, 0xdeaa8fc6000}, {0x43?, 0x7ff64d1a4248?}, 0xdeaa8f9bfa8, {0x7ff64d1a3928, 0xdeaa8f8e000}, {0x7ff64d19f590, 0x7ff64d2e8a80})
+	C:/Repos/q/products/dfx2/internal/appcore/run.go:104 +0x79f
+github.com/michaelquigley/dfx2/internal/appcore.RunBackend(...)
+	C:/Repos/q/products/dfx2/internal/appcore/run.go:48
+github.com/michaelquigley/dfx2/examples/mixer.runMixer.func6()
+	C:/Repos/q/products/dfx2/examples/mixer/mixer_test.go:126 +0x69
+created by github.com/michaelquigley/dfx2/examples/mixer.runMixer in goroutine 20753
+	C:/Repos/q/products/dfx2/examples/mixer/mixer_test.go:125 +0x7f0
+
+goroutine 20797 [select]:
+net/http.(*Server).Shutdown(0xdeaa8b98000, {0x7ff64d1a1fb0, 0x7ff64d2e8a80})
+	C:/Program Files/Go/src/net/http/server.go:3308 +0x295
+github.com/michaelquigley/dfx2/examples/mixer.(*mixer).startFixture.func1.3()
+	C:/Repos/q/products/dfx2/examples/mixer/browser.go:238 +0x29
+github.com/michaelquigley/dfx2/examples/mixer.(*mixer).startFixture.func1({0x7ff64d1a2090, 0xdeaa8fc6050})
+	C:/Repos/q/products/dfx2/examples/mixer/browser.go:245 +0x2fd
+github.com/michaelquigley/dfx2/internal/appcore.(*App).start.func1.1()
+	C:/Repos/q/products/dfx2/internal/appcore/window.go:192 +0x23
+github.com/michaelquigley/dfx2/internal/appcore.invoke({0xdeaa8cc2018?, 0x7ff64cc281d1?}, 0x0?)
+	C:/Repos/q/products/dfx2/internal/appcore/run.go:206 +0x62
+github.com/michaelquigley/dfx2/internal/appcore.(*App).start.func1()
+	C:/Repos/q/products/dfx2/internal/appcore/window.go:192 +0x85
+created by github.com/michaelquigley/dfx2/internal/appcore.(*App).start in goroutine 20815
+	C:/Repos/q/products/dfx2/internal/appcore/window.go:191 +0x255
+FAIL	github.com/michaelquigley/dfx2/examples/mixer	600.170s
+FAIL

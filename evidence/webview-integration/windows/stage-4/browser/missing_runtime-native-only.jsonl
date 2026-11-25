@@ -1,0 +1,11 @@
+# dfx2-webview.exe -resident (TEMP=C:\Cygwin64\tmp\dfx2-wv-matrix-1472903891\missing_runtime\native-only)
+{"event":"ready","gc_signal":60,"pid":8608,"time":"2026-11-24T21:36:08.7235622-05:00"}
+{"command":"native N"}
+{"command":"status"}
+{"core":{"browsers":0,"cleanups":0,"closing":false,"native_completions":0,"tasks":1,"windows":1},"event":"status","native_counters":{"Wakes":4,"Dispatches":4,"Windows":1,"Retired":0,"DispatchTargets":1,"Presents":0,"Paints":0,"PaintFailures":0,"ModalActive":false,"ModalLoops":0,"ModalTurns":0,"ModalTimers":0,"ModalRefusals":0,"Problem":""},"time":"2026-11-24T21:36:09.7257809-05:00","windows":{"N":{"mode":"native"}}}
+{"command":"close N"}
+{"close":"","event":"closed","mode":"native","time":"2026-11-24T21:36:09.7398186-05:00","window":"N"}
+{"command":"status"}
+{"core":{"browsers":0,"cleanups":0,"closing":false,"native_completions":0,"tasks":1,"windows":0},"event":"status","native_counters":{"Wakes":8,"Dispatches":8,"Windows":0,"Retired":0,"DispatchTargets":1,"Presents":0,"Paints":0,"PaintFailures":0,"ModalActive":false,"ModalLoops":0,"ModalTurns":0,"ModalTimers":0,"ModalRefusals":0,"Problem":""},"time":"2026-11-24T21:36:09.7403491-05:00","windows":{}}
+{"command":"quit"}
+{"error":"\u003cnil\u003e","event":"return","time":"2026-11-24T21:36:09.7409007-05:00"}

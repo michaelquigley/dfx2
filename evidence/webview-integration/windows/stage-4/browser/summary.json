@@ -1,0 +1,1922 @@
+{
+ "cases": [
+  {
+   "case": "owned_basics",
+   "ok": true,
+   "checks": [
+    {
+     "check": "inprocess page, assets, query, POST echo, 404, no visible cookie",
+     "ok": true,
+     "detail": {
+      "result": {
+       "cookie": "",
+       "css": true,
+       "echo": {
+        "length": 1005,
+        "method": "POST",
+        "sha256": "a5903776f0c8d72f5b1e8689519fc8d9d6317785a20e31659786c8d8703a6b8c"
+       },
+       "img": true,
+       "imgWidth": 48,
+       "missing": 404,
+       "origin": "https://dfx2.invalid",
+       "query": "é\u0026ü"
+      }
+     }
+    },
+    {
+     "check": "loopback page, assets, query, POST echo, 404, no visible cookie",
+     "ok": true,
+     "detail": {
+      "result": {
+       "cookie": "",
+       "css": true,
+       "echo": {
+        "length": 1005,
+        "method": "POST",
+        "sha256": "a5903776f0c8d72f5b1e8689519fc8d9d6317785a20e31659786c8d8703a6b8c"
+       },
+       "img": true,
+       "imgWidth": 48,
+       "missing": 404,
+       "origin": "http://127.0.0.1:63785",
+       "query": "é\u0026ü"
+      }
+     }
+    },
+    {
+     "check": "in-process origin",
+     "ok": true,
+     "detail": {
+      "start": "https://dfx2.invalid/"
+     }
+    },
+    {
+     "check": "only the loopback endpoint listens",
+     "ok": true,
+     "detail": {
+      "listeners": [
+       "127.0.0.1:63785"
+      ]
+     }
+    },
+    {
+     "check": "uncredentialed loopback clients refused with 403",
+     "ok": true,
+     "detail": {
+      "statuses": {
+       "none": 403,
+       "wrong credential": 403,
+       "wrong credential and Origin": 403
+      }
+     }
+    },
+    {
+     "check": "refusals never reached the handler",
+     "ok": true,
+     "detail": {
+      "endpoint": "loopback origin=http://127.0.0.1:63785 connections=2/32 handlers=0/16 serving=true closed=false drained=false refused-connections=0 busy=0 unauthorized=3 upgrades=0",
+      "handler": {
+       "GET /": 2,
+       "GET /api/missing": 1,
+       "GET /api/query": 1,
+       "GET /favicon.ico": 1,
+       "GET /logo.svg": 2,
+       "GET /probe.css": 2,
+       "GET /probe.js": 2,
+       "POST /api/echo": 1,
+       "POST /api/report": 1
+      }
+     }
+    },
+    {
+     "check": "loopback streams the first chunk before the handler returns",
+     "ok": true,
+     "detail": {
+      "stream": {
+       "chunks": [
+        "chunk-1\n",
+        "chunk-2 after ack\n"
+       ],
+       "status": 200
+      }
+     }
+    },
+    {
+     "check": "closing the in-process window leaves the loopback window listening",
+     "ok": true,
+     "detail": {
+      "listeners": [
+       "127.0.0.1:63785"
+      ]
+     }
+    }
+   ],
+   "detail": {
+    "inprocess_origin": "https://dfx2.invalid",
+    "loopback_origin": "http://127.0.0.1:63785",
+    "screen_capture": {
+     "error": "",
+     "file": "screen-loopback.png",
+     "session_state": "Active"
+    }
+   },
+   "hosts": [
+    {
+     "host": "owned_basics-host",
+     "exit": 0,
+     "error": "\u003cnil\u003e",
+     "temp_leftovers": null,
+     "browser_pids": [
+      4600
+     ]
+    }
+   ],
+   "seconds": 3.5
+  },
+  {
+   "case": "in_process_alone",
+   "ok": true,
+   "checks": [
+    {
+     "check": "in-process host listens on nothing",
+     "ok": true,
+     "detail": {
+      "listeners": null
+     }
+    }
+   ],
+   "hosts": [
+    {
+     "host": "in_process_alone-host",
+     "exit": 0,
+     "error": "\u003cnil\u003e",
+     "shutdown_diagnostics": [
+      "2026/11/24 21:33:48 dfx2 shutdown outstanding: windows=1 app-tasks=0 native-completions=0 wake-pending=false wake-failures=0 release-pending=false failure=\u003cnil\u003e; window=2 state=closing native=true creating=false content-release-pending=false; window=2 browser attached=true attaching=false ready=true close-started=true released=false endpoint-started=true endpoint-drained=true cleanups=[] endpoint=[in-process admitted=0/16 native=0 handlers=0 reading=0 refusals=0/16 reserved=0/66764736 closed=true drained=true] native=[webview2 151.0.4129.93 navigated=true closing=true controller-closed=true released=false native-requests=0 body-readers=0 response-streams=0 async=1]; dispatch-targets=1 native-problem=\"\""
+     ],
+     "temp_leftovers": null,
+     "browser_pids": [
+      4820
+     ]
+    }
+   ],
+   "seconds": 7.3
+  },
+  {
+   "case": "confinement",
+   "ok": true,
+   "checks": [
+    {
+     "check": "subresources, fetches, sockets, frames, workers and redirects reached no collector",
+     "ok": true,
+     "detail": {
+      "hits": null
+     }
+    },
+    {
+     "check": "no page reached another window's endpoint",
+     "ok": true,
+     "detail": {
+      "other_handler": {
+       "GET /": 1,
+       "GET /favicon.ico": 1,
+       "GET /logo.svg": 1,
+       "GET /probe.css": 1,
+       "GET /probe.js": 1
+      }
+     }
+    },
+    {
+     "check": "L location stays on its origin",
+     "ok": true,
+     "detail": {
+      "uri": "http://127.0.0.1:63799/?run=armed\u0026id=armed-51200\u0026then=navigate\u0026how=location\u0026collector=http%3A%2F%2F127.0.0.1%3A63798"
+     }
+    },
+    {
+     "check": "L redirect stays on its origin",
+     "ok": true,
+     "detail": {
+      "uri": "http://127.0.0.1:63799/?run=armed\u0026id=armed-3300\u0026collector=http%3A%2F%2F127.0.0.1%3A63798\u0026then=navigate\u0026how=redirect"
+     }
+    },
+    {
+     "check": "L popup stays on its origin",
+     "ok": true,
+     "detail": {
+      "uri": "http://127.0.0.1:63799/?run=armed\u0026id=armed-21600\u0026then=navigate\u0026how=popup\u0026collector=http%3A%2F%2F127.0.0.1%3A63798"
+     }
+    },
+    {
+     "check": "L form stays on its origin",
+     "ok": true,
+     "detail": {
+      "uri": "http://127.0.0.1:63799/?run=armed\u0026id=armed-29800\u0026then=navigate\u0026how=form\u0026collector=http%3A%2F%2F127.0.0.1%3A63798"
+     }
+    },
+    {
+     "check": "P location stays on its origin",
+     "ok": true,
+     "detail": {
+      "uri": "https://dfx2.invalid/?run=armed\u0026id=armed-92400\u0026collector=http%3A%2F%2F127.0.0.1%3A63798\u0026then=navigate\u0026how=location"
+     }
+    },
+    {
+     "check": "P redirect stays on its origin",
+     "ok": true,
+     "detail": {
+      "uri": "https://dfx2.invalid/?run=armed\u0026id=armed-57900\u0026then=navigate\u0026how=redirect\u0026collector=http%3A%2F%2F127.0.0.1%3A63798"
+     }
+    },
+    {
+     "check": "P popup stays on its origin",
+     "ok": true,
+     "detail": {
+      "uri": "https://dfx2.invalid/?run=armed\u0026id=armed-43800\u0026then=navigate\u0026how=popup\u0026collector=http%3A%2F%2F127.0.0.1%3A63798"
+     }
+    },
+    {
+     "check": "P form stays on its origin",
+     "ok": true,
+     "detail": {
+      "uri": "https://dfx2.invalid/?run=armed\u0026id=armed-39300\u0026then=navigate\u0026how=form\u0026collector=http%3A%2F%2F127.0.0.1%3A63798"
+     }
+    },
+    {
+     "check": "navigation attempts reached no collector: interception is the network boundary",
+     "ok": true,
+     "detail": {
+      "hits": null
+     }
+    }
+   ],
+   "detail": {
+    "page_views": {
+     "inprocess": {
+      "beacon": "true",
+      "css": "added",
+      "eventsource": "error",
+      "fetch": "threw TypeError",
+      "iframe": "added",
+      "iframe-same": "loaded",
+      "img": "added",
+      "other-endpoint": "threw TypeError",
+      "redirect-fetch": "threw TypeError",
+      "redirect-img": "added",
+      "script": "added",
+      "websocket": "error",
+      "worker": "threw SecurityError",
+      "xhr": "0"
+     },
+     "loopback": {
+      "beacon": "true",
+      "css": "added",
+      "eventsource": "error",
+      "fetch": "threw TypeError",
+      "iframe": "added",
+      "iframe-same": "loaded",
+      "img": "added",
+      "other-endpoint": "threw TypeError",
+      "redirect-fetch": "threw TypeError",
+      "redirect-img": "added",
+      "script": "added",
+      "websocket": "error",
+      "worker": "threw SecurityError",
+      "xhr": "0"
+     }
+    },
+    "refusals": {
+     "L-form": null,
+     "L-location": [
+      {
+       "kind": "navigation-refused",
+       "seq": 17,
+       "uri": "http://127.0.0.1:63798/nav"
+      },
+      {
+       "detail": "1",
+       "kind": "blocked",
+       "method": "GET",
+       "seq": 19,
+       "uri": "http://127.0.0.1:63798/nav"
+      }
+     ],
+     "L-popup": [
+      {
+       "kind": "popup-refused",
+       "seq": 34
+      }
+     ],
+     "L-redirect": [
+      {
+       "detail": "redirect",
+       "kind": "navigation-refused",
+       "seq": 26,
+       "uri": "http://127.0.0.1:63798/redirect-nav"
+      },
+      {
+       "detail": "1",
+       "kind": "blocked",
+       "method": "GET",
+       "seq": 28,
+       "uri": "http://127.0.0.1:63798/redirect-nav"
+      }
+     ],
+     "P-form": null,
+     "P-location": [
+      {
+       "kind": "navigation-refused",
+       "seq": 16,
+       "uri": "http://127.0.0.1:63798/nav"
+      },
+      {
+       "detail": "1",
+       "kind": "blocked",
+       "method": "GET",
+       "seq": 18,
+       "uri": "http://127.0.0.1:63798/nav"
+      }
+     ],
+     "P-popup": [
+      {
+       "kind": "popup-refused",
+       "seq": 33
+      }
+     ],
+     "P-redirect": [
+      {
+       "detail": "redirect",
+       "kind": "navigation-refused",
+       "seq": 25,
+       "uri": "http://127.0.0.1:63798/redirect-nav"
+      },
+      {
+       "detail": "1",
+       "kind": "blocked",
+       "method": "GET",
+       "seq": 27,
+       "uri": "http://127.0.0.1:63798/redirect-nav"
+      }
+     ]
+    }
+   },
+   "hosts": [
+    {
+     "host": "confinement-host",
+     "exit": 0,
+     "error": "\u003cnil\u003e",
+     "temp_leftovers": null,
+     "browser_pids": [
+      9724,
+      9312,
+      9916
+     ]
+    }
+   ],
+   "seconds": 20.4
+  },
+  {
+   "case": "storage",
+   "ok": true,
+   "checks": [
+    {
+     "check": "A stored cookie, local and session storage",
+     "ok": true,
+     "detail": {
+      "result": {
+       "cookie": "vis=a",
+       "local": "a",
+       "session": "a"
+      }
+     }
+    },
+    {
+     "check": "B sees none of A's storage",
+     "ok": true,
+     "detail": {
+      "result": {
+       "cookie": "",
+       "local": null,
+       "session": null
+      }
+     }
+    },
+    {
+     "check": "A keeps its session across navigation",
+     "ok": true,
+     "detail": {
+      "result": {
+       "cookie": "vis=a",
+       "local": "a",
+       "session": "a"
+      }
+     }
+    },
+    {
+     "check": "loopback page cookie kept across navigation",
+     "ok": true,
+     "detail": {
+      "reread": {
+       "cookie": "vis=l1",
+       "local": "l1",
+       "session": "l1"
+      },
+      "set": {
+       "cookie": "vis=l1",
+       "local": "l1",
+       "session": "l1"
+      }
+     }
+    },
+    {
+     "check": "loopback windows share no cookies across ports",
+     "ok": true,
+     "detail": {
+      "result": {
+       "cookie": "",
+       "local": null,
+       "session": null
+      }
+     }
+    },
+    {
+     "check": "a reopened window starts empty",
+     "ok": true,
+     "detail": {
+      "result": {
+       "cookie": "",
+       "local": null,
+       "session": null
+      }
+     }
+    }
+   ],
+   "detail": {
+    "cache_observation": {
+     "A-first": {
+      "count": "1"
+     },
+     "A-handler": 2,
+     "A-second": {
+      "count": "2"
+     },
+     "B-first": {
+      "count": "1"
+     }
+    }
+   },
+   "hosts": [
+    {
+     "host": "storage-host",
+     "exit": 0,
+     "error": "\u003cnil\u003e",
+     "shutdown_diagnostics": [
+      "2026/11/24 21:34:19 dfx2 shutdown outstanding: windows=1 app-tasks=0 native-completions=0 wake-pending=false wake-failures=0 release-pending=false failure=\u003cnil\u003e; window=54 state=closing native=true creating=false content-release-pending=false; window=54 browser attached=true attaching=false ready=true close-started=true released=false endpoint-started=true endpoint-drained=true cleanups=[] endpoint=[in-process admitted=0/16 native=0 handlers=0 reading=0 refusals=0/16 reserved=0/66764736 closed=true drained=true] native=[webview2 151.0.4129.93 navigated=true closing=true controller-closed=true released=false native-requests=0 body-readers=0 response-streams=0 async=1]; dispatch-targets=1 native-problem=\"\""
+     ],
+     "temp_leftovers": null,
+     "browser_pids": [
+      8364
+     ]
+    }
+   ],
+   "seconds": 10.7
+  },
+  {
+   "case": "error_pages_loopback",
+   "ok": true,
+   "checks": [
+    {
+     "check": "GET failure offers Retry",
+     "ok": true,
+     "detail": {
+      "event": {
+       "detail": "status 8 http 0",
+       "kind": "error-page",
+       "method": "GET",
+       "retry": true,
+       "seq": 12,
+       "uri": "http://127.0.0.1:63849/api/fail"
+      }
+     }
+    },
+    {
+     "check": "Retry repeated the failed GET",
+     "ok": true,
+     "detail": {
+      "event": {
+       "detail": "status 8 http 0",
+       "kind": "error-page",
+       "method": "GET",
+       "retry": true,
+       "seq": 18,
+       "uri": "http://127.0.0.1:63849/api/fail"
+      }
+     }
+    },
+    {
+     "check": "POST failure withholds Retry",
+     "ok": true,
+     "detail": {
+      "event": {
+       "detail": "status 8 http 0",
+       "kind": "error-page",
+       "method": "POST",
+       "seq": 32,
+       "uri": "http://127.0.0.1:63849/api/fail"
+      }
+     }
+    },
+    {
+     "check": "no error-page action replayed the POST",
+     "ok": true,
+     "detail": {
+      "handler": {
+       "GET /": 5,
+       "GET /api/fail": 6,
+       "GET /favicon.ico": 1,
+       "GET /logo.svg": 5,
+       "GET /probe.css": 5,
+       "GET /probe.js": 5,
+       "POST /api/fail": 3,
+       "POST /api/report": 2
+      },
+      "posts_before": 3
+     }
+    },
+    {
+     "check": "303 target is a retryable GET",
+     "ok": true,
+     "detail": {
+      "event": {
+       "detail": "status 8 http 303",
+       "kind": "error-page",
+       "method": "GET",
+       "retry": true,
+       "seq": 51,
+       "uri": "http://127.0.0.1:63849/api/fail"
+      }
+     }
+    },
+    {
+     "check": "Retry after a 303 resubmitted no POST",
+     "ok": true,
+     "detail": {
+      "handler": {
+       "GET /": 6,
+       "GET /api/fail": 12,
+       "GET /favicon.ico": 1,
+       "GET /logo.svg": 6,
+       "GET /probe.css": 6,
+       "GET /probe.js": 6,
+       "POST /api/fail": 3,
+       "POST /api/report": 3,
+       "POST /api/see-other": 1
+      }
+     }
+    },
+    {
+     "check": "307 keeps the POST and withholds Retry",
+     "ok": true,
+     "detail": {
+      "event": {
+       "detail": "status 8 http 307",
+       "kind": "error-page",
+       "method": "POST",
+       "seq": 66,
+       "uri": "http://127.0.0.1:63849/api/fail"
+      }
+     }
+    },
+    {
+     "check": "Return to start after a 307 resubmitted no POST",
+     "ok": true,
+     "detail": {
+      "handler": {
+       "GET /": 8,
+       "GET /api/fail": 12,
+       "GET /favicon.ico": 1,
+       "GET /logo.svg": 8,
+       "GET /probe.css": 8,
+       "GET /probe.js": 8,
+       "POST /api/fail": 6,
+       "POST /api/report": 4,
+       "POST /api/see-other": 1,
+       "POST /api/temporary": 1
+      }
+     }
+    },
+    {
+     "check": "404 page shown as an ordinary page",
+     "ok": true
+    },
+    {
+     "check": "500 page shown as an ordinary page",
+     "ok": true
+    }
+   ],
+   "detail": {
+    "handler": {
+     "GET /": 8,
+     "GET /api/fail": 15,
+     "GET /api/status": 2,
+     "GET /favicon.ico": 1,
+     "GET /logo.svg": 8,
+     "GET /probe.css": 8,
+     "GET /probe.js": 8,
+     "POST /api/fail": 6,
+     "POST /api/report": 4,
+     "POST /api/see-other": 1,
+     "POST /api/temporary": 1
+    },
+    "screen_capture": {
+     "error": "",
+     "file": "screen-error-page.png",
+     "session_state": "Active"
+    },
+    "transport_redelivery": {
+     "GET /api/fail": 12,
+     "POST /api/fail": 6,
+     "POST /api/temporary": 1
+    }
+   },
+   "hosts": [
+    {
+     "host": "error_pages_loopback-host",
+     "exit": 0,
+     "error": "\u003cnil\u003e",
+     "temp_leftovers": null,
+     "browser_pids": [
+      3760
+     ]
+    }
+   ],
+   "seconds": 4.7
+  },
+  {
+   "case": "error_actions_same_uri",
+   "ok": true,
+   "checks": [
+    {
+     "check": "initial failure offers Retry",
+     "ok": true,
+     "detail": {
+      "event": {
+       "detail": "status 8 http 0",
+       "kind": "error-page",
+       "method": "GET",
+       "retry": true,
+       "seq": 8,
+       "uri": "http://127.0.0.1:63874/recover"
+      }
+     }
+    },
+    {
+     "check": "old retry is refused after the same-URI recovery",
+     "ok": true,
+     "detail": {
+      "event": {
+       "command": "action X retry",
+       "error": "no error page is showing",
+       "event": "error",
+       "time": "2026-11-24T21:34:26.7616844-05:00"
+      }
+     }
+    },
+    {
+     "check": "old start is refused after the same-URI recovery",
+     "ok": true,
+     "detail": {
+      "event": {
+       "command": "action X start",
+       "error": "no error page is showing",
+       "event": "error",
+       "time": "2026-11-24T21:34:26.7626795-05:00"
+      }
+     }
+    }
+   ],
+   "hosts": [
+    {
+     "host": "error_actions_same_uri-host",
+     "exit": 0,
+     "error": "\u003cnil\u003e",
+     "temp_leftovers": null,
+     "browser_pids": [
+      9080
+     ]
+    }
+   ],
+   "seconds": 1.4
+  },
+  {
+   "case": "attachment",
+   "ok": true,
+   "checks": [
+    {
+     "check": "refused navigations leave the window on its service",
+     "ok": true,
+     "detail": {
+      "outside": {
+       "kind": "navigation-refused",
+       "seq": 6,
+       "uri": "http://127.0.0.1:63883/outside"
+      },
+      "redirect": {
+       "detail": "redirect",
+       "kind": "navigation-refused",
+       "seq": 10,
+       "uri": "http://127.0.0.1:63883/redirected"
+      },
+      "uri": "http://127.0.0.1:63884/"
+     }
+    },
+    {
+     "check": "attached GET failure offers Retry",
+     "ok": true,
+     "detail": {
+      "event": {
+       "detail": "status 8 http 0",
+       "kind": "error-page",
+       "method": "GET",
+       "retry": true,
+       "seq": 16,
+       "uri": "http://127.0.0.1:63884/fail"
+      }
+     }
+    },
+    {
+     "check": "attached POST failure withholds Retry",
+     "ok": true,
+     "detail": {
+      "event": {
+       "detail": "status 8 http 0",
+       "kind": "error-page",
+       "method": "POST",
+       "seq": 28,
+       "uri": "http://127.0.0.1:63884/fail-post"
+      }
+     }
+    },
+    {
+     "check": "Return to start resubmitted no POST",
+     "ok": true,
+     "detail": {
+      "posts_delivered_by_transport": 3
+     }
+    },
+    {
+     "check": "the service is still answering after its window closed",
+     "ok": true
+    }
+   ],
+   "detail": {
+    "collector_hits_after_refused_navigations": [
+     {
+      "method": "GET",
+      "path": "/outside",
+      "dest": "document",
+      "remote": "127.0.0.1:63888",
+      "t": "21:34:27.786"
+     },
+     {
+      "method": "GET",
+      "path": "/redirected",
+      "dest": "document",
+      "remote": "127.0.0.1:63892",
+      "t": "21:34:27.991"
+     }
+    ],
+    "service_requests": 16
+   },
+   "hosts": [
+    {
+     "host": "attachment-host",
+     "exit": 0,
+     "error": "\u003cnil\u003e",
+     "temp_leftovers": null
+    }
+   ],
+   "seconds": 4.2
+  },
+  {
+   "case": "response_race",
+   "ok": true,
+   "checks": [
+    {
+     "check": "the page's fetch of the race URL is held at the service",
+     "ok": true,
+     "detail": {
+      "hits": [
+       {
+        "method": "GET",
+        "path": "/api/race",
+        "dest": "empty",
+        "remote": "127.0.0.1:63923",
+        "t": "21:34:31.945"
+       }
+      ]
+     }
+    },
+    {
+     "check": "the navigation to the race URL failed with Retry",
+     "ok": true,
+     "detail": {
+      "event": {
+       "detail": "status 8 http 0",
+       "kind": "error-page",
+       "method": "GET",
+       "retry": true,
+       "seq": 15,
+       "uri": "http://127.0.0.1:63907/api/race"
+      }
+     }
+    },
+    {
+     "check": "the released older response produced no resource response or load while the error page was pending",
+     "ok": true,
+     "detail": {
+      "events_after_error_page": null
+     }
+    },
+    {
+     "check": "the error page's Retry is still the current one",
+     "ok": true,
+     "detail": {
+      "event": {
+       "detail": "retry",
+       "kind": "error-action",
+       "seq": 16,
+       "uri": "http://127.0.0.1:63907/api/race"
+      }
+     }
+    }
+   ],
+   "detail": {
+    "race_hits": [
+     {
+      "method": "GET",
+      "path": "/api/race",
+      "dest": "empty",
+      "remote": "127.0.0.1:63923",
+      "t": "21:34:31.945"
+     },
+     {
+      "method": "GET",
+      "path": "/api/race",
+      "dest": "document",
+      "remote": "127.0.0.1:63927",
+      "t": "21:34:52.034"
+     },
+     {
+      "method": "GET",
+      "path": "/api/race",
+      "dest": "document",
+      "remote": "127.0.0.1:63928",
+      "t": "21:34:54.168"
+     },
+     {
+      "method": "GET",
+      "path": "/api/race",
+      "dest": "document",
+      "remote": "127.0.0.1:63929",
+      "t": "21:34:54.168"
+     },
+     {
+      "method": "GET",
+      "path": "/api/race",
+      "dest": "document",
+      "remote": "127.0.0.1:63930",
+      "t": "21:34:54.169"
+     }
+    ]
+   },
+   "hosts": [
+    {
+     "host": "response_race-host",
+     "exit": 0,
+     "error": "\u003cnil\u003e",
+     "shutdown_diagnostics": [
+      "2026/11/24 21:34:59 dfx2 shutdown outstanding: windows=1 app-tasks=0 native-completions=0 wake-pending=false wake-failures=0 release-pending=false failure=\u003cnil\u003e; window=2 state=closing native=true creating=false content-release-pending=false; window=2 browser attached=true attaching=false ready=true close-started=true released=false endpoint-started=false endpoint-drained=false cleanups=[] endpoint=[] native=[webview2 151.0.4129.93 navigated=true closing=true controller-closed=true released=false native-requests=0 body-readers=0 response-streams=0 async=1]; dispatch-targets=1 native-problem=\"\""
+     ],
+     "temp_leftovers": null,
+     "browser_pids": [
+      9124
+     ]
+    }
+   ],
+   "seconds": 29.7
+  },
+  {
+   "case": "close_cases",
+   "ok": true,
+   "checks": [
+    {
+     "check": "close during credential confirmation and before navigation were reachable natively",
+     "ok": true,
+     "detail": {
+      "reachable": {
+       "inprocess": [
+        "controller",
+        "navigation"
+       ],
+       "loopback": [
+        "controller",
+        "cookie",
+        "navigation"
+       ]
+      }
+     }
+    },
+    {
+     "check": "inprocess: the held handler was entered",
+     "ok": true
+    },
+    {
+     "check": "inprocess: the window stays pending while its handler runs",
+     "ok": true,
+     "detail": {
+      "status": {
+       "endpoint": "in-process admitted=1/16 native=0 handlers=1 reading=0 refusals=0/16 reserved=2230310/66764736 closed=true drained=false",
+       "handler": {
+        "GET /": 2,
+        "GET /api/hold": 1,
+        "GET /favicon.ico": 1,
+        "GET /logo.svg": 2,
+        "GET /probe.css": 2,
+        "GET /probe.js": 2,
+        "POST /api/report": 1
+       },
+       "mode": "inprocess",
+       "native": "webview2 151.0.4129.93 navigated=true closing=true controller-closed=true released=false native-requests=0 body-readers=0 response-streams=0 async=1",
+       "released": false
+      }
+     }
+    },
+    {
+     "check": "loopback: the held handler was entered",
+     "ok": true
+    },
+    {
+     "check": "loopback: the window stays pending while its handler runs",
+     "ok": true,
+     "detail": {
+      "status": {
+       "endpoint": "loopback origin=http://127.0.0.1:63982 connections=0/32 handlers=1/16 serving=false closed=true drained=false refused-connections=0 busy=0 unauthorized=0 upgrades=0",
+       "handler": {
+        "GET /": 2,
+        "GET /api/hold": 1,
+        "GET /logo.svg": 2,
+        "GET /probe.css": 2,
+        "GET /probe.js": 2,
+        "POST /api/report": 1
+       },
+       "mode": "loopback",
+       "native": "webview2 151.0.4129.93 navigated=true closing=true controller-closed=true released=true native-requests=0 body-readers=0 response-streams=0 async=0",
+       "released": true
+      }
+     }
+    }
+   ],
+   "detail": {
+    "inprocess-controller": {
+     "closed": {
+      "close": "claimed-reads=0",
+      "event": "closed",
+      "mode": "inprocess",
+      "time": "2026-11-24T21:35:16.3074247-05:00",
+      "window": "A"
+     },
+     "opened": {
+      "asyncs_at_open": 1,
+      "close_at": "controller",
+      "close_at_error": "",
+      "error": "\u003cnil\u003e",
+      "event": "opened",
+      "events_at_open": 0,
+      "mode": "inprocess",
+      "start": "https://dfx2.invalid/",
+      "time": "2026-11-24T21:35:15.7076881-05:00",
+      "window": "A"
+     },
+     "second_window_events": 8
+    },
+    "inprocess-environment": {
+     "opened": {
+      "asyncs_at_open": 1,
+      "close_at": "environment",
+      "close_at_error": "stage \"environment\" already passed",
+      "error": "\u003cnil\u003e",
+      "event": "opened",
+      "events_at_open": 0,
+      "mode": "inprocess",
+      "start": "https://dfx2.invalid/",
+      "time": "2026-11-24T21:35:07.61465-05:00",
+      "window": "A"
+     },
+     "second_window_events": 9,
+     "unreachable": "stage \"environment\" already passed"
+    },
+    "inprocess-navigation": {
+     "closed": {
+      "close": "claimed-reads=0",
+      "event": "closed",
+      "mode": "inprocess",
+      "time": "2026-11-24T21:35:23.9965621-05:00",
+      "window": "A"
+     },
+     "opened": {
+      "asyncs_at_open": 1,
+      "close_at": "navigation",
+      "close_at_error": "",
+      "error": "\u003cnil\u003e",
+      "event": "opened",
+      "events_at_open": 0,
+      "mode": "inprocess",
+      "start": "https://dfx2.invalid/",
+      "time": "2026-11-24T21:35:23.4223084-05:00",
+      "window": "A"
+     },
+     "second_window_events": 8
+    },
+    "loopback-controller": {
+     "closed": {
+      "close": "claimed-reads=0",
+      "event": "closed",
+      "mode": "loopback",
+      "time": "2026-11-24T21:35:03.4002069-05:00",
+      "window": "A"
+     },
+     "opened": {
+      "asyncs_at_open": 1,
+      "close_at": "controller",
+      "close_at_error": "",
+      "error": "\u003cnil\u003e",
+      "event": "opened",
+      "events_at_open": 0,
+      "mode": "loopback",
+      "start": "http://127.0.0.1:63940/",
+      "time": "2026-11-24T21:35:02.7759638-05:00",
+      "window": "A"
+     },
+     "second_window_events": 9
+    },
+    "loopback-cookie": {
+     "closed": {
+      "close": "claimed-reads=0",
+      "event": "closed",
+      "mode": "loopback",
+      "time": "2026-11-24T21:35:04.9033303-05:00",
+      "window": "A"
+     },
+     "opened": {
+      "asyncs_at_open": 1,
+      "close_at": "cookie",
+      "close_at_error": "",
+      "error": "\u003cnil\u003e",
+      "event": "opened",
+      "events_at_open": 0,
+      "mode": "loopback",
+      "start": "http://127.0.0.1:63948/",
+      "time": "2026-11-24T21:35:04.3263316-05:00",
+      "window": "A"
+     },
+     "second_window_events": 10
+    },
+    "loopback-environment": {
+     "opened": {
+      "asyncs_at_open": 1,
+      "close_at": "environment",
+      "close_at_error": "stage \"environment\" already passed",
+      "error": "\u003cnil\u003e",
+      "event": "opened",
+      "events_at_open": 0,
+      "mode": "loopback",
+      "start": "http://127.0.0.1:63933/",
+      "time": "2026-11-24T21:35:01.0498253-05:00",
+      "window": "A"
+     },
+     "second_window_events": 10,
+     "unreachable": "stage \"environment\" already passed"
+    },
+    "loopback-navigation": {
+     "closed": {
+      "close": "claimed-reads=0",
+      "event": "closed",
+      "mode": "loopback",
+      "time": "2026-11-24T21:35:06.6523284-05:00",
+      "window": "A"
+     },
+     "opened": {
+      "asyncs_at_open": 1,
+      "close_at": "navigation",
+      "close_at_error": "",
+      "error": "\u003cnil\u003e",
+      "event": "opened",
+      "events_at_open": 0,
+      "mode": "loopback",
+      "start": "http://127.0.0.1:63954/",
+      "time": "2026-11-24T21:35:05.9857965-05:00",
+      "window": "A"
+     },
+     "second_window_events": 9
+    },
+    "reachable_stages": {
+     "inprocess": [
+      "controller",
+      "navigation"
+     ],
+     "loopback": [
+      "controller",
+      "cookie",
+      "navigation"
+     ]
+    }
+   },
+   "hosts": [
+    {
+     "host": "close_cases-init-loopback-environment",
+     "exit": 0,
+     "error": "\u003cnil\u003e",
+     "temp_leftovers": null
+    },
+    {
+     "host": "close_cases-init-loopback-controller",
+     "exit": 0,
+     "error": "\u003cnil\u003e",
+     "temp_leftovers": null
+    },
+    {
+     "host": "close_cases-init-loopback-cookie",
+     "exit": 0,
+     "error": "\u003cnil\u003e",
+     "temp_leftovers": null
+    },
+    {
+     "host": "close_cases-init-loopback-navigation",
+     "exit": 0,
+     "error": "\u003cnil\u003e",
+     "temp_leftovers": null
+    },
+    {
+     "host": "close_cases-init-inprocess-environment",
+     "exit": 0,
+     "error": "\u003cnil\u003e",
+     "temp_leftovers": null
+    },
+    {
+     "host": "close_cases-init-inprocess-controller",
+     "exit": 0,
+     "error": "\u003cnil\u003e",
+     "temp_leftovers": null
+    },
+    {
+     "host": "close_cases-init-inprocess-navigation",
+     "exit": 0,
+     "error": "\u003cnil\u003e",
+     "temp_leftovers": null
+    },
+    {
+     "host": "close_cases-handler-inprocess",
+     "exit": 0,
+     "error": "\u003cnil\u003e",
+     "temp_leftovers": null
+    },
+    {
+     "host": "close_cases-handler-loopback",
+     "exit": 0,
+     "error": "\u003cnil\u003e",
+     "temp_leftovers": null
+    },
+    {
+     "host": "close_cases-reading",
+     "exit": 0,
+     "error": "\u003cnil\u003e",
+     "temp_leftovers": null
+    }
+   ],
+   "seconds": 46.9
+  },
+  {
+   "case": "close_one_keep_one",
+   "ok": true,
+   "checks": [
+    {
+     "check": "the closed window's browser process exited while the host continues",
+     "ok": true,
+     "detail": {
+      "pid": 4232
+     }
+    },
+    {
+     "check": "B kept working",
+     "ok": true,
+     "detail": {
+      "result": {
+       "cookie": "",
+       "css": true,
+       "echo": {
+        "length": 1005,
+        "method": "POST",
+        "sha256": "a5903776f0c8d72f5b1e8689519fc8d9d6317785a20e31659786c8d8703a6b8c"
+       },
+       "img": true,
+       "imgWidth": 48,
+       "missing": 404,
+       "origin": "http://127.0.0.1:63997",
+       "query": "é\u0026ü"
+      }
+     }
+    },
+    {
+     "check": "the native window remains",
+     "ok": true
+    }
+   ],
+   "hosts": [
+    {
+     "host": "close_one_keep_one-host",
+     "exit": 0,
+     "error": "\u003cnil\u003e",
+     "temp_leftovers": null,
+     "browser_pids": [
+      4232,
+      8096
+     ]
+    }
+   ],
+   "seconds": 3.8
+  },
+  {
+   "case": "lazy_loading",
+   "ok": true,
+   "checks": [
+    {
+     "check": "native-only startup maps no WebView2 module and extracts nothing",
+     "ok": true,
+     "detail": {
+      "before": {
+       "client_mapped": false,
+       "loader_mapped": false,
+       "temp": null
+      }
+     }
+    },
+    {
+     "check": "the first browser window extracts and maps the loader and the runtime client",
+     "ok": true,
+     "detail": {
+      "after": {
+       "client_mapped": true,
+       "loader_mapped": true,
+       "temp": [
+        "dfx2-webview2-loader-1605983936",
+        "dfx2-webview2-profile-1554183748"
+       ]
+      }
+     }
+    },
+    {
+     "check": "the last close unloads the loader and removes its directory",
+     "ok": true,
+     "detail": {
+      "closed": {
+       "client_mapped": true,
+       "loader_mapped": false,
+       "temp": null
+      }
+     }
+    }
+   ],
+   "detail": {
+    "modules_with_browser": [
+     "advapi32.dll",
+     "bcrypt.dll",
+     "bcryptprimitives.dll",
+     "clbcatq.dll",
+     "combase.dll",
+     "coremessaging.dll",
+     "coreuicomponents.dll",
+     "dfx2-webview.exe",
+     "edputil.dll",
+     "embeddedbrowserwebview.dll",
+     "gdi32.dll",
+     "gdi32full.dll",
+     "imm32.dll",
+     "kernel.appcore.dll",
+     "kernel32.dll",
+     "kernelbase.dll",
+     "msctf.dll",
+     "msvcp_win.dll",
+     "msvcrt.dll",
+     "ntdll.dll",
+     "ntmarta.dll",
+     "ole32.dll",
+     "oleaut32.dll",
+     "powrprof.dll",
+     "propsys.dll",
+     "rpcrt4.dll",
+     "sechost.dll",
+     "shcore.dll",
+     "shell32.dll",
+     "shlwapi.dll",
+     "textinputframework.dll",
+     "ucrtbase.dll",
+     "umpdc.dll",
+     "user32.dll",
+     "uxtheme.dll",
+     "version.dll",
+     "webview2loader.dll",
+     "win32u.dll",
+     "windows.storage.dll",
+     "wintypes.dll",
+     "wldp.dll",
+     "ws2_32.dll"
+    ],
+    "runtime_client_still_mapped_after_last_close": true
+   },
+   "hosts": [
+    {
+     "host": "lazy_loading-host",
+     "exit": 0,
+     "error": "\u003cnil\u003e",
+     "temp_leftovers": null
+    }
+   ],
+   "seconds": 10.2
+  },
+  {
+   "case": "profile_lifecycle",
+   "ok": true,
+   "checks": [
+    {
+     "check": "the profile is a fresh framework directory under the host's TEMP",
+     "ok": true,
+     "detail": {
+      "profile": "C:\\Cygwin64\\tmp\\dfx2-wv-matrix-1472903891\\profile_lifecycle\\host\\dfx2-webview2-profile-171097448",
+      "temp": [
+       "dfx2-webview2-loader-1732580669",
+       "dfx2-webview2-profile-171097448"
+      ]
+     }
+    },
+    {
+     "check": "the profile directory exists while the window lives",
+     "ok": true
+    },
+    {
+     "check": "the browser process has exited when the window reports closed",
+     "ok": true,
+     "detail": {
+      "pid": 5492
+     }
+    },
+    {
+     "check": "the profile directory is gone after close",
+     "ok": true,
+     "detail": {
+      "err": "GetFileAttributesEx C:\\Cygwin64\\tmp\\dfx2-wv-matrix-1472903891\\profile_lifecycle\\host\\dfx2-webview2-profile-171097448: The system cannot find the file specified."
+     }
+    },
+    {
+     "check": "nothing framework-owned remains in TEMP",
+     "ok": true,
+     "detail": {
+      "temp": null
+     }
+    }
+   ],
+   "detail": {
+    "close_took": "324ms",
+    "closed_event": [
+     {
+      "close": "claimed-reads=0",
+      "event": "closed",
+      "mode": "loopback",
+      "time": "2026-11-24T21:36:02.7306835-05:00",
+      "window": "L"
+     }
+    ]
+   },
+   "hosts": [
+    {
+     "host": "profile_lifecycle-host",
+     "exit": 0,
+     "error": "\u003cnil\u003e",
+     "temp_leftovers": null,
+     "browser_pids": [
+      5492
+     ]
+    }
+   ],
+   "seconds": 0.8
+  },
+  {
+   "case": "size_move",
+   "ok": true,
+   "checks": [
+    {
+     "check": "the browser shell was found by title",
+     "ok": true
+    },
+    {
+     "check": "the caption drag was injected",
+     "ok": true,
+     "detail": {
+      "error": "\u003cnil\u003e"
+     }
+    },
+    {
+     "check": "the size/move loop was established",
+     "ok": true,
+     "detail": {
+      "counters": {
+       "DispatchTargets": 1,
+       "Dispatches": 19,
+       "ModalActive": false,
+       "ModalLoops": 1,
+       "ModalRefusals": 0,
+       "ModalTimers": 8,
+       "ModalTurns": 8,
+       "PaintFailures": 0,
+       "Paints": 0,
+       "Presents": 0,
+       "Problem": "",
+       "Retired": 0,
+       "Wakes": 19,
+       "Windows": 2
+      }
+     }
+    },
+    {
+     "check": "the page's request completed while the loop ran",
+     "ok": true,
+     "detail": {
+      "counters": {
+       "DispatchTargets": 1,
+       "Dispatches": 19,
+       "ModalActive": false,
+       "ModalLoops": 1,
+       "ModalRefusals": 0,
+       "ModalTimers": 8,
+       "ModalTurns": 8,
+       "PaintFailures": 0,
+       "Paints": 0,
+       "Presents": 0,
+       "Problem": "",
+       "Retired": 0,
+       "Wakes": 19,
+       "Windows": 2
+      },
+      "report": {
+       "href": "https://dfx2.invalid/?run=checks\u0026id=checks-47700",
+       "id": "checks-47700",
+       "result": {
+        "cookie": "",
+        "css": true,
+        "echo": {
+         "length": 1005,
+         "method": "POST",
+         "sha256": "a5903776f0c8d72f5b1e8689519fc8d9d6317785a20e31659786c8d8703a6b8c"
+        },
+        "img": true,
+        "imgWidth": 48,
+        "missing": 404,
+        "origin": "https://dfx2.invalid",
+        "query": "é\u0026ü"
+       },
+       "run": "checks"
+      }
+     }
+    },
+    {
+     "check": "the shell moved",
+     "ok": true,
+     "detail": {
+      "after": 523,
+      "before": 364
+     }
+    },
+    {
+     "check": "the loop is no longer active",
+     "ok": true
+    }
+   ],
+   "hosts": [
+    {
+     "host": "size_move-host",
+     "exit": 0,
+     "error": "\u003cnil\u003e",
+     "temp_leftovers": null
+    }
+   ],
+   "seconds": 5.1
+  },
+  {
+   "case": "browser_failure",
+   "ok": true,
+   "checks": [
+    {
+     "check": "the browser process is known",
+     "ok": true,
+     "detail": {
+      "pid": 9656
+     }
+    },
+    {
+     "check": "the application failed and drained",
+     "ok": true,
+     "detail": {
+      "return": {
+       "error": "dfx2 webview window 3: WebView2 browser process exited (reason unexpected, exit code 1, )",
+       "event": "return",
+       "time": "2026-11-24T21:36:08.6985238-05:00"
+      }
+     }
+    }
+   ],
+   "hosts": [
+    {
+     "host": "browser_failure-host",
+     "exit": 1,
+     "error": "dfx2 webview window 3: WebView2 browser process exited (reason unexpected, exit code 1, )",
+     "stderr": [
+      "dfx2 webview window 3: WebView2 browser process exited (reason unexpected, exit code 1, )"
+     ],
+     "temp_leftovers": null,
+     "browser_pids": [
+      9656
+     ]
+    }
+   ],
+   "seconds": 0.8
+  },
+  {
+   "case": "missing_runtime",
+   "ok": true,
+   "checks": [
+    {
+     "check": "a native-only application runs without the runtime",
+     "ok": true
+    },
+    {
+     "check": "Open fails naming the missing runtime",
+     "ok": true,
+     "detail": {
+      "error": {
+       "command": "open A inprocess",
+       "error": "dfx2 webview.Open: browser: WebView2 Runtime not found (HRESULT ERROR_FILE_NOT_FOUND (0x80070002)): install the Evergreen WebView2 Runtime from https://developer.microsoft.com/microsoft-edge/webview2/ (Windows 11 includes it)",
+       "event": "error",
+       "time": "2026-11-24T21:36:09.8066499-05:00"
+      }
+     }
+    },
+    {
+     "check": "the failure is fatal and reaches Run",
+     "ok": true,
+     "detail": {
+      "return": {
+       "error": "dfx2 webview.Open: browser: WebView2 Runtime not found (HRESULT ERROR_FILE_NOT_FOUND (0x80070002)): install the Evergreen WebView2 Runtime from https://developer.microsoft.com/microsoft-edge/webview2/ (Windows 11 includes it)",
+       "event": "return",
+       "time": "2026-11-24T21:36:09.820531-05:00"
+      }
+     }
+    }
+   ],
+   "hosts": [
+    {
+     "host": "missing_runtime-native-only",
+     "exit": 0,
+     "error": "\u003cnil\u003e",
+     "temp_leftovers": null
+    },
+    {
+     "host": "missing_runtime-browser",
+     "exit": 1,
+     "error": "dfx2 webview.Open: browser: WebView2 Runtime not found (HRESULT ERROR_FILE_NOT_FOUND (0x80070002)): install the Evergreen WebView2 Runtime from https://developer.microsoft.com/microsoft-edge/webview2/ (Windows 11 includes it)",
+     "stderr": [
+      "dfx2 webview.Open: browser: WebView2 Runtime not found (HRESULT ERROR_FILE_NOT_FOUND (0x80070002)): install the Evergreen WebView2 Runtime from https://developer.microsoft.com/microsoft-edge/webview2/ (Windows 11 includes it)"
+     ],
+     "temp_leftovers": null
+    }
+   ],
+   "seconds": 1.1
+  },
+  {
+   "case": "exe_only",
+   "ok": true,
+   "checks": [
+    {
+     "check": "nothing but the executable is beside it",
+     "ok": true,
+     "detail": {
+      "entries": 1
+     }
+    },
+    {
+     "check": "the copied executable hosts a loopback window",
+     "ok": true,
+     "detail": {
+      "result": {
+       "cookie": "",
+       "css": true,
+       "echo": {
+        "length": 1005,
+        "method": "POST",
+        "sha256": "a5903776f0c8d72f5b1e8689519fc8d9d6317785a20e31659786c8d8703a6b8c"
+       },
+       "img": true,
+       "imgWidth": 48,
+       "missing": 404,
+       "origin": "http://127.0.0.1:64022",
+       "query": "é\u0026ü"
+      }
+     }
+    },
+    {
+     "check": "the loader was loaded from the extracted copy under TEMP",
+     "ok": true,
+     "detail": {
+      "loader": "C:\\Cygwin64\\tmp\\dfx2-wv-matrix-1472903891\\exe_only\\host\\dfx2-webview2-loader-3599627144\\WebView2Loader.dll"
+     }
+    },
+    {
+     "check": "no file appeared beside the executable",
+     "ok": true
+    }
+   ],
+   "hosts": [
+    {
+     "host": "exe_only-host",
+     "exit": 0,
+     "error": "\u003cnil\u003e",
+     "temp_leftovers": null
+    }
+   ],
+   "seconds": 1.1
+  },
+  {
+   "case": "body_reader",
+   "ok": true,
+   "checks": [
+    {
+     "check": "a 900000-byte upload is echoed intact",
+     "ok": true,
+     "detail": {
+      "result": {
+       "echo": {
+        "length": 900000,
+        "method": "POST",
+        "sha256": "53eef6246186f58559356c069c97663557e7c70bb2884eaa010da4944eee6d8f"
+       },
+       "status": 200
+      }
+     }
+    },
+    {
+     "check": "no body reader remains after the upload",
+     "ok": true,
+     "detail": {
+      "browser": {
+       "Actions": 0,
+       "Allowed": 2,
+       "Asyncs": 1,
+       "Closing": false,
+       "Copies": 0,
+       "Delivered": 11,
+       "Destroyed": false,
+       "Downloads": 0,
+       "ErrorPages": 0,
+       "Events": [
+        {
+         "detail": "browser process 8792",
+         "kind": "controller",
+         "seq": 1
+        },
+        {
+         "kind": "navigation-allowed",
+         "seq": 2,
+         "uri": "https://dfx2.invalid/"
+        },
+        {
+         "kind": "document-request",
+         "method": "GET",
+         "seq": 3,
+         "uri": "https://dfx2.invalid/"
+        },
+        {
+         "detail": "200",
+         "kind": "resource-response",
+         "seq": 4,
+         "uri": "https://dfx2.invalid/"
+        },
+        {
+         "detail": "status 0 http 200",
+         "kind": "load",
+         "method": "GET",
+         "seq": 5,
+         "uri": "https://dfx2.invalid/"
+        },
+        {
+         "kind": "navigation-allowed",
+         "seq": 6,
+         "uri": "https://dfx2.invalid/?run=uploadEcho\u0026id=uploadEcho-8000\u0026size=900000"
+        },
+        {
+         "kind": "document-request",
+         "method": "GET",
+         "seq": 7,
+         "uri": "https://dfx2.invalid/?run=uploadEcho\u0026id=uploadEcho-8000\u0026size=900000"
+        },
+        {
+         "detail": "200",
+         "kind": "resource-response",
+         "seq": 8,
+         "uri": "https://dfx2.invalid/?run=uploadEcho\u0026id=uploadEcho-8000\u0026size=900000"
+        },
+        {
+         "detail": "status 0 http 200",
+         "kind": "load",
+         "method": "GET",
+         "seq": 9,
+         "uri": "https://dfx2.invalid/?run=uploadEcho\u0026id=uploadEcho-8000\u0026size=900000"
+        }
+       ],
+       "Navigated": true,
+       "Permissions": 0,
+       "Popups": 0,
+       "Reads": 0,
+       "Refused": 0,
+       "Released": false,
+       "Requests": 0,
+       "Runtime": "151.0.4129.93",
+       "Signal": 0,
+       "Start": "https://dfx2.invalid/"
+      }
+     }
+    },
+    {
+     "check": "an empty POST is answered as an empty body",
+     "ok": true,
+     "detail": {
+      "page": {
+       "echo": {
+        "length": 0,
+        "method": "POST",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+       },
+       "status": 200
+      }
+     }
+    }
+   ],
+   "detail": {
+    "emptyPost": {
+     "handler": {
+      "GET /": 3,
+      "GET /favicon.ico": 1,
+      "GET /logo.svg": 3,
+      "GET /probe.css": 3,
+      "GET /probe.js": 3,
+      "POST /api/echo": 2,
+      "POST /api/report": 2
+     },
+     "page": {
+      "echo": {
+       "length": 0,
+       "method": "POST",
+       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "status": 200
+     },
+     "request_content": [
+      {
+       "detail": "get_Content S_OK null=true",
+       "kind": "request-content",
+       "seq": 14
+      }
+     ]
+    },
+    "streamUpload": {
+     "handler": {
+      "GET /": 4,
+      "GET /favicon.ico": 1,
+      "GET /logo.svg": 4,
+      "GET /probe.css": 4,
+      "GET /probe.js": 4,
+      "POST /api/echo": 3,
+      "POST /api/report": 3
+     },
+     "page": {
+      "echo": {
+       "length": 0,
+       "method": "POST",
+       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "status": 200
+     },
+     "request_content": [
+      {
+       "detail": "get_Content S_OK null=true",
+       "kind": "request-content",
+       "seq": 19
+      }
+     ]
+    }
+   },
+   "hosts": [
+    {
+     "host": "body_reader-body",
+     "exit": 0,
+     "error": "\u003cnil\u003e",
+     "temp_leftovers": null
+    }
+   ],
+   "seconds": 7.4
+  },
+  {
+   "case": "body_close",
+   "ok": true,
+   "checks": [
+    {
+     "check": "a close stopped a claimed body read, and every attempt drained",
+     "ok": true,
+     "detail": {
+      "claimed_at_close": 1
+     }
+    }
+   ],
+   "detail": {
+    "attempts": [
+     {
+      "close": "claimed-reads=1",
+      "delay_ms": 0
+     },
+     {
+      "close": "claimed-reads=0",
+      "delay_ms": 5
+     },
+     {
+      "close": "claimed-reads=0",
+      "delay_ms": 10
+     },
+     {
+      "close": "claimed-reads=0",
+      "delay_ms": 20
+     },
+     {
+      "close": "claimed-reads=0",
+      "delay_ms": 40
+     },
+     {
+      "close": "claimed-reads=0",
+      "delay_ms": 80
+     }
+    ],
+    "claimed_at_close": 1
+   },
+   "hosts": [
+    {
+     "host": "body_close-attempt-0",
+     "exit": 0,
+     "error": "\u003cnil\u003e",
+     "temp_leftovers": null
+    },
+    {
+     "host": "body_close-attempt-1",
+     "exit": 0,
+     "error": "\u003cnil\u003e",
+     "temp_leftovers": null
+    },
+    {
+     "host": "body_close-attempt-2",
+     "exit": 0,
+     "error": "\u003cnil\u003e",
+     "temp_leftovers": null
+    },
+    {
+     "host": "body_close-attempt-3",
+     "exit": 0,
+     "error": "\u003cnil\u003e",
+     "temp_leftovers": null
+    },
+    {
+     "host": "body_close-attempt-4",
+     "exit": 0,
+     "error": "\u003cnil\u003e",
+     "temp_leftovers": null
+    },
+    {
+     "host": "body_close-attempt-5",
+     "exit": 0,
+     "error": "\u003cnil\u003e",
+     "temp_leftovers": null
+    }
+   ],
+   "seconds": 43.4
+  }
+ ],
+ "passed": true,
+ "runtime": "151.0.4129.93",
+ "session_state": "Active",
+ "untested": null
+}
