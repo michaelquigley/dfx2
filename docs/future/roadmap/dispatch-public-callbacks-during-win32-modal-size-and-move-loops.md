@@ -3,7 +3,9 @@ title: Dispatch public callbacks during Win32 modal size and move loops
 state: evaluating
 created: 2026-11-04
 tags: [enhancement]
-log: docs/journal/2026-11-04.md
+log:
+  - stamp: 2026-11-04
+    note: "Context: docs/journal/2026-11-04.md"
 ---
 
 observe the built Win32 size/move dispatch with real applications. The synthetic-mixer arc implements bounded turns during size/move loops, with native validation and accepted limits in [ui.md](../../current/ui.md#dispatch-during-windows-size-and-move-loops). Other native modal loops remain outside that guarantee; expand it only for a concrete need.

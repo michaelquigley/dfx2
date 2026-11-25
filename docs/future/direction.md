@@ -13,7 +13,7 @@ dfx2 drops Dear ImGui and cgo. It draws native UI itself and shows web UI in the
 
 **Programming model and first application.** Source compatibility with dfx or dfw is not a goal. Preserve the immediate-mode programming model, with a smoother, more idiomatic Go API. Sessionmixer is the first real application that will guide the native UI work.
 
-The next design slice is a Sessionmixer integration plan: use the mixed fixture to scope a real strip and its controller without coupling device dependencies to the framework. Choices not recorded under Decisions below remain proposals.
+Before Sessionmixer integration, adapt a handful of representative dfx examples to exercise the native API: counter, composition, faders and meters. The [draft design](example-ports.md) and [work order](example-ports-work-order.md) describe this bounded arc. Then return to a parallel, read-only Sessionmixer frontend without coupling device dependencies to the framework. Choices not recorded under Decisions below remain proposals.
 
 ## Decisions
 
