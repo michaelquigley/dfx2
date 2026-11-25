@@ -30,7 +30,7 @@ Every window chooses one mode, and nothing falls back between them:
 
 ### Native and browser views of one model
 
-The [synthetic mixer](../../examples/mixer/README.md#mixed-views--browser) shows the intended shape: `-browser` opens a native window and a browser view over one application-owned model, in any of the three modes. The browser view's handlers are thin. They read the model's immutable snapshots and submit edits through the application's own ordered command path, the same one native edits use. The model, its snapshots and its commands carry no browser or HTTP types.
+The [synthetic mixer](../../examples/mixer/README.md#mixed-views--browser) shows the intended shape: `-browser` opens a native window and a browser view over one application-owned model, in any of the three modes. The browser view's handlers are thin. They read the model's immutable snapshots and submit edits through the application's own ordered command path, the same one native edits use. The model, its snapshots and its commands carry no browser or HTTP types. The mixed example passed Linux and Windows automated auditions, and Michael reported that both manual checklists worked well. [Stage 4 evidence](../../evidence/webview-integration/stage-4.md) records the coverage limits; final acceptance remains pending.
 
 The page keeps one request outstanding, polling for the next snapshot after the last one is answered. Showing a snapshot submits nothing, and an edit is sent once, never retried. The application's workers are its own tasks, so they outlive every request and window. In attach mode the service the view attaches to is the application's too, not the window's: closing the view leaves it serving. None of this needs framework support beyond the contracts below.
 

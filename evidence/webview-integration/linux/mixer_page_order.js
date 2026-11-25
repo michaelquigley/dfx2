@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Checks the mixer page's edit submission against controlled responses: one
-// page submits its edits in input order, one at a time; a fader with an edit
+// page submits its edits in input order, one at a time; a control with an edit
 // still queued or unanswered keeps its latest value through an older
 // snapshot; a failed submission lets the next one through and is never
 // retried. It loads examples/mixer/web/mixer.js into a bare context with a
@@ -61,17 +61,17 @@ function check(name, ok, detail) {
   if (!ok) failures++;
 }
 
-function snapshot(version, gain) {
+function snapshot(version, gain, mute = false) {
   const ch = (id) => ({ id, name: id, level: 0, db: -60, gain: 0.5, muted: false, gainPending: false, pendingGain: 0, gainSeq: 0,
-    mutePending: false, pendingMute: false, muteSeq: 0, shownGain: id === "c" ? gain : 0.5, shownMute: false });
+    mutePending: false, pendingMute: false, muteSeq: 0, shownGain: id === "c" ? gain : 0.5, shownMute: id === "c" ? mute : false });
   return { view: "B", version, tick: 0, running: false, channels: [..."abcdef"].map(ch), error: "",
     commands: { accepted: 0, applied: 0, refused: 0, rejected: 0, canceled: 0, outstanding: 0, delayMs: 0, rejectNext: 0 } };
 }
 
-// Answers the outstanding poll with a snapshot whose channel c shows gain.
-async function poll(version, gain) {
+// Answers the outstanding poll with channel c's displayed values.
+async function poll(version, gain, mute = false) {
   const r = requests.filter((x) => x.url.startsWith("api/state")).pop();
-  r.settle(true, snapshot(version, gain));
+  r.settle(true, snapshot(version, gain, mute));
   await flush();
   timers.shift()(); // the page's next poll, 100 ms later
   await flush();
@@ -118,6 +118,26 @@ async function poll(version, gain) {
   await flush();
   check("the failed submission is never retried", edits().filter((r) => r.body.value === 0.2).length === 1, edits().map((r) => r.body));
   check("the failure is shown", byId.net.textContent.startsWith("edit") , byId.net.textContent);
+
+  // A stale poll between checkbox activations must not change the next edit.
+  const mute = byId.strips.children[2].children[2].children[0]; // channel c's label contains Mute
+  const start = edits().length;
+  mute.checked = true; mute.dispatch("change");
+  await flush();
+  await poll(4, 0.42, false);
+  check("an older snapshot leaves unanswered Mute checked", mute.checked === true, mute.checked);
+  mute.checked = !mute.checked; mute.dispatch("change");
+  edits()[start].settle(true, { accepted: true, sequence: 4 });
+  await flush();
+  check("two checkbox activations submit true then false", edits().length === start + 2 &&
+    edits()[start].body.value === true && edits()[start + 1].body.value === false,
+    edits().slice(start).map((r) => r.body));
+  await poll(5, 0.42, true);
+  check("Mute stays unchecked while its second edit is unanswered", mute.checked === false, mute.checked);
+  edits()[start + 1].settle(true, { accepted: true, sequence: 5 });
+  await flush();
+  await poll(6, 0.42, true);
+  check("Mute follows snapshots once every edit is answered", mute.checked === true, mute.checked);
 
   console.log(failures ? `${failures} failed` : "all passed");
   process.exit(failures ? 1 : 0);

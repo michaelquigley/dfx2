@@ -79,7 +79,7 @@ function render(s) {
     const e = strip(c);
     e.name.textContent = c.name;
     if (!held.has(c.id) && !sending.has(c.id)) e.fader.value = String(c.shownGain);
-    e.mute.checked = c.shownMute;
+    if (!sending.has(c.id)) e.mute.checked = c.shownMute;
     e.meter.style.width = `${Math.round(c.level * 100)}%`;
     e.level.textContent = `${c.db.toFixed(1)} dB`;
     e.device.textContent = `device ${c.gain.toFixed(2)}${c.muted ? " muted" : ""}`;

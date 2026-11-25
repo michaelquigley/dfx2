@@ -1,6 +1,6 @@
 # Webview integration stage 4: the mixed mixer
 
-Stage 4 of the [work order](../../docs/future/webview-integration-work-order.md) connects browser views to the synthetic mixer's existing model and ordered command path, beside its native windows. Stage 3 was accepted with documented limits and follow-ups under canon commit `76e1f94`. This stage builds on `e0adfd2` and its staged stage 3 closeout documentation, which is preserved unchanged. Built behavior is in the [mixer README](../../examples/mixer/README.md#mixed-views--browser) and [webview.md](../../docs/current/webview.md#native-and-browser-views-of-one-model). **Nothing is committed, and stage 4 is not accepted:** acceptance waits for the Windows run and Michael's audition on both hosts.
+Stage 4 of the [work order](../../docs/future/webview-integration-work-order.md) connects browser views to the synthetic mixer's existing model and ordered command path, beside its native windows. Stage 3 was accepted with documented limits and follow-ups under canon commit `76e1f94`. This stage builds on `e0adfd2` and its staged stage 3 closeout documentation, which is preserved unchanged. Built behavior is in the [mixer README](../../examples/mixer/README.md#mixed-views--browser) and [webview.md](../../docs/current/webview.md#native-and-browser-views-of-one-model). **Stage 4 is not yet accepted.** Candidate `ebfc7ab` and Windows return `e775bf5` are committed. Automated validation and Michael's manual auditions on both hosts are complete, with the limits below; Linux return review found no new implementation issue. Canon alignment and final acceptance remain.
 
 ## What was built
 
@@ -22,15 +22,15 @@ The change is confined to `examples/mixer`; no framework package changed.
 
 Not built, as directed: generic deduplication, reconnection, device integration, a production Sessionmixer server, or any change for the recorded signal risks, the blocking-response failure, loader unload, Retry-method inheritance or Open's startup-error reporting.
 
-## Status at transfer
+## Current status after Windows return
 
-The candidate is this working tree, ready for Michael's commit and the Windows transfer after his Linux manual audition. It is not accepted.
+The candidate is `ebfc7ab`, with Windows evidence and driver changes returned in `e775bf5`. No Go source changed on Windows. The later one-line checkbox reconciliation correction has the focused Node regression below; the native runs remain evidence for ebfc7ab, not a native run of that correction. Stage acceptance remains pending.
 
 - **Current Linux evidence**, all at this candidate's mixer unless noted:
   - **Mixed-view audition:** 12/12, in `linux/stage-4-x/`.
   - **Mixer stage 4 regression:** 8/8, in `linux/stage-4-x/regression/`.
   - **Browser matrix:** 33/33, in `linux/stage-4/integrated/`. No Linux-linked framework file has changed since that run; W3 is Windows-only code.
-- **Review:** the last full-rubric round, `7b428eff75ad`, is not clean. Its dispositions are under [Review](#review).
+- **Review:** final full-rubric round `1b552e54b3c0` against canon `00086c5` is not clean. Its three findings are dispositioned below: the checkbox correction is fixed and the two other findings are deferred by Michael. No further full-tree review or native matrix rerun is required for this narrow correction.
 - **Manual Linux audition:** Michael reported on 2026-11-24 that everything checked out fine. The browser fader's release-only submission was clarified; no behavior change was requested.
 - **Windows run:** done on 2026-11-24 at `ebfc7ab`, see [Windows validation](#windows-validation-of-ebfc7ab--2026-11-24). Michael completed the Windows hands-on checklist the same day and reported that everything worked fine.
 - **Deferred to the roadmap:** W2 (malformed handler headers), X1 (Win32 input order) and X2 (UI-thread COM balance).
@@ -245,7 +245,7 @@ This is the current Linux evidence for the transfer. The earlier runs are kept.
 
 ## Windows validation of `ebfc7ab` — 2026-11-24
 
-Run on the Windows host at **`ebfc7ab2909709655d2d71c195a4940610ecf49f`** (Michael's commit of the stage 4 tree), clean tree, `CGO_ENABLED=0` throughout, no production code changed. Host: Windows 10 Pro 10.0.19045.6466, amd64, Go 1.27.4, Evergreen WebView2 Runtime 151.0.4129.93 (the SDK pin 1.0.4129.50 is unchanged), PowerShell 5.1.19041.6456, Remote Desktop session `rdp-tcp#5` (session 2) `Active` throughout (the drivers' environment files record the stale `SESSIONNAME` `RDP-Tcp#1`), one display, 3840×1600 at 96 DPI on the Microsoft Remote Display Adapter. Node is not installed. No person was at the desktop: every result below is scripted, and the hands-on checklist is pending.
+Run on the Windows host at **`ebfc7ab2909709655d2d71c195a4940610ecf49f`** (Michael's commit of the stage 4 tree), clean tree, `CGO_ENABLED=0` throughout, no production code changed. Host: Windows 10 Pro 10.0.19045.6466, amd64, Go 1.27.4, Evergreen WebView2 Runtime 151.0.4129.93 (the SDK pin 1.0.4129.50 is unchanged), PowerShell 5.1.19041.6456, Remote Desktop session `rdp-tcp#5` (session 2) `Active` throughout (the drivers' environment files record the stale `SESSIONNAME` `RDP-Tcp#1`), one display, 3840×1600 at 96 DPI on the Microsoft Remote Display Adapter. Node is not installed. No person was at the desktop during the scripted run. Michael completed the hands-on checklist afterwards, as recorded below.
 
 **Executables**, built from the clean tree before any run directory existed (`vcs.modified=false`):
 
@@ -286,3 +286,33 @@ Run on the Windows host at **`ebfc7ab2909709655d2d71c195a4940610ecf49f`** (Micha
 **Limits.** No race detector or Node on this host; one display and one DPI. `mixed.ps1`'s browser-process check looks only for `msedgewebview2.exe` processes whose parent is the mixer; the browser matrix driver's fuller descendant accounting applies to the browser matrix alone. The resident check confirms the process alive 3 s after both closes, not a zero-window ownership record.
 
 **Findings.** None against the implementation: nothing native contradicted the modeled or Linux behavior, and W3's copy ran natively through the whole matrix. Two driver changes: the `stage4.ps1` gate budget and the new `mixed.ps1`.
+
+## Linux return review — 2026-11-25
+
+Reviewed Windows return `e775bf5` against candidate `ebfc7ab`. The return changes evidence, documentation and Windows drivers only: the mixer repetition gate grows from 600 to 1800 seconds, and `mixed.ps1` adds the console-driven mixed-view checks. No Go source, dependency or product behavior changed.
+
+The retained summaries and mixed-view logs support 18/18 browser cases, 72/72 mixed checks, the native mixer regression, 17/17 control checks, both text-cache cases and all nine foundation cases with their expected exits. The mixed logs contain no edit or command records and finish with commands conserved. The first native `body_close` pass is one observed claimed read at close, not a stream-lifetime measurement or a guarantee that every run catches that timing.
+
+The full `CGO_ENABLED=0 go test ./... -count=1`, Linux vet and Node page-order check pass on the returned tree. The initial sandboxed test invocation could not open loopback sockets; the suite passed with local socket access. No Linux native rerun was needed because the return changed no linked product code.
+
+No new implementation finding. Manual results remain operator reports; the Windows pending-edit cancellation count was not retained, and the mixed driver's process check covers direct browser children only. These are disclosed evidence limits, not grounds for another hardening loop. The existing deferred findings and historical not-clean Terminus verdict remain. Canon alignment and stage acceptance are next; intent-document retirement waits for acceptance.
+
+## Final review against aligned canon — 2026-11-25
+
+Full-rubric Terminus `1b552e54b3c0`, against canon `00086c5`, returned **not clean: three blocking findings, no advisories**. All 11 qualities were selected over 10,434 tracked files; 12 assets remain outside project-local territories as in the coverage audit. The reviewer inspected source and did not perform new native runs. The initial assessment below is preserved; Michael's final dispositions follow it.
+
+- **`finite-read-reservation-released-early`**, `internal/endpoint/finite.go:325–357`: stopping or completing a read clears its read-buffer charge before the browser reports request release. Source confirms the early credit and that the Windows callback still holds the result buffer; no native budget-overshoot interleaving was reproduced during this return review. Keeping admission until worker completion is a separate limit. The initial recommendation was a focused accounting check; Michael subsequently deferred that investigation as recorded below.
+- **`mixer-poll-overwrites-unanswered-mute`**, `examples/mixer/web/mixer.js:79–82`: reproduced with a temporary extension of the existing controlled Node fixture. Checking Mute, delivering an older unmuted poll before its answer, and toggling again submitted `true, true` instead of `true, false`. The fader's queued/unanswered guard is absent from checkbox reconciliation. Recommendation: the narrow page fix and a permanent regression in the existing Node check.
+- **`windows-large-snapshot-header-only`**, `evidence/synthetic-mixer/windows/audition.ps1:215–245`: confirmed that the driver reads only the PNG header. During this review, Pillow fully decoded all five retained large-case snapshots in `run-stage4-mixed/matrix/snapshots`, at the expected dimensions from 984×761 to 3200×1400. The validator can be strengthened, but this run's artifacts are intact. Recommendation: follow-up driver work, not a new native rerun solely for this finding.
+
+At review time the temporary checkbox probe lived in `/tmp`; no product or test source had changed. The subsequent correction and dispositions follow.
+
+### Final dispositions and checkbox correction
+
+Michael approved the narrow checkbox fix and deferred the read-buffer investigation and PNG validator improvement. This closes triage of `1b552e54b3c0`; its verdict remains **not clean**, not a claim that the deferred findings were fixed. No additional full-tree review or native validation campaign was run.
+
+- **Checkbox, fixed:** snapshot reconciliation now uses the existing per-channel queued/unanswered guard for Mute as well as the fader. No submission, server or framework mechanism changed. The permanent Node check delivers an older snapshot between two checkbox activations, verifies `true` then `false` submissions, protects the second unanswered edit, and confirms snapshots resume after both answers. Against the old page, three assertions failed; after the one-line fix, all eleven checks pass. `node --check` also passes. The prior Linux and Windows native runs and manual passes remain tied to their recorded candidate; this post-return correction has focused Node coverage only and changes the mixer's embedded page.
+- **Read-buffer accounting, deferred:** [investigation item](../../docs/future/roadmap/investigate-finite-read-buffer-reservation-lifetime.md). The early credit is recorded, but no material application failure was demonstrated; do not expand this closeout into new ownership machinery.
+- **PNG gate, deferred:** [driver item](../../docs/future/roadmap/decode-windows-large-image-audition-snapshots.md). The actual five retained images fully decoded; no new native run is needed solely to strengthen the validator.
+
+Canon `00086c5` remains unchanged. Final stage acceptance and retirement of realized intent documents remain for closeout; the review loop is complete under these dispositions.
